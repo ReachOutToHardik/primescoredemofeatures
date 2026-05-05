@@ -1,81 +1,132 @@
+
 import { useState, useEffect } from 'react'
 import { Search, Building2, MapPin, CheckCircle2, XCircle, ChevronDown } from 'lucide-react'
+import { supabase } from '../../lib/supabase'
 
 export default function IfscCode() {
   const [searchMode, setSearchMode] = useState<'ifsc' | 'branch'>('ifsc')
-  const [ifsc, setIfsc] = useState('')
+  const [ifscInput, setIfscInput] = useState('')
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   // Branch Search States
-  const [banks, setBanks] = useState<string[]>([])
   const [states, setStates] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
+  const [banks, setBanks] = useState<string[]>([])
   const [branches, setBranches] = useState<any[]>([])
 
-  const [selectedBank, setSelectedBank] = useState('')
   const [selectedState, setSelectedState] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
+  const [selectedBank, setSelectedBank] = useState('')
   const [selectedBranch, setSelectedBranch] = useState('')
 
-  // Initial Fetch: Banks
+  // 1. Initial Fetch: All States
   useEffect(() => {
-    if (searchMode === 'branch' && banks.length === 0) {
-      fetch('https://bank-apis.justonepixel.com/api/v1/get-banks')
-        .then(res => res.json())
-        .then(json => setBanks(json.banks || []))
-        .catch(() => setError('Failed to load banks. Please try again later.'))
+    async function fetchStates() {
+      if (searchMode === 'branch' && states.length === 0) {
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('banks')
+          .select('state')
+        
+        if (error) {
+          setError('Failed to load states.')
+        } else if (data) {
+          const uniqueStates = Array.from(new Set(data.map(item => item.state))).sort()
+          setStates(uniqueStates)
+        }
+        setLoading(false)
+      }
     }
+    fetchStates()
   }, [searchMode])
 
-  // Fetch States when Bank changes
+  // 2. Fetch Cities when State changes
   useEffect(() => {
-    if (selectedBank) {
-      setStates([])
-      setCities([])
-      setBranches([])
-      setSelectedState('')
-      setSelectedCity('')
-      setSelectedBranch('')
-      fetch(`https://bank-apis.justonepixel.com/api/v1/get-states?bank=${selectedBank}`)
-        .then(res => res.json())
-        .then(json => setStates(json.states || []))
+    async function fetchCities() {
+      if (selectedState) {
+        setCities([])
+        setBanks([])
+        setBranches([])
+        setSelectedCity('')
+        setSelectedBank('')
+        setSelectedBranch('')
+        
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('banks')
+          .select('city')
+          .eq('state', selectedState)
+        
+        if (!error && data) {
+          const uniqueCities = Array.from(new Set(data.map(item => item.city))).sort()
+          setCities(uniqueCities)
+        }
+        setLoading(false)
+      }
     }
-  }, [selectedBank])
-
-  // Fetch Cities when State changes
-  useEffect(() => {
-    if (selectedBank && selectedState) {
-      setCities([])
-      setBranches([])
-      setSelectedCity('')
-      setSelectedBranch('')
-      fetch(`https://bank-apis.justonepixel.com/api/v1/get-cities?bank=${selectedBank}&state=${selectedState}`)
-        .then(res => res.json())
-        .then(json => setCities(json.cities || []))
-    }
+    fetchCities()
   }, [selectedState])
 
-  // Fetch Branches when City changes
+  // 3. Fetch Banks when City changes
   useEffect(() => {
-    if (selectedBank && selectedState && selectedCity) {
-      setBranches([])
-      setSelectedBranch('')
-      fetch(`https://bank-apis.justonepixel.com/api/v1/get-branches?bank=${selectedBank}&state=${selectedState}&city=${selectedCity}`)
-        .then(res => res.json())
-        .then(json => setBranches(json.branches || []))
+    async function fetchBanks() {
+      if (selectedState && selectedCity) {
+        setBanks([])
+        setBranches([])
+        setSelectedBank('')
+        setSelectedBranch('')
+        
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('banks')
+          .select('bank')
+          .eq('state', selectedState)
+          .eq('city', selectedCity)
+        
+        if (!error && data) {
+          const uniqueBanks = Array.from(new Set(data.map(item => item.bank))).sort()
+          setBanks(uniqueBanks)
+        }
+        setLoading(false)
+      }
     }
+    fetchBanks()
   }, [selectedCity])
 
-  const handleBranchSelect = (branchIfsc: string) => {
-    setIfsc(branchIfsc)
-    handleSearch(null, branchIfsc)
+  // 4. Fetch Branches when Bank changes
+  useEffect(() => {
+    async function fetchBranches() {
+      if (selectedState && selectedCity && selectedBank) {
+        setBranches([])
+        setSelectedBranch('')
+        
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('banks')
+          .select('branch, ifsc')
+          .eq('state', selectedState)
+          .eq('city', selectedCity)
+          .eq('bank', selectedBank)
+        
+        if (!error && data) {
+          setBranches(data.sort((a, b) => a.branch.localeCompare(b.branch)))
+        }
+        setLoading(false)
+      }
+    }
+    fetchBranches()
+  }, [selectedBank])
+
+  const handleBranchSelect = async (branchIfsc: string) => {
+    setIfscInput(branchIfsc)
+    await handleSearch(null, branchIfsc)
   }
 
   const handleSearch = async (e: React.FormEvent | null, directIfsc?: string) => {
     if (e) e.preventDefault()
-    const targetIfsc = directIfsc || ifsc
+    const targetIfsc = directIfsc || ifscInput
     if (!targetIfsc.trim()) return
 
     setLoading(true)
@@ -83,10 +134,27 @@ export default function IfscCode() {
     setData(null)
 
     try {
-      const res = await fetch(`https://ifsc.razorpay.com/${targetIfsc.toUpperCase()}`)
-      if (!res.ok) throw new Error('Invalid IFSC Code or Bank details not found')
-      const json = await res.json()
-      setData(json)
+      const { data: bankData, error: dbError } = await supabase
+        .from('banks')
+        .select('*')
+        .eq('ifsc', targetIfsc.toUpperCase())
+        .single()
+
+      if (dbError || !bankData) throw new Error('Branch not found')
+      
+      setData({
+        BANK: bankData.bank,
+        BRANCH: bankData.branch,
+        IFSC: bankData.ifsc,
+        MICR: bankData.MICR,
+        ADDRESS: bankData.address,
+        CITY: bankData.city,
+        STATE: bankData.state,
+        NEFT: bankData.NEFT === 'true' || bankData.NEFT === true,
+        RTGS: bankData.rtgs === 'true' || bankData.rtgs === true,
+        IMPS: bankData.imps === 'true' || bankData.imps === true,
+        UPI: bankData.UPI === 'true' || bankData.UPI === true
+      })
     } catch (err: any) {
       setError('Bank branch not found. Please verify the IFSC code.')
     } finally {
@@ -134,8 +202,8 @@ export default function IfscCode() {
                 <input
                   type="text"
                   placeholder="Enter 11-digit IFSC Code (e.g., HDFC0000123)"
-                  value={ifsc}
-                  onChange={(e) => setIfsc(e.target.value.toUpperCase())}
+                  value={ifscInput}
+                  onChange={(e) => setIfscInput(e.target.value.toUpperCase())}
                   maxLength={11}
                   className="w-full pl-12 pr-32 py-4 rounded-xl border border-gray-200 focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] outline-none transition-all uppercase text-lg font-medium"
                   required
@@ -154,51 +222,51 @@ export default function IfscCode() {
             </form>
           ) : (
             <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {/* Bank Selection */}
+              {/* 1. State Selection */}
               <div className="relative">
                 <select 
-                  value={selectedBank} 
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium"
-                >
-                  <option value="">Select Bank</option>
-                  {banks.map(b => <option key={b} value={b}>{b}</option>)}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* State Selection */}
-              <div className="relative">
-                <select 
-                  disabled={!selectedBank}
                   value={selectedState} 
                   onChange={(e) => setSelectedState(e.target.value)}
-                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium disabled:opacity-50"
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium"
                 >
-                  <option value="">Select State</option>
+                  <option value="">{loading && !states.length ? 'Loading States...' : 'Select State'}</option>
                   {states.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
 
-              {/* City Selection */}
+              {/* 2. City Selection */}
               <div className="relative">
                 <select 
-                  disabled={!selectedState}
+                  disabled={!selectedState || (loading && !cities.length)}
                   value={selectedCity} 
                   onChange={(e) => setSelectedCity(e.target.value)}
                   className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium disabled:opacity-50"
                 >
-                  <option value="">Select City</option>
+                  <option value="">{loading && selectedState && !cities.length ? 'Loading Cities...' : 'Select City'}</option>
                   {cities.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
 
-              {/* Branch Selection */}
+              {/* 3. Bank Selection */}
               <div className="relative">
                 <select 
-                  disabled={!selectedCity}
+                  disabled={!selectedCity || (loading && !banks.length)}
+                  value={selectedBank} 
+                  onChange={(e) => setSelectedBank(e.target.value)}
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium disabled:opacity-50"
+                >
+                  <option value="">{loading && selectedCity && !banks.length ? 'Loading Banks...' : 'Select Bank'}</option>
+                  {banks.map(b => <option key={b} value={b}>{b}</option>)}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+              </div>
+
+              {/* 4. Branch Selection */}
+              <div className="relative">
+                <select 
+                  disabled={!selectedBank || (loading && !branches.length)}
                   value={selectedBranch} 
                   onChange={(e) => {
                     setSelectedBranch(e.target.value)
@@ -206,7 +274,7 @@ export default function IfscCode() {
                   }}
                   className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium disabled:opacity-50"
                 >
-                  <option value="">Select Branch</option>
+                  <option value="">{loading && selectedBank && !branches.length ? 'Loading Branches...' : 'Select Branch'}</option>
                   {branches.map(b => <option key={b.ifsc} value={b.ifsc}>{b.branch}</option>)}
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />

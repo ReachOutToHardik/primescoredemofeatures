@@ -2,13 +2,13 @@
 import { motion, useAnimationFrame, useMotionValue, useSpring } from 'framer-motion';
 
 const FEATURES = [
-  { id: 1, image: '/carousel/c_img1.png' },
-  { id: 2, image: '/carousel/c_img2.png' },
-  { id: 3, image: '/carousel/c_img3.png' },
-  { id: 4, image: '/carousel/c_img4.png' },
-  { id: 5, image: '/carousel/c_img5.png' },
-  { id: 6, image: '/carousel/c_img6.png' },
-  { id: 7, image: '/carousel/c_img7.png' }
+  { id: 1, image: '/carousel/c_img1.jpg' },
+  { id: 2, image: '/carousel/c_img2.jpg' },
+  { id: 3, image: '/carousel/c_img3.jpg' },
+  { id: 4, image: '/carousel/c_img4.jpg' },
+  { id: 5, image: '/carousel/c_img5.jpg' },
+  { id: 6, image: '/carousel/c_img6.jpg' },
+  { id: 7, image: '/carousel/c_img7.jpg' }
 ];
 
 function FeatureCard({ image }: { image: string }) {
