@@ -54,19 +54,25 @@ export default function Contact() {
     setStatus('sending')
 
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: form.name,
-          from_email: form.email,
-          from_phone: form.phone,
-          issue_type: form.issueType,
-          message: form.message,
-          to_name: 'Primescore Support',
-        },
-        publicKey
-      )
+      const templateParams = {
+        from_name: form.name,
+        from_email: form.email,
+        from_phone: form.phone,
+        issue_type: form.issueType,
+        message: form.message,
+        to_name: 'Primescore Support',
+        to_email: form.email, // explicitly passing so the user template can use it
+      }
+
+      // Send to Admin (original)
+      const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
+      
+      // Send to User (new auto-reply template)
+      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
+
+      // Wait for both to finish
+      await Promise.all([adminPromise, userPromise])
+
 
       setStatus('sent')
       setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '' })

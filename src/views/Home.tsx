@@ -140,19 +140,25 @@ export default function Home() {
     setCtaStatus('sending')
 
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: ctaForm.name,
-          from_email: ctaForm.email,
-          from_phone: 'Not provided (Home Page)',
-          issue_type: 'General Inquiry (Home Page)',
-          message: ctaForm.message,
-          to_name: 'Primescore Support',
-        },
-        publicKey
-      )
+      const templateParams = {
+        from_name: ctaForm.name,
+        from_email: ctaForm.email,
+        from_phone: 'Not provided (Home Page)',
+        issue_type: 'General Inquiry (Home Page)',
+        message: ctaForm.message,
+        to_name: 'Primescore Support',
+        to_email: ctaForm.email, // explicitly passing so the user template can use it
+      }
+
+      // Send to Admin (original)
+      const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
+      
+      // Send to User (new auto-reply template)
+      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
+
+      // Wait for both to finish
+      await Promise.all([adminPromise, userPromise])
+
 
       setCtaStatus('sent')
       setCtaForm({ name: '', email: '', message: '' })
