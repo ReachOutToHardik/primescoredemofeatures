@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import Link from 'next/link'
 
 const footerLink = 'text-sm text-textSecondary hover:text-brandNavy transition-colors duration-200'
 
@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center">
-              <img src="/Logo-primescore.png" alt="Primescore" className="h-10 w-auto" />
+              <img src="/Logo-primescore.png" alt="Primescore" className="w-auto" style={{ height: '64px', width: 'auto' }} />
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-textSecondary">
               Credit rectification and score support — dispute errors, recover your score, and unlock
@@ -23,10 +23,10 @@ export default function Footer() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-wider text-brandNavy">Platform</div>
               <div className="mt-4 grid gap-2.5">
-                <NavLink className={footerLink} to="/services">Services</NavLink>
-                <NavLink className={footerLink} to="/how-it-works">How It Works</NavLink>
-                <NavLink className={footerLink} to="/pricing">Pricing</NavLink>
-                <NavLink className={footerLink} to="/dashboard">Dashboard</NavLink>
+                <Link className={footerLink} href="/services">Services</Link>
+                <Link className={footerLink} href="/how-it-works">How It Works</Link>
+                <Link className={footerLink} href="/pricing">Pricing</Link>
+                <Link className={footerLink} href="/dashboard">Dashboard</Link>
               </div>
             </div>
 
@@ -34,10 +34,10 @@ export default function Footer() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-wider text-brandNavy">Company</div>
               <div className="mt-4 grid gap-2.5">
-                <NavLink className={footerLink} to="/about">About</NavLink>
-                <NavLink className={footerLink} to="/contact">Contact</NavLink>
-                <a className={footerLink} href="#">Privacy Policy</a>
-                <a className={footerLink} href="#">Terms of Service</a>
+                <Link className={footerLink} href="/about">About</Link>
+                <Link className={footerLink} href="/contact">Contact</Link>
+                <Link className={footerLink} href="/privacy">Privacy Policy</Link>
+                <Link className={footerLink} href="/terms">Terms of Service</Link>
               </div>
             </div>
 
@@ -45,9 +45,11 @@ export default function Footer() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-wider text-brandNavy">Tools</div>
               <div className="mt-4 grid gap-2.5">
-                <NavLink className={footerLink} to="/tools/emi">EMI Calculator</NavLink>
-                <NavLink className={footerLink} to="/tools/gst">GST Calculator</NavLink>
-                <NavLink className={footerLink} to="/tools/ifsc">IFSC Code Finder</NavLink>
+                <Link className={footerLink} href="/tools/emi">EMI Calculator</Link>
+                <Link className={footerLink} href="/tools/gst">GST Calculator</Link>
+                <Link className={footerLink} href="/tools/sip">SIP Calculator</Link>
+                <Link className={footerLink} href="/tools/fd">FD Calculator</Link>
+                <Link className={footerLink} href="/tools/ifsc">IFSC Code Finder</Link>
               </div>
             </div>
           </div>
@@ -86,19 +88,19 @@ export default function Footer() {
           <div className="text-xs font-semibold uppercase tracking-wider text-brandNavy mb-6">Service Locations</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-3 gap-x-4">
             {[
-              'Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur', 'Bhilwara', 'Alwar', 
+              'Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur', 'Bhilwara', 'Alwar',
               'Bharatpur', 'Sikar', 'Pali', 'Sri Ganganagar', 'Jhunjhunu', 'Chittorgarh', 'Jaisalmer', 'Nagaur',
-              'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 'Surat', 
-              'Pune', 'Lucknow', 'Kanpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam', 'Patna', 
+              'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 'Surat',
+              'Pune', 'Lucknow', 'Kanpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam', 'Patna',
               'Vadodara', 'Ghaziabad', 'Ludhiana'
             ].map((city) => (
-              <NavLink 
-                key={city} 
-                to={`/services/credit-rectification/${city.toLowerCase().replace(/\s+/g, '-')}`}
+              <Link
+                key={city}
+                href={`/services/credit-rectification/${city.toLowerCase().replace(/\s+/g, '-')}`}
                 className="text-[11px] text-textSecondary hover:text-[#10b981] transition-colors"
               >
                 Credit Rectification in {city}
-              </NavLink>
+              </Link>
             ))}
           </div>
         </div>

@@ -94,5 +94,47 @@ export const BLOG_POSTS: BlogPost[] = [
       <h2>How to Fix a 'Settled' Status</h2>
       <p>The only way to fix this is to reach out to the lender, pay the remaining balance (the 'haircut' amount), and ask them to update the status to 'Closed' or 'Full Paid'.</p>
     `
+  },
+  {
+    id: '4',
+    slug: 'minimum-cibil-score-for-home-loan-jaipur',
+    title: 'Minimum CIBIL Score Required for Home Loan in Jaipur (2024)',
+    excerpt: 'Planning to buy your dream home in the Pink City? Here is what banks in Jaipur look for in your credit report.',
+    category: 'Home Loans',
+    date: 'May 12, 2024',
+    readTime: '5 min read',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897e61b0b?auto=format&fit=crop&q=80&w=800',
+    author: {
+      name: 'Sawai Singh',
+      role: 'Finance Strategist',
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
+    },
+    content: `
+      <h2>Home Loan Scene in Jaipur</h2>
+      <p>With Jaipur expanding rapidly towards Sikar Road and Ajmer Road, banks like SBI, HDFC, and ICICI have strict CIBIL criteria for housing loans.</p>
+      <h2>Ideal Score for Best Rates</h2>
+      <p>To get interest rates starting from 8.40%, banks in Jaipur typically expect a CIBIL score of 750 or above. Scores below 700 may lead to higher interest rates or even rejection.</p>
+    `
+  },
+  {
+    id: '5',
+    slug: 'cibil-score-repair-jodhpur-expert-guide',
+    title: 'Expert Guide to CIBIL Score Repair in Jodhpur',
+    excerpt: 'How to fix credit report errors and improve your score specifically for lenders in Jodhpur and Western Rajasthan.',
+    category: 'Credit Improvement',
+    date: 'May 14, 2024',
+    readTime: '6 min read',
+    image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=800',
+    author: {
+      name: 'Sawai Singh',
+      role: 'Credit Expert',
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
+    },
+    content: `
+      <h2>Why Jodhpur Needs Specialized Credit Repair</h2>
+      <p>Many local businesses and individuals in Jodhpur face issues with non-updated reports after loan closures. Our Jodhpur office specializes in resolving these local banking errors.</p>
+      <h2>Steps to Fix Your Score</h2>
+      <p>1. Audit your current reports. 2. Identify mismatching entries from local cooperative banks. 3. File structured disputes with bureau-ready evidence.</p>
+    `
   }
 ];

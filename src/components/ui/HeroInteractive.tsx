@@ -1,6 +1,8 @@
+'use client'
+
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowRight, Lock, ShieldCheck, Award } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import Link from 'next/link'
 import Button from './Button'
 import DashboardPreview3D from './DashboardPreview3D'
 import { useState } from 'react'
@@ -62,9 +64,9 @@ export default function HeroInteractive() {
       </motion.div>
 
       <div className="w-full relative z-10">
-        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1fr]">
+        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1fr] text-center lg:text-left">
           {/* Left Text */}
-          <div>
+          <div className="flex flex-col items-center lg:items-start">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -78,7 +80,7 @@ export default function HeroInteractive() {
               Trusted by 50,000+ Indians
             </motion.div>
 
-            <h1 className="mt-6 font-display text-[42px] font-black leading-[1.05] tracking-tight text-brandNavy sm:text-[56px] lg:text-[76px] flex flex-wrap gap-x-[0.3em]">
+            <h1 className="mt-6 font-display text-[36px] font-black leading-[1.1] tracking-tight text-brandNavy sm:text-[56px] lg:text-[76px] flex flex-wrap justify-center lg:justify-start gap-x-[0.3em]">
               {words.map((word, i) => (
                 <motion.span
                   key={i}
@@ -106,25 +108,25 @@ export default function HeroInteractive() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.5 }}
-              className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+              className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center w-full sm:w-auto"
             >
-              <NavLink to="/contact">
+              <Link href="/contact" className="w-full sm:w-auto">
                 <Button className="w-full sm:w-auto h-12 px-8 text-base shadow-glowRed">
                   Check My Score Free <ArrowRight className="h-5 w-5" />
                 </Button>
-              </NavLink>
-              <NavLink to="/how-it-works">
+              </Link>
+              <Link href="/how-it-works" className="w-full sm:w-auto">
                 <Button variant="ghost" className="w-full sm:w-auto h-12 px-8 text-base">
                   How It Works
                 </Button>
-              </NavLink>
+              </Link>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.5 }}
-              className="mt-10 flex flex-wrap items-center gap-6 text-sm font-medium text-textSecondary"
+              className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm font-medium text-textSecondary"
             >
               <div className="flex items-center gap-2">
                 <Lock className="h-5 w-5 text-brandRed" />
