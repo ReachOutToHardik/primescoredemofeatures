@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { Search, Building2, MapPin, CheckCircle2, XCircle, ChevronDown } from 'lucide-react'
+import { Search, Building2, MapPin, CheckCircle2, XCircle, ChevronDown, AlertCircle } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
 export default function IfscCode() {
@@ -8,7 +8,7 @@ export default function IfscCode() {
   const [ifscInput, setIfscInput] = useState('')
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   // Branch Search States
   const [states, setStates] = useState<string[]>([])
@@ -25,16 +25,19 @@ export default function IfscCode() {
   useEffect(() => {
     async function fetchStates() {
       if (searchMode === 'branch' && states.length === 0) {
+        if (!supabase) {
+          setError('Supabase is not configured. Please check your environment variables.')
+          return
+        }
+
         setLoading(true)
         const { data, error } = await supabase
-          .from('banks')
-          .select('state')
+          .rpc('get_unique_states')
         
         if (error) {
-          setError('Failed to load states.')
+          setError(`Database Error: ${error.message}`)
         } else if (data) {
-          const uniqueStates = Array.from(new Set(data.map(item => item.state))).sort()
-          setStates(uniqueStates)
+          setStates(data.map((item: any) => item.state))
         }
         setLoading(false)
       }
@@ -45,7 +48,7 @@ export default function IfscCode() {
   // 2. Fetch Cities when State changes
   useEffect(() => {
     async function fetchCities() {
-      if (selectedState) {
+      if (selectedState && supabase) {
         setCities([])
         setBanks([])
         setBranches([])
@@ -62,6 +65,8 @@ export default function IfscCode() {
         if (!error && data) {
           const uniqueCities = Array.from(new Set(data.map(item => item.city))).sort()
           setCities(uniqueCities)
+        } else if (error) {
+          setError(`Error fetching cities: ${error.message}`)
         }
         setLoading(false)
       }
@@ -72,7 +77,7 @@ export default function IfscCode() {
   // 3. Fetch Banks when City changes
   useEffect(() => {
     async function fetchBanks() {
-      if (selectedState && selectedCity) {
+      if (selectedState && selectedCity && supabase) {
         setBanks([])
         setBranches([])
         setSelectedBank('')
@@ -88,6 +93,8 @@ export default function IfscCode() {
         if (!error && data) {
           const uniqueBanks = Array.from(new Set(data.map(item => item.bank))).sort()
           setBanks(uniqueBanks)
+        } else if (error) {
+          setError(`Error fetching banks: ${error.message}`)
         }
         setLoading(false)
       }
@@ -98,7 +105,7 @@ export default function IfscCode() {
   // 4. Fetch Branches when Bank changes
   useEffect(() => {
     async function fetchBranches() {
-      if (selectedState && selectedCity && selectedBank) {
+      if (selectedState && selectedCity && selectedBank && supabase) {
         setBranches([])
         setSelectedBranch('')
         
@@ -112,6 +119,8 @@ export default function IfscCode() {
         
         if (!error && data) {
           setBranches(data.sort((a, b) => a.branch.localeCompare(b.branch)))
+        } else if (error) {
+          setError(`Error fetching branches: ${error.message}`)
         }
         setLoading(false)
       }
@@ -126,11 +135,16 @@ export default function IfscCode() {
 
   const handleSearch = async (e: React.FormEvent | null, directIfsc?: string) => {
     if (e) e.preventDefault()
+    if (!supabase) {
+      setError('Cannot search: Supabase configuration is missing.')
+      return
+    }
+
     const targetIfsc = directIfsc || ifscInput
     if (!targetIfsc.trim()) return
 
     setLoading(true)
-    setError('')
+    setError(null)
     setData(null)
 
     try {
@@ -175,6 +189,16 @@ export default function IfscCode() {
           </p>
         </div>
 
+        {/* Global Configuration Error Display */}
+        {!supabase && (
+          <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 animate-in fade-in slide-in-from-top-2">
+            <AlertCircle className="h-5 w-5 shrink-0" />
+            <p className="text-sm font-medium">
+              <strong>Configuration Missing:</strong> Supabase environment variables are not set. Check your .env file or Vercel settings.
+            </p>
+          </div>
+        )}
+
         {/* Search Mode Tabs */}
         <div className="flex bg-gray-200/50 p-1 rounded-xl max-w-sm mx-auto mb-8">
           <button 
@@ -210,13 +234,13 @@ export default function IfscCode() {
                 />
                 <button 
                   type="submit" 
-                  disabled={loading}
+                  disabled={loading || !supabase}
                   className="absolute right-2 top-2 bottom-2 px-6 bg-[#10b981] text-white rounded-lg font-medium hover:bg-[#10b981]/90 transition-colors disabled:opacity-70"
                 >
                   {loading ? 'Searching...' : 'Search'}
                 </button>
               </div>
-              {error && (
+              {error && searchMode === 'ifsc' && (
                 <p className="mt-4 text-red-500 font-medium text-center">{error}</p>
               )}
             </form>
@@ -225,9 +249,10 @@ export default function IfscCode() {
               {/* 1. State Selection */}
               <div className="relative">
                 <select 
+                  disabled={!supabase}
                   value={selectedState} 
                   onChange={(e) => setSelectedState(e.target.value)}
-                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium"
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#10b981] transition-all pr-10 font-medium disabled:opacity-50"
                 >
                   <option value="">{loading && !states.length ? 'Loading States...' : 'Select State'}</option>
                   {states.map(s => <option key={s} value={s}>{s}</option>)}
@@ -279,7 +304,7 @@ export default function IfscCode() {
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
-              {error && (
+              {error && searchMode === 'branch' && (
                 <p className="mt-4 text-red-500 font-medium text-center sm:col-span-2">{error}</p>
               )}
             </div>
