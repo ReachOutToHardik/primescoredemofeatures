@@ -19,7 +19,7 @@ export default function EmiCalculator() {
   return (
     <div className="py-20 lg:py-24 min-h-screen bg-gray-50">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        
+
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold text-gray-900 sm:text-5xl">
             EMI Calculator
@@ -32,7 +32,7 @@ export default function EmiCalculator() {
         {/* Calculator Card */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            
+
             {/* Left: Sliders */}
             <div className="grid gap-8">
               {/* Amount */}
@@ -44,10 +44,10 @@ export default function EmiCalculator() {
                     <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))} className="bg-transparent outline-none w-24 text-right" />
                   </div>
                 </div>
-                <input 
-                  type="range" min="100000" max="10000000" step="50000" 
-                  value={amount} onChange={e => setAmount(Number(e.target.value))} 
-                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]" 
+                <input
+                  type="range" min="100000" max="10000000" step="50000"
+                  value={amount} onChange={e => setAmount(Number(e.target.value))}
+                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]"
                 />
               </div>
 
@@ -60,10 +60,10 @@ export default function EmiCalculator() {
                     <span className="ml-1">%</span>
                   </div>
                 </div>
-                <input 
-                  type="range" min="1" max="30" step="0.1" 
-                  value={rate} onChange={e => setRate(Number(e.target.value))} 
-                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]" 
+                <input
+                  type="range" min="1" max="30" step="0.1"
+                  value={rate} onChange={e => setRate(Number(e.target.value))}
+                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]"
                 />
               </div>
 
@@ -76,10 +76,10 @@ export default function EmiCalculator() {
                     <span className="ml-1">Yr</span>
                   </div>
                 </div>
-                <input 
-                  type="range" min="1" max="30" step="1" 
-                  value={tenure} onChange={e => setTenure(Number(e.target.value))} 
-                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]" 
+                <input
+                  type="range" min="1" max="30" step="1"
+                  value={tenure} onChange={e => setTenure(Number(e.target.value))}
+                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#10b981]"
                 />
               </div>
             </div>
@@ -88,7 +88,7 @@ export default function EmiCalculator() {
             <div>
               <div className="flex justify-center gap-6 mb-8 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-4 rounded-full bg-[#Eef2ff]" />
+                  <div className="w-8 h-4 rounded-full bg-[#d5dfff]" />
                   <span>Principal amount</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -100,9 +100,9 @@ export default function EmiCalculator() {
               <div className="flex justify-center mb-12 relative">
                 <svg className="w-48 h-48 -rotate-90" viewBox="0 0 140 140">
                   {/* Principal Circle */}
-                  <circle cx="70" cy="70" r="60" fill="none" stroke="#Eef2ff" strokeWidth="20" />
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="#d5dfff" strokeWidth="20" />
                   {/* Interest Circle */}
-                  <circle 
+                  <circle
                     cx="70" cy="70" r="60" fill="none" stroke="#4f46e5" strokeWidth="20"
                     strokeDasharray={circumference}
                     strokeDashoffset={interestDashoffset}
