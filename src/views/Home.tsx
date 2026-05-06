@@ -22,7 +22,7 @@ import HeroInteractive from '../components/ui/HeroInteractive'
 import DashboardPreview3D from '../components/ui/DashboardPreview3D'
 import Carousel3D from '../components/ui/Carousel3D'
 import { useMemo, useState, useEffect, useRef } from 'react'
-
+import emailjs from '@emailjs/browser'
 
 
 function TestimonialCard({ t }: { t: any }) {
@@ -120,8 +120,48 @@ function ParallaxShape({ delay = 0, className = "" }: { delay?: number, classNam
 }
 
 export default function Home() {
-  const [ctaEmail, setCtaEmail] = useState('')
-  const [ctaStatus, setCtaStatus] = useState<'idle' | 'sent'>('idle')
+  const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '' })
+  const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  const handleCtaSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!ctaForm.email.trim() || !ctaForm.name.trim()) return
+    
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS config missing')
+      setCtaStatus('error')
+      return
+    }
+
+    setCtaStatus('sending')
+
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: ctaForm.name,
+          from_email: ctaForm.email,
+          from_phone: 'Not provided (Home Page)',
+          issue_type: 'General Inquiry (Home Page)',
+          message: ctaForm.message,
+          to_name: 'Primescore Support',
+        },
+        publicKey
+      )
+
+      setCtaStatus('sent')
+      setCtaForm({ name: '', email: '', message: '' })
+      setTimeout(() => setCtaStatus('idle'), 5000)
+    } catch (err) {
+      console.error('EmailJS Error:', err)
+      setCtaStatus('error')
+    }
+  }
 
   const statItems = useMemo(
     () => [
@@ -393,30 +433,33 @@ export default function Home() {
                 </div>
 
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    if (!ctaEmail.trim()) return
-                    setCtaStatus('sent')
-                    setTimeout(() => setCtaStatus('idle'), 2500)
-                    setCtaEmail('')
-                  }}
+                  onSubmit={handleCtaSubmit}
                   className="relative z-10 mt-8 flex flex-col gap-4"
                 >
+                  {ctaStatus === 'error' && (
+                    <div className="p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
+                      Failed to send message. Please email us directly.
+                    </div>
+                  )}
                   <input
                     type="text"
+                    value={ctaForm.name}
+                    onChange={(e) => setCtaForm(p => ({ ...p, name: e.target.value }))}
                     placeholder="Your Name"
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
                   <input
-                    value={ctaEmail}
-                    onChange={(e) => setCtaEmail(e.target.value)}
                     type="email"
+                    value={ctaForm.email}
+                    onChange={(e) => setCtaForm(p => ({ ...p, email: e.target.value }))}
                     placeholder="Email Address"
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
                   <textarea
+                    value={ctaForm.message}
+                    onChange={(e) => setCtaForm(p => ({ ...p, message: e.target.value }))}
                     placeholder="How can we help you?"
                     rows={4}
                     className="w-full resize-none rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] p-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
@@ -427,8 +470,8 @@ export default function Home() {
                     Or email us directly at <a href="mailto:info@primescore.in" className="font-bold text-brandRed hover:underline">info@primescore.in</a>
                   </div>
 
-                  <Button type="submit" className="mt-4 h-14 w-full text-base shadow-glowRed">
-                    {ctaStatus === 'sent' ? 'Message Sent ✓' : 'Send Inquiry'}
+                  <Button type="submit" disabled={ctaStatus === 'sending'} className="mt-4 h-14 w-full text-base shadow-glowRed disabled:opacity-70 disabled:cursor-not-allowed">
+                    {ctaStatus === 'sending' ? 'Sending...' : ctaStatus === 'sent' ? 'Message Sent ✓' : 'Send Inquiry'}
                   </Button>
                 </form>
               </div>
