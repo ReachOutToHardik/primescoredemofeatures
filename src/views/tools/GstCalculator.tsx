@@ -74,7 +74,7 @@ export default function GstCalculator() {
 
               <div>
                 <label className="text-sm font-medium text-gray-700 block mb-3">Tax Slab (%)</label>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 gap-2 mb-4">
                   {[5, 12, 18, 28].map(r => (
                     <button 
                       key={r} 
@@ -84,6 +84,21 @@ export default function GstCalculator() {
                       {r}%
                     </button>
                   ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-gray-600">Custom Rate:</span>
+                  <div className="relative flex-1">
+                    <input 
+                      type="number" 
+                      value={rate || ''}
+                      onChange={(e) => setRate(e.target.value ? Number(e.target.value) : 0)}
+                      className="w-full pl-4 pr-8 py-2 rounded-lg border border-gray-200 focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] outline-none transition-all"
+                      placeholder="Enter custom %"
+                    />
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 font-medium">%</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
