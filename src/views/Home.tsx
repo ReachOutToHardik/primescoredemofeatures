@@ -22,6 +22,7 @@ import HeroInteractive from '../components/ui/HeroInteractive'
 import DashboardPreview3D from '../components/ui/DashboardPreview3D'
 import Carousel3D from '../components/ui/Carousel3D'
 import CreditImpactCalculator from '../components/ui/CreditImpactCalculator'
+import BureauFlow from '../components/ui/BureauFlow'
 import { useMemo, useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 
@@ -276,26 +277,34 @@ export default function Home() {
               <div className="order-2 lg:order-1">
                 <img src="/Logo-primescore.png" alt="Primescore" className="h-8 w-auto brightness-0 invert mb-8" />
                 <h2 className="font-display text-4xl font-black tracking-tight text-white sm:text-5xl">
-                  Total transparency.<br />No black boxes.
+                  One Dashboard.<br />All 4 Bureau Scores.
                 </h2>
                 <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
-                  Unlike traditional agencies, we give you a live dashboard to track every dispute, reference ID, and score change. You are always in control of your financial data.
+                  Unlike traditional agencies, we give you a live dashboard to track every dispute across CIBIL, Experian, Equifax & CRIF. Every reference ID, every score change — all in one place.
                 </p>
                 <div className="mt-10 grid gap-4">
                   {[
-                    'Live case tracking & timelines',
+                    'Track scores from CIBIL, Experian, Equifax & CRIF',
+                    'Live dispute status & reference IDs',
                     'Direct chat with your credit expert',
                     'Secure document vault',
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-6 w-6 text-brandGreen" />
+                      <CheckCircle2 className="h-6 w-6 text-brandGreen shrink-0" />
                       <span className="text-base font-medium text-white">{item}</span>
                     </div>
                   ))}
                 </div>
-                <div className="mt-12">
+                <div className="mt-12 flex flex-col sm:flex-row gap-4">
                   <Link href="/dashboard">
-                    <Button as="div" variant="white">View Sample Dashboard</Button>
+                    <Button as="div" variant="white" className="h-13 px-8 text-base font-bold shadow-xl hover:-translate-y-1 transition-transform">
+                      Open My Dashboard →
+                    </Button>
+                  </Link>
+                  <Link href="/how-it-works">
+                    <Button as="div" variant="ghost" className="h-13 px-8 text-base font-bold text-white border-white/20 hover:bg-white/10 hover:-translate-y-1 transition-transform">
+                      See How It Works
+                    </Button>
                   </Link>
                 </div>
               </div>
@@ -305,6 +314,15 @@ export default function Home() {
               </div>
             </div>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══ BUREAU FLOW EXPLAINER ═══ */}
+      <section className="py-24 sm:py-32 bg-[#F8FAFC]">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+          <Reveal>
+            <BureauFlow />
           </Reveal>
         </div>
       </section>
@@ -504,28 +522,6 @@ export default function Home() {
 
       {/* ═══ 3D FEATURE CAROUSEL ═══ */}
       <Carousel3D />
-
-      {/* Floating WhatsApp */}
-      <a
-        href="https://wa.me/919680530334"
-        target="_blank"
-        rel="noreferrer noopener"
-        className="fixed bottom-6 right-6 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110 active:scale-95 sm:bottom-8 sm:right-8"
-        aria-label="Contact on WhatsApp"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          width="32"
-          height="32"
-          stroke="currentColor"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-        </svg>
-      </a>
     </div>
   )
 }
