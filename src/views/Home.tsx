@@ -187,7 +187,7 @@ export default function Home() {
       <HeroInteractive />
 
       {/* ═══ STATS ═══ */}
-      <section className="-mx-4 sm:-mx-6 lg:-mx-12">
+      <section className="">
         <div className="border-y border-brandNavy/5 bg-brandNavy px-4 py-12 sm:px-6 lg:px-12 text-white">
           <div className="mx-auto grid max-w-[1440px] gap-8 sm:grid-cols-4">
             {statItems.map((s) => (

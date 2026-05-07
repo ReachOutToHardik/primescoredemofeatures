@@ -85,7 +85,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="pb-20">
+    <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-20">
       <section className="pt-12 sm:pt-16">
         <Reveal>
           <div>

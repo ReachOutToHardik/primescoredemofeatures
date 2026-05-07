@@ -75,7 +75,7 @@ export default function HeroInteractive() {
         </div>
       </motion.div>
 
-      <div className="w-full relative z-10 mx-auto">
+      <div className="w-full relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">

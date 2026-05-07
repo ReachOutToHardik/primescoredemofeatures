@@ -47,9 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <Navbar />
         <main className="relative w-full overflow-x-hidden">
-          <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-12">
-            {children}
-          </div>
+          {children}
         </main>
         <Footer />
         <WhatsAppWidget />

@@ -46,7 +46,7 @@ export default function Carousel3D() {
   });
 
   return (
-    <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-gray-50 overflow-hidden pt-20">
+    <div className="relative w-full bg-gray-50 overflow-hidden pt-20">
       <div className="text-center relative z-30 px-4">
         <h2 className="font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
           Everything you need,<br />in one place
