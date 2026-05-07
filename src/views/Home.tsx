@@ -21,6 +21,7 @@ import Reveal from '../components/ui/Reveal'
 import HeroInteractive from '../components/ui/HeroInteractive'
 import DashboardPreview3D from '../components/ui/DashboardPreview3D'
 import Carousel3D from '../components/ui/Carousel3D'
+import CreditImpactCalculator from '../components/ui/CreditImpactCalculator'
 import { useMemo, useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 
@@ -404,6 +405,15 @@ export default function Home() {
           <div className="mt-12 md:hidden">
             <TestimonialCarousel items={testimonials} />
           </div>
+        </div>
+      </section>
+
+      {/* ═══ CREDIT IMPACT CALCULATOR ═══ */}
+      <section className="mt-32">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+          <Reveal>
+            <CreditImpactCalculator />
+          </Reveal>
         </div>
       </section>
 
