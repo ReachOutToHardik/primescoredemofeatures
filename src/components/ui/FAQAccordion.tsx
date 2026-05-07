@@ -12,39 +12,33 @@ export default function FAQAccordion({ items }: { items: FAQ[] }) {
         return (
           <div
             key={item.q}
-            className={[
-              'overflow-hidden rounded-2xl border transition-colors duration-200',
-              open
-                ? 'border-brandRed/25 bg-white shadow-card'
-                : 'border-brandNavy/8 bg-white/60 hover:bg-white/80',
-            ].join(' ')}
+            className="border-b border-gray-200 last:border-0"
           >
             <button
               type="button"
               onClick={() => setOpenIndex(open ? null : idx)}
-              className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+              className="flex w-full items-center justify-between py-5 text-left outline-none group"
             >
-              <div className="flex items-baseline gap-3">
-                <span className="font-mono text-xs text-textSecondary/60">
-                  {String(idx + 1).padStart(2, '0')}
-                </span>
-                <span className="font-semibold text-brandNavy">{item.q}</span>
-              </div>
+              <span className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                {item.q}
+              </span>
               <ChevronDown
                 className={[
-                  'h-5 w-5 shrink-0 text-textSecondary transition-transform duration-300',
-                  open ? 'rotate-180' : 'rotate-0',
+                  'h-5 w-5 shrink-0 text-gray-400 transition-transform duration-200',
+                  open ? 'rotate-180 text-blue-600' : 'rotate-0',
                 ].join(' ')}
               />
             </button>
             <div
               className={[
-                'grid transition-[grid-template-rows] duration-300 ease-out',
+                'grid transition-[grid-template-rows] duration-200 ease-out',
                 open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
               ].join(' ')}
             >
-              <div className="overflow-hidden px-6 pb-5 pl-[3.25rem] text-sm leading-relaxed text-textSecondary">
-                {item.a}
+              <div className="overflow-hidden">
+                <div className="pb-5 pr-8 text-base leading-relaxed text-gray-600">
+                  {item.a}
+                </div>
               </div>
             </div>
           </div>
