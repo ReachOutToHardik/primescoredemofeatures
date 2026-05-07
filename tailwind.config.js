@@ -11,6 +11,7 @@ export default {
         brandNavy: '#222A59',
         brandYellow: '#FFB81C',
         brandGreen: '#63A831',
+        brandBlue: '#2563EB',
         brandOrange: '#E55523',
         success: '#63A831',
         textPrimary: '#222A59',

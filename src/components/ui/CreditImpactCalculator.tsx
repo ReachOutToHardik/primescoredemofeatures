@@ -79,9 +79,9 @@ export default function CreditImpactCalculator() {
             />
           </div>
 
-          <div className="mt-4 p-5 rounded-2xl bg-brandGreen/10 border border-brandGreen/20 text-center">
-            <div className="text-sm font-semibold text-brandGreen uppercase tracking-wider mb-1">Your Total Savings with Primescore</div>
-            <div className="font-display text-4xl font-black text-brandGreen">
+          <div className="mt-4 p-5 rounded-2xl bg-brandBlue/10 border border-brandBlue/20 text-center">
+            <div className="text-sm font-semibold text-brandBlue uppercase tracking-wider mb-1">Your Total Savings with Primescore</div>
+            <div className="font-display text-4xl font-black text-brandBlue">
               {formatCurrency(totalSavings)}
             </div>
           </div>
@@ -108,22 +108,22 @@ export default function CreditImpactCalculator() {
           </div>
 
           {/* Good Score */}
-          <div className="rounded-2xl border border-brandGreen/20 bg-brandGreen/5 p-6 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 text-brandGreen opacity-10 transform translate-x-1/4 -translate-y-1/4">
+          <div className="rounded-2xl border border-brandBlue/20 bg-brandBlue/5 p-6 flex flex-col relative overflow-hidden">
+            <div className="absolute top-0 right-0 text-brandBlue opacity-10 transform translate-x-1/4 -translate-y-1/4">
               <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
-            <div className="text-center pb-4 border-b border-brandGreen/10 relative z-10">
-              <div className="text-sm font-bold text-brandGreen uppercase tracking-wide">Good Score (750+)</div>
-              <div className="text-2xl font-black text-brandGreen mt-1">{goodRate}% <span className="text-sm font-medium">Interest</span></div>
+            <div className="text-center pb-4 border-b border-brandBlue/10 relative z-10">
+              <div className="text-sm font-bold text-brandBlue uppercase tracking-wide">Good Score (750+)</div>
+              <div className="text-2xl font-black text-brandBlue mt-1">{goodRate}% <span className="text-sm font-medium">Interest</span></div>
             </div>
             <div className="pt-6 flex flex-col gap-4 relative z-10">
               <div>
-                <div className="text-xs text-brandGreen/70 font-semibold uppercase">Monthly EMI</div>
-                <div className="text-xl font-bold text-brandGreen">{formatCurrency(goodEMI)}</div>
+                <div className="text-xs text-brandBlue/70 font-semibold uppercase">Monthly EMI</div>
+                <div className="text-xl font-bold text-brandBlue">{formatCurrency(goodEMI)}</div>
               </div>
               <div>
-                <div className="text-xs text-brandGreen/70 font-semibold uppercase">Total Interest Paid</div>
-                <div className="text-xl font-bold text-brandGreen">{formatCurrency(goodTotalInterest)}</div>
+                <div className="text-xs text-brandBlue/70 font-semibold uppercase">Total Interest Paid</div>
+                <div className="text-xl font-bold text-brandBlue">{formatCurrency(goodTotalInterest)}</div>
               </div>
             </div>
           </div>

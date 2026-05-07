@@ -293,7 +293,7 @@ export default function Home() {
                     'Secure document vault',
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-6 w-6 text-brandGreen shrink-0" />
+                      <CheckCircle2 className="h-6 w-6 text-brandBlue shrink-0" />
                       <span className="text-base font-medium text-white">{item}</span>
                     </div>
                   ))}
