@@ -205,7 +205,9 @@ export default function Home() {
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 sm:py-32 relative bg-[#F8FAFC]" id="how">
+      <section className="py-24 sm:py-32 relative bg-[#F8FAFC] overflow-hidden" id="how">
+        <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandBlue/5" />
+        <ParallaxShape delay={3} className="bottom-0 -right-20 h-96 w-96 bg-brandBlue/5" />
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
 
           {/* Split layout: label left, content right */}
@@ -331,7 +333,7 @@ export default function Home() {
       </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="py-24 sm:py-32 bg-[#FFF5F5]" id="services">
+      <section className="py-24 sm:py-32 bg-[#F1F7FF]" id="services">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           {/* Asymmetric header: big left text, right link */}
           <Reveal>
@@ -339,7 +341,7 @@ export default function Home() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Services</p>
                 <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl lg:text-6xl leading-[1.05]">
-                  What we fix<br /><span className="text-brandRed">for you.</span>
+                  What we fix<br /><span className="text-brandBlue">for you.</span>
                 </h2>
               </div>
               <Link href="/services" className="shrink-0 hidden sm:block">
@@ -384,7 +386,8 @@ export default function Home() {
       </section>
 
       {/* ═══ CREDIT IMPACT CALCULATOR ═══ */}
-      <section className="py-24 sm:py-32 bg-white">
+      <section className="py-24 sm:py-32 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-brandBlue/5 blur-3xl pointer-events-none" />
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <Reveal>
             <CreditImpactCalculator />

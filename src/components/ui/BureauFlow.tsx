@@ -98,8 +98,8 @@ export default function BureauFlow() {
 
               {/* ══ FAN-OUT: Banks → Bureaus ══ */}
               {/* "reports to all 4 →" annotation */}
-              <FT x={175} y={28} size={12} fill="#9CA3AF" weight={600} italic delay={0.7} inView={inView}>reports to all 4 →</FT>
-              <DrawPath d={`M${165},${32} L${260},${32}`} stroke="#D1D5DB" sw={1} delay={0.7} inView={inView} />
+              <FT x={205} y={20} size={11} fill="#9CA3AF" weight={600} italic delay={0.7} inView={inView}>reports to all 4 →</FT>
+              <DrawPath d={`M${150},${26} L${260},${26}`} stroke="#D1D5DB" sw={1} delay={0.7} inView={inView} />
 
               {banks.map((_, bi) =>
                 bureaus.map((b, ri) => {
@@ -132,8 +132,8 @@ export default function BureauFlow() {
 
               {/* ══ CONVERGENCE: Bureaus → Primescore ══ */}
               {/* "we track all →" annotation */}
-              <FT x={450} y={28} size={12} fill="#9CA3AF" weight={600} italic delay={1.2} inView={inView}>we track all →</FT>
-              <DrawPath d={`M${440},${32} L${524},${32}`} stroke="#D1D5DB" sw={1} delay={1.2} inView={inView} />
+              <FT x={475} y={20} size={11} fill="#9CA3AF" weight={600} italic delay={1.2} inView={inView}>we track all →</FT>
+              <DrawPath d={`M${430},${26} L${524},${26}`} stroke="#D1D5DB" sw={1} delay={1.2} inView={inView} />
 
               {bureaus.map((b, i) => {
                 const fy = buY0 + i * buGap + buH / 2
@@ -192,23 +192,13 @@ export default function BureauFlow() {
 
               {/* ══ WHITEBOARD ANNOTATIONS ══ */}
               {/* Loan fraud note — hand-drawn callout */}
-              <DrawPath d={`M${buX+buW/2},${buY0+4*buGap+20} Q${buX+buW/2},${buY0+4*buGap+38} ${buX+30},${buY0+4*buGap+50}`}
-                stroke="#E4131B" sw={1.5} delay={2.6} inView={inView} />
-              <FT x={buX+buW/2} y={buY0+4*buGap+40} size={12} fill="#E4131B" weight={700} delay={2.7} inView={inView}>
-                ← including
+              <DrawPath d={`M${buX+buW/2},${buY0+3*buGap+buH+5} Q${buX+buW/2},${buY0+3*buGap+buH+30} ${buX+buW+15},${buY0+3*buGap+buH+45}`}
+                stroke="#E4131B" sw={1.2} delay={2.6} inView={inView} />
+              <FT x={buX+buW+20} y={buY0+3*buGap+buH+42} size={11} fill="#E4131B" weight={700} delay={2.7} inView={inView} anchor="start">
+                ← includes loans
               </FT>
-              <FT x={buX+buW/2} y={buY0+4*buGap+54} size={12} fill="#E4131B" weight={700} delay={2.75} inView={inView}>
-                loans you never took!
-              </FT>
-
-              {/* Banks section bracket / note */}
-              <DrawPath d={`M${bkX-8},${bkY0} L${bkX-12},${bkY0} L${bkX-12},${bkY0+3*bkGap+bkH} L${bkX-8},${bkY0+3*bkGap+bkH}`}
-                stroke="#9CA3AF" sw={1.5} delay={0.9} inView={inView} />
-              <FT x={bkX-22} y={bkY0+1.5*bkGap+bkH/2} size={11} fill="#9CA3AF" weight={600} delay={1.0} inView={inView} italic>
-                your
-              </FT>
-              <FT x={bkX-22} y={bkY0+1.5*bkGap+bkH/2+14} size={11} fill="#9CA3AF" weight={600} delay={1.0} inView={inView} italic>
-                lenders
+              <FT x={buX+buW+20} y={buY0+3*buGap+buH+56} size={11} fill="#E4131B" weight={700} delay={2.75} inView={inView} anchor="start">
+                you never took!
               </FT>
 
               {/* Star decoration */}

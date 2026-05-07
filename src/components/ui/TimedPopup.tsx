@@ -12,35 +12,37 @@ const WaIcon = () => (
 
 export default function TimedPopup() {
   const [show, setShow] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (sessionStorage.getItem('ps_popup')) return
+    setMounted(true)
     const t = setTimeout(() => {
       setShow(true)
-      sessionStorage.setItem('ps_popup', '1')
-    }, 15000)
+    }, 10000)
     return () => clearTimeout(t)
   }, [])
+
+  if (!mounted) return null
 
   return (
     <AnimatePresence>
       {show && (
-        <>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShow(false)}
           />
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed left-1/2 top-1/2 z-[90] w-full max-w-sm -translate-x-1/2 -translate-y-1/2 px-4"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="relative z-10 w-full max-w-sm"
           >
-            <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <div className="relative overflow-hidden rounded-xl bg-white shadow-2xl">
               <button
                 onClick={() => setShow(false)}
                 className="absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
@@ -98,7 +100,7 @@ export default function TimedPopup() {
               </div>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
     </AnimatePresence>
   )

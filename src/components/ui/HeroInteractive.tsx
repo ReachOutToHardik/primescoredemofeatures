@@ -23,7 +23,7 @@ export default function HeroInteractive() {
 
   const glowX = useSpring(mouseX, { damping: 30, stiffness: 200 })
   const glowY = useSpring(mouseY, { damping: 30, stiffness: 200 })
-  const background = useMotionTemplate`radial-gradient(circle 600px at ${glowX}px ${glowY}px, rgba(228,30,38,0.06), transparent 80%)`
+  const background = useMotionTemplate`radial-gradient(circle 600px at ${glowX}px ${glowY}px, rgba(37,99,235,0.08), transparent 80%)`
 
   return (
     <section
