@@ -207,56 +207,59 @@ export default function Home() {
       {/* ═══ HOW IT WORKS ═══ */}
       <section className="py-24 sm:py-32 relative bg-[#F8FAFC]" id="how">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
-          <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandRed/10" />
-          <ParallaxShape delay={2} className="bottom-0 -right-20 h-96 w-96 bg-brandNavy/5" />
-        
-        <Reveal>
-          <div className="text-center max-w-2xl mx-auto">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">How it works</p>
-            <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
-              Three steps to a cleaner report
-            </h2>
-            <p className="mt-4 text-base text-textSecondary">We do the heavy lifting. You track the progress.</p>
-          </div>
-        </Reveal>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {[
-            {
-              icon: FileUp,
-              num: '01',
-              title: 'Upload Your Report',
-              desc: 'Quick onboarding. We only request essential documents through a secure, encrypted upload portal.',
-            },
-            {
-              icon: Brain,
-              num: '02',
-              title: 'We Identify & Dispute',
-              desc: 'Our experts detect disputable inaccuracies and prepare bureau-ready evidence packs backed by law.',
-            },
-            {
-              icon: TrendingUp,
-              num: '03',
-              title: 'Score Recovers',
-              desc: 'Corrections reflect — your credit strengthens and premium loan approvals become easier than ever.',
-            },
-          ].map((step, idx) => (
-            <Reveal key={step.title} delay={idx * 0.08}>
-              <div className="group relative overflow-hidden rounded-[2rem] border border-brandNavy/10 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-brandRed/30 hover:shadow-elevated">
-                <div className="absolute -right-4 -top-4 text-[120px] font-black leading-none text-brandNavy/[0.03] transition-colors group-hover:text-brandRed/[0.05]">
-                  {step.num}
-                </div>
-                <div className="relative">
-                  <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brandRed/10 transition-colors group-hover:bg-brandRed">
-                    <step.icon className="h-6 w-6 text-brandRed transition-colors group-hover:text-white" />
-                  </div>
-                  <h3 className="mt-6 font-display text-xl font-bold text-brandNavy">{step.title}</h3>
-                  <p className="mt-3 text-base leading-relaxed text-textSecondary">{step.desc}</p>
-                </div>
+          {/* Split layout: label left, content right */}
+          <div className="grid lg:grid-cols-[220px_1fr] gap-12 lg:gap-20">
+            {/* Left sticky label */}
+            <Reveal>
+              <div className="lg:sticky lg:top-32 lg:self-start pt-1">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">How it works</p>
+                <h2 className="mt-4 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl leading-[1.1]">
+                  Three steps.
+                </h2>
+                <p className="mt-4 text-base text-textSecondary leading-relaxed">We do the heavy lifting. You just track the progress on your dashboard.</p>
+                <div className="mt-8 h-px bg-brandNavy/10" />
+                <p className="mt-6 text-sm font-semibold text-brandNavy">Average turnaround: <span className="text-brandRed">90 days</span></p>
               </div>
             </Reveal>
-          ))}
-        </div>
+
+            {/* Steps */}
+            <div className="flex flex-col gap-6">
+              {[
+                {
+                  icon: FileUp,
+                  num: '01',
+                  title: 'Share your credit report',
+                  desc: 'We only ask for what we need. Secure, encrypted upload. Takes 5 minutes.',
+                },
+                {
+                  icon: Brain,
+                  num: '02',
+                  title: 'We identify and dispute',
+                  desc: 'Our experts spot errors, fake loans, wrong settlements — and build bureau-ready evidence packs to dispute them.',
+                },
+                {
+                  icon: TrendingUp,
+                  num: '03',
+                  title: 'Your score climbs',
+                  desc: 'Once bureaus correct the errors, your score goes up. You see every update live on your Primescore dashboard.',
+                },
+              ].map((step, idx) => (
+                <Reveal key={step.title} delay={idx * 0.1}>
+                  <div className="group flex gap-6 rounded-2xl border border-brandNavy/8 bg-white p-6 transition-all duration-300 hover:border-brandRed/20 hover:shadow-elevated">
+                    <div className="shrink-0 grid h-12 w-12 place-items-center rounded-2xl bg-brandRed/8 transition-colors group-hover:bg-brandRed">
+                      <step.icon className="h-5 w-5 text-brandRed transition-colors group-hover:text-white" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] font-bold uppercase tracking-widest text-textSecondary/60 mb-1">{step.num}</div>
+                      <h3 className="font-display text-lg font-bold text-brandNavy">{step.title}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-textSecondary">{step.desc}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -330,47 +333,52 @@ export default function Home() {
       {/* ═══ SERVICES ═══ */}
       <section className="py-24 sm:py-32 bg-[#FFF5F5]" id="services">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
-        <Reveal>
-          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-            <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Services</p>
-              <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
-                Everything you need to repair credit
-              </h2>
+          {/* Asymmetric header: big left text, right link */}
+          <Reveal>
+            <div className="flex items-end justify-between gap-8 border-b border-brandRed/10 pb-10">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Services</p>
+                <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl lg:text-6xl leading-[1.05]">
+                  What we fix<br /><span className="text-brandRed">for you.</span>
+                </h2>
+              </div>
+              <Link href="/services" className="shrink-0 hidden sm:block">
+                <Button as="div" variant="ghost" className="h-12 border-brandNavy/20 text-sm">
+                  All services <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-            <Link href="/services" className="shrink-0">
-              <Button as="div" variant="ghost" className="h-12 border-brandNavy/20">
-                View all services <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </Reveal>
+          </Reveal>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, idx) => {
-            const Icon = serviceIcons[s.id] || ShieldCheck
-            return (
-              <Reveal key={s.id} delay={idx * 0.05}>
-                <div className="group flex h-full flex-col rounded-[2rem] border border-brandNavy/10 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-brandRed/30 hover:shadow-elevated">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brandNavy/5">
-                      <Icon className="h-6 w-6 text-brandNavy" />
+          {/* 2-col left feature + 4-col mini cards */}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s, idx) => {
+              const Icon = serviceIcons[s.id] || ShieldCheck
+              const isFeatured = idx === 0
+              return (
+                <Reveal key={s.id} delay={idx * 0.05}>
+                  <div className={`group flex h-full flex-col rounded-2xl border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated ${
+                    isFeatured ? 'border-brandRed/20 lg:row-span-2' : 'border-brandNavy/8 hover:border-brandRed/20'
+                  }`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="grid h-11 w-11 place-items-center rounded-xl bg-brandNavy/5 group-hover:bg-brandRed/10 transition-colors">
+                        <Icon className="h-5 w-5 text-brandNavy group-hover:text-brandRed transition-colors" />
+                      </div>
+                      <span className="rounded-full bg-brandYellow/10 px-2.5 py-1 font-mono text-xs font-bold text-[#8a6400]">
+                        {s.priceRange}
+                      </span>
                     </div>
-                    <span className="rounded-full bg-brandYellow/10 px-3 py-1 font-mono text-xs font-bold text-brandYellow">
-                      {s.priceRange}
-                    </span>
+                    <h3 className="mt-5 font-display text-xl font-bold text-brandNavy">{s.title}</h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-textSecondary">{s.short}</p>
+                    <Link href="/services" className="mt-5">
+                      <div className="text-sm font-semibold text-brandRed flex items-center gap-1.5 hover:gap-2.5 transition-all">
+                        Learn more <ArrowRight className="h-3.5 w-3.5" />
+                      </div>
+                    </Link>
                   </div>
-                  <h3 className="mt-6 font-display text-2xl font-bold text-brandNavy">{s.title}</h3>
-                  <p className="mt-3 flex-1 text-base leading-relaxed text-textSecondary">{s.short}</p>
-                  <Link href="/services" className="mt-8">
-                    <Button as="div" variant="ghost" className="w-full text-brandNavy">
-                      Learn More
-                    </Button>
-                  </Link>
-                </div>
-              </Reveal>
-            )
-          })}
+                </Reveal>
+              )
+            })}
         </div>
         </div>
       </section>

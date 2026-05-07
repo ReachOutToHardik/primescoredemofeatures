@@ -74,7 +74,7 @@ export default function BureauFlow() {
           {!mounted ? (
             <div className="h-96 w-full animate-pulse rounded-2xl bg-gray-100" />
           ) : (
-            <svg viewBox="0 0 730 400" className="w-full" style={{ fontFamily: 'var(--font-caveat, Georgia), cursive' }}>
+            <svg viewBox="0 0 730 400" className="w-full" style={{ fontFamily: 'var(--font-inter, DM Sans, system-ui, sans-serif)' }} aria-label="Diagram showing how banks report to credit bureaus and Primescore aggregates all scores">
 
               {/* ── WHITEBOARD BG LINES (ruled lines feel) ── */}
               {[80, 128, 176, 224, 272].map(y => (

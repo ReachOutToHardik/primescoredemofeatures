@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Outfit, JetBrains_Mono, Caveat } from 'next/font/google'
+import { Sora, DM_Sans, JetBrains_Mono, Caveat } from 'next/font/google'
 import '../src/index.css'
 import Navbar from '../src/components/layout/Navbar'
 import Footer from '../src/components/layout/Footer'
@@ -9,8 +9,8 @@ import Preloader from '../src/components/ui/Preloader'
 import WhatsAppWidget from '../src/components/ui/WhatsAppWidget'
 import TimedPopup from '../src/components/ui/TimedPopup'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
+const sora = Sora({ subsets: ['latin'], variable: '--font-inter' })
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-outfit' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
 
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${caveat.variable}`}>
+    <html lang="en" className={`${sora.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${caveat.variable}`}>
       <body className="relative min-h-screen bg-night font-body text-brandNavy overflow-x-hidden">
         <Preloader />
         <div className="pointer-events-none fixed inset-0 -z-10">
