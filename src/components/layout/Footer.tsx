@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube, FaXTwitter, FaThreads } from 'react-icons/fa6'
 
 const footerLink = 'text-sm text-textSecondary hover:text-brandNavy transition-colors duration-200'
 
@@ -16,6 +17,14 @@ export default function Footer() {
               Credit rectification and score support — dispute errors, recover your score, and unlock
               better credit outcomes.
             </p>
+            <div className="mt-6 flex items-center gap-4 text-textSecondary">
+              <a href="https://www.facebook.com/profile.php?id=61561478021964" target="_blank" rel="noopener noreferrer" className="hover:text-[#1877F2] transition-colors"><FaFacebook className="h-5 w-5" /></a>
+              <a href="https://x.com/Primescore_in" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><FaXTwitter className="h-5 w-5" /></a>
+              <a href="http://instagram.com/primescore.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#E4405F] transition-colors"><FaInstagram className="h-5 w-5" /></a>
+              <a href="http://linkedin.com/company/primescore" target="_blank" rel="noopener noreferrer" className="hover:text-[#0A66C2] transition-colors"><FaLinkedin className="h-5 w-5" /></a>
+              <a href="http://www.youtube.com/@PrimeScore-In" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF0000] transition-colors"><FaYoutube className="h-5 w-5" /></a>
+              <a href="http://threads.com/@primescore.in" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><FaThreads className="h-5 w-5" /></a>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-2">

@@ -3,9 +3,8 @@
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowRight, Lock, ShieldCheck, Award } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
 import Button from './Button'
-import heroImg from '../../assets/heroimage.png'
+import DashboardPreview3D from './DashboardPreview3D'
 import { useState } from 'react'
 
 const headline = "Fix Your CIBIL Score. Unlock Your Future."
@@ -144,23 +143,14 @@ export default function HeroInteractive() {
             </motion.div>
           </div>
 
-          {/* Right Hero Image */}
+          {/* Right 3D Dashboard */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="lg:justify-self-end w-full pt-10 lg:pt-0 relative z-20 flex justify-center lg:justify-end"
+            className="lg:justify-self-end w-full pt-10 lg:pt-0 relative z-20"
           >
-            <div className="relative w-full max-w-xl">
-              {/* Optional ambient glow behind the image */}
-              <div className="absolute inset-0 -m-6 rounded-3xl bg-brandRed/5 blur-3xl" />
-              <Image 
-                src={heroImg} 
-                alt="Primescore Platform" 
-                className="relative z-10 w-full h-auto object-cover"
-                priority
-              />
-            </div>
+            <DashboardPreview3D />
           </motion.div>
         </div>
       </div>
