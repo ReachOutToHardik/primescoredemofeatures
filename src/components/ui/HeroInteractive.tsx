@@ -103,7 +103,7 @@ export default function HeroInteractive() {
                     initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
                     animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                     transition={{ delay: i * 0.08, type: 'spring', stiffness: 150, damping: 12 }}
-                    className={`inline-block ${isHighlight ? 'text-transparent bg-clip-text bg-gradient-to-r from-brandRed to-[#ff4d4d]' : ''}`}
+                    className={`inline-block ${isHighlight ? 'text-brandRed' : ''}`}
                   >
                     {word}
                   </motion.span>
@@ -128,8 +128,7 @@ export default function HeroInteractive() {
               className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center w-full sm:w-auto"
             >
               <Link href="/contact" className="w-full sm:w-auto group">
-                <Button as="div" className="relative w-full sm:w-auto h-14 px-8 text-base shadow-[0_0_40px_-10px_rgba(228,30,38,0.5)] transition-all group-hover:shadow-[0_0_60px_-15px_rgba(228,30,38,0.7)] group-hover:-translate-y-1 overflow-hidden">
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <Button as="div" className="relative w-full sm:w-auto h-14 px-8 text-base shadow-xl transition-all hover:shadow-2xl group-hover:-translate-y-1 overflow-hidden bg-brandRed text-white hover:bg-[#D41018]">
                   <span className="relative flex items-center gap-2">Talk To A Credit Expert <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" /></span>
                 </Button>
               </Link>

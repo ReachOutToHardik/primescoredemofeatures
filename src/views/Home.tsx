@@ -204,7 +204,7 @@ export default function Home() {
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 sm:py-32 relative bg-gray-50/50" id="how">
+      <section className="py-24 sm:py-32 relative bg-[#F8FAFC]" id="how">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandRed/10" />
           <ParallaxShape delay={2} className="bottom-0 -right-20 h-96 w-96 bg-brandNavy/5" />
@@ -310,7 +310,7 @@ export default function Home() {
       </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="py-24 sm:py-32 bg-brandRed/[0.02]" id="services">
+      <section className="py-24 sm:py-32 bg-[#FFF5F5]" id="services">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <Reveal>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
@@ -367,7 +367,7 @@ export default function Home() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-24 sm:py-32 bg-brandNavy/[0.02]">
+      <section className="py-24 sm:py-32 bg-[#F1F5F9]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <Reveal>
             <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
@@ -424,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* ═══ FAQ & INQUIRY ═══ */}
-      <section className="py-24 sm:py-32 bg-gray-50/50">
+      <section className="py-24 sm:py-32 bg-[#F8FAFC]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <div className="grid gap-16 lg:grid-cols-2">
             {/* FAQ Side */}
