@@ -204,9 +204,10 @@ export default function Home() {
       </section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section className="mt-32 relative" id="how">
-        <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandRed/10" />
-        <ParallaxShape delay={2} className="bottom-0 -right-20 h-96 w-96 bg-brandNavy/5" />
+      <section className="py-24 sm:py-32 relative bg-gray-50/50" id="how">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+          <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandRed/10" />
+          <ParallaxShape delay={2} className="bottom-0 -right-20 h-96 w-96 bg-brandNavy/5" />
         
         <Reveal>
           <div className="text-center max-w-2xl mx-auto">
@@ -255,13 +256,15 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        </div>
       </section>
 
 
 
       {/* ═══ DASHBOARD HIGHLIGHT ═══ */}
-      <section className="mt-32" id="dashboard-section">
-        <Reveal>
+      <section className="py-24 sm:py-32 bg-white" id="dashboard-section">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+          <Reveal>
           <div className="rounded-[3rem] bg-brandNavy px-6 py-16 sm:px-16 sm:py-20 lg:px-24 relative overflow-hidden">
             {/* Parallax Background Circles */}
             <motion.div 
@@ -301,12 +304,14 @@ export default function Home() {
                 <ScrollLinkedDashboard />
               </div>
             </div>
-          </div>
-        </Reveal>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="mt-32" id="services">
+      <section className="py-24 sm:py-32 bg-brandRed/[0.02]" id="services">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <Reveal>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div className="max-w-2xl">
@@ -349,10 +354,20 @@ export default function Home() {
             )
           })}
         </div>
+        </div>
+      </section>
+
+      {/* ═══ CREDIT IMPACT CALCULATOR ═══ */}
+      <section className="py-24 sm:py-32 bg-white">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+          <Reveal>
+            <CreditImpactCalculator />
+          </Reveal>
+        </div>
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="mt-32">
+      <section className="py-24 sm:py-32 bg-brandNavy/[0.02]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <Reveal>
             <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
@@ -408,17 +423,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ CREDIT IMPACT CALCULATOR ═══ */}
-      <section className="mt-32">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
-          <Reveal>
-            <CreditImpactCalculator />
-          </Reveal>
-        </div>
-      </section>
-
       {/* ═══ FAQ & INQUIRY ═══ */}
-      <section className="mt-32 mb-20">
+      <section className="py-24 sm:py-32 bg-gray-50/50">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <div className="grid gap-16 lg:grid-cols-2">
             {/* FAQ Side */}
