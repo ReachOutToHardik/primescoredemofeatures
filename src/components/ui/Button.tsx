@@ -16,10 +16,16 @@ const variants: Record<Variant, string> = {
     'bg-white text-brandNavy shadow-sm hover:bg-white/90 focus-visible:ring-white/40',
 }
 
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  as?: React.ElementType;
+}
+
 export default function Button({
   variant = 'primary',
   className = '',
+  as: Component = 'button',
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
-  return <button {...props} className={[base, variants[variant], className].join(' ')} />
+}: ButtonProps) {
+  return <Component {...(props as any)} className={[base, variants[variant], className].join(' ')} />
 }

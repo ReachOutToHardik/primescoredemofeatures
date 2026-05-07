@@ -41,10 +41,10 @@ export default function Services() {
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link href="/pricing">
-                <Button className="w-full sm:w-auto">See Pricing</Button>
+                <Button as="div" className="w-full sm:w-auto">See Pricing</Button>
               </Link>
               <Link href="/contact">
-                <Button variant="ghost" className="w-full sm:w-auto">
+                <Button as="div" variant="ghost" className="w-full sm:w-auto">
                   Talk to an expert
                 </Button>
               </Link>
@@ -202,10 +202,10 @@ export default function Services() {
             </div>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link href="/contact">
-                <Button className="w-full sm:w-auto">Book a free assessment</Button>
+                <Button as="div" className="w-full sm:w-auto">Book a free assessment</Button>
               </Link>
               <Link href="/how-it-works">
-                <Button variant="ghost" className="w-full sm:w-auto">
+                <Button as="div" variant="ghost" className="w-full sm:w-auto">
                   See the full process
                 </Button>
               </Link>

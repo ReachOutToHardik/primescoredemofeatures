@@ -152,7 +152,7 @@ export default function Pricing() {
 
                 <div className="mt-auto pt-6">
                   <Link href="/contact">
-                    <Button className="w-full" variant={p.highlight ? 'primary' : 'ghost'}>
+                    <Button as="div" className="w-full" variant={p.highlight ? 'primary' : 'ghost'}>
                       Get started
                     </Button>
                   </Link>
@@ -177,7 +177,7 @@ export default function Pricing() {
                 </p>
               </div>
               <Link href="/contact">
-                <Button variant="ghost" className="w-full border-white/20 text-white hover:border-white/40 hover:bg-white/10 sm:w-auto">
+                <Button as="div" variant="ghost" className="w-full border-white/20 text-white hover:border-white/40 hover:bg-white/10 sm:w-auto">
                   Check eligibility
                 </Button>
               </Link>

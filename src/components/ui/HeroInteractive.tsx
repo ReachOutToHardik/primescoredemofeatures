@@ -112,12 +112,12 @@ export default function HeroInteractive() {
               className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center w-full sm:w-auto"
             >
               <Link href="/contact" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-12 px-8 text-base shadow-glowRed">
+                <Button as="div" className="w-full sm:w-auto h-12 px-8 text-base shadow-glowRed">
                   Check My Score Free <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/how-it-works" className="w-full sm:w-auto">
-                <Button variant="ghost" className="w-full sm:w-auto h-12 px-8 text-base">
+                <Button as="div" variant="ghost" className="w-full sm:w-auto h-12 px-8 text-base">
                   How It Works
                 </Button>
               </Link>

@@ -291,7 +291,7 @@ export default function Home() {
                 </div>
                 <div className="mt-12">
                   <Link href="/dashboard">
-                    <Button variant="white">View Sample Dashboard</Button>
+                    <Button as="div" variant="white">View Sample Dashboard</Button>
                   </Link>
                 </div>
               </div>
@@ -315,7 +315,7 @@ export default function Home() {
               </h2>
             </div>
             <Link href="/services" className="shrink-0">
-              <Button variant="ghost" className="h-12 border-brandNavy/20">
+              <Button as="div" variant="ghost" className="h-12 border-brandNavy/20">
                 View all services <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
@@ -339,7 +339,7 @@ export default function Home() {
                   <h3 className="mt-6 font-display text-2xl font-bold text-brandNavy">{s.title}</h3>
                   <p className="mt-3 flex-1 text-base leading-relaxed text-textSecondary">{s.short}</p>
                   <Link href="/services" className="mt-8">
-                    <Button variant="ghost" className="w-full text-brandNavy">
+                    <Button as="div" variant="ghost" className="w-full text-brandNavy">
                       Learn More
                     </Button>
                   </Link>
