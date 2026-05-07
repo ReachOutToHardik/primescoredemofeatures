@@ -32,7 +32,7 @@ export default function CreditImpactCalculator() {
 
   return (
     <div className="rounded-[2.5rem] border border-brandNavy/10 bg-white p-6 sm:p-12 shadow-card relative overflow-hidden">
-      <div className="absolute top-0 right-0 h-96 w-96 translate-x-1/3 -translate-y-1/3 rounded-full bg-brandRed/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 h-96 w-96 translate-x-1/3 -translate-y-1/3 rounded-full bg-brandBlue/10 blur-3xl pointer-events-none" />
       
       <div className="relative z-10 text-center max-w-2xl mx-auto mb-12">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Cost of Bad Credit</p>

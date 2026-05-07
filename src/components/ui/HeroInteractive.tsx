@@ -42,6 +42,10 @@ export default function HeroInteractive() {
       {/* Background Grid Pattern for high-tech SaaS feel */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
+      {/* Static Blue Blurs */}
+      <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brandBlue/10 blur-[120px] pointer-events-none" />
+      <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-brandBlue/10 blur-[120px] pointer-events-none" />
+
       {/* Floating Badges */}
       <motion.div
         animate={{ y: [-10, 10, -10], rotate: [-1, 1, -1] }}

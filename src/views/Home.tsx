@@ -273,7 +273,7 @@ export default function Home() {
             {/* Parallax Background Circles */}
             <motion.div 
               style={{ y: useTransform(useScroll().scrollYProgress, [0, 1], [0, -100]) }}
-              className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-brandRed/10 blur-3xl pointer-events-none" 
+              className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-brandBlue/10 blur-3xl pointer-events-none" 
             />
             
             <div className="grid items-center gap-12 lg:grid-cols-2 relative z-10">
@@ -469,7 +469,7 @@ export default function Home() {
             {/* Inquiry Side */}
             <Reveal delay={0.2}>
               <div className="rounded-[2.5rem] border border-brandNavy/10 bg-white p-8 shadow-card sm:p-12 relative overflow-hidden">
-                <div className="absolute top-0 right-0 h-40 w-40 translate-x-1/2 -translate-y-1/2 rounded-full bg-brandRed/5 blur-3xl pointer-events-none" />
+                <div className="absolute top-0 right-0 h-40 w-40 translate-x-1/2 -translate-y-1/2 rounded-full bg-brandBlue/10 blur-3xl pointer-events-none" />
                 <div className="relative z-10 flex items-center gap-4">
                   <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brandRed/10">
                     <Mail className="h-6 w-6 text-brandRed" />
