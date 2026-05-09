@@ -74,16 +74,34 @@ export default function PhoneShowcase() {
           rotateY,
           transformStyle: "preserve-3d",
         }}
-        initial={{ opacity: 0, scale: 0.8, y: 100 }}
+        initial={{ 
+          opacity: 0, 
+          scale: 0.7, 
+          y: 200, 
+          rotateX: "45deg", 
+          rotateY: "-20deg",
+          z: -500 
+        }}
         animate={{ 
           opacity: 1, 
           scale: 1, 
-          y: [0, -15, 0] // Floating animation
+          y: [0, -15, 0], // Merge entry with floating
+          rotateX: ["45deg", "0deg"],
+          rotateY: ["-20deg", "0deg"],
+          z: 0
         }}
         transition={{ 
-          opacity: { duration: 1.2 },
-          scale: { duration: 1.5 },
-          y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+          opacity: { duration: 1.5, ease: "easeOut" },
+          scale: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
+          y: { 
+            duration: 5, 
+            times: [0, 0.5, 1],
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          },
+          rotateX: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
+          rotateY: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
+          z: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
         }}
         className="relative w-[260px] md:w-[320px] h-[520px] md:h-[640px] bg-black rounded-[45px] md:rounded-[54px] border-[5px] md:border-[8px] border-[#1a1a1a] cursor-grab active:cursor-grabbing overflow-hidden z-20"
       >

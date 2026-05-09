@@ -43,15 +43,32 @@ export default function HeroInteractive() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-[68px] lg:text-[82px]">
-              Your Entire Credit Profile.<br className="hidden lg:block" />
-              <span className="text-brandRed">One Dashboard.</span>
+            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-[68px] lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
+              {"Your Entire Credit Profile. One Dashboard.".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: i * 0.1, 
+                    ease: [0.2, 0.65, 0.3, 0.9] 
+                  }}
+                  className="mr-[0.2em] last:mr-0 inline-block"
+                >
+                  {word === "One" || word === "Dashboard." ? (
+                    <span className="text-brandRed">{word}</span>
+                  ) : (
+                    word
+                  )}
+                </motion.span>
+              ))}
             </h1>
 
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
               className="mt-8 max-w-lg text-lg leading-relaxed text-textSecondary font-medium"
             >
               The only platform in India that tracks every dispute across all 4 bureaus in real-time. Watch your CIBIL, Experian, Equifax, and CRIF scores climb live.
