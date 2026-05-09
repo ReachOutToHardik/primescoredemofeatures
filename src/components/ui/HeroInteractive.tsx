@@ -27,7 +27,7 @@ export default function HeroInteractive() {
 
   return (
     <section
-      className="relative flex min-h-[calc(100svh-64px)] items-center pb-12 pt-12 sm:pb-16 sm:pt-16 overflow-hidden bg-[#0A0A0A] bg-grain"
+      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-[#0A0A0A] bg-grain"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -42,7 +42,7 @@ export default function HeroInteractive() {
           opacity: [0.15, 0.25, 0.15]
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-brandBlue/10 blur-[150px] pointer-events-none" 
+        className="absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-brandBlue/10 blur-[150px] pointer-events-none hidden sm:block" 
       />
       <motion.div 
         animate={{ 
@@ -50,14 +50,14 @@ export default function HeroInteractive() {
           opacity: [0.05, 0.1, 0.05]
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -right-20 bottom-0 h-[500px] w-[500px] rounded-full bg-brandRed/10 blur-[150px] pointer-events-none" 
+        className="absolute -right-20 bottom-0 h-[500px] w-[500px] rounded-full bg-brandRed/10 blur-[150px] pointer-events-none hidden sm:block" 
       />
 
       <div className="w-full relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
+        <div className="grid items-center gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-white sm:text-[68px] lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
+            <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-white sm:text-6xl lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
               {"Your Entire Credit Profile. One Dashboard.".split(" ").map((word, i) => (
                 <motion.span
                   key={i}

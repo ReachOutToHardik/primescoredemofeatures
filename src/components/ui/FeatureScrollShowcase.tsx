@@ -125,10 +125,10 @@ export default function FeatureScrollShowcase() {
           />
         </motion.div>
 
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center relative z-10">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-12 items-center relative z-10">
           
           {/* Left Side: Content */}
-          <div className="relative h-[400px] flex flex-col justify-center gpu-accelerated">
+          <div className="relative h-[300px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
             {features.map((feature, i) => {
               const start = i * 0.25
               const end = (i + 1) * 0.25
@@ -147,25 +147,25 @@ export default function FeatureScrollShowcase() {
                   <motion.div 
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center gap-3 mb-8"
+                    className="inline-flex items-center gap-3 mb-4 lg:mb-8"
                   >
                     <div className="h-px w-8 bg-white/20" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">Premium Module 0{i + 1}</span>
                   </motion.div>
-                  <h2 className="text-5xl sm:text-7xl font-black text-white tracking-tighter leading-[0.9] mb-8">
+                  <h2 className="text-4xl sm:text-7xl font-black text-white tracking-tighter leading-[1.0] lg:leading-[0.9] mb-4 lg:mb-8">
                     {feature.title.split(" ").map((w, idx) => (
                       <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
                     ))}
                   </h2>
-                  <p className="text-xl text-white/50 leading-relaxed max-w-lg font-medium">
+                  <p className="text-sm lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium hidden sm:block">
                     {feature.description}
                   </p>
-                  <div className="mt-12 flex items-center gap-6">
-                     <button className="h-14 px-8 rounded-full bg-white text-brandNavy font-bold text-sm uppercase tracking-widest hover:bg-white/90 transition-all hover:-translate-y-1 active:scale-95 shadow-xl">
+                  <div className="mt-6 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                     <button className="h-12 lg:h-14 px-6 lg:px-8 rounded-full bg-white text-brandNavy font-bold text-xs lg:text-sm uppercase tracking-widest hover:bg-white/90 transition-all hover:-translate-y-1 active:scale-95 shadow-xl">
                         Open Feature
                      </button>
-                     <button className="flex items-center gap-2 text-white/50 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors group">
-                        User Guide <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                     <button className="flex items-center gap-2 text-white/50 font-bold text-[10px] lg:text-xs uppercase tracking-widest hover:text-white transition-colors group">
+                        User Guide <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 group-hover:translate-x-1 transition-transform" />
                      </button>
                   </div>
                 </motion.div>
@@ -174,7 +174,7 @@ export default function FeatureScrollShowcase() {
           </div>
 
           {/* Right Side: Phone Showcase */}
-          <div className="relative flex justify-center perspective-2000">
+          <div className="relative flex justify-center perspective-2000 mt-0 lg:mt-0 scale-[0.8] sm:scale-100 origin-top lg:origin-center">
             <motion.div
               style={{
                 rotateY: phoneRotateY,
@@ -183,7 +183,7 @@ export default function FeatureScrollShowcase() {
                 x: phoneX,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-[300px] h-[600px] bg-black rounded-[50px] border-[8px] border-white/5 shadow-2xl overflow-hidden"
+              className="relative w-[280px] sm:w-[300px] h-[580px] sm:h-[600px] bg-black rounded-[45px] sm:rounded-[50px] border-[6px] sm:border-[8px] border-white/5 shadow-2xl overflow-hidden"
             >
               {/* Phone Content Swapper */}
               <div className="relative w-full h-full bg-white overflow-hidden">

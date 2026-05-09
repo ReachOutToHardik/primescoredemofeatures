@@ -85,10 +85,10 @@ export default function Navbar() {
   }, [pathname])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-[100] px-4 py-4 md:px-6 md:py-6 pointer-events-none">
       <nav
         className={[
-          'mx-auto max-w-5xl flex items-center justify-between px-6 py-3 transition-all duration-500 pointer-events-auto rounded-full',
+          'mx-auto max-w-5xl flex items-center justify-between px-4 md:px-6 py-3 transition-all duration-500 pointer-events-auto rounded-full',
           isScrolled
             ? 'glass-premium shadow-2xl scale-[0.98]'
             : 'bg-transparent',
