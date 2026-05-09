@@ -7,7 +7,7 @@ import { ArrowRight, Clock } from 'lucide-react'
 export default function Blog() {
   return (
     <div className="py-20 lg:py-24 min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         
         {/* Header */}
         <div className="max-w-3xl mb-16">
