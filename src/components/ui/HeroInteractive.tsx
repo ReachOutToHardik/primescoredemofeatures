@@ -27,23 +27,37 @@ export default function HeroInteractive() {
 
   return (
     <section
-      className="relative flex min-h-[calc(100svh-64px)] items-center pb-12 pt-12 sm:pb-16 sm:pt-16 overflow-hidden bg-white"
+      className="relative flex min-h-[calc(100svh-64px)] items-center pb-12 pt-12 sm:pb-16 sm:pt-16 overflow-hidden bg-[#0A0A0A] bg-grain"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      {/* Background Grid Pattern - Dark Version */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
-      {/* Static Blue Blurs */}
-      <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brandBlue/5 blur-[120px] pointer-events-none" />
-      <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-brandBlue/5 blur-[120px] pointer-events-none" />
+      {/* Animated Light Leaks */}
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.15, 0.25, 0.15]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-brandBlue/10 blur-[150px] pointer-events-none" 
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1.2, 1, 1.2],
+          opacity: [0.05, 0.1, 0.05]
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -right-20 bottom-0 h-[500px] w-[500px] rounded-full bg-brandRed/10 blur-[150px] pointer-events-none" 
+      />
 
       <div className="w-full relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-[68px] lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
+            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-white sm:text-[68px] lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
               {"Your Entire Credit Profile. One Dashboard.".split(" ").map((word, i) => (
                 <motion.span
                   key={i}
@@ -59,7 +73,7 @@ export default function HeroInteractive() {
                   {word === "One" || word === "Dashboard." ? (
                     <span className="text-brandRed">{word}</span>
                   ) : (
-                    word
+                    <span className="text-premium-gradient">{word}</span>
                   )}
                 </motion.span>
               ))}
@@ -69,7 +83,7 @@ export default function HeroInteractive() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-              className="mt-8 max-w-lg text-lg leading-relaxed text-textSecondary font-medium"
+              className="mt-8 max-w-lg text-lg leading-relaxed text-white/50 font-medium"
             >
               The only platform in India that tracks every dispute across all 4 bureaus in real-time. Watch your CIBIL, Experian, Equifax, and CRIF scores climb live.
             </motion.p>
@@ -81,12 +95,12 @@ export default function HeroInteractive() {
               className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center w-full sm:w-auto"
             >
               <Link href="/dashboard" className="w-full sm:w-auto group">
-                <Button as="div" className="w-full sm:w-auto h-16 px-10 text-base shadow-xl transition-all hover:shadow-2xl group-hover:-translate-y-1 bg-brandRed text-white hover:bg-[#D41018] rounded-full font-bold uppercase tracking-widest">
+                <Button as="div" className="w-full sm:w-auto h-16 px-10 text-base shadow-2xl transition-all hover:shadow-brandRed/20 group-hover:-translate-y-1 bg-brandRed text-white hover:bg-[#D41018] rounded-full font-bold uppercase tracking-widest border-none">
                   Open My Dashboard
                 </Button>
               </Link>
               <Link href="/contact" className="w-full sm:w-auto">
-                <Button as="div" variant="surface" className="w-full sm:w-auto h-16 px-10 text-base font-bold bg-white border-brandNavy/10 hover:bg-white/80 transition-all hover:-translate-y-1 rounded-full uppercase tracking-widest">
+                <Button as="div" variant="surface" className="w-full sm:w-auto h-16 px-10 text-base font-bold bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all hover:-translate-y-1 rounded-full uppercase tracking-widest">
                   Talk To Expert
                 </Button>
               </Link>

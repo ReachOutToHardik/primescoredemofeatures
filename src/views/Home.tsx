@@ -23,6 +23,7 @@ import HeroInteractive from '../components/ui/HeroInteractive'
 import DashboardPreview3D from '../components/ui/DashboardPreview3D'
 import Carousel3D from '../components/ui/Carousel3D'
 import CreditImpactCalculator from '../components/ui/CreditImpactCalculator'
+import FeatureScrollShowcase from '../components/ui/FeatureScrollShowcase'
 import BureauFlow from '../components/ui/BureauFlow'
 import { useMemo, useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
@@ -182,12 +183,16 @@ export default function Home() {
     [],
   )
 
+  const mainContainerRef = useRef<HTMLDivElement>(null)
+
   return (
-    <div className="pb-20">
-      <HeroInteractive />
+    <div ref={mainContainerRef} className="h-screen overflow-y-auto scroll-smooth snap-y snap-mandatory no-scrollbar">
+      <div className="snap-start">
+        <HeroInteractive />
+      </div>
 
       {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
-      <section className="bg-brandNavy relative py-16 overflow-hidden">
+      <section className="bg-brandNavy relative py-16 overflow-hidden snap-start">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brandBlue via-transparent to-transparent pointer-events-none" />
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-8 text-center relative z-10">
           <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">
@@ -224,7 +229,7 @@ export default function Home() {
       `}</style>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 sm:py-32 relative bg-[#F9FBFF] overflow-hidden" id="how">
+      <section className="py-24 sm:py-32 relative bg-[#F9FBFF] overflow-hidden snap-start" id="how">
         {/* Decorative Grid Background */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
         
@@ -290,67 +295,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ DASHBOARD HIGHLIGHT ═══ */}
-      <section className="py-24 sm:py-32 bg-white relative overflow-hidden" id="dashboard-section">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
-          <Reveal>
-          <div className="rounded-[4rem] bg-brandNavy px-6 py-16 sm:px-16 sm:py-20 lg:px-24 relative overflow-hidden shadow-2xl">
-            {/* Dynamic Background Glows */}
-            <div className="absolute top-0 right-0 h-[600px] w-[600px] bg-brandBlue/20 blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-brandRed/10 blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
-            
-            <div className="grid items-center gap-12 lg:grid-cols-2 relative z-10">
-              <div className="order-2 lg:order-1">
-                <div className="inline-flex items-center gap-2 mb-8 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
-                  <div className="w-2 h-2 rounded-full bg-brandBlue animate-pulse" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Real-time Monitoring</span>
-                </div>
-                <h2 className="font-display text-4xl font-black tracking-tight text-white sm:text-6xl leading-tight">
-                  One Dashboard.<br />All 4 Bureau Scores.
-                </h2>
-                <p className="mt-8 max-w-lg text-lg leading-relaxed text-white/60">
-                  Unlike traditional agencies, we give you a live dashboard to track every dispute across CIBIL, Experian, Equifax & CRIF. Every reference ID, every score change — all in one place.
-                </p>
-                <div className="mt-10 grid gap-5">
-                  {[
-                    'Track scores from CIBIL, Experian, Equifax & CRIF',
-                    'Live dispute status & reference IDs',
-                    'Direct chat with your credit expert',
-                    'Secure document vault',
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-4 group/item">
-                      <div className="h-6 w-6 rounded-full bg-brandBlue/20 flex items-center justify-center group-hover/item:bg-brandBlue transition-colors">
-                        <CheckCircle2 className="h-4 w-4 text-brandBlue group-hover/item:text-white transition-colors" />
-                      </div>
-                      <span className="text-base font-medium text-white/90">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-12 flex flex-col sm:flex-row gap-4">
-                  <Link href="/dashboard">
-                    <Button as="div" variant="white" className="h-14 px-10 text-base font-bold shadow-xl hover:-translate-y-1 transition-all rounded-full bg-white text-brandNavy hover:bg-white/90">
-                      Open My Dashboard →
-                    </Button>
-                  </Link>
-                  <Link href="/how-it-works">
-                    <Button as="div" variant="ghost" className="h-14 px-10 text-base font-bold text-white border-white/20 hover:bg-white/10 hover:-translate-y-1 transition-all rounded-full">
-                      See How It Works
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              
-              <div className="hidden lg:flex order-2 justify-center lg:-mr-12 perspective-2000">
-                <ScrollLinkedDashboard />
-              </div>
-            </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
+      <div className="snap-start">
+        <FeatureScrollShowcase scrollContainer={mainContainerRef} />
+      </div>
 
       {/* ═══ BUREAU FLOW EXPLAINER ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F9FBFF] relative overflow-hidden">
+      <section className="py-24 sm:py-32 bg-[#F9FBFF] relative overflow-hidden snap-start">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'linear-gradient(90deg, #0a192f 1px, transparent 1px), linear-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           <Reveal>
@@ -360,7 +311,7 @@ export default function Home() {
       </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services">
+      <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden snap-start" id="services">
         <ParallaxShape delay={2} className="top-1/4 -right-20 h-96 w-96 bg-brandBlue/10 blur-[120px]" />
         <ParallaxShape delay={4} className="bottom-1/4 -left-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
         

@@ -12,85 +12,85 @@ html {
 body {
   margin: 0;
   font-family: 'DM Sans', system-ui, sans-serif;
-  background: #f7f8fc;
-  color: #0f1729;
+  background: #0A0A0A; /* Darker, premium base */
+  color: #FFFFFF;
   line-height: 1.6;
   overflow-x: hidden;
 }
 
-::selection {
-  background: rgba(228, 30, 38, 0.18);
-  color: #222A59;
+/* --- Optimized Grain Texture --- */
+.bg-grain {
+  position: relative;
 }
 
-/* --- Dot pattern for subtle texture --- */
-.bg-dots {
-  background-image: radial-gradient(circle at 1px 1px, rgba(34, 42, 89, 0.05) 1px, transparent 1px);
-  background-size: 32px 32px;
+.bg-grain::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg"); /* Lighter static noise */
+  will-change: transform;
 }
 
-/* --- Glass effect --- */
-.glass {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(34, 42, 89, 0.08);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  backdrop-filter: blur(16px) saturate(1.4);
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
-/* --- Card shadow --- */
-.card-glow {
-  box-shadow: 0 1px 3px rgba(34, 42, 89, 0.06), 0 6px 24px rgba(34, 42, 89, 0.08);
+/* --- Sophisticated Glass --- */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* --- Text gradient for hero accents --- */
-.text-gradient {
-  background: linear-gradient(135deg, #E41E26 0%, #E55523 50%, #FFB81C 100%);
+/* --- Fluid Container --- */
+.container-premium {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --- Text Gradient Premium --- */
+.text-premium-gradient {
+  background: linear-gradient(to bottom right, #FFFFFF 30%, rgba(255,255,255,0.5));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* --- Section with alternate background --- */
-.section-alt {
-  background: rgba(34, 42, 89, 0.025);
-  border-top: 1px solid rgba(34, 42, 89, 0.06);
-  border-bottom: 1px solid rgba(34, 42, 89, 0.06);
 }
 
 /* --- Custom scrollbar --- */
 ::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0A0A0A;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(34, 42, 89, 0.15);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 42, 89, 0.25);
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* --- Focus states --- */
-*:focus-visible {
-  outline: none;
+/* --- Smooth Font Rendering --- */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Input transitions --- */
-input, select, textarea {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-input:focus, select:focus, textarea:focus {
-  box-shadow: 0 0 0 3px rgba(228, 30, 38, 0.1);
+/* --- Disable pointer events on noise --- */
+.pointer-none {
+  pointer-events: none;
 }
 
-/* --- Accessibility --- */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+::selection {
+  background: rgba(37, 99, 235, 0.3);
+  color: white;
 }

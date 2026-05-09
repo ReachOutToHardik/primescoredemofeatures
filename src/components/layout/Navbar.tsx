@@ -42,7 +42,6 @@ export default function Navbar() {
       { to: '/how-it-works', label: 'How It Works' },
       { to: '/pricing', label: 'Pricing' },
       { to: '/about', label: 'About' },
-      { to: '/blog', label: 'Knowledge Hub' },
       { to: '/contact', label: 'Contact' },
     ],
     [],
@@ -53,101 +52,100 @@ export default function Navbar() {
   }, [pathname])
 
   useEffect(() => {
-    const handler = () => setIsScrolled(window.scrollY > 12)
+    const handler = () => setIsScrolled(window.scrollY > 20)
     handler()
     window.addEventListener('scroll', handler, { passive: true })
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
   return (
-    <header className="sticky top-0 z-50">
-      <div
+    <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none">
+      <nav
         className={[
-          'border-b transition-all duration-300',
+          'mx-auto max-w-5xl flex items-center justify-between px-6 py-3 transition-all duration-500 pointer-events-auto rounded-full',
           isScrolled
-            ? 'border-brandNavy/8 bg-white/85 backdrop-blur-xl'
-            : 'border-transparent bg-transparent',
+            ? 'glass-premium shadow-2xl scale-[0.98]'
+            : 'bg-transparent',
         ].join(' ')}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 lg:px-12">
-          <Link href="/" className="group flex items-center">
-            {/* Desktop Logo */}
-            <div className="hidden sm:block">
-              <Image 
-                src="/Logo-primescore.png" 
-                alt="Primescore" 
-                width={125} 
-                height={32} 
-                className="h-[32px] w-auto" 
-                priority 
-                style={{ height: 'auto' }} 
-              />
-            </div>
-            {/* Mobile/Short Logo */}
-            <div className="block sm:hidden">
-              <Image 
-                src="/primescore-logo-tab.png" 
-                alt="Primescore" 
-                width={44} 
-                height={44} 
-                className="h-11 w-auto rounded-xl shadow-sm" 
-                priority 
-                style={{ height: 'auto' }} 
-              />
-            </div>
-          </Link>
+        <Link href="/" className="group flex items-center shrink-0">
+          <div className="relative">
+            <Image 
+              src="/primescore-logo-tab.png" 
+              alt="Primescore" 
+              width={32} 
+              height={32} 
+              className="h-8 w-auto rounded-lg" 
+              priority 
+            />
+            <div className="absolute -inset-2 bg-brandBlue/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+          <span className="ml-3 font-display font-black text-xl tracking-tighter text-white">Primescore</span>
+        </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            {links.map((l) => (
-              <NavItem key={l.to} to={l.to} label={l.label} />
-            ))}
+        <div className="hidden items-center gap-1 md:flex">
+          {links.map((l) => (
             <Link
-              href="/dashboard"
-              className="rounded-lg border border-brandNavy/15 bg-white/70 px-4 py-2 text-[13px] font-semibold text-brandNavy transition-all duration-200 hover:border-brandNavy/30 hover:bg-white"
+              key={l.to}
+              href={l.to}
+              className={[
+                'px-4 py-2 text-[12px] font-bold uppercase tracking-widest transition-colors',
+                pathname === l.to ? 'text-white' : 'text-white/40 hover:text-white',
+              ].join(' ')}
             >
-              Dashboard
+              {l.label}
             </Link>
-          </nav>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex items-center justify-center rounded-xl border border-brandNavy/10 bg-white/90 p-2.5 text-brandNavy shadow-sm backdrop-blur-md md:hidden"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-          >
-            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          ))}
         </div>
 
-        <AnimatePresence>
-          {mobileOpen ? (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden"
-            >
-              <div className="mx-auto max-w-[1440px] px-4 pb-4 sm:px-6 lg:px-12">
-                <div className="overflow-hidden rounded-xl border border-brandNavy/8 bg-white shadow-elevated">
-                  <div className="grid gap-1 p-3">
-                    {links.map((l) => (
-                      <NavItem key={l.to} to={l.to} label={l.label} onClick={() => setMobileOpen(false)} />
-                    ))}
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileOpen(false)}
-                      className="mt-1 rounded-lg bg-brandRed px-4 py-2.5 text-center text-sm font-semibold text-white"
-                    >
-                      Dashboard
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
+        <div className="hidden items-center gap-4 md:flex">
+          <Link
+            href="/dashboard"
+            className="rounded-full bg-white px-5 py-2 text-[11px] font-black uppercase tracking-widest text-brandNavy transition-all hover:scale-105 active:scale-95"
+          >
+            Dashboard
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          className="p-2 text-white md:hidden"
+        >
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </nav>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="absolute top-24 left-6 right-6 glass-premium rounded-[2rem] p-6 shadow-2xl md:hidden pointer-events-auto"
+          >
+            <div className="grid gap-4">
+              {links.map((l) => (
+                <Link
+                  key={l.to}
+                  href={l.to}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-lg font-bold text-white/60 hover:text-white px-4 py-2 border-b border-white/5"
+                >
+                  {l.label}
+                </Link>
+              ))}
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="mt-4 rounded-full bg-brandRed py-4 text-center text-sm font-black uppercase tracking-widest text-white"
+              >
+                Open Dashboard
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }
