@@ -27,31 +27,44 @@ export default function HeroInteractive() {
 
   return (
     <section
-      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-[#0A0A0A] bg-grain"
+      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-[#050505]"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background Grid Pattern - Dark Version */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      {/* Mesh Gradient Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          animate={{ 
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-brandBlue/20 blur-[120px] rounded-full"
+        />
+        <motion.div 
+          animate={{ 
+            x: [0, -80, 0],
+            y: [0, 100, 0],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-brandRed/10 blur-[100px] rounded-full"
+        />
+        <motion.div 
+          animate={{ 
+            x: [0, 50, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute -bottom-[10%] left-[20%] w-[60%] h-[30%] bg-brandYellow/5 blur-[120px] rounded-full"
+        />
+      </div>
 
-      {/* Animated Light Leaks */}
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.15, 0.25, 0.15]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-brandBlue/10 blur-[150px] pointer-events-none hidden sm:block" 
-      />
-      <motion.div 
-        animate={{ 
-          scale: [1.2, 1, 1.2],
-          opacity: [0.05, 0.1, 0.05]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -right-20 bottom-0 h-[500px] w-[500px] rounded-full bg-brandRed/10 blur-[150px] pointer-events-none hidden sm:block" 
-      />
+      {/* Noise Overlay */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat"></div>
+
+      {/* Background Grid Pattern - Dark Version */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
       <div className="w-full relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <div className="grid items-center gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">

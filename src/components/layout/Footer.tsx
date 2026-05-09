@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube, FaXTwitter, FaThreads } from 'react-icons/fa6'
+import { ChevronRight } from 'lucide-react'
 
 const footerLink = 'text-sm text-textSecondary hover:text-brandNavy transition-colors duration-200'
 
@@ -111,6 +112,12 @@ export default function Footer() {
                 Credit Rectification in {city}
               </Link>
             ))}
+            <Link
+              href="/locations"
+              className="text-[11px] font-bold text-brandRed hover:underline transition-colors flex items-center gap-1"
+            >
+              View All Cities <ChevronRight className="h-3 w-3" />
+            </Link>
           </div>
         </div>
 
