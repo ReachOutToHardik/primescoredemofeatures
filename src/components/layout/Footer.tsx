@@ -5,7 +5,7 @@ const footerLink = 'text-sm text-textSecondary hover:text-brandNavy transition-c
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t border-brandNavy/8">
+    <footer className="mt-24 border-t border-brandNavy/8" data-theme="light">
       <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 lg:px-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}

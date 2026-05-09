@@ -183,16 +183,14 @@ export default function Home() {
     [],
   )
 
-  const mainContainerRef = useRef<HTMLDivElement>(null)
-
   return (
-    <div ref={mainContainerRef} className="h-screen overflow-y-auto scroll-smooth snap-y snap-mandatory no-scrollbar">
-      <div className="snap-start">
+    <div className="bg-[#0A0A0A]">
+      <div data-theme="dark">
         <HeroInteractive />
       </div>
 
       {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
-      <section className="bg-brandNavy relative py-16 overflow-hidden snap-start">
+      <section className="bg-brandNavy relative py-16 overflow-hidden" data-theme="dark">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brandBlue via-transparent to-transparent pointer-events-none" />
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-8 text-center relative z-10">
           <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">
@@ -228,90 +226,15 @@ export default function Home() {
         }
       `}</style>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 sm:py-32 relative bg-[#F9FBFF] overflow-hidden snap-start" id="how">
-        {/* Decorative Grid Background */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-        
-        <ParallaxShape delay={1} className="top-20 -left-20 h-80 w-80 bg-brandBlue/10 blur-[100px]" />
-        <ParallaxShape delay={3} className="bottom-0 -right-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
-        
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
-          {/* Split layout: label left, content right */}
-          <div className="grid lg:grid-cols-[220px_1fr] gap-12 lg:gap-20">
-            {/* Left sticky label */}
-            <Reveal>
-              <div className="lg:sticky lg:top-32 lg:self-start pt-1">
-                <div className="inline-flex items-center gap-2 mb-4">
-                  <div className="h-1 w-8 bg-brandRed rounded-full" />
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">How it works</p>
-                </div>
-                <h2 className="font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl leading-[1.1]">
-                  Three steps.
-                </h2>
-                <p className="mt-4 text-base text-textSecondary leading-relaxed">We do the heavy lifting. You just track the progress on your dashboard.</p>
-                <div className="mt-8 h-px bg-brandNavy/10 w-full" />
-                <p className="mt-6 text-sm font-semibold text-brandNavy">Average turnaround: <span className="text-brandRed">90 days</span></p>
-              </div>
-            </Reveal>
-
-            {/* Steps */}
-            <div className="flex flex-col gap-6">
-              {[
-                {
-                  icon: FileUp,
-                  num: '01',
-                  title: 'Share your credit report',
-                  desc: 'We only ask for what we need. Secure, encrypted upload. Takes 5 minutes.',
-                },
-                {
-                  icon: Brain,
-                  num: '02',
-                  title: 'We identify and dispute',
-                  desc: 'Our experts spot errors, fake loans, wrong settlements — and build bureau-ready evidence packs to dispute them.',
-                },
-                {
-                  icon: TrendingUp,
-                  num: '03',
-                  title: 'Your score climbs',
-                  desc: 'Once bureaus correct the errors, your score goes up. You see every update live on your Primescore dashboard.',
-                },
-              ].map((step, idx) => (
-                <Reveal key={step.title} delay={idx * 0.1}>
-                  <div className="group flex gap-6 rounded-[2rem] border border-brandNavy/5 bg-white/80 p-8 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brandRed/20 hover:shadow-elevated hover:bg-white">
-                    <div className="shrink-0 grid h-14 w-14 place-items-center rounded-2xl bg-brandRed/5 transition-all duration-500 group-hover:bg-brandRed group-hover:scale-110 group-hover:rotate-3 shadow-sm">
-                      <step.icon className="h-6 w-6 text-brandRed transition-colors group-hover:text-white" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-brandNavy/30 mb-2">{step.num} / PROCESS</div>
-                      <h3 className="font-display text-xl font-bold text-brandNavy group-hover:text-brandRed transition-colors">{step.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-textSecondary">{step.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
-      <div className="snap-start">
-        <FeatureScrollShowcase scrollContainer={mainContainerRef} />
+      <div data-theme="dark">
+        <FeatureScrollShowcase />
       </div>
 
-      {/* ═══ BUREAU FLOW EXPLAINER ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F9FBFF] relative overflow-hidden snap-start">
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'linear-gradient(90deg, #0a192f 1px, transparent 1px), linear-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
-          <Reveal>
-            <BureauFlow />
-          </Reveal>
-        </div>
-      </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden snap-start" id="services">
+      <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services" data-theme="light">
         <ParallaxShape delay={2} className="top-1/4 -right-20 h-96 w-96 bg-brandBlue/10 blur-[120px]" />
         <ParallaxShape delay={4} className="bottom-1/4 -left-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
         

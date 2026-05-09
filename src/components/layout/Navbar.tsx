@@ -33,6 +33,7 @@ function NavItem({ to, label, onClick }: { to: string; label: string; onClick?: 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const pathname = usePathname()
 
   const links = useMemo(
@@ -52,11 +53,36 @@ export default function Navbar() {
   }, [pathname])
 
   useEffect(() => {
-    const handler = () => setIsScrolled(window.scrollY > 20)
-    handler()
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
+    // Intersection Observer to detect section themes
+    const observerOptions = {
+      root: null,
+      rootMargin: '-10% 0px -85% 0px', // Watch the top 10% of the screen
+      threshold: 0
+    }
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionTheme = entry.target.getAttribute('data-theme')
+          if (sectionTheme === 'dark' || sectionTheme === 'light') {
+            setTheme(sectionTheme as 'dark' | 'light')
+          }
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions)
+    const sections = document.querySelectorAll('[data-theme]')
+    sections.forEach((section) => observer.observe(section))
+
+    const scrollHandler = () => setIsScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+    
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', scrollHandler)
+    }
+  }, [pathname])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none">
@@ -80,7 +106,9 @@ export default function Navbar() {
             />
             <div className="absolute -inset-2 bg-brandBlue/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="ml-3 font-display font-black text-xl tracking-tighter text-white">Primescore</span>
+          <span className={`ml-3 font-display font-black text-xl tracking-tighter transition-colors ${theme === 'dark' ? 'text-white' : 'text-brandNavy'}`}>
+            Primescore
+          </span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -90,7 +118,9 @@ export default function Navbar() {
               href={l.to}
               className={[
                 'px-4 py-2 text-[12px] font-bold uppercase tracking-widest transition-colors',
-                pathname === l.to ? 'text-white' : 'text-white/40 hover:text-white',
+                pathname === l.to 
+                  ? (theme === 'dark' ? 'text-white' : 'text-brandRed') 
+                  : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-brandNavy/40 hover:text-brandNavy'),
               ].join(' ')}
             >
               {l.label}
@@ -101,7 +131,10 @@ export default function Navbar() {
         <div className="hidden items-center gap-4 md:flex">
           <Link
             href="/dashboard"
-            className="rounded-full bg-white px-5 py-2 text-[11px] font-black uppercase tracking-widest text-brandNavy transition-all hover:scale-105 active:scale-95"
+            className={[
+              'rounded-full px-5 py-2 text-[11px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg',
+              theme === 'dark' ? 'bg-white text-brandNavy' : 'bg-brandNavy text-white'
+            ].join(' ')}
           >
             Dashboard
           </Link>
@@ -110,7 +143,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}
-          className="p-2 text-white md:hidden"
+          className={`p-2 transition-colors md:hidden ${theme === 'dark' ? 'text-white' : 'text-brandNavy'}`}
         >
           {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>

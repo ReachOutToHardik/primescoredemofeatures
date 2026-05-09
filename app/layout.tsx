@@ -39,14 +39,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sora.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${caveat.variable}`}>
-      <body className="relative min-h-screen bg-night font-body text-brandNavy overflow-x-hidden">
+      <body className="relative min-h-screen bg-night font-body text-brandNavy">
         <Preloader />
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute inset-0 bg-heroRadial" />
           <div className="absolute inset-0 bg-dots opacity-[0.4]" />
         </div>
         <Navbar />
-        <main className="relative w-full overflow-x-hidden">
+        <main className="relative w-full">
           {children}
         </main>
         <Footer />

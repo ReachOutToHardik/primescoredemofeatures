@@ -49,11 +49,10 @@ const features = [
   }
 ]
 
-export default function FeatureScrollShowcase({ scrollContainer }: { scrollContainer?: React.RefObject<HTMLDivElement> }) {
+export default function FeatureScrollShowcase() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    container: scrollContainer,
     offset: ["start start", "end end"]
   })
 
@@ -75,7 +74,7 @@ export default function FeatureScrollShowcase({ scrollContainer }: { scrollConta
   const glowOpacity = useTransform(smoothProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0])
 
   return (
-    <motion.div ref={containerRef} style={{ backgroundColor: bgColor }} className="relative h-[800vh] bg-grain overflow-hidden">
+    <motion.div ref={containerRef} style={{ backgroundColor: bgColor }} className="relative h-[800vh] bg-grain">
       {/* Sticky Container */}
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden gpu-accelerated">
         
