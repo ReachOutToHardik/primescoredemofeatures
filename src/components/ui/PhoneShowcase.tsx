@@ -75,13 +75,17 @@ export default function PhoneShowcase() {
           transformStyle: "preserve-3d",
         }}
         initial={{ opacity: 0, scale: 0.8, y: 100 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ 
-          duration: 1.2, 
-          ease: [0.16, 1, 0.3, 1],
-          scale: { duration: 1.5 }
+        animate={{ 
+          opacity: 1, 
+          scale: 1, 
+          y: [0, -15, 0] // Floating animation
         }}
-        className="relative w-[260px] md:w-[320px] h-[520px] md:h-[640px] bg-black rounded-[45px] md:rounded-[54px] border-[5px] md:border-[8px] border-[#1a1a1a] shadow-[0_0_80px_rgba(0,0,0,0.5)] cursor-grab active:cursor-grabbing overflow-hidden"
+        transition={{ 
+          opacity: { duration: 1.2 },
+          scale: { duration: 1.5 },
+          y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+        }}
+        className="relative w-[260px] md:w-[320px] h-[520px] md:h-[640px] bg-black rounded-[45px] md:rounded-[54px] border-[5px] md:border-[8px] border-[#1a1a1a] cursor-grab active:cursor-grabbing overflow-hidden z-20"
       >
         {/* Phone Bezel/Frame Thickness Effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-black to-gray-800 rounded-[50px] -z-10 translate-z-[-25px]" />
@@ -223,38 +227,15 @@ export default function PhoneShowcase() {
         <div className="absolute inset-x-[10px] inset-y-[10px] rounded-[40px] bg-gradient-to-tr from-white/10 via-transparent to-white/5 pointer-events-none z-40" />
       </motion.div>
 
-      {/* Floating UI Badges */}
-      <motion.div
-        animate={{ 
-          y: isHovered ? -15 : 0,
-          opacity: isHovered ? 1 : 0.8
+      {/* Premium Contact Shadow Below */}
+      <motion.div 
+        style={{
+          scale: useTransform(mouseYSpring, [-0.5, 0.5], [1.1, 0.9]),
+          opacity: useTransform(mouseYSpring, [-0.5, 0.5], [0.3, 0.15]),
+          x: useTransform(mouseXSpring, [-0.5, 0.5], [20, -20]),
         }}
-        className="absolute top-[15%] right-[2%] bg-white/90 backdrop-blur-md border border-brandNavy/10 p-4 rounded-2xl flex items-center gap-4 z-50 pointer-events-none hidden lg:flex shadow-elevated"
-      >
-         <div className="w-12 h-12 rounded-full bg-brandGreen/10 flex items-center justify-center">
-            <TrendingUp className="w-6 h-6 text-brandGreen" />
-         </div>
-         <div>
-            <div className="text-xs font-bold text-brandNavy uppercase tracking-wider font-display">Average Increase</div>
-            <div className="text-lg font-black text-brandNavy font-display">+120 Points</div>
-         </div>
-      </motion.div>
-
-      <motion.div
-        animate={{ 
-          y: isHovered ? 15 : 0,
-          opacity: isHovered ? 1 : 0.8
-        }}
-        className="absolute bottom-[25%] left-[2%] bg-white/90 backdrop-blur-md border border-brandNavy/10 p-4 rounded-2xl flex items-center gap-4 z-50 pointer-events-none hidden lg:flex shadow-elevated"
-      >
-         <div className="w-12 h-12 rounded-full bg-brandRed/10 flex items-center justify-center">
-            <ShieldCheck className="w-6 h-6 text-brandRed" />
-         </div>
-         <div>
-            <div className="text-xs font-bold text-brandNavy uppercase tracking-wider font-display">Dispute Expert</div>
-            <div className="text-sm text-textSecondary font-body">All 4 Bureaus Tracked</div>
-         </div>
-      </motion.div>
+        className="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[220px] md:w-[280px] h-[40px] bg-black/40 blur-[40px] rounded-[100%] z-0"
+      />
     </div>
   );
 }

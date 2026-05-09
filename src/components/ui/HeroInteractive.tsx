@@ -43,17 +43,9 @@ export default function HeroInteractive() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 rounded-full bg-brandBlue/10 px-4 py-1.5 text-brandBlue"
-            >
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em]">India's #1 Credit Rectification</span>
-            </motion.div>
-
-            <h1 className="mt-8 font-display text-[44px] font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-[68px] lg:text-[82px]">
-              Stop Letting a Bad Score <br className="hidden lg:block" />
-              <span className="text-brandRed">Hold You Back.</span>
+            <h1 className="font-display text-[44px] font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-[68px] lg:text-[82px]">
+              Your Entire Credit Profile.<br className="hidden lg:block" />
+              <span className="text-brandRed">One Dashboard.</span>
             </h1>
 
             <motion.p
@@ -62,7 +54,7 @@ export default function HeroInteractive() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="mt-8 max-w-lg text-lg leading-relaxed text-textSecondary font-medium"
             >
-              Your credit score is your financial power. We execute a document-driven dispute process to delete errors and reclaim your power in <span className="font-bold text-brandNavy">90 days or less.</span>
+              The only platform in India that tracks every dispute across all 4 bureaus in real-time. Watch your CIBIL, Experian, Equifax, and CRIF scores climb live.
             </motion.p>
 
             <motion.div
@@ -71,14 +63,14 @@ export default function HeroInteractive() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center w-full sm:w-auto"
             >
-              <Link href="/contact" className="w-full sm:w-auto group">
+              <Link href="/dashboard" className="w-full sm:w-auto group">
                 <Button as="div" className="w-full sm:w-auto h-16 px-10 text-base shadow-xl transition-all hover:shadow-2xl group-hover:-translate-y-1 bg-brandRed text-white hover:bg-[#D41018] rounded-full font-bold uppercase tracking-widest">
-                  Talk To A Credit Expert
+                  Open My Dashboard
                 </Button>
               </Link>
-              <Link href="/how-it-works" className="w-full sm:w-auto">
+              <Link href="/contact" className="w-full sm:w-auto">
                 <Button as="div" variant="surface" className="w-full sm:w-auto h-16 px-10 text-base font-bold bg-white border-brandNavy/10 hover:bg-white/80 transition-all hover:-translate-y-1 rounded-full uppercase tracking-widest">
-                  See How It Works
+                  Talk To Expert
                 </Button>
               </Link>
             </motion.div>

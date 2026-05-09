@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import {
   ArrowRight,
@@ -183,44 +184,68 @@ export default function Home() {
 
   return (
     <div className="pb-20">
-      {/* ═══ HERO ═══ */}
       <HeroInteractive />
 
-      {/* ═══ STATS ═══ */}
-      <section className="">
-        <div className="border-y border-brandNavy/5 bg-brandNavy px-4 py-12 sm:px-6 lg:px-12 text-white">
-          <div className="mx-auto grid max-w-[1440px] gap-8 sm:grid-cols-4">
-            {statItems.map((s) => (
-              <Reveal key={s.label}>
-                <div className="text-center">
-                  <div className="font-display text-4xl font-black tracking-tight sm:text-5xl text-white">
-                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} />
-                  </div>
-                  <div className="mt-2 text-sm font-medium text-white/70 uppercase tracking-widest">{s.label}</div>
-                </div>
-              </Reveal>
+      {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
+      <section className="bg-brandNavy relative py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brandBlue via-transparent to-transparent pointer-events-none" />
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-8 text-center relative z-10">
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">
+            Trusted by clients from across India's top institutions
+          </p>
+        </div>
+        <div className="relative flex overflow-hidden z-10">
+          <div className="flex animate-marquee whitespace-nowrap gap-12 sm:gap-24 items-center">
+            {/* Logo items duplicated for seamless loop */}
+            {[...Array(2)].map((_, i) => (
+              <React.Fragment key={i}>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">CIBIL</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">EXPERIAN</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">CRIF</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">EQUIFAX</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">HDFC BANK</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">ICICI BANK</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">SBI</span>
+                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">AXIS BANK</span>
+              </React.Fragment>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 sm:py-32 relative bg-[#F8FAFC] overflow-hidden" id="how">
-        <ParallaxShape delay={1} className="top-0 -left-20 h-64 w-64 bg-brandBlue/5" />
-        <ParallaxShape delay={3} className="bottom-0 -right-20 h-96 w-96 bg-brandBlue/5" />
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+      `}</style>
 
+      {/* ═══ HOW IT WORKS ═══ */}
+      <section className="py-24 sm:py-32 relative bg-[#F9FBFF] overflow-hidden" id="how">
+        {/* Decorative Grid Background */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        
+        <ParallaxShape delay={1} className="top-20 -left-20 h-80 w-80 bg-brandBlue/10 blur-[100px]" />
+        <ParallaxShape delay={3} className="bottom-0 -right-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
+        
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           {/* Split layout: label left, content right */}
           <div className="grid lg:grid-cols-[220px_1fr] gap-12 lg:gap-20">
             {/* Left sticky label */}
             <Reveal>
               <div className="lg:sticky lg:top-32 lg:self-start pt-1">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">How it works</p>
-                <h2 className="mt-4 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl leading-[1.1]">
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <div className="h-1 w-8 bg-brandRed rounded-full" />
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">How it works</p>
+                </div>
+                <h2 className="font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl leading-[1.1]">
                   Three steps.
                 </h2>
                 <p className="mt-4 text-base text-textSecondary leading-relaxed">We do the heavy lifting. You just track the progress on your dashboard.</p>
-                <div className="mt-8 h-px bg-brandNavy/10" />
+                <div className="mt-8 h-px bg-brandNavy/10 w-full" />
                 <p className="mt-6 text-sm font-semibold text-brandNavy">Average turnaround: <span className="text-brandRed">90 days</span></p>
               </div>
             </Reveal>
@@ -248,14 +273,14 @@ export default function Home() {
                 },
               ].map((step, idx) => (
                 <Reveal key={step.title} delay={idx * 0.1}>
-                  <div className="group flex gap-6 rounded-2xl border border-brandNavy/8 bg-white p-6 transition-all duration-300 hover:border-brandRed/20 hover:shadow-elevated">
-                    <div className="shrink-0 grid h-12 w-12 place-items-center rounded-2xl bg-brandRed/8 transition-colors group-hover:bg-brandRed">
-                      <step.icon className="h-5 w-5 text-brandRed transition-colors group-hover:text-white" />
+                  <div className="group flex gap-6 rounded-[2rem] border border-brandNavy/5 bg-white/80 p-8 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brandRed/20 hover:shadow-elevated hover:bg-white">
+                    <div className="shrink-0 grid h-14 w-14 place-items-center rounded-2xl bg-brandRed/5 transition-all duration-500 group-hover:bg-brandRed group-hover:scale-110 group-hover:rotate-3 shadow-sm">
+                      <step.icon className="h-6 w-6 text-brandRed transition-colors group-hover:text-white" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-bold uppercase tracking-widest text-textSecondary/60 mb-1">{step.num}</div>
-                      <h3 className="font-display text-lg font-bold text-brandNavy">{step.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-textSecondary">{step.desc}</p>
+                      <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-brandNavy/30 mb-2">{step.num} / PROCESS</div>
+                      <h3 className="font-display text-xl font-bold text-brandNavy group-hover:text-brandRed transition-colors">{step.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-textSecondary">{step.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -265,56 +290,57 @@ export default function Home() {
         </div>
       </section>
 
-
-
       {/* ═══ DASHBOARD HIGHLIGHT ═══ */}
-      <section className="py-24 sm:py-32 bg-white" id="dashboard-section">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+      <section className="py-24 sm:py-32 bg-white relative overflow-hidden" id="dashboard-section">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           <Reveal>
-          <div className="rounded-[3rem] bg-brandNavy px-6 py-16 sm:px-16 sm:py-20 lg:px-24 relative overflow-hidden">
-            {/* Parallax Background Circles */}
-            <motion.div 
-              style={{ y: useTransform(useScroll().scrollYProgress, [0, 1], [0, -100]) }}
-              className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-brandBlue/10 blur-3xl pointer-events-none" 
-            />
+          <div className="rounded-[4rem] bg-brandNavy px-6 py-16 sm:px-16 sm:py-20 lg:px-24 relative overflow-hidden shadow-2xl">
+            {/* Dynamic Background Glows */}
+            <div className="absolute top-0 right-0 h-[600px] w-[600px] bg-brandBlue/20 blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-brandRed/10 blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
             
             <div className="grid items-center gap-12 lg:grid-cols-2 relative z-10">
               <div className="order-2 lg:order-1">
-                <img src="/Logo-primescore.png" alt="Primescore" className="h-8 w-auto brightness-0 invert mb-8" />
-                <h2 className="font-display text-4xl font-black tracking-tight text-white sm:text-5xl">
+                <div className="inline-flex items-center gap-2 mb-8 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
+                  <div className="w-2 h-2 rounded-full bg-brandBlue animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Real-time Monitoring</span>
+                </div>
+                <h2 className="font-display text-4xl font-black tracking-tight text-white sm:text-6xl leading-tight">
                   One Dashboard.<br />All 4 Bureau Scores.
                 </h2>
-                <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
+                <p className="mt-8 max-w-lg text-lg leading-relaxed text-white/60">
                   Unlike traditional agencies, we give you a live dashboard to track every dispute across CIBIL, Experian, Equifax & CRIF. Every reference ID, every score change — all in one place.
                 </p>
-                <div className="mt-10 grid gap-4">
+                <div className="mt-10 grid gap-5">
                   {[
                     'Track scores from CIBIL, Experian, Equifax & CRIF',
                     'Live dispute status & reference IDs',
                     'Direct chat with your credit expert',
                     'Secure document vault',
                   ].map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-6 w-6 text-brandBlue shrink-0" />
-                      <span className="text-base font-medium text-white">{item}</span>
+                    <div key={item} className="flex items-center gap-4 group/item">
+                      <div className="h-6 w-6 rounded-full bg-brandBlue/20 flex items-center justify-center group-hover/item:bg-brandBlue transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-brandBlue group-hover/item:text-white transition-colors" />
+                      </div>
+                      <span className="text-base font-medium text-white/90">{item}</span>
                     </div>
                   ))}
                 </div>
                 <div className="mt-12 flex flex-col sm:flex-row gap-4">
                   <Link href="/dashboard">
-                    <Button as="div" variant="white" className="h-13 px-8 text-base font-bold shadow-xl hover:-translate-y-1 transition-transform">
+                    <Button as="div" variant="white" className="h-14 px-10 text-base font-bold shadow-xl hover:-translate-y-1 transition-all rounded-full bg-white text-brandNavy hover:bg-white/90">
                       Open My Dashboard →
                     </Button>
                   </Link>
                   <Link href="/how-it-works">
-                    <Button as="div" variant="ghost" className="h-13 px-8 text-base font-bold text-white border-white/20 hover:bg-white/10 hover:-translate-y-1 transition-transform">
+                    <Button as="div" variant="ghost" className="h-14 px-10 text-base font-bold text-white border-white/20 hover:bg-white/10 hover:-translate-y-1 transition-all rounded-full">
                       See How It Works
                     </Button>
                   </Link>
                 </div>
               </div>
               
-              <div className="hidden lg:flex order-2 justify-center lg:-mr-12 perspective-1000">
+              <div className="hidden lg:flex order-2 justify-center lg:-mr-12 perspective-2000">
                 <ScrollLinkedDashboard />
               </div>
             </div>
@@ -324,8 +350,9 @@ export default function Home() {
       </section>
 
       {/* ═══ BUREAU FLOW EXPLAINER ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F8FAFC]">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+      <section className="py-24 sm:py-32 bg-[#F9FBFF] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'linear-gradient(90deg, #0a192f 1px, transparent 1px), linear-gradient(#0a192f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           <Reveal>
             <BureauFlow />
           </Reveal>
@@ -333,20 +360,25 @@ export default function Home() {
       </section>
 
       {/* ═══ SERVICES ═══ */}
-      <section className="py-24 sm:py-32 bg-[#F1F7FF]" id="services">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+      <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services">
+        <ParallaxShape delay={2} className="top-1/4 -right-20 h-96 w-96 bg-brandBlue/10 blur-[120px]" />
+        <ParallaxShape delay={4} className="bottom-1/4 -left-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
+        
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           {/* Asymmetric header: big left text, right link */}
           <Reveal>
-            <div className="flex items-end justify-between gap-8 border-b border-brandRed/10 pb-10">
+            <div className="flex items-end justify-between gap-8 border-b border-brandNavy/10 pb-12">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Services</p>
-                <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl lg:text-6xl leading-[1.05]">
+                <div className="inline-flex items-center gap-2 mb-4 bg-brandRed/10 rounded-full px-3 py-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brandRed">Our Expertise</p>
+                </div>
+                <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-6xl lg:text-7xl leading-[0.95]">
                   What we fix<br /><span className="text-brandBlue">for you.</span>
                 </h2>
               </div>
               <Link href="/services" className="shrink-0 hidden sm:block">
-                <Button as="div" variant="ghost" className="h-12 border-brandNavy/20 text-sm">
-                  All services <ArrowRight className="h-4 w-4" />
+                <Button as="div" variant="ghost" className="h-14 px-8 border-brandNavy/20 text-sm font-bold rounded-full hover:bg-brandNavy hover:text-white transition-all">
+                  All services <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </Link>
             </div>
