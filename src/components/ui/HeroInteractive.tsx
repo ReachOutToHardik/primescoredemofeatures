@@ -88,17 +88,17 @@ export default function HeroInteractive() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.5 }}
-              className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center w-full sm:w-auto"
+              className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center w-full sm:w-auto"
             >
               <Link href="/dashboard" className="w-full sm:w-auto group">
-                <Button as="div" className="w-full sm:w-auto h-16 px-10 text-base shadow-2xl transition-all hover:shadow-brandRed/20 group-hover:-translate-y-1 bg-brandRed text-white hover:bg-[#D41018] rounded-full font-bold uppercase tracking-widest border-none">
-                  Open My Dashboard
-                </Button>
+                <div className="flex h-14 w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-white px-8 text-[11px] font-bold uppercase tracking-[0.25em] text-brandNavy transition-all duration-300 hover:scale-105 hover:shadow-glowNavy active:scale-95">
+                  Open Dashboard <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </div>
               </Link>
-              <Link href="/contact" className="w-full sm:w-auto">
-                <Button as="div" variant="surface" className="w-full sm:w-auto h-16 px-10 text-base font-bold bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all hover:-translate-y-1 rounded-full uppercase tracking-widest">
-                  Talk To Expert
-                </Button>
+              <Link href="/contact" className="w-full sm:w-auto group flex items-center justify-center">
+                <div className="flex h-14 items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.25em] text-white/50 transition-all duration-300 hover:text-white">
+                  Talk to expert
+                </div>
               </Link>
             </motion.div>
           </div>
