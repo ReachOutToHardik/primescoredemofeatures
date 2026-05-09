@@ -57,35 +57,31 @@ export default function HeroInteractive() {
         <div className="grid items-center gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-white sm:text-6xl lg:text-[82px] flex flex-wrap justify-center lg:justify-start">
-              {"Your Entire Credit Profile. One Dashboard.".split(" ").map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.8, 
-                    delay: i * 0.1, 
-                    ease: [0.2, 0.65, 0.3, 0.9] 
-                  }}
-                  className="mr-[0.2em] last:mr-0 inline-block"
-                >
-                  {word === "One" || word === "Dashboard." ? (
-                    <span className="text-brandRed">{word}</span>
-                  ) : (
-                    <span className="text-premium-gradient">{word}</span>
-                  )}
-                </motion.span>
-              ))}
+            <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-white sm:text-6xl lg:text-[82px] flex flex-col items-center lg:items-start text-center lg:text-left w-full">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] }}>
+                <span className="text-white">Your Entire</span>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.2, 0.65, 0.3, 0.9] }} className="mt-1 lg:mt-2">
+                <span className="text-white/60">Credit Profile.</span>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }} 
+                className="mt-2 lg:mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4"
+              >
+                <span className="font-handwriting text-brandYellow text-[60px] sm:text-[90px] lg:text-[110px] leading-none -rotate-2 origin-bottom-left">One</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandRed to-brandOrange leading-none pb-2">Dashboard.</span>
+              </motion.div>
             </h1>
 
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-              className="mt-8 max-w-lg text-lg leading-relaxed text-white/50 font-medium"
+              transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+              className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-white/50 font-medium"
             >
-              The only platform in India that tracks every dispute across all 4 bureaus in real-time. Watch your CIBIL, Experian, Equifax, and CRIF scores climb live.
+              The only platform in India that tracks every dispute across all <strong className="text-white font-bold">4 bureaus</strong> in real-time. Watch your <span className="text-brandGreen font-bold">CIBIL</span>, <span className="text-brandBlue font-bold">Experian</span>, <span className="text-brandRed font-bold">Equifax</span>, and <span className="text-brandYellow font-bold">CRIF</span> scores climb live.
             </motion.p>
 
             <motion.div

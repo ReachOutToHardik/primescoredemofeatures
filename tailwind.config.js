@@ -21,6 +21,7 @@ export default {
         display: ['Sora', 'system-ui', 'sans-serif'],
         body: ['DM Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        handwriting: ['var(--font-caveat)', 'cursive'],
       },
       boxShadow: {
         glowRed: '0 1px 2px rgba(228,30,38,0.12), 0 8px 24px rgba(228,30,38,0.20)',
