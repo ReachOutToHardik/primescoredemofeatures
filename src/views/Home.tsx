@@ -190,26 +190,37 @@ export default function Home() {
       </div>
 
       {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
-      <section className="bg-brandNavy relative py-16 overflow-hidden" data-theme="dark">
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brandBlue via-transparent to-transparent pointer-events-none" />
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-8 text-center relative z-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/50">
+      <section className="bg-[#0A0A0A] relative py-12 border-b border-white/5 overflow-hidden" data-theme="dark">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-10 text-center relative z-10">
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/30">
             Trusted by clients from across India's top institutions
           </p>
         </div>
-        <div className="relative flex overflow-hidden z-10">
-          <div className="flex animate-marquee whitespace-nowrap gap-12 sm:gap-24 items-center">
+        <div className="relative flex overflow-hidden z-10 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+          <div className="flex animate-marquee whitespace-nowrap gap-16 sm:gap-32 items-center">
             {/* Logo items duplicated for seamless loop */}
             {[...Array(2)].map((_, i) => (
               <React.Fragment key={i}>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">CIBIL</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">EXPERIAN</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">CRIF</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">EQUIFAX</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">HDFC BANK</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">ICICI BANK</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">SBI</span>
-                <span className="text-2xl sm:text-4xl font-black tracking-tighter text-white/10 hover:text-white/30 transition-colors cursor-default">AXIS BANK</span>
+                {[
+                  { name: 'CIBIL', color: 'text-brandGreen/80 hover:text-brandGreen' },
+                  { name: 'EXPERIAN', color: 'text-brandBlue/80 hover:text-brandBlue' },
+                  { name: 'CRIF', color: 'text-brandYellow/80 hover:text-brandYellow' },
+                  { name: 'EQUIFAX', color: 'text-brandRed/80 hover:text-brandRed' },
+                  { name: 'HDFC BANK', color: 'text-brandBlue/80 hover:text-brandBlue' },
+                  { name: 'ICICI BANK', color: 'text-brandOrange/80 hover:text-brandOrange' },
+                  { name: 'SBI', color: 'text-brandBlue/80 hover:text-brandBlue' },
+                  { name: 'AXIS BANK', color: 'text-brandRed/80 hover:text-brandRed' },
+                  { name: 'LMJ', color: 'text-brandYellow/80 hover:text-brandYellow' },
+                  { name: 'BPB INDIA', color: 'text-brandGreen/80 hover:text-brandGreen' },
+                  { name: 'GANPATI STEELS JODHPUR', color: 'text-brandRed/80 hover:text-brandRed' },
+                ].map((logo) => (
+                  <span 
+                    key={logo.name} 
+                    className={`text-xl sm:text-2xl font-display font-black tracking-[0.2em] transition-all duration-500 cursor-default ${logo.color}`}
+                  >
+                    {logo.name}
+                  </span>
+                ))}
               </React.Fragment>
             ))}
           </div>
@@ -251,7 +262,7 @@ export default function Home() {
                 </h2>
               </div>
               <Link href="/services" className="shrink-0 hidden sm:block">
-                <Button as="div" variant="ghost" className="h-14 px-8 border-brandNavy/20 text-sm font-bold rounded-full hover:bg-brandNavy hover:text-white transition-all">
+                <Button as="div" variant="ghost" className="h-14 px-8 border-brandNavy/20 text-sm font-bold rounded-full hover:bg-brandNavy hover:text-white transition-all text-brandNavy">
                   All services <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </Link>
@@ -265,8 +276,10 @@ export default function Home() {
               const isFeatured = idx === 0
               return (
                 <Reveal key={s.id} delay={idx * 0.05}>
-                  <div className={`group flex h-full flex-col rounded-2xl border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated ${
-                    isFeatured ? 'border-brandRed/20 lg:row-span-2' : 'border-brandNavy/8 hover:border-brandRed/20'
+                  <div className={`group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated ${
+                    isFeatured 
+                      ? 'border-brandRed/20 bg-white lg:row-span-2' 
+                      : 'border-brandNavy/8 bg-white hover:border-brandRed/20'
                   }`}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="grid h-11 w-11 place-items-center rounded-xl bg-brandNavy/5 group-hover:bg-brandRed/10 transition-colors">
