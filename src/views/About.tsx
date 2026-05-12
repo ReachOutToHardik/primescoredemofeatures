@@ -43,13 +43,15 @@ export default function About() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <div className="relative aspect-video rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden group max-w-lg ml-auto w-full">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-300">
-                    Portrait Placeholder
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/50 to-transparent pointer-events-none" />
+              <div className="relative aspect-video rounded-2xl border border-slate-100 overflow-hidden group max-w-lg ml-auto w-full shadow-lg">
+                <Image 
+                  src="/about/1778578171390-205641593-Untitled design (11).png"
+                  alt="Primescore Founders"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none" />
               </div>
             </Reveal>
           </div>
