@@ -66,15 +66,15 @@ export default function FeatureScrollShowcase() {
   // Mapping scroll to phone transforms
   const phoneRotateY = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [0, 20, -20, 15, 0])
   const phoneRotateX = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [0, 5, 12, -8, 0])
-  const phoneScale = useTransform(smoothProgress, [0, 0.05, 0.95, 1], [0.85, 1, 1, 0.85])
-  const phoneX = useTransform(smoothProgress, [0, 0.1, 0.9, 1], ["15%", "0%", "0%", "-15%"])
+  const phoneScale = useTransform(smoothProgress, [0, 0.05, 0.95, 1], [0.95, 1, 1, 0.95])
+  const phoneX = useTransform(smoothProgress, [0, 0.1, 0.9, 1], ["5%", "0%", "0%", "-5%"])
   // Dynamic Background Colors
   const bgColor = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], ["#0A0A0A", "#0F172A", "#18181B", "#0A0A0A", "#0A0A0A"])
   const glowColor = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], ["#2563EB", "#EF4444", "#10B981", "#F59E0B", "#2563EB"])
   const glowOpacity = useTransform(smoothProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0])
 
   return (
-    <motion.div ref={containerRef} style={{ backgroundColor: bgColor }} className="relative h-[800vh] bg-grain">
+    <motion.div ref={containerRef} style={{ backgroundColor: bgColor }} className="relative h-[450vh] bg-grain">
       {/* Sticky Container */}
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden gpu-accelerated">
         

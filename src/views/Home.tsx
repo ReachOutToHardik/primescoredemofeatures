@@ -96,9 +96,9 @@ function ScrollLinkedDashboard() {
     offset: ["start end", "end start"]
   })
 
-  const scale = useTransform(scrollYProgress, [0, 0.4], [0.8, 1])
-  const rotateX = useTransform(scrollYProgress, [0, 0.4], [25, 0])
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1])
+  const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1])
+  const rotateX = useTransform(scrollYProgress, [0, 0.2], [25, 0])
+  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1])
 
   return (
     <motion.div 
