@@ -33,7 +33,7 @@ function NavItem({ to, label, onClick }: { to: string; label: string; onClick?: 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light') // Default to light for better visibility on most pages
   const pathname = usePathname()
 
   const links = useMemo(
@@ -61,19 +61,41 @@ export default function Navbar() {
     }
 
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      let activeTheme: 'dark' | 'light' | null = null
+      
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionTheme = entry.target.getAttribute('data-theme')
           if (sectionTheme === 'dark' || sectionTheme === 'light') {
-            setTheme(sectionTheme as 'dark' | 'light')
+            activeTheme = sectionTheme as 'dark' | 'light'
           }
         }
       })
+
+      if (activeTheme) {
+        setTheme(activeTheme)
+      } else if (window.scrollY < 100) {
+        // If no section is clearly intersecting and we are at the top,
+        // check if the very first section has a theme
+        const firstSection = document.querySelector('[data-theme]')
+        if (firstSection) {
+          const firstTheme = firstSection.getAttribute('data-theme')
+          if (firstTheme === 'dark' || firstTheme === 'light') {
+            setTheme(firstTheme as 'dark' | 'light')
+          }
+        }
+      }
     }
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions)
     const sections = document.querySelectorAll('[data-theme]')
-    sections.forEach((section) => observer.observe(section))
+    
+    if (sections.length > 0) {
+      sections.forEach((section) => observer.observe(section))
+    } else {
+      // Fallback for pages with no data-theme markers
+      setTheme('light')
+    }
 
     const scrollHandler = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener('scroll', scrollHandler, { passive: true })
@@ -90,7 +112,9 @@ export default function Navbar() {
         className={[
           'mx-auto max-w-5xl flex items-center justify-between px-4 md:px-6 py-3 transition-all duration-500 pointer-events-auto rounded-full border',
           isScrolled
-            ? 'glass-premium shadow-2xl scale-[0.98] border-white/10'
+            ? theme === 'dark' 
+              ? 'bg-black/60 border-white/10 backdrop-blur-md shadow-2xl scale-[0.98]' 
+              : 'bg-white/80 border-brandNavy/5 backdrop-blur-md shadow-2xl scale-[0.98]'
             : theme === 'dark' 
               ? 'bg-white/[0.03] border-white/10 backdrop-blur-md' 
               : 'bg-transparent border-transparent',
