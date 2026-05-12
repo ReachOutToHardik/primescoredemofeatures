@@ -202,21 +202,21 @@ export default function Home() {
             {[...Array(2)].map((_, i) => (
               <React.Fragment key={i}>
                 {[
-                  { name: 'CIBIL', color: 'text-brandGreen/80 hover:text-brandGreen' },
-                  { name: 'EXPERIAN', color: 'text-brandBlue/80 hover:text-brandBlue' },
-                  { name: 'CRIF', color: 'text-brandYellow/80 hover:text-brandYellow' },
-                  { name: 'EQUIFAX', color: 'text-brandRed/80 hover:text-brandRed' },
-                  { name: 'HDFC BANK', color: 'text-brandBlue/80 hover:text-brandBlue' },
-                  { name: 'ICICI BANK', color: 'text-brandOrange/80 hover:text-brandOrange' },
-                  { name: 'SBI', color: 'text-brandBlue/80 hover:text-brandBlue' },
-                  { name: 'AXIS BANK', color: 'text-brandRed/80 hover:text-brandRed' },
-                  { name: 'LMJ', color: 'text-brandYellow/80 hover:text-brandYellow' },
-                  { name: 'BPB INDIA', color: 'text-brandGreen/80 hover:text-brandGreen' },
-                  { name: 'GANPATI STEELS JODHPUR', color: 'text-brandRed/80 hover:text-brandRed' },
+                  { name: 'CIBIL' },
+                  { name: 'EXPERIAN' },
+                  { name: 'CRIF' },
+                  { name: 'EQUIFAX' },
+                  { name: 'HDFC BANK' },
+                  { name: 'ICICI BANK' },
+                  { name: 'SBI' },
+                  { name: 'AXIS BANK' },
+                  { name: 'LMJ' },
+                  { name: 'BPB INDIA' },
+                  { name: 'GANPATI STEELS JODHPUR' },
                 ].map((logo) => (
                   <span 
                     key={logo.name} 
-                    className={`text-xl sm:text-2xl font-display font-black tracking-[0.2em] transition-all duration-500 cursor-default ${logo.color}`}
+                    className="text-xl sm:text-2xl font-display font-black tracking-[0.2em] transition-all duration-500 cursor-default text-white/40 hover:text-white"
                   >
                     {logo.name}
                   </span>
