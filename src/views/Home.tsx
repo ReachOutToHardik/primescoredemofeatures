@@ -184,15 +184,15 @@ export default function Home() {
   )
 
   return (
-    <div className="bg-[#0A0A0A]">
-      <div data-theme="dark">
+    <div className="bg-white">
+      <div data-theme="light">
         <HeroInteractive />
       </div>
 
       {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
-      <section className="bg-[#0A0A0A] relative py-12 border-b border-white/5 overflow-hidden" data-theme="dark">
+      <section className="bg-brandNavy relative py-12 border-b border-white/5 overflow-hidden" data-theme="dark">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-10 text-center relative z-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/30">
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">
             Trusted by clients from across India's top institutions
           </p>
         </div>

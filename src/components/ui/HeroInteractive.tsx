@@ -1,3 +1,4 @@
+
 'use client'
 
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
@@ -23,16 +24,16 @@ export default function HeroInteractive() {
 
   const glowX = useSpring(mouseX, { damping: 30, stiffness: 200 })
   const glowY = useSpring(mouseY, { damping: 30, stiffness: 200 })
-  const background = useMotionTemplate`radial-gradient(circle 600px at ${glowX}px ${glowY}px, rgba(37,99,235,0.08), transparent 80%)`
+  const background = useMotionTemplate`radial-gradient(circle 600px at ${glowX}px ${glowY}px, rgba(37,99,235,0.05), transparent 80%)`
 
   return (
     <section
-      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-[#050505]"
+      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-white"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Mesh Gradient Background */}
+      {/* Mesh Gradient Background - Light Version */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <motion.div 
           animate={{ 
@@ -40,7 +41,7 @@ export default function HeroInteractive() {
             y: [0, 50, 0],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-brandBlue/20 blur-[120px] rounded-full"
+          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-brandBlue/5 blur-[120px] rounded-full"
         />
         <motion.div 
           animate={{ 
@@ -48,7 +49,7 @@ export default function HeroInteractive() {
             y: [0, 100, 0],
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-brandRed/10 blur-[100px] rounded-full"
+          className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-brandRed/5 blur-[100px] rounded-full"
         />
         <motion.div 
           animate={{ 
@@ -56,26 +57,26 @@ export default function HeroInteractive() {
             y: [0, -50, 0],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-[10%] left-[20%] w-[60%] h-[30%] bg-brandYellow/5 blur-[120px] rounded-full"
+          className="absolute -bottom-[10%] left-[20%] w-[60%] h-[30%] bg-brandYellow/[0.03] blur-[120px] rounded-full"
         />
       </div>
 
       {/* Noise Overlay */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat"></div>
+      <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat"></div>
 
-      {/* Background Grid Pattern - Dark Version */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      {/* Background Grid Pattern - Light Version */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
       <div className="w-full relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
         <div className="grid items-center gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-white sm:text-6xl lg:text-[82px] flex flex-col items-center lg:items-start text-center lg:text-left w-full">
+            <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-6xl lg:text-[82px] flex flex-col items-center lg:items-start text-center lg:text-left w-full">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] }}>
-                <span className="text-white">Your Entire</span>
+                <span className="text-brandNavy">Your Entire</span>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.2, 0.65, 0.3, 0.9] }} className="mt-1 lg:mt-2">
-                <span className="text-white/60">Credit Profile.</span>
+                <span className="text-brandNavy/40">Credit Profile.</span>
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} 
@@ -83,8 +84,8 @@ export default function HeroInteractive() {
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }} 
                 className="mt-2 lg:mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4"
               >
-                <span className="font-handwriting text-brandYellow text-[60px] sm:text-[90px] lg:text-[110px] leading-none -rotate-2 origin-bottom-left">One</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandRed to-brandOrange leading-none pb-2">Dashboard.</span>
+                <span className="font-handwriting text-brandRed text-[60px] sm:text-[90px] lg:text-[110px] leading-none -rotate-2 origin-bottom-left">One</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brandBlue via-brandBlue to-brandNavy leading-none pb-2">Dashboard.</span>
               </motion.div>
             </h1>
 
@@ -92,9 +93,9 @@ export default function HeroInteractive() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
-              className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-white/50 font-medium"
+              className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-textSecondary font-medium"
             >
-              The only platform in India that tracks every dispute across all <strong className="text-white font-bold">4 bureaus</strong> in real-time. Watch your <span className="text-brandGreen font-bold">CIBIL</span>, <span className="text-brandBlue font-bold">Experian</span>, <span className="text-brandRed font-bold">Equifax</span>, and <span className="text-brandYellow font-bold">CRIF</span> scores climb live.
+              The only platform in India that tracks every dispute across all <strong className="text-brandNavy font-bold">4 bureaus</strong> in real-time. Watch your <span className="text-brandGreen font-bold">CIBIL</span>, <span className="text-brandBlue font-bold">Experian</span>, <span className="text-brandRed font-bold">Equifax</span>, and <span className="text-brandYellow font-bold">CRIF</span> scores climb live.
             </motion.p>
 
             <motion.div
@@ -104,12 +105,12 @@ export default function HeroInteractive() {
               className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center w-full sm:w-auto"
             >
               <Link href="/dashboard" className="w-full sm:w-auto group">
-                <div className="flex h-14 w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-white px-8 text-[11px] font-bold uppercase tracking-[0.25em] text-brandNavy transition-all duration-300 hover:scale-105 hover:shadow-glowNavy active:scale-95">
+                <div className="flex h-14 w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brandNavy px-8 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:scale-105 hover:shadow-glowNavy active:scale-95">
                   Open Dashboard <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
               <Link href="/contact" className="w-full sm:w-auto group flex items-center justify-center">
-                <div className="flex h-14 items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.25em] text-white/50 transition-all duration-300 hover:text-white">
+                <div className="flex h-14 items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.25em] text-brandNavy/40 transition-all duration-300 hover:text-brandNavy">
                   Talk to expert
                 </div>
               </Link>
