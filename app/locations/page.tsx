@@ -18,8 +18,26 @@ const ALL_STATES = [
   "UTTAR PRADESH", "UTTARAKHAND", "WEST BENGAL"
 ]
 
+const SEO_CITIES: Record<string, string[]> = {
+  "RAJASTHAN": ["Jaipur", "Jodhpur", "Kota", "Udaipur", "Bikaner", "Ajmer", "Sikar", "Alwar"],
+  "MAHARASHTRA": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Navi Mumbai", "Solapur"],
+  "GUJARAT": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar"],
+  "DELHI": ["New Delhi", "North Delhi", "South Delhi", "West Delhi", "East Delhi"],
+  "KARNATAKA": ["Bangalore", "Mysore", "Hubli", "Mangalore", "Belgaum", "Gulbarga"],
+  "TAMIL NADU": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tiruppur"],
+  "UTTAR PRADESH": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Noida", "Ghaziabad", "Bareilly", "Meerut"],
+  "WEST BENGAL": ["Kolkata", "Howrah", "Asansol", "Siliguri", "Durgapur"],
+  "TELANGANA": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar"],
+  "ANDHRA PRADESH": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+  "BIHAR": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+  "PUNJAB": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
+  "HARYANA": ["Gurgaon", "Faridabad", "Panipat", "Ambala"],
+  "KERALA": ["Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur"],
+  "MADHYA PRADESH": ["Indore", "Bhopal", "Jabalpur", "Gwalior"]
+}
+
 export default function LocationsPage() {
-  const [cityData, setCityData] = useState<Record<string, string[]>>({})
+  const [cityData, setCityData] = useState<Record<string, string[]>>(SEO_CITIES)
   const [expandedStates, setExpandedStates] = useState<string[]>([])
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({})
   const [searchQuery, setSearchQuery] = useState('')
@@ -35,7 +53,8 @@ export default function LocationsPage() {
 
     setExpandedStates(prev => [...prev, state])
 
-    if (!cityData[state] && supabase) {
+    // If we only have SEO cities or nothing, fetch the full list for this state
+    if ((!cityData[state] || cityData[state].length <= 10) && supabase) {
       setLoadingStates(prev => ({ ...prev, [state]: true }))
       
       const { data, error } = await supabase
@@ -90,11 +109,9 @@ export default function LocationsPage() {
   }, [searchQuery])
 
   return (
-    <main className="min-h-screen bg-white">
-      <Navbar />
-      
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="pt-32 pb-16 border-b border-gray-100 bg-gray-50/50">
+      <section className="pt-32 pb-16 border-b border-gray-100 bg-gray-50/50" data-theme="light">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 text-center">
           <Reveal>
             <div className="flex items-center justify-center gap-2 text-[#10b981] font-bold text-sm uppercase tracking-wider mb-4">
@@ -130,7 +147,7 @@ export default function LocationsPage() {
       </section>
 
       {/* Main Directory */}
-      <section className="py-16">
+      <section className="py-16 min-h-[60vh]" data-theme="light">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           {searchQuery.trim().length >= 3 ? (
             <div className="space-y-6">
@@ -176,8 +193,8 @@ export default function LocationsPage() {
                       <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
 
-                    {(isOpen || true) && (
-                      <div className={`px-6 pb-8 border-t border-gray-50 ${!isOpen ? 'hidden' : 'block animate-in fade-in slide-in-from-top-2'}`}>
+                    {isOpen && (
+                      <div className="px-6 pb-8 border-t border-gray-50 animate-in fade-in slide-in-from-top-2">
                         {isLoading ? (
                           <div className="flex items-center gap-2 py-6 text-gray-400 justify-center">
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -207,7 +224,23 @@ export default function LocationsPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      {/* Trust CTA */}
+      <section className="py-16" data-theme="light">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="p-10 rounded-[2.5rem] bg-gray-900 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/10 blur-[100px] pointer-events-none"></div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-3xl font-bold mb-4 tracking-tight">Don't See Your City?</h3>
+              <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+                Primescore serves clients in every corner of India through our digital-first process. If your city isn't listed, contact us for a free remote consultation.
+              </p>
+              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#10b981] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#0da673] transition-all group">
+                Free Consultation <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
