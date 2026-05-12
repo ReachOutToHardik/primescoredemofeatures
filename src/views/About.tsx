@@ -84,6 +84,48 @@ export default function About() {
             </Reveal>
           </div>
         </section>
+        <section className="mt-24 border-t border-brandNavy/5 pt-24">
+          <Reveal>
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed mb-4">Credibility</p>
+              <h2 className="font-display text-4xl font-black text-brandNavy tracking-tight">Recognized & <span className="text-brandBlue">Supported By</span></h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-6 sm:grid-cols-3">
+            {[
+              { 
+                title: 'DPIIT', 
+                subtitle: 'Govt. of India', 
+                desc: 'Recognized by the Department for Promotion of Industry and Internal Trade, Ministry of Commerce & Industry.' 
+              },
+              { 
+                title: 'iStart Rajasthan', 
+                subtitle: 'Jodhpur Hub', 
+                desc: 'Incubated and supported by iStart Rajasthan, the flagship startup initiative of the Government of Rajasthan.' 
+              },
+              { 
+                title: 'Startup India', 
+                subtitle: 'National Initiative', 
+                desc: 'Proudly part of the Startup India initiative, empowering the next generation of Indian entrepreneurs.' 
+              }
+            ].map((r, i) => (
+              <Reveal key={r.title} delay={i * 0.1}>
+                <div className="group relative rounded-[2rem] border border-brandNavy/5 bg-slate-50/50 p-8 text-center transition-all hover:bg-white hover:shadow-elevated hover:border-brandRed/10">
+                  <div className="mb-4 text-2xl font-display font-black text-brandNavy group-hover:text-brandRed transition-colors">
+                    {r.title}
+                  </div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-brandBlue mb-4">
+                    {r.subtitle}
+                  </div>
+                  <p className="text-xs leading-relaxed text-textSecondary font-medium">
+                    {r.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   )
