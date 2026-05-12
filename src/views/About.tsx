@@ -1,8 +1,19 @@
 'use client'
 
-import { ShieldCheck, Sparkles, Target, Users } from 'lucide-react'
+import { ShieldCheck, Sparkles, Target, Users, Mail, ChevronRight } from 'lucide-react'
+import { FaLinkedin, FaXTwitter, FaInstagram } from 'react-icons/fa6'
 import Reveal from '../components/ui/Reveal'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
+
+const teamImages = [
+  "/about/1778576601195-682511650-IMG_7994.JPG",
+  "/about/1778576601199-467388510-IMG_7427.JPG",
+  "/about/1778576601364-367645446-IMG_7996.JPG",
+  "/about/1778576601566-671629370-IMG_7426.JPG",
+  "/about/1778576601574-893335231-IMG_7425.JPG",
+  "/about/1778576610529-76709075-IMG_7431.JPG"
+]
 
 export default function About() {
   return (
@@ -81,6 +92,95 @@ export default function About() {
                 </div>
               </div>
             </Reveal>
+          </div>
+        </section>
+
+        {/* Leadership Section */}
+        <section className="mt-32">
+          <Reveal>
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed mb-4">Leadership</p>
+              <h2 className="font-display text-4xl sm:text-6xl font-black text-brandNavy tracking-tight">
+                Meet our <span className="text-brandBlue">Founders</span>
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-8 sm:grid-cols-2 max-w-4xl mx-auto">
+            <Reveal>
+              <div className="group relative rounded-[2rem] overflow-hidden bg-slate-50 border border-slate-100 p-8 text-center transition-all hover:shadow-elevated hover:bg-white">
+                <div className="relative mx-auto mb-8 h-48 w-48 rounded-full bg-brandNavy flex items-center justify-center text-4xl font-display font-bold text-white shadow-2xl">
+                   SS
+                   <div className="absolute -inset-2 rounded-full border border-brandNavy/10 animate-[spin_10s_linear_infinite]" />
+                </div>
+                <h3 className="text-2xl font-display font-black text-brandNavy">Sawai Singh</h3>
+                <p className="text-sm font-bold text-brandRed uppercase tracking-widest mt-2">Founder</p>
+                <div className="mt-6 flex justify-center gap-4">
+                  <button className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brandBlue hover:border-brandBlue transition-all">
+                    <FaLinkedin className="h-4 w-4" />
+                  </button>
+                  <button className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brandNavy hover:border-brandNavy transition-all">
+                    <FaXTwitter className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.1}>
+              <div className="group relative rounded-[2rem] overflow-hidden bg-slate-50 border border-slate-100 p-8 text-center transition-all hover:shadow-elevated hover:bg-white">
+                <div className="relative mx-auto mb-8 h-48 w-48 rounded-full bg-brandRed flex items-center justify-center text-4xl font-display font-bold text-white shadow-2xl">
+                   KS
+                   <div className="absolute -inset-2 rounded-full border border-brandRed/10 animate-[spin_12s_linear_infinite]" />
+                </div>
+                <h3 className="text-2xl font-display font-black text-brandNavy">Karan Singh</h3>
+                <p className="text-sm font-bold text-brandBlue uppercase tracking-widest mt-2">Co-Founder</p>
+                <div className="mt-6 flex justify-center gap-4">
+                  <button className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brandBlue hover:border-brandBlue transition-all">
+                    <FaLinkedin className="h-4 w-4" />
+                  </button>
+                  <button className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brandNavy hover:border-brandNavy transition-all">
+                    <FaXTwitter className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Team Gallery Section */}
+        <section className="mt-32">
+          <Reveal>
+            <div className="flex flex-col sm:flex-row items-end justify-between gap-6 mb-16">
+               <div className="max-w-2xl">
+                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed mb-4">Our Culture</p>
+                  <h2 className="font-display text-4xl sm:text-6xl font-black text-brandNavy tracking-tight leading-none">
+                    Life at <span className="text-brandBlue">Primescore</span>
+                  </h2>
+               </div>
+               <p className="text-textSecondary font-medium max-w-sm mb-2">
+                 We are a team of dedicated professionals committed to fixing the Indian credit ecosystem.
+               </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {teamImages.map((src, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div className="group relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-slate-100 shadow-sm border border-slate-200">
+                  <Image 
+                    src={src} 
+                    alt={`Primescore Team ${i + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brandNavy/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    <p className="text-white font-bold tracking-widest uppercase text-[10px]">Quality Service Hub</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </section>
       </div>
