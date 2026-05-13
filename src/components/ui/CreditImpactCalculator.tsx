@@ -113,7 +113,7 @@ export default function CreditImpactCalculator() {
               <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
             <div className="text-center pb-4 border-b border-brandBlue/10 relative z-10">
-              <div className="text-sm font-bold text-brandBlue uppercase tracking-wide">Good Score (750+)</div>
+              <div className="text-sm font-bold text-brandBlue uppercase tracking-wide">Primescore (750+)</div>
               <div className="text-2xl font-black text-brandBlue mt-1">{goodRate}% <span className="text-sm font-medium">Interest</span></div>
             </div>
             <div className="pt-6 flex flex-col gap-4 relative z-10">
