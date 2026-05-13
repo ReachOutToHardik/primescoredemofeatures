@@ -126,7 +126,7 @@ export const testimonials: Testimonial[] = [
     after: 745,
     days: 15,
     rating: 5,
-    quote: 'I am very happy with your service and I really appreciate it. Thanks a lot. The work was done in only a few days. Once again, thank you.',
+    quote: 'I am very happy from your service and I am really appreciate with you thanks a lot And work is done in only few days onc again thanks you',
     avatar: 'https://lh3.googleusercontent.com/a/ACg8ocIJcnSeH2gaS0phHPbSgV_Ku4f4XXdpjV2BZ2-bLMBLa0zXQA=s120-c-rp-mo-br100'
   },
   {
@@ -238,6 +238,94 @@ export const testimonials: Testimonial[] = [
     rating: 5,
     quote: "It's very good support for improve cradit score in right way. Thanks to Primscore team Jodhpur",
     avatar: 'https://lh3.googleusercontent.com/a/ACg8ocIyQZfs5FW2HWevrlPbJNC-MpI0Iy_e684jwh560JZQJwlzoA=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'Bheema Ram',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 590,
+    after: 750,
+    days: 28,
+    rating: 5,
+    quote: 'Good work ,more satisfied ferfect accurate work.',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLsUdtDE8jpMQ2Z23BDv0GFOFk6B1qu2olokGHtcOzDm7e-1Q=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'subhash bishnoi',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 615,
+    after: 760,
+    days: 20,
+    rating: 5,
+    quote: '🙏👍 Highly satisfied with the prompt service and results.',
+    avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXK-gH-RW12Ge8u5XP8RqIjo9YuniU3Jal5JrmhIwu3cv-0TIVO=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'nagora rk',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 580,
+    after: 725,
+    days: 35,
+    rating: 4,
+    quote: 'service center is best competitive netur',
+    avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjUGTPk0zNpZH5_HlzE6i2Ik-E9KVZaZw-Gy-zqWHThDfU2uIeM=s120-c-rp-mo-br100'
+  },
+  {
+    name: '#Balaji Traders',
+    city: 'Jodhpur',
+    role: 'Business Owner',
+    before: 640,
+    after: 775,
+    days: 15,
+    rating: 5,
+    quote: 'good work and fast solution….thnx',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocIS4nwuW_GcqgaMQX_p4s2oePOM-DyfBtDPz45RdgTm18URXLU=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'Mimrote 28',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 570,
+    after: 740,
+    days: 42,
+    rating: 5,
+    quote: 'Best service and good corporation',
+    avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjWWeZnQO2EMeehpuVTKF8sP2Ib7ejOdOHiwYcbmKmSidCwaW9Fd=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'Karan Singh',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 610,
+    after: 755,
+    days: 7,
+    rating: 5,
+    quote: 'Good service credit score rectify in 1 week',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLtNplTcVbSjwPZ-Cis0Vf3TWP644Uj-Jd-Lnt6fVSxWJPZ7w=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'Jay Singh',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 595,
+    after: 750,
+    days: 30,
+    rating: 5,
+    quote: 'satisfied with the service of prime score cibil rectification team',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocK7D989moBgYqYmR0B3ngFq1e6I_1X6WOpp3holnGBb5CqDZQ=s120-c-rp-mo-br100'
+  },
+  {
+    name: 'Tikamram Saran',
+    city: 'Jodhpur',
+    role: 'Client',
+    before: 625,
+    after: 780,
+    days: 45,
+    rating: 5,
+    quote: ', ok 🆗👌 Everything handled professionally.',
+    avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjX2bthn13ntrBGFmwcQ-ETWUXBDRyKf11oyAiSQ03WMjXsrSkKt=s120-c-rp-mo-br100'
   }
 ]
 
