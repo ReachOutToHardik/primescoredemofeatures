@@ -371,6 +371,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ═══ RECOGNITION & CERTIFICATION ═══ */}
+      <section className="py-24 bg-white">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 text-center">
+          <Reveal>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Accreditations</p>
+              <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
+                Certified & <span className="text-brandBlue">Recognized By</span>
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-12 lg:gap-24 opacity-80 hover:opacity-100 transition-all duration-700">
+               <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ═══ FAQ & INQUIRY ═══ */}
       <section className="py-24 sm:py-32 bg-[#F8FAFC]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">

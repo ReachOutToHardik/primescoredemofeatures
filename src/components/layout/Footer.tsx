@@ -18,6 +18,7 @@ export default function Footer() {
               Credit rectification and score support — dispute errors, recover your score, and unlock
               better credit outcomes.
             </p>
+
             <div className="mt-6 flex items-center gap-4 text-textSecondary">
               <a href="https://www.facebook.com/profile.php?id=61561478021964" target="_blank" rel="noopener noreferrer" className="hover:text-[#1877F2] transition-colors"><FaFacebook className="h-5 w-5" /></a>
               <a href="https://x.com/Primescore_in" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><FaXTwitter className="h-5 w-5" /></a>
@@ -121,7 +122,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-brandNavy/8 pt-6 text-xs text-textSecondary sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-t border-brandNavy/8 pt-8 text-xs text-textSecondary sm:flex-row sm:items-center sm:justify-between">
           <div>© {new Date().getFullYear()} Primescore. All rights reserved.</div>
           <div>Primescore is not a credit bureau or NBFC. We assist with dispute filing and documentation.</div>
         </div>
