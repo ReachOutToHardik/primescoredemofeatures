@@ -345,7 +345,7 @@ export default function Home() {
               transition={{ ease: 'linear', duration: 180, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
-              {[...testimonials, ...testimonials, ...testimonials, ...testimonials].map((t, idx) => (
+              {[...testimonials.slice(0, 7), ...testimonials.slice(0, 7)].map((t, idx) => (
                 <TestimonialCard key={`col1-${idx}`} t={t} />
               ))}
             </motion.div>
@@ -356,7 +356,7 @@ export default function Home() {
               transition={{ ease: 'linear', duration: 200, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
-              {[...testimonials, ...testimonials, ...testimonials, ...testimonials].map((t, idx) => (
+              {[...testimonials.slice(7, 14), ...testimonials.slice(7, 14)].map((t, idx) => (
                 <TestimonialCard key={`col2-${idx}`} t={t} />
               ))}
             </motion.div>
@@ -367,7 +367,7 @@ export default function Home() {
               transition={{ ease: 'linear', duration: 160, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
-              {[...testimonials, ...testimonials, ...testimonials, ...testimonials].map((t, idx) => (
+              {[...testimonials.slice(14), ...testimonials.slice(14)].map((t, idx) => (
                 <TestimonialCard key={`col3-${idx}`} t={t} />
               ))}
             </motion.div>
