@@ -342,7 +342,7 @@ export default function Home() {
             {/* Column 1 - Up */}
             <motion.div
               animate={{ y: ['0%', '-50%'] }}
-              transition={{ ease: 'linear', duration: 180, repeat: Infinity }}
+              transition={{ ease: 'linear', duration: 35, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
               {[...testimonials.slice(0, 7), ...testimonials.slice(0, 7)].map((t, idx) => (
@@ -353,7 +353,7 @@ export default function Home() {
             {/* Column 2 - Down */}
             <motion.div
               animate={{ y: ['-50%', '0%'] }}
-              transition={{ ease: 'linear', duration: 200, repeat: Infinity }}
+              transition={{ ease: 'linear', duration: 45, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
               {[...testimonials.slice(7, 14), ...testimonials.slice(7, 14)].map((t, idx) => (
@@ -364,7 +364,7 @@ export default function Home() {
             {/* Column 3 - Up */}
             <motion.div
               animate={{ y: ['0%', '-50%'] }}
-              transition={{ ease: 'linear', duration: 160, repeat: Infinity }}
+              transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
               className="flex w-full flex-col gap-6"
             >
               {[...testimonials.slice(14), ...testimonials.slice(14)].map((t, idx) => (
