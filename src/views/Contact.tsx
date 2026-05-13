@@ -8,7 +8,7 @@ import Button from '../components/ui/Button'
 
 type IssueType = 'CIBIL Rectification' | 'Loan Settlement' | 'Credit Card Dispute' | 'Monitoring' | 'EMI Restructuring' | 'Not sure'
 
-type FormState = { name: string; email: string; phone: string; issueType: IssueType; message: string }
+type FormState = { name: string; email: string; phone: string; issueType: IssueType; message: string; preferredDate: string; preferredTime: string }
 
 const DEFAULT_NUMBER = '919680530334'
 const SUPPORT_EMAIL = 'info@primescore.in'
@@ -28,7 +28,7 @@ export default function Contact() {
   const telHref = `tel:${supportPhone.replace(/[^\d+]/g, '')}`
 
   const [form, setForm] = useState<FormState>({
-    name: '', email: '', phone: '', issueType: 'Not sure', message: '',
+    name: '', email: '', phone: '', issueType: 'Not sure', message: '', preferredDate: '', preferredTime: '',
   })
 
   const whatsappHref = useMemo(() => {
@@ -59,6 +59,8 @@ export default function Contact() {
         from_email: form.email,
         from_phone: form.phone,
         issue_type: form.issueType,
+        preferred_date: form.preferredDate || 'Not selected',
+        preferred_time: form.preferredTime || 'Not selected',
         message: form.message,
         to_name: 'Primescore Support',
         to_email: form.email, // explicitly passing so the user template can use it
@@ -75,7 +77,7 @@ export default function Contact() {
 
 
       setStatus('sent')
-      setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '' })
+      setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '', preferredDate: '', preferredTime: '' })
       setTimeout(() => setStatus('idle'), 5000)
     } catch (err) {
       console.error('EmailJS Error:', err)
@@ -232,6 +234,27 @@ export default function Contact() {
                       <option>Monitoring</option>
                       <option>EMI Restructuring</option>
                     </select>
+                  </div>
+                  
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
+                      <input
+                        type="date"
+                        value={form.preferredDate}
+                        onChange={(e) => setForm(p => ({ ...p, preferredDate: e.target.value }))}
+                        className={inputCls}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time</label>
+                      <input
+                        type="time"
+                        value={form.preferredTime}
+                        onChange={(e) => setForm(p => ({ ...p, preferredTime: e.target.value }))}
+                        className={inputCls}
+                      />
+                    </div>
                   </div>
                   <textarea value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} placeholder="Describe your issue..." className={[inputCls, 'min-h-[140px] resize-none py-3'].join(' ')} required />
                   

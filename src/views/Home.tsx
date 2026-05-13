@@ -133,7 +133,7 @@ function ParallaxShape({ delay = 0, className = "" }: { delay?: number, classNam
 }
 
 export default function Home() {
-  const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '' })
+  const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
   const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
   const handleCtaSubmit = async (e: React.FormEvent) => {
@@ -158,6 +158,8 @@ export default function Home() {
         from_email: ctaForm.email,
         from_phone: 'Not provided (Home Page)',
         issue_type: 'General Inquiry (Home Page)',
+        preferred_date: ctaForm.preferredDate || 'Not selected',
+        preferred_time: ctaForm.preferredTime || 'Not selected',
         message: ctaForm.message,
         to_name: 'Primescore Support',
         to_email: ctaForm.email, // explicitly passing so the user template can use it
@@ -174,7 +176,7 @@ export default function Home() {
 
 
       setCtaStatus('sent')
-      setCtaForm({ name: '', email: '', message: '' })
+      setCtaForm({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
       setTimeout(() => setCtaStatus('idle'), 5000)
     } catch (err) {
       console.error('EmailJS Error:', err)
@@ -460,6 +462,26 @@ export default function Home() {
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
+                      <input
+                        type="date"
+                        value={ctaForm.preferredDate}
+                        onChange={(e) => setCtaForm(p => ({ ...p, preferredDate: e.target.value }))}
+                        className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy outline-none transition-colors focus:border-brandNavy focus:bg-white"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time</label>
+                      <input
+                        type="time"
+                        value={ctaForm.preferredTime}
+                        onChange={(e) => setCtaForm(p => ({ ...p, preferredTime: e.target.value }))}
+                        className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy outline-none transition-colors focus:border-brandNavy focus:bg-white"
+                      />
+                    </div>
+                  </div>
                   <textarea
                     value={ctaForm.message}
                     onChange={(e) => setCtaForm(p => ({ ...p, message: e.target.value }))}
