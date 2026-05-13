@@ -33,9 +33,18 @@ function TestimonialCard({ t }: { t: any }) {
   return (
     <div className="rounded-[2rem] border border-brandNavy/10 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brandNavy/20 hover:shadow-elevated">
       <div className="flex items-center gap-4">
-        <div className="grid h-12 w-12 place-items-center rounded-full bg-brandNavy text-white font-display text-lg font-bold">
-          {t.name.split(' ').map((w: string) => w[0]).join('')}
-        </div>
+        {t.avatar ? (
+          <img 
+            src={t.avatar} 
+            alt={t.name} 
+            referrerPolicy="no-referrer"
+            className="h-12 w-12 rounded-full object-cover border border-brandNavy/5" 
+          />
+        ) : (
+          <div className="grid h-12 w-12 place-items-center rounded-full bg-brandNavy text-white font-display text-lg font-bold">
+            {t.name.split(' ').map((w: string) => w[0]).join('')}
+          </div>
+        )}
         <div>
           <div className="text-base font-bold text-brandNavy">{t.name}</div>
           <div className="text-sm font-medium text-textSecondary">{t.role}</div>
@@ -385,9 +394,9 @@ export default function Home() {
 
           <Reveal delay={0.2}>
             <div className="mt-16 flex flex-wrap items-center justify-center gap-12 lg:gap-24 opacity-80 hover:opacity-100 transition-all duration-700">
-               <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
             </div>
           </Reveal>
         </div>

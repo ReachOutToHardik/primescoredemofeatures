@@ -94,9 +94,9 @@ export default function About() {
 
           <Reveal delay={0.2}>
             <div className="flex flex-wrap items-center justify-center gap-12 lg:gap-24 opacity-90 hover:opacity-100 transition-all duration-700">
-               <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
             </div>
           </Reveal>
         </section>
