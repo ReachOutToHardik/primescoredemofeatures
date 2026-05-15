@@ -174,11 +174,11 @@ export default function PhoneShowcase() {
                 <div className="w-full grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider font-body">PAN</div>
-                    <div className="text-xs font-bold text-brandNavy font-mono">KMMPS6930R</div>
+                    <div className="text-xs font-bold text-brandNavy font-mono">KMMPS****R</div>
                   </div>
                   <div>
                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider font-body">DOB</div>
-                     <div className="text-xs font-bold text-brandNavy font-body">19 Jun 2000</div>
+                     <div className="text-xs font-bold text-brandNavy font-body">15 Aug 1995</div>
                   </div>
                 </div>
               </div>
