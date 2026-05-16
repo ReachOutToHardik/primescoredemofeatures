@@ -181,7 +181,11 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="absolute top-24 left-6 right-6 glass-premium rounded-[2rem] p-6 shadow-2xl md:hidden pointer-events-auto"
+            className={`absolute top-24 left-6 right-6 rounded-[2rem] p-6 shadow-2xl md:hidden pointer-events-auto backdrop-blur-xl border transition-all duration-300 ${
+              theme === 'dark'
+                ? 'bg-black/85 border-white/10 text-white'
+                : 'bg-white/95 border-brandNavy/10 text-brandNavy'
+            }`}
           >
             <div className="grid gap-4">
               {links.map((l) => (
@@ -189,7 +193,11 @@ export default function Navbar() {
                   key={l.to}
                   href={l.to}
                   onClick={() => setMobileOpen(false)}
-                  className="text-lg font-bold text-white/60 hover:text-white px-4 py-2 border-b border-white/5"
+                  className={`text-lg font-bold px-4 py-2 border-b transition-colors ${
+                    theme === 'dark'
+                      ? 'text-white/70 hover:text-white border-white/10'
+                      : 'text-brandNavy/80 hover:text-brandNavy border-brandNavy/10'
+                  }`}
                 >
                   {l.label}
                 </Link>
@@ -197,7 +205,7 @@ export default function Navbar() {
               <Link
                 href="/dashboard"
                 onClick={() => setMobileOpen(false)}
-                className="mt-4 rounded-full bg-brandRed py-4 text-center text-sm font-black uppercase tracking-widest text-white"
+                className="mt-4 rounded-full bg-brandRed py-4 text-center text-sm font-black uppercase tracking-widest text-white shadow-lg active:scale-95 transition-transform"
               >
                 Open Dashboard
               </Link>
