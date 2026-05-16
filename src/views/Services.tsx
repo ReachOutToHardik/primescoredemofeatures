@@ -65,9 +65,6 @@ export default function Services() {
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-brandRed/10">
                       {Icon ? <Icon className="h-5 w-5 text-brandRed" /> : null}
                     </div>
-                    <span className="rounded-full bg-brandNavy/[0.04] px-2.5 py-0.5 font-mono text-xs text-textSecondary">
-                      {s.priceRange}
-                    </span>
                   </div>
 
                   <h3 className="mt-4 font-display text-lg font-bold text-brandNavy">{s.title}</h3>
@@ -164,9 +161,6 @@ export default function Services() {
                       <h3 className="font-display text-xl font-bold text-brandNavy">{s.title}</h3>
                       <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-textSecondary">{s.description}</p>
                     </div>
-                    <span className="shrink-0 rounded-lg bg-brandNavy/[0.04] px-3 py-2 font-mono text-sm text-brandNavy">
-                      {s.priceRange}
-                    </span>
                   </div>
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
