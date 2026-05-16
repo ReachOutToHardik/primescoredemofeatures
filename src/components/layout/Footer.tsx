@@ -122,9 +122,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-brandNavy/8 pt-8 text-xs text-textSecondary sm:flex-row sm:items-center sm:justify-between">
-          <div>© {new Date().getFullYear()} Primescore. All rights reserved.</div>
-          <div>Primescore is not a credit bureau or NBFC. We assist with dispute filing and documentation.</div>
+        <div className="mt-12 flex flex-col gap-4 border-t border-brandNavy/8 pt-8 text-xs text-textSecondary sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <div className="font-bold text-brandNavy">PRIMESCORE FINTECH PRIVATE LIMITED</div>
+            <div className="font-mono text-[11px] text-textSecondary/90 font-semibold">CIN: U70200RJ2025PTC102685 • DPIIT Recognition: DIPP20068</div>
+            <div className="mt-1 text-textSecondary/70">© {new Date().getFullYear()} Primescore. All rights reserved.</div>
+          </div>
+          <div className="max-w-md text-left sm:text-right leading-relaxed text-textSecondary/80">
+            Primescore is an independent credit consultancy and is not a credit bureau or NBFC. We assist users with bureau audits, error identification, and formal dispute documentation.
+          </div>
         </div>
       </div>
     </footer>
