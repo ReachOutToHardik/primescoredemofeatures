@@ -7,7 +7,6 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Preloader from '../src/components/ui/Preloader'
 import WhatsAppWidget from '../src/components/ui/WhatsAppWidget'
-import TimedPopup from '../src/components/ui/TimedPopup'
 
 const sora = Sora({ subsets: ['latin'], variable: '--font-inter' })
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-outfit' })
@@ -51,7 +50,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <WhatsAppWidget />
-        <TimedPopup />
         <Analytics />
         <SpeedInsights />
       </body>
