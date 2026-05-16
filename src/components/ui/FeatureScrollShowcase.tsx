@@ -20,6 +20,7 @@ import {
 
 const features = [
   {
+    badge: "01 // Multi-Bureau Sync",
     title: "Multi-Bureau Command Center",
     description: "The only dashboard in India that pulls live data from CIBIL, Experian, Equifax, and CRIF. See every score, every discrepancy, all in one premium interface.",
     icon: Layout,
@@ -27,6 +28,7 @@ const features = [
     screen: "overview"
   },
   {
+    badge: "02 // Resolution Engine",
     title: "Real-Time Dispute Tracker",
     description: "No more black holes. Track every dispute filing with official reference IDs, current status, and direct links to bureau evidence packs.",
     icon: FileSearch,
@@ -34,13 +36,15 @@ const features = [
     screen: "disputes"
   },
   {
-    title: "Document Vault",
-    description: "Bank-grade encrypted storage for your PAN, Aadhaar, and credit reports. Secure, fast, and accessible only to you and your assigned expert.",
-    icon: Lock,
+    badge: "03 // Smart Diagnostics",
+    title: "Unified AI Score Audit",
+    description: "Instantly detect score variance, credit utilization spikes, and critical late payment records across all bureaus in one automated audit report.",
+    icon: TrendingUp,
     color: "#10B981", // brandGreen
-    screen: "vault"
+    screen: "audit"
   },
   {
+    badge: "04 // Dedicated Consultation",
     title: "Direct Expert Access",
     description: "Skip the call center. Chat directly with your credit rectification specialist. Get strategy updates and advice delivered straight to your dashboard.",
     icon: MessageSquare,
@@ -150,7 +154,7 @@ export default function FeatureScrollShowcase() {
                     className="inline-flex items-center gap-3 mb-2 lg:mb-8"
                   >
                     <div className="h-px w-6 lg:w-8 bg-white/20" />
-                    <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">Module 0{i + 1}</span>
+                    <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">{feature.badge}</span>
                   </motion.div>
                   <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.0] lg:leading-[0.9] mb-4 lg:mb-8">
                     {feature.title.split(" ").map((w, idx) => (
@@ -255,51 +259,53 @@ export default function FeatureScrollShowcase() {
                     </div>
                  </PhoneScreen>
 
-                 {/* Screen 3: Vault */}
+                 {/* Screen 3: Smart Audit */}
                  <PhoneScreen 
                     progress={smoothProgress} 
                     range={[0.5, 0.75]}
                     bg="white"
                  >
-                    <div className="p-6 pt-12 h-full flex flex-col">
-                       <h3 className="text-xl font-bold text-brandNavy font-display">Secure Vault</h3>
-                       <p className="text-[10px] text-slate-400 font-bold mb-6">256-bit AES Encryption</p>
+                    <div className="p-6 pt-12 h-full flex flex-col justify-between">
+                       <div>
+                          <h3 className="text-xl font-bold text-brandNavy font-display">Unified Score Audit</h3>
+                          <p className="text-[10px] text-slate-400 font-bold mb-6">Report Generated Successfully</p>
 
-                       <div className="grid grid-cols-2 gap-3 mb-6">
-                          <div className="p-4 rounded-2xl bg-brandBlue/5 border border-brandBlue/10 flex flex-col items-center text-center">
-                             <div className="w-10 h-10 rounded-xl bg-brandBlue/10 flex items-center justify-center mb-3">
-                                <ShieldCheck className="w-5 h-5 text-brandBlue" />
+                          {/* Gauge simulation */}
+                          <div className="flex items-center gap-4 p-4 rounded-2xl bg-brandNavy text-white mb-4 shadow-lg">
+                             <div className="w-14 h-14 rounded-full border-4 border-brandGreen flex flex-col items-center justify-center shrink-0 text-center">
+                                <span className="text-lg font-black font-display">742</span>
+                                <span className="text-[6px] uppercase tracking-wider text-white/70">Avg Score</span>
                              </div>
-                             <div className="text-[10px] font-bold text-brandNavy">Identity</div>
+                             <div>
+                                <div className="text-xs font-bold">Good Standing</div>
+                                <div className="text-[9px] text-white/70">Experian variance detected (&gt;15 pts lower)</div>
+                             </div>
                           </div>
-                          <div className="p-4 rounded-2xl bg-brandRed/5 border border-brandRed/10 flex flex-col items-center text-center">
-                             <div className="w-10 h-10 rounded-xl bg-brandRed/10 flex items-center justify-center mb-3">
-                                <FileSearch className="w-5 h-5 text-brandRed" />
+
+                          {/* Action Required Card */}
+                          <div className="p-4 rounded-2xl border border-red-100 bg-red-50/50 mb-4">
+                             <div className="flex items-center gap-2 mb-1">
+                                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                                <span className="text-xs font-bold text-red-900">Critical Severity</span>
                              </div>
-                             <div className="text-[10px] font-bold text-brandNavy">Reports</div>
+                             <div className="text-[11px] font-bold text-red-800">Late Payment Record</div>
+                             <div className="text-[9px] text-red-600/80">HDFC Credit Card reported 30 days late.</div>
                           </div>
                        </div>
 
-                       <div className="space-y-3">
-                          <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-100">
-                             <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
-                                <CheckCircle2 className="w-4 h-4 text-brandGreen" />
-                             </div>
-                             <div className="flex-1">
-                                <div className="text-[10px] font-bold text-brandNavy">PAN_Card.pdf</div>
-                                <div className="text-[8px] text-slate-400">Verified • 1.2 MB</div>
-                             </div>
-                             <Download className="w-3 h-3 text-slate-300" />
+                       {/* Bottom Stat summary */}
+                       <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 pb-8">
+                          <div className="text-center p-2 rounded-xl bg-slate-50">
+                             <div className="text-[8px] uppercase font-bold text-slate-400">Accounts</div>
+                             <div className="text-xs font-black text-brandNavy font-display">8 <span className="text-[8px] text-brandGreen font-normal">Active</span></div>
                           </div>
-                          <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-100">
-                             <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
-                                <CheckCircle2 className="w-4 h-4 text-brandGreen" />
-                             </div>
-                             <div className="flex-1">
-                                <div className="text-[10px] font-bold text-brandNavy">CIBIL_Report_May.pdf</div>
-                                <div className="text-[8px] text-slate-400">Verified • 2.4 MB</div>
-                             </div>
-                             <Download className="w-3 h-3 text-slate-300" />
+                          <div className="text-center p-2 rounded-xl bg-slate-50">
+                             <div className="text-[8px] uppercase font-bold text-slate-400">Util</div>
+                             <div className="text-xs font-black text-brandNavy font-display">22% <span className="text-[8px] text-brandGreen font-normal">Excel</span></div>
+                          </div>
+                          <div className="text-center p-2 rounded-xl bg-slate-50">
+                             <div className="text-[8px] uppercase font-bold text-slate-400">On-Time</div>
+                             <div className="text-xs font-black text-brandNavy font-display">98%</div>
                           </div>
                        </div>
                     </div>
