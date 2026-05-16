@@ -129,10 +129,10 @@ export default function FeatureScrollShowcase() {
           />
         </motion.div>
 
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-4 sm:gap-8 lg:gap-12 items-start lg:items-center relative z-10 pt-20 sm:pt-28 lg:pt-0">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-3 sm:gap-8 lg:gap-12 items-start lg:items-center relative z-10 pt-16 sm:pt-28 lg:pt-0">
           
           {/* Left Side: Content */}
-          <div className="relative h-[140px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
+          <div className="relative h-[120px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
             {features.map((feature, i) => {
               const start = i * 0.25
               const end = (i + 1) * 0.25
@@ -154,9 +154,9 @@ export default function FeatureScrollShowcase() {
                     className="inline-flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 lg:mb-8"
                   >
                     <div className="h-px w-6 lg:w-8 bg-white/20" />
-                    <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">{feature.badge}</span>
+                    <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.5em] text-white/40">{feature.badge}</span>
                   </motion.div>
-                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-3 lg:mb-8">
+                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-1.5 sm:mb-3 lg:mb-8">
                     {feature.title.split(" ").map((w, idx) => (
                       <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
                     ))}
@@ -164,8 +164,8 @@ export default function FeatureScrollShowcase() {
                   <p className="text-sm lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium hidden sm:block">
                     {feature.description}
                   </p>
-                  <div className="mt-2 sm:mt-4 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                     <button className="h-10 lg:h-14 px-6 lg:px-8 rounded-full bg-white text-brandNavy font-bold text-[10px] lg:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
+                  <div className="mt-1 sm:mt-4 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                     <button className="h-9 sm:h-14 px-5 sm:px-8 rounded-full bg-white text-brandNavy font-bold text-[9px] sm:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
                         Open Feature
                      </button>
                   </div>
@@ -175,7 +175,7 @@ export default function FeatureScrollShowcase() {
           </div>
 
           {/* Right Side: Phone Showcase */}
-          <div className="relative flex justify-center perspective-2000 mt-6 sm:mt-12 lg:mt-0 origin-top lg:origin-center">
+          <div className="relative flex justify-center perspective-2000 mt-2 sm:mt-12 lg:mt-0 origin-top lg:origin-center">
             <motion.div
               style={{
                 rotateY: phoneRotateY,
@@ -184,13 +184,13 @@ export default function FeatureScrollShowcase() {
                 x: phoneX,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-[260px] sm:w-[300px] h-[500px] sm:h-[600px] bg-black rounded-[40px] sm:rounded-[50px] border-[6px] sm:border-[8px] border-white/5 shadow-2xl overflow-hidden"
+              className="relative w-[240px] sm:w-[300px] h-[450px] sm:h-[600px] bg-black rounded-[38px] sm:rounded-[50px] border-[6px] sm:border-[8px] border-white/5 shadow-2xl overflow-hidden"
             >
               {/* Phone Content Swapper */}
               <div className="relative w-full h-full bg-white overflow-hidden">
                  {/* Status Bar */}
-                 <div className="absolute top-0 left-0 w-full h-10 px-8 flex justify-between items-end pb-1 z-50 text-black">
-                    <span className="text-[12px] font-bold">9:41</span>
+                 <div className="absolute top-0 left-0 w-full h-10 px-6 sm:px-8 flex justify-between items-end pb-1 z-50 text-black">
+                    <span className="text-[11px] sm:text-[12px] font-bold">9:41</span>
                     <div className="flex items-center gap-1.5">
                       <Signal className="w-3 h-3" />
                       <Wifi className="w-3 h-3" />
@@ -204,23 +204,23 @@ export default function FeatureScrollShowcase() {
                     range={[0, 0.25]}
                     bg="white"
                  >
-                    <div className="p-6 pt-12">
-                       <h3 className="text-xl font-bold text-brandNavy font-display">Multi-Bureau</h3>
-                       <p className="text-[10px] text-slate-400 font-bold mb-6">Live Credit Monitoring</p>
+                    <div className="p-4 pt-10 sm:p-6 sm:pt-12">
+                       <h3 className="text-lg sm:text-xl font-bold text-brandNavy font-display">Multi-Bureau</h3>
+                       <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold mb-4 sm:mb-6">Live Credit Monitoring</p>
                        
-                       <div className="space-y-4">
+                       <div className="space-y-2.5 sm:space-y-4">
                           {[
                             { name: 'CIBIL', score: 742, color: '#10B981' },
                             { name: 'EXPERIAN', score: 738, color: '#2563EB' },
                             { name: 'CRIF', score: 745, color: '#F59E0B' },
                             { name: 'EQUIFAX', score: 732, color: '#EF4444' },
                           ].map(b => (
-                            <div key={b.name} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                            <div key={b.name} className="p-3 sm:p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex justify-between items-center">
                                <div>
-                                  <div className="text-[9px] font-black text-slate-400">{b.name}</div>
-                                  <div className="text-xl font-black text-brandNavy font-display">{b.score}</div>
+                                  <div className="text-[8px] sm:text-[9px] font-black text-slate-400">{b.name}</div>
+                                  <div className="text-base sm:text-xl font-black text-brandNavy font-display">{b.score}</div>
                                </div>
-                               <div className="w-10 h-10 rounded-full border-4 border-slate-100 flex items-center justify-center" style={{ borderColor: b.color + '20' }}>
+                               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-4 border-slate-100 flex items-center justify-center" style={{ borderColor: b.color + '20' }}>
                                   <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: b.color }} />
                                </div>
                             </div>
@@ -235,24 +235,24 @@ export default function FeatureScrollShowcase() {
                     range={[0.25, 0.5]}
                     bg="#F8FAFC"
                  >
-                    <div className="p-6 pt-12">
-                       <h3 className="text-xl font-bold text-brandNavy font-display">Active Disputes</h3>
-                       <p className="text-[10px] text-slate-400 font-bold mb-6">12 Actions in Progress</p>
+                    <div className="p-4 pt-10 sm:p-6 sm:pt-12">
+                       <h3 className="text-lg sm:text-xl font-bold text-brandNavy font-display">Active Disputes</h3>
+                       <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold mb-4 sm:mb-6">12 Actions in Progress</p>
 
-                       <div className="space-y-3">
+                       <div className="space-y-2.5 sm:space-y-3">
                           {[
                             { title: 'Wrong Settlement', bureau: 'CIBIL', status: 'In Review', id: 'REF: #8291' },
                             { title: 'Fake Loan Entry', bureau: 'EXPERIAN', status: 'Disputed', id: 'REF: #8295' },
                             { title: 'Address Conflict', bureau: 'CRIF', status: 'Resolved', id: 'REF: #8102' },
                             { title: 'Duplicate Acc', bureau: 'EQUIFAX', status: 'In Review', id: 'REF: #8299' },
                           ].map((d, i) => (
-                            <div key={i} className="p-4 rounded-xl bg-white shadow-sm border border-slate-100">
-                               <div className="flex justify-between items-start mb-2">
-                                  <span className="text-[9px] font-bold text-brandNavy bg-brandNavy/5 px-2 py-0.5 rounded-md">{d.bureau}</span>
-                                  <span className={`text-[9px] font-bold ${d.status === 'Resolved' ? 'text-brandGreen' : 'text-brandBlue'}`}>{d.status}</span>
+                            <div key={i} className="p-3 sm:p-4 rounded-xl bg-white shadow-sm border border-slate-100">
+                               <div className="flex justify-between items-start mb-1 sm:mb-2">
+                                  <span className="text-[8px] sm:text-[9px] font-bold text-brandNavy bg-brandNavy/5 px-2 py-0.5 rounded-md">{d.bureau}</span>
+                                  <span className={`text-[8px] sm:text-[9px] font-bold ${d.status === 'Resolved' ? 'text-brandGreen' : 'text-brandBlue'}`}>{d.status}</span>
                                </div>
-                               <div className="text-xs font-bold text-brandNavy mb-1">{d.title}</div>
-                               <div className="text-[10px] text-slate-400">{d.id}</div>
+                               <div className="text-[11px] sm:text-xs font-bold text-brandNavy mb-0.5 sm:mb-1">{d.title}</div>
+                               <div className="text-[9px] sm:text-[10px] text-slate-400">{d.id}</div>
                             </div>
                           ))}
                        </div>
@@ -265,47 +265,47 @@ export default function FeatureScrollShowcase() {
                     range={[0.5, 0.75]}
                     bg="white"
                  >
-                    <div className="p-6 pt-12 h-full flex flex-col justify-between">
+                    <div className="p-4 pt-10 sm:p-6 sm:pt-12 h-full flex flex-col justify-between">
                        <div>
-                          <h3 className="text-xl font-bold text-brandNavy font-display">Unified Score Audit</h3>
-                          <p className="text-[10px] text-slate-400 font-bold mb-6">Report Generated Successfully</p>
+                          <h3 className="text-lg sm:text-xl font-bold text-brandNavy font-display">Unified Score Audit</h3>
+                          <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold mb-3 sm:mb-6">Report Generated Successfully</p>
 
                           {/* Gauge simulation */}
-                          <div className="flex items-center gap-4 p-4 rounded-2xl bg-brandNavy text-white mb-4 shadow-lg">
-                             <div className="w-14 h-14 rounded-full border-4 border-brandGreen flex flex-col items-center justify-center shrink-0 text-center">
-                                <span className="text-lg font-black font-display">742</span>
-                                <span className="text-[6px] uppercase tracking-wider text-white/70">Avg Score</span>
+                          <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl bg-brandNavy text-white mb-3 sm:mb-4 shadow-lg">
+                             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-4 border-brandGreen flex flex-col items-center justify-center shrink-0 text-center">
+                                <span className="text-base sm:text-lg font-black font-display">742</span>
+                                <span className="text-[5px] sm:text-[6px] uppercase tracking-wider text-white/70">Avg Score</span>
                              </div>
                              <div>
-                                <div className="text-xs font-bold">Good Standing</div>
-                                <div className="text-[9px] text-white/70">Experian variance detected (&gt;15 pts lower)</div>
+                                <div className="text-[11px] sm:text-xs font-bold">Good Standing</div>
+                                <div className="text-[8px] sm:text-[9px] text-white/70">Experian variance detected (&gt;15 pts lower)</div>
                              </div>
                           </div>
 
                           {/* Action Required Card */}
-                          <div className="p-4 rounded-2xl border border-red-100 bg-red-50/50 mb-4">
-                             <div className="flex items-center gap-2 mb-1">
-                                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                                <span className="text-xs font-bold text-red-900">Critical Severity</span>
+                          <div className="p-3 sm:p-4 rounded-2xl border border-red-100 bg-red-50/50 mb-3 sm:mb-4">
+                             <div className="flex items-center gap-1.5 mb-1">
+                                <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 shrink-0" />
+                                <span className="text-[11px] sm:text-xs font-bold text-red-900">Critical Severity</span>
                              </div>
-                             <div className="text-[11px] font-bold text-red-800">Late Payment Record</div>
-                             <div className="text-[9px] text-red-600/80">HDFC Credit Card reported 30 days late.</div>
+                             <div className="text-[10px] sm:text-[11px] font-bold text-red-800">Late Payment Record</div>
+                             <div className="text-[8px] sm:text-[9px] text-red-600/80">HDFC Credit Card reported 30 days late.</div>
                           </div>
                        </div>
 
                        {/* Bottom Stat summary */}
-                       <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 pb-8">
+                       <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-2 border-t border-slate-100 pb-3 sm:pb-8">
                           <div className="text-center p-2 rounded-xl bg-slate-50">
-                             <div className="text-[8px] uppercase font-bold text-slate-400">Accounts</div>
-                             <div className="text-xs font-black text-brandNavy font-display">8 <span className="text-[8px] text-brandGreen font-normal">Active</span></div>
+                             <div className="text-[7px] sm:text-[8px] uppercase font-bold text-slate-400">Accounts</div>
+                             <div className="text-[11px] sm:text-xs font-black text-brandNavy font-display">8 <span className="text-[7px] sm:text-[8px] text-brandGreen font-normal">Active</span></div>
                           </div>
                           <div className="text-center p-2 rounded-xl bg-slate-50">
-                             <div className="text-[8px] uppercase font-bold text-slate-400">Util</div>
-                             <div className="text-xs font-black text-brandNavy font-display">22% <span className="text-[8px] text-brandGreen font-normal">Excel</span></div>
+                             <div className="text-[7px] sm:text-[8px] uppercase font-bold text-slate-400">Util</div>
+                             <div className="text-[11px] sm:text-xs font-black text-brandNavy font-display">22% <span className="text-[7px] sm:text-[8px] text-brandGreen font-normal">Excel</span></div>
                           </div>
                           <div className="text-center p-2 rounded-xl bg-slate-50">
-                             <div className="text-[8px] uppercase font-bold text-slate-400">On-Time</div>
-                             <div className="text-xs font-black text-brandNavy font-display">98%</div>
+                             <div className="text-[7px] sm:text-[8px] uppercase font-bold text-slate-400">On-Time</div>
+                             <div className="text-[11px] sm:text-xs font-black text-brandNavy font-display">98%</div>
                           </div>
                        </div>
                     </div>
@@ -317,28 +317,30 @@ export default function FeatureScrollShowcase() {
                     range={[0.75, 1]}
                     bg="#F1F5F9"
                  >
-                    <div className="p-6 pt-12 h-full flex flex-col">
-                       <h3 className="text-xl font-bold text-brandNavy font-display">Expert Support</h3>
-                       <p className="text-[10px] text-slate-400 font-bold mb-6">Assigned: Ankur Sharma</p>
+                    <div className="p-4 pt-10 sm:p-6 sm:pt-12 h-full flex flex-col justify-between pb-3 sm:pb-6">
+                       <div>
+                          <h3 className="text-lg sm:text-xl font-bold text-brandNavy font-display">Expert Support</h3>
+                          <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold mb-4 sm:mb-6">Assigned: Ankur Sharma</p>
 
-                       <div className="flex-1 space-y-4">
-                          <div className="max-w-[80%] p-3 rounded-2xl rounded-tl-none bg-white text-[11px] text-slate-600 shadow-sm">
-                             Hi Hardik, we've drafted the dispute for the SBI credit card entry. Ready for review?
-                          </div>
-                          <div className="max-w-[80%] p-3 rounded-2xl rounded-tr-none bg-brandBlue text-white text-[11px] ml-auto shadow-md">
-                             Yes, looks good. Let's file it.
-                          </div>
-                          <div className="max-w-[80%] p-3 rounded-2xl rounded-tl-none bg-white text-[11px] text-slate-600 shadow-sm">
-                             Great. Filing now. You'll see the ref ID in the dispute tracker in 5 mins.
+                          <div className="space-y-3 sm:space-y-4">
+                             <div className="max-w-[85%] p-2.5 sm:p-3 rounded-2xl rounded-tl-none bg-white text-[10px] sm:text-[11px] text-slate-600 shadow-sm leading-relaxed">
+                                Hi Hardik, we've drafted the dispute for the SBI credit card entry. Ready for review?
+                             </div>
+                             <div className="max-w-[85%] p-2.5 sm:p-3 rounded-2xl rounded-tr-none bg-brandBlue text-white text-[10px] sm:text-[11px] ml-auto shadow-md leading-relaxed">
+                                Yes, looks good. Let's file it.
+                             </div>
+                             <div className="max-w-[85%] p-2.5 sm:p-3 rounded-2xl rounded-tl-none bg-white text-[10px] sm:text-[11px] text-slate-600 shadow-sm leading-relaxed">
+                                Great. Filing now. You'll see the ref ID in the dispute tracker in 5 mins.
+                             </div>
                           </div>
                        </div>
 
-                       <div className="mt-4 flex gap-2">
-                          <div className="flex-1 h-10 rounded-full bg-white border border-slate-200 px-4 flex items-center text-[10px] text-slate-400">
+                       <div className="mt-3 sm:mt-4 flex gap-2">
+                          <div className="flex-1 h-9 sm:h-10 rounded-full bg-white border border-slate-200 px-3 sm:px-4 flex items-center text-[9px] sm:text-[10px] text-slate-400">
                              Type a message...
                           </div>
-                          <div className="w-10 h-10 rounded-full bg-brandNavy flex items-center justify-center">
-                             <MessageSquare className="w-4 h-4 text-white" />
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-brandNavy flex items-center justify-center shrink-0">
+                             <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                           </div>
                        </div>
                     </div>
@@ -346,7 +348,7 @@ export default function FeatureScrollShowcase() {
               </div>
 
               {/* Home Bar */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/10 rounded-full z-50" />
+              <div className="absolute bottom-1.5 sm:bottom-2 left-1/2 -translate-x-1/2 w-28 sm:w-32 h-1 bg-black/10 rounded-full z-50" />
             </motion.div>
           </div>
 
