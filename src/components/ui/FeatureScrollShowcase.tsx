@@ -129,10 +129,10 @@ export default function FeatureScrollShowcase() {
           />
         </motion.div>
 
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-12 items-start lg:items-center relative z-10 pt-32 lg:pt-0">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-4 sm:gap-8 lg:gap-12 items-start lg:items-center relative z-10 pt-20 sm:pt-28 lg:pt-0">
           
           {/* Left Side: Content */}
-          <div className="relative h-[200px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
+          <div className="relative h-[140px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
             {features.map((feature, i) => {
               const start = i * 0.25
               const end = (i + 1) * 0.25
@@ -151,12 +151,12 @@ export default function FeatureScrollShowcase() {
                   <motion.div 
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center gap-3 mb-2 lg:mb-8"
+                    className="inline-flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 lg:mb-8"
                   >
                     <div className="h-px w-6 lg:w-8 bg-white/20" />
                     <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">{feature.badge}</span>
                   </motion.div>
-                  <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.0] lg:leading-[0.9] mb-4 lg:mb-8">
+                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-3 lg:mb-8">
                     {feature.title.split(" ").map((w, idx) => (
                       <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
                     ))}
@@ -164,7 +164,7 @@ export default function FeatureScrollShowcase() {
                   <p className="text-sm lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium hidden sm:block">
                     {feature.description}
                   </p>
-                  <div className="mt-4 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                  <div className="mt-2 sm:mt-4 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                      <button className="h-10 lg:h-14 px-6 lg:px-8 rounded-full bg-white text-brandNavy font-bold text-[10px] lg:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
                         Open Feature
                      </button>
@@ -175,7 +175,7 @@ export default function FeatureScrollShowcase() {
           </div>
 
           {/* Right Side: Phone Showcase */}
-          <div className="relative flex justify-center perspective-2000 mt-12 lg:mt-0 scale-[0.75] sm:scale-100 origin-top lg:origin-center">
+          <div className="relative flex justify-center perspective-2000 mt-6 sm:mt-12 lg:mt-0 origin-top lg:origin-center">
             <motion.div
               style={{
                 rotateY: phoneRotateY,
@@ -184,7 +184,7 @@ export default function FeatureScrollShowcase() {
                 x: phoneX,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-[280px] sm:w-[300px] h-[580px] sm:h-[600px] bg-black rounded-[45px] sm:rounded-[50px] border-[6px] sm:border-[8px] border-white/5 shadow-2xl overflow-hidden"
+              className="relative w-[260px] sm:w-[300px] h-[500px] sm:h-[600px] bg-black rounded-[40px] sm:rounded-[50px] border-[6px] sm:border-[8px] border-white/5 shadow-2xl overflow-hidden"
             >
               {/* Phone Content Swapper */}
               <div className="relative w-full h-full bg-white overflow-hidden">
