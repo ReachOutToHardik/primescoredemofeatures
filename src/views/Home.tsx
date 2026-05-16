@@ -200,53 +200,6 @@ export default function Home() {
         <HeroInteractive />
       </div>
 
-      {/* ═══ TRUSTED BY (LOGO MARQUEE) ═══ */}
-      <section className="bg-brandNavy relative py-12 border-b border-white/5 overflow-hidden" data-theme="dark">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 mb-10 text-center relative z-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/40">
-            Trusted by clients from across India's top institutions
-          </p>
-        </div>
-        <div className="relative flex overflow-hidden z-10 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
-          <div className="flex animate-marquee whitespace-nowrap gap-16 sm:gap-32 items-center">
-            {/* Logo items duplicated for seamless loop */}
-            {[...Array(2)].map((_, i) => (
-              <React.Fragment key={i}>
-                {[
-                  { name: 'CIBIL' },
-                  { name: 'EXPERIAN' },
-                  { name: 'CRIF' },
-                  { name: 'EQUIFAX' },
-                  { name: 'HDFC BANK' },
-                  { name: 'ICICI BANK' },
-                  { name: 'SBI' },
-                  { name: 'AXIS BANK' },
-                  { name: 'LMJ' },
-                  { name: 'BPB INDIA' },
-                  { name: 'GANPATI STEELS JODHPUR' },
-                ].map((logo) => (
-                  <span 
-                    key={logo.name} 
-                    className="text-xl sm:text-2xl font-display font-black tracking-[0.2em] transition-all duration-500 cursor-default text-white/40 hover:text-white"
-                  >
-                    {logo.name}
-                  </span>
-                ))}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
 
 
       {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
