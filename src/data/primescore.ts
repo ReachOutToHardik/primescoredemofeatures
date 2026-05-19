@@ -38,16 +38,16 @@ export const services: Service[] = [
   },
   {
     id: 'card-disputes',
-    title: 'Credit Card Dispute Filing',
-    short: 'Chargebacks, wrong late fees, and disputed dues — handled end-to-end.',
+    title: 'Written-off Account Resolution',
+    short: 'Resolve "Written-off" status on your profile and clear your history.',
     description:
-      'We handle disputes for incorrect charges, unfair fees, wrong delinquency tags, and account status issues. Every dispute is backed with narrative, proof, and a trackable escalation sequence.',
+      'We handle disputes, negotiations, and formal reporting corrections for accounts marked as "Written-off" in your credit report. Every case is backed with a custom strategy, legal documentation, and tracking to clean up your credit history.',
     priceRange: '₹999 – ₹3,999',
     timeline: [
-      { title: 'Transaction Trace', detail: 'We map statements, dues, and communications into a clear timeline.', eta: '24–48 hrs' },
-      { title: 'Dispute Draft', detail: 'We draft the dispute with precise references for fast acceptance.', eta: '2–3 days' },
-      { title: 'Submission & Tracking', detail: 'We submit to issuer and bureaus, then monitor updates.', eta: 'Same day' },
-      { title: 'Resolution Push', detail: 'We follow up until you get a written resolution or correction.', eta: '2–6 weeks' },
+      { title: 'Case Audit', detail: 'We map outstanding balances, payment histories, and direct lender reports.', eta: '24–48 hrs' },
+      { title: 'Drafting Dispute', detail: 'We prepare the dispute or settlement proposal with precise references.', eta: '2–3 days' },
+      { title: 'Submission', detail: 'We submit directly to the lender and bureaus and track reference IDs.', eta: 'Same day' },
+      { title: 'Resolution Tracking', detail: 'We push for resolution with structured escalations until the status is cleared.', eta: '30–60 days' },
     ],
   },
   {
@@ -80,16 +80,16 @@ export const services: Service[] = [
   },
   {
     id: 'emi',
-    title: 'EMI Restructuring',
-    short: 'Restructure responsibly and prevent late tags from destroying trust.',
+    title: 'Suit Filed Case Assistance',
+    short: 'When a suit filed case appears in your credit report, we assist you in resolving legal disputes.',
     description:
-      'When EMIs are tight, the right restructure saves you from long-term credit damage. We help you document your case, negotiate revised terms, and ensure bureau reporting stays accurate.',
+      'When a suit filed case appears in your credit report, we will assist you in resolving legal disputes. We help you coordinate resolution, draft settlement and correction proposals, and ensure the "Suit Filed" status is properly removed from your bureau report once resolved.',
     priceRange: '₹2,499 – ₹7,999',
     timeline: [
-      { title: 'Affordability Review', detail: 'We calculate safe EMI bands and realistic revised terms.', eta: '1–2 days' },
-      { title: 'Lender Proposal', detail: 'We prepare documents and a clean proposal to submit.', eta: '3–5 days' },
-      { title: 'Restructure Track', detail: 'We follow up for approvals and written confirmation.', eta: '1–3 weeks' },
-      { title: 'Bureau Correctness', detail: 'We verify reporting and dispute wrong delinquency flags.', eta: '30–60 days' },
+      { title: 'Legal Mapping', detail: 'We analyze the court case details, lender notices, and bureau status codes.', eta: '1–2 days' },
+      { title: 'Resolution Proposal', detail: 'We draft a professional legal dispute or settlement proposal.', eta: '3–5 days' },
+      { title: 'Negotiation Support', detail: 'We coordinate with legal departments to reach an official settlement.', eta: '1–3 weeks' },
+      { title: 'Bureau Clearance', detail: 'We submit the NOC/clearance proof to bureaus and track update reports.', eta: '30–60 days' },
     ],
   },
 ]
