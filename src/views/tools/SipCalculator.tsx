@@ -20,7 +20,7 @@ export default function SipCalculator() {
   const gainDashoffset = circumference - (gainPercentage / 100) * circumference
 
   return (
-    <div className="py-20 lg:py-24 min-h-screen bg-gray-50">
+    <div className="pt-28 pb-20 lg:pt-36 lg:pb-24 min-h-screen bg-gray-50">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold text-gray-900 sm:text-5xl">

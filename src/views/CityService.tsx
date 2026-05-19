@@ -9,7 +9,7 @@ export default function CityService({ city }: { city?: string }) {
   return (
     <div className="bg-white min-h-screen">
       {/* Official Header Section */}
-      <section className="py-16 lg:py-24 border-b border-gray-100">
+      <section className="pt-28 pb-16 lg:pt-36 lg:pb-24 border-b border-gray-100">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1">
