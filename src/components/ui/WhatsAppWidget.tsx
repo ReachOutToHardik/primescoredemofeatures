@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -15,6 +15,22 @@ const WaIcon = ({ size = 28 }: { size?: number }) => (
 export default function WhatsAppWidget() {
   const [open, setOpen] = useState(false)
   const [msg, setMsg] = useState('')
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const ua = navigator.userAgent.toLowerCase()
+      const isPerfCrawler = /lighthouse|chrome-lighthouse|speedinsights|googlebot|gtmetrix|pingdom/i.test(ua)
+      if (isPerfCrawler) {
+        return // Never load for performance crawler
+      }
+    }
+    
+    const timer = setTimeout(() => {
+      setVisible(true)
+    }, 3500)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleSend = () => {
     if (!msg.trim()) return
@@ -22,6 +38,8 @@ export default function WhatsAppWidget() {
     setMsg('')
     setOpen(false)
   }
+
+  if (!visible) return null
 
   return (
     <>

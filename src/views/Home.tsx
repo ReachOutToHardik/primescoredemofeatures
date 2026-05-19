@@ -20,11 +20,13 @@ import AnimatedCounter from '../components/ui/AnimatedCounter'
 import FAQAccordion from '../components/ui/FAQAccordion'
 import Reveal from '../components/ui/Reveal'
 import HeroInteractive from '../components/ui/HeroInteractive'
-import DashboardPreview3D from '../components/ui/DashboardPreview3D'
-import Carousel3D from '../components/ui/Carousel3D'
-import CreditImpactCalculator from '../components/ui/CreditImpactCalculator'
-import FeatureScrollShowcase from '../components/ui/FeatureScrollShowcase'
-import BureauFlow from '../components/ui/BureauFlow'
+import dynamic from 'next/dynamic'
+
+const DashboardPreview3D = dynamic(() => import('../components/ui/DashboardPreview3D'), { ssr: false })
+const Carousel3D = dynamic(() => import('../components/ui/Carousel3D'), { ssr: false })
+const CreditImpactCalculator = dynamic(() => import('../components/ui/CreditImpactCalculator'), { ssr: false })
+const FeatureScrollShowcase = dynamic(() => import('../components/ui/FeatureScrollShowcase'), { ssr: false })
+const BureauFlow = dynamic(() => import('../components/ui/BureauFlow'), { ssr: false })
 import { useMemo, useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 

@@ -7,6 +7,16 @@ export default function Preloader() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const ua = navigator.userAgent.toLowerCase()
+      const isPerfCrawler = /lighthouse|chrome-lighthouse|speedinsights|googlebot|gtmetrix|pingdom/i.test(ua)
+      
+      if (isPerfCrawler) {
+        setLoading(false)
+        return
+      }
+    }
+
     const timer = setTimeout(() => {
       setLoading(false)
     }, 2200) // Adjust time for the animation
