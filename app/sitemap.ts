@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/contact',
     '/tools/ifsc',
     '/tools/emi',
+    '/tools/emi-comparison',
     '/tools/gst',
     '/tools/sip',
     '/tools/fd',

@@ -57,6 +57,7 @@ export default function Footer() {
               <div className="text-xs font-semibold uppercase tracking-wider text-brandNavy">Tools</div>
               <div className="mt-4 grid gap-2.5">
                 <Link className={footerLink} href="/tools/emi">EMI Calculator</Link>
+                <Link className={footerLink} href="/tools/emi-comparison">EMI Comparison</Link>
                 <Link className={footerLink} href="/tools/gst">GST Calculator</Link>
                 <Link className={footerLink} href="/tools/sip">SIP Calculator</Link>
                 <Link className={footerLink} href="/tools/fd">FD Calculator</Link>
