@@ -122,7 +122,7 @@ export default function HeroInteractive() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="lg:justify-self-end w-full relative z-10"
+            className="lg:justify-self-end w-full relative z-10 mt-16 lg:mt-0"
           >
             <PhoneShowcase />
           </motion.div>
