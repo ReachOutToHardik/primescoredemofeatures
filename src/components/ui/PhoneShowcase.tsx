@@ -2,16 +2,16 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { 
-  Wifi, 
-  Battery, 
-  Signal, 
-  Download, 
-  Home, 
-  BarChart3, 
-  AlertCircle, 
-  User, 
-  Menu, 
+import {
+  Wifi,
+  Battery,
+  Signal,
+  Download,
+  Home,
+  BarChart3,
+  AlertCircle,
+  User,
+  Menu,
   Bell,
   ShieldCheck,
   TrendingUp
@@ -51,7 +51,7 @@ export default function PhoneShowcase() {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
@@ -61,9 +61,9 @@ export default function PhoneShowcase() {
     >
       {/* Dynamic Glows behind phone */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] pointer-events-none z-0">
-        <motion.div 
+        <motion.div
           animate={{ scale: isHovered ? 1.1 : 1 }}
-          className="absolute inset-0 bg-brandBlue/5 blur-[120px] rounded-full" 
+          className="absolute inset-0 bg-brandBlue/5 blur-[120px] rounded-full"
         />
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-brandRed/5 blur-[80px] rounded-full" />
       </div>
@@ -74,30 +74,30 @@ export default function PhoneShowcase() {
           rotateY,
           transformStyle: "preserve-3d",
         }}
-        initial={{ 
-          opacity: 0, 
-          scale: 0.7, 
-          y: 200, 
-          rotateX: "45deg", 
+        initial={{
+          opacity: 0,
+          scale: 0.7,
+          y: 200,
+          rotateX: "45deg",
           rotateY: "-20deg",
-          z: -500 
+          z: -500
         }}
-        animate={{ 
-          opacity: 1, 
-          scale: 1, 
+        animate={{
+          opacity: 1,
+          scale: 1,
           y: [0, -15, 0], // Merge entry with floating
           rotateX: ["45deg", "0deg"],
           rotateY: ["-20deg", "0deg"],
           z: 0
         }}
-        transition={{ 
+        transition={{
           opacity: { duration: 1.5, ease: "easeOut" },
           scale: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
-          y: { 
-            duration: 5, 
+          y: {
+            duration: 5,
             times: [0, 0.5, 1],
-            repeat: Infinity, 
-            ease: "easeInOut" 
+            repeat: Infinity,
+            ease: "easeInOut"
           },
           rotateX: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
           rotateY: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
@@ -107,10 +107,10 @@ export default function PhoneShowcase() {
       >
         {/* Phone Bezel/Frame Thickness Effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-black to-gray-800 rounded-[50px] -z-10 translate-z-[-25px]" />
-        
+
         {/* Main Phone Body */}
         <div className="relative w-full h-full rounded-[40px] md:rounded-[46px] overflow-hidden translate-z-[1px] bg-white">
-          
+
           {/* iPhone Status Bar */}
           <div className="absolute top-0 left-0 w-full h-12 flex justify-between items-end px-8 pb-1 z-20 text-black">
             <span className="text-[13px] font-bold">9:41</span>
@@ -157,8 +157,8 @@ export default function PhoneShowcase() {
             <div className="px-5 mb-8">
               <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 pt-2">
-                   <div className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1 text-center">Avg Score</div>
-                   <div className="text-2xl font-black text-brandNavy text-center font-display">742</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1 text-center">Avg Score</div>
+                  <div className="text-2xl font-black text-brandNavy text-center font-display">740</div>
                 </div>
 
                 <div className="w-full flex items-center gap-4 mb-6">
@@ -177,8 +177,8 @@ export default function PhoneShowcase() {
                     <div className="text-xs font-bold text-brandNavy font-mono">KMMPS****R</div>
                   </div>
                   <div>
-                     <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider font-body">DOB</div>
-                     <div className="text-xs font-bold text-brandNavy font-body">15 Aug 1995</div>
+                    <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider font-body">DOB</div>
+                    <div className="text-xs font-bold text-brandNavy font-body">15 Aug 1995</div>
                   </div>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default function PhoneShowcase() {
             <div className="px-5 mb-6 overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-4 border-b border-slate-100 min-w-max pb-1">
                 {["Overview", "Accounts", "Enquiries", "Comparison"].map((tab) => (
-                  <button 
+                  <button
                     key={tab}
                     className={`text-xs font-bold pb-3 px-1 relative ${tab === "Comparison" ? "text-brandNavy" : "text-slate-400"}`}
                   >
@@ -246,7 +246,7 @@ export default function PhoneShowcase() {
       </motion.div>
 
       {/* Premium Contact Shadow Below */}
-      <motion.div 
+      <motion.div
         style={{
           scale: useTransform(mouseYSpring, [-0.5, 0.5], [1.1, 0.9]),
           opacity: useTransform(mouseYSpring, [-0.5, 0.5], [0.3, 0.15]),
