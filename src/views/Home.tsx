@@ -135,11 +135,43 @@ function ParallaxShape({ delay = 0, className = "" }: { delay?: number, classNam
 export default function Home() {
   const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
   const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [ctaError, setCtaError] = useState('')
+
+  const todayStr = useMemo(() => {
+    const today = new Date()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const dd = String(today.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  }, [])
 
   const handleCtaSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!ctaForm.email.trim() || !ctaForm.name.trim()) return
     
+    // Validate preferred date (cannot be in the past)
+    if (ctaForm.preferredDate) {
+      const selectedDate = new Date(ctaForm.preferredDate)
+      const today = new Date()
+      selectedDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
+      if (selectedDate < today) {
+        setCtaStatus('error')
+        setCtaError('Consultation date cannot be in the past.')
+        return
+      }
+    }
+
+    // Validate preferred time (must be between 9 AM and 6 PM)
+    if (ctaForm.preferredTime) {
+      const [hours, minutes] = ctaForm.preferredTime.split(':').map(Number)
+      if (hours < 9 || hours > 18 || (hours === 18 && minutes > 0)) {
+        setCtaStatus('error')
+        setCtaError('Preferred consultation time must be between 9:00 AM and 6:00 PM (Office hours).')
+        return
+      }
+    }
+
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
     const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
@@ -147,6 +179,7 @@ export default function Home() {
     if (!serviceId || !templateId || !publicKey) {
       console.error('EmailJS config missing')
       setCtaStatus('error')
+      setCtaError('Form configuration is missing. Please email us directly.')
       return
     }
 
@@ -176,11 +209,13 @@ export default function Home() {
 
 
       setCtaStatus('sent')
+      setCtaError('')
       setCtaForm({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
       setTimeout(() => setCtaStatus('idle'), 5000)
     } catch (err) {
       console.error('EmailJS Error:', err)
       setCtaStatus('error')
+      setCtaError('Failed to send message. Please try again or use WhatsApp.')
     }
   }
 
@@ -393,7 +428,7 @@ export default function Home() {
                 >
                   {ctaStatus === 'error' && (
                     <div className="p-3 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
-                      Failed to send message. Please email us directly.
+                      {ctaError || 'Failed to send message. Please email us directly.'}
                     </div>
                   )}
                   <input
@@ -417,15 +452,18 @@ export default function Home() {
                       <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
                       <input
                         type="date"
+                        min={todayStr}
                         value={ctaForm.preferredDate}
                         onChange={(e) => setCtaForm(p => ({ ...p, preferredDate: e.target.value }))}
                         className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy outline-none transition-colors focus:border-brandNavy focus:bg-white"
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time (9 AM – 6 PM)</label>
                       <input
                         type="time"
+                        min="09:00"
+                        max="18:00"
                         value={ctaForm.preferredTime}
                         onChange={(e) => setCtaForm(p => ({ ...p, preferredTime: e.target.value }))}
                         className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy outline-none transition-colors focus:border-brandNavy focus:bg-white"
