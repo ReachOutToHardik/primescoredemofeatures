@@ -121,20 +121,17 @@ export default function Navbar() {
         ].join(' ')}
       >
         <Link href="/" className="group flex items-center shrink-0">
-          <div className="relative">
+          <div className="relative flex items-center">
             <Image 
-              src="/primescore-logo-tab.png" 
+              src={theme === 'dark' ? "/Darkmode_Logo.png" : "/lightmode_Logo.png"} 
               alt="Primescore" 
-              width={32} 
-              height={32} 
-              className="h-8 w-auto rounded-lg" 
+              width={210} 
+              height={80} 
+              className="h-10 md:h-[50px] w-auto object-contain transition-all duration-300 select-none translate-y-[-1px]" 
               priority 
             />
             <div className="absolute -inset-2 bg-brandBlue/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className={`ml-3 font-display font-black text-xl tracking-tighter transition-colors ${theme === 'dark' ? 'text-white' : 'text-brandNavy'}`}>
-            Primescore
-          </span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">

@@ -13,7 +13,7 @@ export default function About() {
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-brandRed/5 blur-[100px] rounded-full pointer-events-none" />
       
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24 relative z-10">
-        <section className="pt-20 sm:pt-28">
+        <section className="pt-28 sm:pt-36">
           <Reveal>
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 mb-6">
