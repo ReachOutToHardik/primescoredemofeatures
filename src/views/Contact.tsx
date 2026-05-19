@@ -23,6 +23,14 @@ export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+
+  const todayStr = useMemo(() => {
+    const today = new Date()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const dd = String(today.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  }, [])
   
   const supportPhone = DEFAULT_SUPPORT_PHONE
   const telHref = `tel:${supportPhone.replace(/[^\d+]/g, '')}`
@@ -40,6 +48,29 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Validate preferred date (cannot be in the past)
+    if (form.preferredDate) {
+      const selectedDate = new Date(form.preferredDate)
+      const today = new Date()
+      selectedDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
+      if (selectedDate < today) {
+        setStatus('error')
+        setErrorMessage('Consultation date cannot be in the past.')
+        return
+      }
+    }
+
+    // Validate preferred time (must be between 9 AM and 6 PM)
+    if (form.preferredTime) {
+      const [hours, minutes] = form.preferredTime.split(':').map(Number)
+      if (hours < 9 || hours > 18 || (hours === 18 && minutes > 0)) {
+        setStatus('error')
+        setErrorMessage('Preferred consultation time must be between 9:00 AM and 6:00 PM (Office hours).')
+        return
+      }
+    }
+
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
     const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
@@ -165,24 +196,6 @@ export default function Contact() {
                   We reply within <span className="font-semibold text-brandNavy">2 hours</span> during business hours. For urgent cases, WhatsApp is fastest.
                 </p>
               </div>
-
-              {/* Map */}
-              <div className="overflow-hidden rounded-xl border border-brandNavy/8">
-                <div className="flex items-center justify-between bg-white px-4 py-3">
-                  <span className="text-sm font-medium text-brandNavy">Our location</span>
-                  <a href={MAPS_LINK} target="_blank" rel="noreferrer noopener" className="text-xs font-medium text-brandRed hover:underline">
-                    Open in Maps
-                  </a>
-                </div>
-                <div className="h-48">
-                  <iframe
-                    title="Primescore on Google Maps"
-                    className="h-full w-full"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps?q=26.2601171,73.0254566&output=embed"
-                  />
-                </div>
-              </div>
             </div>
           </Reveal>
 
@@ -241,15 +254,18 @@ export default function Contact() {
                       <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
                       <input
                         type="date"
+                        min={todayStr}
                         value={form.preferredDate}
                         onChange={(e) => setForm(p => ({ ...p, preferredDate: e.target.value }))}
                         className={inputCls}
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Time (9 AM – 6 PM)</label>
                       <input
                         type="time"
+                        min="09:00"
+                        max="18:00"
                         value={form.preferredTime}
                         onChange={(e) => setForm(p => ({ ...p, preferredTime: e.target.value }))}
                         className={inputCls}
@@ -269,6 +285,36 @@ export default function Contact() {
             </div>
           </Reveal>
         </div>
+      </section>
+
+      {/* Map: Premium Full Width Banner */}
+      <section className="mt-16">
+        <Reveal>
+          <div className="overflow-hidden rounded-2xl border border-brandNavy/8 bg-white shadow-card">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-brandNavy/8 px-6 py-4 gap-3 bg-night/5">
+              <div>
+                <h3 className="font-display text-lg font-bold text-brandNavy">Our Office Location</h3>
+                <p className="text-xs text-textSecondary mt-0.5">iStart Nest Incubation Center, Jodhpur (Raj.) – 342001</p>
+              </div>
+              <a 
+                href={MAPS_LINK} 
+                target="_blank" 
+                rel="noreferrer noopener" 
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brandRed px-4 py-2 text-xs font-semibold text-white hover:bg-brandRed/90 transition-all w-fit shadow-glowRed"
+              >
+                Open in Google Maps
+              </a>
+            </div>
+            <div className="h-[400px] w-full">
+              <iframe
+                title="Primescore on Google Maps"
+                className="h-full w-full border-0"
+                referrerPolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps?q=26.2601171,73.0254566&output=embed"
+              />
+            </div>
+          </div>
+        </Reveal>
       </section>
     </div>
   )
