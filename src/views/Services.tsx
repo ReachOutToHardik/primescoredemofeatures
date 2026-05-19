@@ -24,6 +24,15 @@ const iconById = {
   emi: Wallet,
 } as const
 
+const imageById = {
+  rectification: '/service/1779181760377-905109645-CIBIL-Score-Rectification.jpeg',
+  settlement: '/service/1779181760372-867672048-Loan-Settlement-Negotiation.jpeg',
+  'card-disputes': '/service/1779181760370-183828100-Written-off-Account-Resolution.jpeg',
+  monitoring: '/service/1779181760448-994722974-Credit-Report-Monitoring.jpeg',
+  coaching: '/service/1779181760374-904786478-Personal-Finance-Coaching.jpeg',
+  emi: '/service/1779181760376-7477191-Suit-Filed-Case-Assistance.jpeg',
+} as const
+
 export default function Services() {
   return (
     <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-20">
@@ -60,14 +69,22 @@ export default function Services() {
             const Icon = iconById[s.id as keyof typeof iconById]
             return (
               <Reveal key={s.id} delay={idx * 0.04}>
-                <div className="group flex flex-col rounded-2xl border border-brandNavy/8 bg-white p-6 transition-all duration-300 hover:border-brandRed/25 hover:shadow-card">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-brandRed/10">
-                      {Icon ? <Icon className="h-5 w-5 text-brandRed" /> : null}
+                <div className="group flex flex-col rounded-2xl border border-brandNavy/8 bg-white p-5 transition-all duration-300 hover:border-brandRed/25 hover:shadow-card">
+                  {/* Card Image Banner */}
+                  <div className="relative h-44 w-full overflow-hidden rounded-xl bg-night/5 mb-4">
+                    <img 
+                      src={imageById[s.id as keyof typeof imageById]} 
+                      alt={s.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {/* Floating Icon Badge */}
+                    <div className="absolute bottom-3 left-3 grid h-9 w-9 place-items-center rounded-xl bg-white/95 text-brandRed shadow-sm backdrop-blur-sm">
+                      {Icon ? <Icon className="h-4.5 w-4.5" /> : null}
                     </div>
                   </div>
 
-                  <h3 className="mt-4 font-display text-lg font-bold text-brandNavy">{s.title}</h3>
+                  <h3 className="font-display text-lg font-bold text-brandNavy">{s.title}</h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-textSecondary">{s.description}</p>
 
                   <div className="mt-5">
