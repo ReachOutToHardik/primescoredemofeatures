@@ -10,7 +10,7 @@ export type Service = {
 export const services: Service[] = [
   {
     id: 'rectification',
-    title: 'CIBIL Score Rectification',
+    title: 'Credit score rectification',
     short: 'Dispute inaccuracies, fix wrong entries, and rebuild trust with bureaus.',
     description:
       'We audit your report line-by-line, identify disputable inaccuracies, and file legally-backed disputes with clear evidence. You get a real-time dashboard of what was filed, when, and why — with transparent outcomes.',
