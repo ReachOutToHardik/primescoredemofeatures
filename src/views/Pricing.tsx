@@ -1,229 +1,216 @@
 'use client'
 
 import { Check } from 'lucide-react'
-import { useMemo, useState } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import Link from 'next/link'
 
-type Billing = 'oneTime' | 'monthly'
-
 export default function Pricing() {
-  const [billing, setBilling] = useState<Billing>('oneTime')
-
-  const plans = useMemo(
-    () => [
-      {
-        key: 'starter',
-        name: 'Starter',
-        oneTime: 999,
-        monthly: 399,
-        highlight: false,
-        description: 'Quick audits and straightforward dispute cases.',
-        features: [
-          'Credit report audit summary',
-          'Up to 2 dispute filings',
-          'Email + WhatsApp updates',
-          'Basic score hygiene checklist',
-        ],
-      },
-      {
-        key: 'pro',
-        name: 'Pro',
-        oneTime: 2499,
-        monthly: 999,
-        highlight: true,
-        description: 'Serious score recovery with expert follow-ups.',
-        features: [
-          'Deep audit + expert review',
-          'Up to 6 dispute filings',
-          'Progress dashboard tracking',
-          'Structured follow-ups + escalations',
-          'One expert call included',
-        ],
-      },
-      {
-        key: 'premium',
-        name: 'Premium',
-        oneTime: 4999,
-        monthly: 1999,
-        highlight: false,
-        description: 'White-glove handling for complex profiles.',
-        features: [
-          'Priority review & drafting',
-          'Up to 12 dispute filings',
-          'Dedicated credit expert',
-          'Weekly progress reviews',
-          'Monitoring + rapid disputes',
-        ],
-      },
-    ],
-    [],
-  )
-
-  const priceLabel = (plan: (typeof plans)[number]) => {
-    const value = billing === 'oneTime' ? plan.oneTime : plan.monthly
-    const suffix = billing === 'oneTime' ? '' : '/mo'
-    return `₹${value.toLocaleString('en-IN')}${suffix}`
+  const plan = {
+    name: 'PrimeScore Report Fetch & Dashboard Access',
+    price: 299,
+    description: 'A one-time fee to pull your official credit reports from all four bureaus and keep them securely stored on our interactive dashboard forever.',
+    features: [
+      'Official 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
+      'Lifetime Interactive Dashboard Storage',
+      'Detailed Inconsistency & Error Flagging summary',
+      'Direct Portal Chat with Credit Experts to review your report',
+      'Zero Monthly Subscription Fees or automatic renewals',
+      'Minimal-Access Encrypted Document Vault security'
+    ]
   }
 
-  const featureRows = [
-    { label: 'Expert-led report audit', starter: true, pro: true, premium: true },
-    { label: 'Dispute drafting + filing', starter: 'Up to 2', pro: 'Up to 6', premium: 'Up to 12' },
-    { label: 'Progress dashboard', starter: false, pro: true, premium: true },
-    { label: 'Escalations & follow-ups', starter: false, pro: true, premium: true },
-    { label: 'Dedicated expert', starter: false, pro: false, premium: true },
-    { label: 'Monitoring & alerts', starter: false, pro: false, premium: true },
-    { label: 'Money-back guarantee', starter: true, pro: true, premium: true },
+  const comparisonRows = [
+    { 
+      metric: 'Pricing Model', 
+      primescore: '₹299 One-time (No recurring fees)', 
+      freeApps: 'Free (But constant spam & upselling)', 
+      agencies: '₹5,000+ Upfront Retainers' 
+    },
+    { 
+      metric: 'Bureaus Pulled', 
+      primescore: 'All 4 Bureaus (CIBIL, Experian, Equifax, CRIF)', 
+      freeApps: '1 Bureau only', 
+      agencies: '1 Bureau only' 
+    },
+    { 
+      metric: 'Data Longevity', 
+      primescore: 'Stored securely on your dashboard forever', 
+      freeApps: 'Do not store previous data (requires refreshes)', 
+      agencies: 'Do not store previous data (static PDF/paper)' 
+    },
+    { 
+      metric: 'Spam Policy', 
+      primescore: 'Strict Zero-Spam. We never sell your number.', 
+      freeApps: 'Spams you with loan and credit card calls', 
+      agencies: 'Inconsistent support spam laws' 
+    },
+    { 
+      metric: 'Expert Review', 
+      primescore: 'Direct chat with credit analysts included', 
+      freeApps: 'Robotic automated chats only', 
+      agencies: 'Available only at high hourly rates' 
+    }
   ] as const
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-20">
-      <section className="pt-24 sm:pt-36">
+    <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24">
+      {/* Premium minimal header */}
+      <section className="pt-28 sm:pt-36 text-center">
         <Reveal>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-textSecondary">Pricing</p>
-            <h1 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
-              Simple, transparent pricing
+          <div className="flex flex-col items-center">
+            <span className="inline-flex items-center rounded-full bg-brandRed/10 px-3.5 py-1 text-xs font-semibold tracking-wider text-brandRed uppercase">
+              One-Time Payment
+            </span>
+            <h1 className="mt-4 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl leading-none">
+              One-time fetch. Lifetime dashboard access.
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-textSecondary">
-              Choose one-time rectification, or monthly coverage for ongoing monitoring + guidance.
+            <p className="mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-textSecondary">
+              Pay ₹299 once to pull your official 4-bureau credit reports and keep them saved securely in your PrimeScore account forever. Zero monthly subscriptions. Zero ad spam.
             </p>
-            <div className="mt-7 inline-flex rounded-xl border border-brandNavy/8 bg-night/50 p-1">
-              {(['oneTime', 'monthly'] as const).map((b) => (
-                <button
-                  key={b}
-                  type="button"
-                  onClick={() => setBilling(b)}
-                  className={[
-                    'rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200',
-                    billing === b
-                      ? 'bg-brandRed text-white shadow-sm'
-                      : 'text-textSecondary hover:text-brandNavy',
-                  ].join(' ')}
-                >
-                  {b === 'oneTime' ? 'One-time' : 'Monthly'}
-                </button>
-              ))}
-            </div>
           </div>
         </Reveal>
       </section>
 
-      <section className="mt-12">
-        <div className="grid gap-5 lg:grid-cols-3">
-          {plans.map((p, idx) => (
-            <Reveal key={p.key} delay={idx * 0.04}>
-              <div
-                className={[
-                  'relative flex flex-col rounded-2xl border bg-white p-6 sm:p-7',
-                  p.highlight
-                    ? 'border-brandRed/30 shadow-glowRed ring-1 ring-brandRed/10'
-                    : 'border-brandNavy/8 shadow-card',
-                ].join(' ')}
-              >
-                {p.highlight && (
-                  <div className="absolute -top-3 left-6 rounded-full bg-brandRed px-3 py-0.5 text-xs font-semibold text-white">
-                    Most popular
+      {/* Pricing Card Section */}
+      <section className="mt-12 flex justify-center">
+        <div className="w-full max-w-4xl">
+          <Reveal>
+            <div className="relative overflow-hidden rounded-3xl border border-brandNavy/8 bg-white p-6 sm:p-10 shadow-card">
+              {/* Decorative Subtle Accent Gradient */}
+              <div className="absolute top-0 right-0 h-48 w-48 bg-gradient-to-br from-brandRed/5 to-transparent rounded-full blur-2xl"></div>
+              
+              <div className="relative grid gap-8 md:grid-cols-12 md:items-stretch">
+                {/* Left side inside card: Core Pricing & CTA */}
+                <div className="md:col-span-5 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-display text-2xl font-bold text-brandNavy">{plan.name}</h3>
+                    <p className="mt-3 text-xs leading-relaxed text-textSecondary">
+                      {plan.description}
+                    </p>
                   </div>
-                )}
-                <div>
-                  <h3 className="font-display text-xl font-bold text-brandNavy">{p.name}</h3>
-                  <p className="mt-1 text-sm text-textSecondary">{p.description}</p>
-                </div>
-
-                <div className="mt-5 font-display text-4xl font-black tracking-tight text-brandNavy">
-                  {priceLabel(p)}
-                </div>
-                <p className="mt-1 text-xs text-textSecondary">
-                  {billing === 'monthly' ? 'Cancel anytime' : 'One-time payment'}
-                </p>
-
-                <div className="mt-6 grid gap-2.5">
-                  {p.features.map((f) => (
-                    <div key={f} className="flex items-start gap-2.5 text-sm">
-                      <div className="mt-0.5 grid h-4.5 w-4.5 shrink-0 place-items-center rounded-full bg-success/15 text-success">
-                        <Check className="h-3 w-3" />
-                      </div>
-                      <span className="text-brandNavy">{f}</span>
+                  
+                  <div className="mt-8 md:mt-0">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-display text-5xl font-black text-brandNavy">₹299</span>
+                      <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
                     </div>
-                  ))}
+                    <p className="mt-1 text-[10px] font-semibold text-textSecondary uppercase tracking-wider">
+                      No recurring charges · No automatic renewals
+                    </p>
+                    
+                    <div className="mt-6">
+                      <Link href="/contact">
+                        <Button as="div" className="w-full py-3.5 text-center text-sm font-bold shadow-glowRed">
+                          Fetch My Credit Reports
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-auto pt-6">
-                  <Link href="/contact">
-                    <Button as="div" className="w-full" variant={p.highlight ? 'primary' : 'ghost'}>
-                      Get started
-                    </Button>
-                  </Link>
+                {/* Vertical Divider for desktop */}
+                <div className="hidden md:block md:col-span-1 border-r border-brandNavy/6 my-2"></div>
+
+                {/* Right side inside card: Detailed feature list */}
+                <div className="md:col-span-6 flex flex-col justify-center">
+                  <h4 className="font-display text-xs font-bold uppercase tracking-wider text-brandNavy mb-4">
+                    What is included:
+                  </h4>
+                  <ul className="grid gap-3.5 text-xs sm:text-sm">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-start gap-3">
+                        <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-success/15 text-success">
+                          <Check className="h-3 w-3 stroke-[2.5px]" />
+                        </div>
+                        <span className="text-brandNavy font-medium leading-normal">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            </Reveal>
-          ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Money-back guarantee */}
-      <section className="mt-14">
-        <Reveal>
-          <div className="rounded-2xl bg-brandNavy p-6 sm:p-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="font-display text-xl font-bold text-white">
-                  100% money-back if no improvement in 90 days
-                </h3>
-                <p className="mt-1.5 text-sm text-white/50">
-                  Eligible when filed disputes conclude and your profile shows no improvement.
-                </p>
-              </div>
-              <Link href="/contact">
-                <Button as="div" variant="ghost" className="w-full border-white/20 text-white hover:border-white/40 hover:bg-white/10 sm:w-auto">
-                  Check eligibility
-                </Button>
-              </Link>
-            </div>
+      {/* Trust guarantees bar */}
+      <section className="mt-8 max-w-4xl mx-auto grid gap-4 sm:grid-cols-3">
+        <Reveal delay={0.05}>
+          <div className="rounded-2xl border border-brandNavy/6 bg-night/30 p-4 text-center">
+            <div className="text-xs font-bold text-brandNavy uppercase tracking-wider">Pay Once, Keep Forever</div>
+            <div className="mt-1 text-[11px] text-textSecondary leading-relaxed">No recurring subscriptions or hidden membership cards. Your credit report data stays saved on your dashboard.</div>
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div className="rounded-2xl border border-brandNavy/6 bg-night/30 p-4 text-center">
+            <div className="text-xs font-bold text-brandNavy uppercase tracking-wider">Zero Spams or Ad Leads</div>
+            <div className="mt-1 text-[11px] text-textSecondary leading-relaxed">Unlike free checkers, we do not monetize your scores by selling your contact number to loan brokers or banks.</div>
+          </div>
+        </Reveal>
+        <Reveal delay={0.15}>
+          <div className="rounded-2xl border border-brandNavy/6 bg-night/30 p-4 text-center">
+            <div className="text-xs font-bold text-brandNavy uppercase tracking-wider">Startup India Recognized</div>
+            <div className="mt-1 text-[11px] text-textSecondary leading-relaxed">Primescore operates as an officially recognized credit consultancy startup under the DPIIT (Govt. of India).</div>
           </div>
         </Reveal>
       </section>
 
-      {/* Feature comparison */}
-      <section className="mt-24">
+      {/* Comparison Grid */}
+      <section className="mt-20 max-w-4xl mx-auto">
         <Reveal>
-          <div>
+          <div className="text-center mb-10">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-textSecondary">Compare</p>
             <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-brandNavy sm:text-4xl">
-              Feature comparison
+              How we compare
             </h2>
+            <p className="mt-2 text-xs sm:text-sm text-textSecondary leading-relaxed">
+              Why thousands of Indian credit builders use PrimeScore instead of free ad-supported check apps.
+            </p>
           </div>
         </Reveal>
 
-        {/* Desktop */}
-        <div className="mt-10 hidden overflow-hidden rounded-2xl border border-brandNavy/8 bg-white sm:block">
-          <div className="grid grid-cols-4 border-b border-brandNavy/8 bg-night/60 p-5 text-sm font-semibold text-brandNavy">
-            <div>Feature</div>
-            <div>Starter</div>
-            <div>Pro</div>
-            <div>Premium</div>
+        {/* Desktop Comparison Table */}
+        <div className="mt-8 hidden overflow-hidden rounded-2xl border border-brandNavy/8 bg-white sm:block">
+          <div className="grid grid-cols-12 border-b border-brandNavy/8 bg-night/60 p-4 text-xs font-semibold uppercase tracking-wider text-brandNavy">
+            <div className="col-span-3">Feature</div>
+            <div className="col-span-3 text-success font-bold">PrimeScore (₹299 One-time)</div>
+            <div className="col-span-3">Free Score Apps</div>
+            <div className="col-span-3">Traditional Bureaus</div>
           </div>
-          {featureRows.map((row) => (
-            <div key={row.label} className="grid grid-cols-4 border-b border-brandNavy/6 p-5 text-sm last:border-b-0">
-              <div className="font-medium text-brandNavy">{row.label}</div>
-              <div>{renderValue(row.starter)}</div>
-              <div>{renderValue(row.pro)}</div>
-              <div>{renderValue(row.premium)}</div>
+          {comparisonRows.map((row) => (
+            <div key={row.metric} className="grid grid-cols-12 border-b border-brandNavy/6 p-4 text-xs last:border-b-0 items-center">
+              <div className="col-span-3 font-bold text-brandNavy pr-3">{row.metric}</div>
+              <div className="col-span-3 font-semibold text-success pr-3 flex items-start gap-1.5">
+                <Check className="h-3.5 w-3.5 stroke-[3px] shrink-0 text-success" />
+                <span>{row.primescore}</span>
+              </div>
+              <div className="col-span-3 text-textSecondary pr-3">{row.freeApps}</div>
+              <div className="col-span-3 text-textSecondary">{row.agencies}</div>
             </div>
           ))}
         </div>
 
-        {/* Mobile */}
-        <div className="mt-10 grid gap-3 sm:hidden">
-          {featureRows.map((row) => (
-            <div key={row.label} className="rounded-xl border border-brandNavy/8 bg-white p-4">
-              <div className="text-sm font-semibold text-brandNavy">{row.label}</div>
-              <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
-                <div><span className="text-textSecondary">Starter: </span>{renderValueCompact(row.starter)}</div>
-                <div><span className="text-textSecondary">Pro: </span>{renderValueCompact(row.pro)}</div>
-                <div><span className="text-textSecondary">Premium: </span>{renderValueCompact(row.premium)}</div>
+        {/* Mobile Comparison Layout */}
+        <div className="mt-6 grid gap-4 sm:hidden text-xs">
+          {comparisonRows.map((row) => (
+            <div key={row.metric} className="rounded-xl border border-brandNavy/8 bg-white p-4">
+              <div className="font-bold text-brandNavy uppercase tracking-wider mb-2.5">{row.metric}</div>
+              <div className="grid gap-2">
+                <div className="flex items-start gap-1.5">
+                  <span className="text-textSecondary font-medium shrink-0">PrimeScore:</span>
+                  <span className="font-semibold text-brandNavy flex items-center gap-1">
+                    <Check className="h-3 w-3 stroke-[3px] text-success shrink-0" /> {row.primescore}
+                  </span>
+                </div>
+                <div className="flex items-start gap-1">
+                  <span className="text-textSecondary font-medium shrink-0">Free Apps:</span>
+                  <span className="text-textSecondary">{row.freeApps}</span>
+                </div>
+                <div className="flex items-start gap-1">
+                  <span className="text-textSecondary font-medium shrink-0">Traditional:</span>
+                  <span className="text-textSecondary">{row.agencies}</span>
+                </div>
               </div>
             </div>
           ))}
@@ -231,20 +218,4 @@ export default function Pricing() {
       </section>
     </div>
   )
-}
-
-function renderValue(v: boolean | string) {
-  if (typeof v === 'string') return <span className="font-mono text-brandNavy">{v}</span>
-  return v ? (
-    <span className="inline-flex items-center gap-1.5 text-success">
-      <Check className="h-4 w-4" /> Yes
-    </span>
-  ) : (
-    <span className="text-textSecondary/50">—</span>
-  )
-}
-
-function renderValueCompact(v: boolean | string) {
-  if (typeof v === 'string') return <span className="font-medium text-brandNavy">{v}</span>
-  return v ? <span className="font-medium text-success">✓</span> : <span className="text-textSecondary/50">—</span>
 }

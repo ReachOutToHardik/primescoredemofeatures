@@ -56,7 +56,7 @@ export const services: Service[] = [
     short: 'Get alerts, stay clean, and catch errors before they become problems.',
     description:
       'We monitor key signals like new inquiries, account status changes, and adverse flags. You get proactive guidance to protect your score while your disputes are in flight.',
-    priceRange: '₹399/mo – ₹999/mo',
+    priceRange: '₹299 (One-time fetch)',
     timeline: [
       { title: 'Setup', detail: 'We configure monitoring and create your baseline score snapshot.', eta: 'Same day' },
       { title: 'Alerts', detail: 'You get timely alerts when meaningful credit events occur.', eta: 'Ongoing' },
