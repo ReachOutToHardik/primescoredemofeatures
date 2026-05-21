@@ -61,12 +61,12 @@ export default function Dashboard() {
         // Send Premium Welcome Email via EmailJS (Waitlist specific account)
         try {
           await emailjs.send(
-            process.env.NEXT_PUBLIC_WAITLIST_SERVICE_ID || '',
-            process.env.NEXT_PUBLIC_WAITLIST_TEMPLATE_ID || '',
+            'service_z29eucm',
+            'template_7fkqtv5',
             {
               to_email: email,
             },
-            process.env.NEXT_PUBLIC_WAITLIST_PUBLIC_KEY || ''
+            '4OCw45XN2GQNAs8uy'
           )
         } catch (emailError) {
           console.error('EmailJS Error:', emailError)
