@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 // Web3Forms Configuration
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
@@ -57,6 +58,20 @@ export default function Dashboard() {
       })
 
       if (res.status === 200) {
+        // Send Premium Welcome Email via EmailJS
+        try {
+          await emailjs.send(
+            process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+            process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+            {
+              to_email: email, // This matches the {{to_email}} variable in the EmailJS template
+            },
+            process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+          )
+        } catch (emailError) {
+          console.error('EmailJS Error:', emailError)
+        }
+
         setStatus('success')
         setEmail('')
       } else {
