@@ -1,157 +1,188 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import {
-  Bell,
-  FileText,
-  LayoutDashboard,
-  ShieldCheck,
-  UserRound,
-} from 'lucide-react'
-import Reveal from '../components/ui/Reveal'
-import Button from '../components/ui/Button'
+import { CheckCircle2, ArrowRight } from 'lucide-react'
 
-const tabImages: Record<string, string> = {
-  'Overview': '/dashboard/overview.png',
-  'Accounts': '/dashboard/account.png',
-  'Enquiries': '/dashboard/enquiries.png',
-  'Comparison': '/dashboard/comparision.png',
-}
-
-function ImagePlaceholder({ title }: { title: string }) {
-  const imgSrc = tabImages[title] || tabImages['Overview']
-
-  return (
-    <Reveal>
-      <div className="group relative w-full overflow-hidden rounded-2xl border border-brandNavy/8 bg-white shadow-card lg:h-auto">
-        {/* Desktop view: full height, standard hover effect */}
-        <motion.div
-          className="hidden w-full lg:block"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
-          <img
-            src={imgSrc}
-            alt={`${title} view`}
-            className="h-auto w-full object-cover"
-          />
-        </motion.div>
-
-        {/* Mobile view: fixed height, auto-pan/zoom effect */}
-        <div className="h-[350px] w-full lg:hidden">
-          <motion.img
-            src={imgSrc}
-            alt={`${title} view`}
-            className="h-full w-full object-cover"
-            animate={{
-              objectPosition: ["0% 0%", "100% 0%", "0% 0%"],
-              scale: [1, 1.05, 1]
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        </div>
-      </div>
-    </Reveal>
-  )
-}
+// Web3Forms Configuration
+const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
+const ACCESS_KEY = '3b227acb-f76a-4120-8568-797ad9dd59b5'
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('Overview')
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
-  const tabs = [
-    { id: 'Overview', icon: LayoutDashboard, label: 'Overview' },
-    { id: 'Accounts', icon: FileText, label: 'Accounts' },
-    { id: 'Enquiries', icon: Bell, label: 'Enquiries' },
-    { id: 'Comparison', icon: ShieldCheck, label: 'Comparison' },
-  ]
+  // Countdown to June 14, 2026
+  useEffect(() => {
+    const targetDate = new Date('2026-06-14T00:00:00Z').getTime()
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime()
+      const distance = targetDate - now
+
+      if (distance < 0) {
+        clearInterval(interval)
+        return
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+
+    try {
+      const res = await fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          email: email,
+          subject: 'New Waitlist Signup for Primescore Dashboard',
+          from_name: 'Primescore Waitlist',
+        }),
+      })
+
+      if (res.status === 200) {
+        setStatus('success')
+        setEmail('')
+      } else {
+        setStatus('error')
+      }
+    } catch (err) {
+      setStatus('error')
+    }
+  }
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-20">
-      <section className="pt-12 sm:pt-16">
-        <Reveal>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-textSecondary">Dashboard</p>
-            <h1 className="mt-3 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
-              Your Primescore Dashboard
-            </h1>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-textSecondary">
-              Preview of what clients see: score movement, active disputes, documents, and next actions.
-            </p>
-          </div>
-        </Reveal>
-      </section>
+    <div className="min-h-screen pt-32 pb-20 flex flex-col items-center justify-center bg-white px-4 sm:px-6 relative overflow-hidden selection:bg-brandNavy/10">
+      
+      {/* Ultra-Premium Background Effects */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.03] pointer-events-none" />
+      <div className="absolute top-0 w-full h-[600px] bg-gradient-to-b from-brandNavy/[0.04] to-transparent pointer-events-none" />
+      
+      {/* Engaging Background Graphic 1 */}
+      <motion.div
+        animate={{ 
+          y: [0, -20, 0],
+          rotate: [0, 5, 0],
+        }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[15%] left-[10%] w-64 h-64 border-[1px] border-brandNavy/5 rounded-full pointer-events-none hidden lg:block"
+      />
+      {/* Engaging Background Graphic 2 */}
+      <motion.div
+        animate={{ 
+          y: [0, 30, 0],
+          rotate: [45, 60, 45],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-[20%] right-[10%] w-72 h-72 border-[1px] border-brandNavy/5 rounded-[40px] pointer-events-none hidden lg:block"
+      />
+      
+      {/* Animated Subtle Glow */}
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3] 
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-brandNavy/[0.03] blur-[120px] rounded-full pointer-events-none"
+      />
 
-      <section className="mt-12">
-        <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-          {/* Sidebar */}
-          <Reveal>
-            <aside className="sticky top-20 hidden h-fit rounded-2xl border border-brandNavy/8 bg-white p-4 shadow-card lg:block">
-              <div className="flex items-center gap-3 px-2 pb-4">
-                <div className="grid h-10 w-10 place-items-center rounded-full bg-brandRed/12 font-display text-sm font-bold text-brandRed">
-                  <UserRound className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-brandNavy">Client</div>
-                  <div className="font-mono text-xs text-textSecondary">PS-28419</div>
-                </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-3xl w-full text-center relative z-10"
+      >
+
+
+        <h1 className="text-5xl sm:text-[80px] font-medium tracking-tight text-brandNavy mb-8 leading-[1.05]">
+          The new standard in <br className="hidden sm:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-br from-brandNavy to-brandNavy/60">credit resolution.</span>
+        </h1>
+
+        <p className="text-lg sm:text-xl text-textSecondary mb-14 max-w-2xl mx-auto font-light leading-relaxed">
+          We are launching the entirely rebuilt Primescore Dashboard. 
+          Join the exclusive waitlist today to secure a <strong className="text-brandNavy font-semibold">40% discount on your first payment</strong>.
+        </p>
+
+        {/* Premium Countdown */}
+        <div className="flex justify-center gap-6 sm:gap-12 mb-16">
+          {[
+            { label: 'Days', value: timeLeft.days },
+            { label: 'Hours', value: timeLeft.hours },
+            { label: 'Minutes', value: timeLeft.minutes },
+            { label: 'Seconds', value: timeLeft.seconds },
+          ].map((item) => (
+            <div key={item.label} className="flex flex-col items-center">
+              <div className="text-4xl sm:text-6xl font-light text-brandNavy tracking-tighter tabular-nums mb-2">
+                {String(item.value).padStart(2, '0')}
               </div>
-
-              <div className="grid gap-1">
-                {tabs.map((x) => (
-                  <button
-                    key={x.id}
-                    onClick={() => setActiveTab(x.id)}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${activeTab === x.id
-                        ? 'bg-brandNavy/[0.04] font-semibold text-brandNavy'
-                        : 'text-textSecondary hover:bg-brandNavy/[0.04] hover:text-brandNavy'
-                      }`}
-                  >
-                    <x.icon className="h-4 w-4" />
-                    <span>{x.label}</span>
-                  </button>
-                ))}
+              <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-textSecondary font-semibold">
+                {item.label}
               </div>
-
-              <div className="mt-6 rounded-xl bg-brandRed/8 p-3">
-                <div className="text-sm font-semibold text-brandNavy">Book Expert Call</div>
-                <div className="mt-0.5 text-xs text-textSecondary">15 min · Clear next steps</div>
-                <Button className="mt-3 h-9 w-full text-xs">Schedule</Button>
-              </div>
-            </aside>
-          </Reveal>
-
-          {/* Main content */}
-          <div className="grid min-w-0 gap-6">
-            {/* Mobile Tabs */}
-            <Reveal>
-              <div className="flex w-full items-center justify-between rounded-2xl border border-brandNavy/8 bg-white p-1.5 shadow-sm lg:hidden">
-                {tabs.map((x) => (
-                  <button
-                    key={x.id}
-                    onClick={() => setActiveTab(x.id)}
-                    className={`flex flex-1 flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 transition-all ${activeTab === x.id
-                        ? 'bg-brandNavy/[0.06] text-brandNavy shadow-sm scale-[0.98]'
-                        : 'text-textSecondary hover:bg-brandNavy/[0.04] hover:text-brandNavy'
-                      }`}
-                  >
-                    <x.icon className={`h-5 w-5 transition-all ${activeTab === x.id ? 'stroke-[2.5px]' : ''}`} />
-                    <span className={`text-[10px] tracking-wide sm:text-xs ${activeTab === x.id ? 'font-bold' : 'font-medium'}`}>
-                      {x.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </Reveal>
-
-            <ImagePlaceholder title={activeTab} />
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
+
+        {/* Premium Form */}
+        {status === 'success' ? (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="flex items-center justify-center gap-3 p-6 rounded-2xl bg-white border border-brandNavy/10 shadow-sm max-w-md mx-auto"
+          >
+            <CheckCircle2 className="w-5 h-5 text-brandNavy" />
+            <span className="font-medium text-brandNavy">You're on the list. Keep an eye on your inbox.</span>
+          </motion.div>
+        ) : (
+          <form onSubmit={handleSubmit} className="relative max-w-lg mx-auto group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-brandNavy/20 to-brandRed/20 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+            <div className="relative flex items-center">
+              <input
+                type="email"
+                required
+                placeholder="Enter your work email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-16 pl-8 pr-[160px] rounded-full border border-brandNavy/10 bg-white/80 backdrop-blur-md shadow-sm text-brandNavy placeholder:text-textSecondary/50 focus:outline-none focus:border-brandNavy/30 focus:ring-4 focus:ring-brandNavy/5 transition-all text-lg"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="absolute right-2 top-2 bottom-2 px-8 rounded-full bg-brandNavy text-white text-sm font-medium hover:bg-brandNavy/90 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 shadow-md"
+              >
+                {status === 'loading' ? 'Joining...' : (
+                  <>
+                    Join Waitlist
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
+            {status === 'error' && (
+              <p className="absolute -bottom-8 left-0 w-full text-center text-xs text-brandRed font-medium">
+                Something went wrong. Please check your connection and try again.
+              </p>
+            )}
+          </form>
+        )}
+      </motion.div>
     </div>
   )
 }

@@ -1,13 +1,15 @@
 'use client'
-import React from 'react'
 
+import React from 'react'
 import {
   ArrowRight,
   Brain,
   CheckCircle2,
   FileUp,
+  FileSearch,
   Lock,
   Radar,
+  Scale,
   ShieldCheck,
   TrendingUp,
   Mail
@@ -16,20 +18,224 @@ import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { faqs, services, testimonials } from '../data/primescore'
 import Button from '../components/ui/Button'
-import AnimatedCounter from '../components/ui/AnimatedCounter'
 import FAQAccordion from '../components/ui/FAQAccordion'
 import Reveal from '../components/ui/Reveal'
 import HeroInteractive from '../components/ui/HeroInteractive'
 import dynamic from 'next/dynamic'
-
-const DashboardPreview3D = dynamic(() => import('../components/ui/DashboardPreview3D'), { ssr: false })
-const Carousel3D = dynamic(() => import('../components/ui/Carousel3D'), { ssr: false })
-const CreditImpactCalculator = dynamic(() => import('../components/ui/CreditImpactCalculator'), { ssr: false })
-const FeatureScrollShowcase = dynamic(() => import('../components/ui/FeatureScrollShowcase'), { ssr: false })
-const BureauFlow = dynamic(() => import('../components/ui/BureauFlow'), { ssr: false })
 import { useMemo, useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 
+const Carousel3D = dynamic(() => import('../components/ui/Carousel3D'), { ssr: false })
+const CreditImpactCalculator = dynamic(() => import('../components/ui/CreditImpactCalculator'), { ssr: false })
+const ParthScrollShowcase = dynamic(() => import('../components/ui/ParthScrollShowcase'), { ssr: false })
+
+/* ─── AI Chipset Background Pattern ─── */
+function AiChipsetBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.15]">
+      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="chipset-pattern" width="200" height="200" patternUnits="userSpaceOnUse">
+            {/* Base Grid */}
+            <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#6366f1" strokeWidth="0.5" strokeOpacity="0.3" />
+            
+            {/* CPU / Logic Block */}
+            <rect x="40" y="40" width="40" height="40" rx="4" fill="none" stroke="#818cf8" strokeWidth="1.5" />
+            <rect x="45" y="45" width="30" height="30" rx="2" fill="none" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.7" />
+            <circle cx="60" cy="60" r="8" fill="#818cf8" fillOpacity="0.2" />
+            
+            {/* Data Buses */}
+            <path d="M 80 50 L 120 50 L 140 70 L 200 70" fill="none" stroke="#a78bfa" strokeWidth="1" />
+            <path d="M 80 60 L 110 60 L 130 80 L 180 80 L 200 60" fill="none" stroke="#818cf8" strokeWidth="0.5" />
+            <path d="M 80 70 L 100 70 L 120 90 L 120 200" fill="none" stroke="#6366f1" strokeWidth="1" />
+            
+            {/* Micro-nodes */}
+            <circle cx="120" cy="50" r="2" fill="#a78bfa" />
+            <circle cx="140" cy="70" r="1.5" fill="#a78bfa" />
+            <circle cx="100" cy="70" r="2" fill="#6366f1" />
+            <circle cx="120" cy="90" r="1.5" fill="#6366f1" />
+            
+            {/* Secondary Logic Block */}
+            <rect x="140" y="120" width="24" height="24" rx="2" fill="none" stroke="#818cf8" strokeWidth="1" />
+            <circle cx="152" cy="132" r="4" fill="#a78bfa" fillOpacity="0.3" />
+            
+            {/* Complex Traces */}
+            <path d="M 40 50 L 0 50" fill="none" stroke="#818cf8" strokeWidth="1" />
+            <path d="M 60 40 L 60 0" fill="none" stroke="#6366f1" strokeWidth="1" />
+            <path d="M 50 80 L 50 140 L 70 160 L 120 160" fill="none" stroke="#a78bfa" strokeWidth="0.5" />
+            <path d="M 140 132 L 100 132 L 80 112 L 0 112" fill="none" stroke="#6366f1" strokeWidth="1" />
+            <path d="M 164 132 L 184 132 L 200 148" fill="none" stroke="#818cf8" strokeWidth="1" />
+            <path d="M 152 144 L 152 200" fill="none" stroke="#a78bfa" strokeWidth="1" />
+            <path d="M 152 120 L 152 90 L 172 70 L 200 70" fill="none" stroke="#6366f1" strokeWidth="0.5" />
+            
+            {/* Memory Modules */}
+            <rect x="10" y="140" width="8" height="20" rx="1" fill="none" stroke="#a78bfa" strokeWidth="1" />
+            <rect x="25" y="140" width="8" height="20" rx="1" fill="none" stroke="#a78bfa" strokeWidth="1" />
+            <path d="M 14 140 L 14 112" fill="none" stroke="#6366f1" strokeWidth="0.5" />
+            <path d="M 29 140 L 29 112" fill="none" stroke="#6366f1" strokeWidth="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#chipset-pattern)" />
+      </svg>
+      {/* Subtle overlay gradient to blend edges */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#06040f_80%)]" />
+    </div>
+  )
+}
+
+/* ─── Tracing Lines: animated dots racing along SVG tracks ─── */
+function TracingLines() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 1440 700"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <filter id="pt-glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="pt-glow-lg" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* ── Track lines (static, faint) ── */}
+        <path d="M -100 185 L 1540 185" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.1" />
+        <path d="M -100 430 L 1540 430" stroke="#818cf8" strokeWidth="1" strokeOpacity="0.08" />
+        <path d="M -100 590 L 900 590" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.07" />
+        <path d="M 280 -20 L 780 720" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.07" />
+        <path d="M 940 -20 L 520 720" stroke="#818cf8" strokeWidth="1" strokeOpacity="0.06" />
+        <path d="M 1120 -20 L 1540 280" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.07" />
+        {/* vertical connectors */}
+        <path d="M 510 185 L 510 430" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.08" />
+        <path d="M 920 185 L 920 430" stroke="#818cf8" strokeWidth="1" strokeOpacity="0.08" />
+        <path d="M 920 430 L 920 590" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.06" />
+
+        {/* ── Intersection pulse nodes ── */}
+        {[
+          { cx: 510, cy: 185, c: '#6366f1', dur: '2s', delay: '0s' },
+          { cx: 920, cy: 185, c: '#818cf8', dur: '2.4s', delay: '0.6s' },
+          { cx: 510, cy: 430, c: '#a78bfa', dur: '3s', delay: '1s' },
+          { cx: 920, cy: 430, c: '#6366f1', dur: '2.2s', delay: '1.5s' },
+          { cx: 920, cy: 590, c: '#818cf8', dur: '2.8s', delay: '0.3s' },
+        ].map((n, i) => (
+          <g key={i} filter="url(#pt-glow)">
+            <circle cx={n.cx} cy={n.cy} r="3" fill={n.c} fillOpacity="0.6">
+              <animate attributeName="r" values="2;4.5;2" dur={n.dur} begin={n.delay} repeatCount="indefinite" />
+              <animate attributeName="fillOpacity" values="0.3;0.9;0.3" dur={n.dur} begin={n.delay} repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+
+        {/* ── Moving dots (comet + halo pairs) ── */}
+
+        {/* Right on top track */}
+        <g filter="url(#pt-glow-lg)">
+          <circle r="6" fill="#6366f1" fillOpacity="0.25">
+            <animateMotion dur="9s" repeatCount="indefinite" path="M -100 185 L 1540 185" />
+          </circle>
+        </g>
+        <g filter="url(#pt-glow)">
+          <circle r="2.5" fill="#a5b4fc">
+            <animateMotion dur="9s" repeatCount="indefinite" path="M -100 185 L 1540 185" />
+          </circle>
+        </g>
+
+        {/* Second dot on top track, offset */}
+        <g filter="url(#pt-glow)">
+          <circle r="1.8" fill="#818cf8">
+            <animateMotion dur="9s" begin="4.5s" repeatCount="indefinite" path="M -100 185 L 1540 185" />
+          </circle>
+        </g>
+
+        {/* Left on middle track */}
+        <g filter="url(#pt-glow-lg)">
+          <circle r="6" fill="#a78bfa" fillOpacity="0.2">
+            <animateMotion dur="12s" begin="2s" repeatCount="indefinite" path="M 1540 430 L -100 430" />
+          </circle>
+        </g>
+        <g filter="url(#pt-glow)">
+          <circle r="2.5" fill="#c4b5fd">
+            <animateMotion dur="12s" begin="2s" repeatCount="indefinite" path="M 1540 430 L -100 430" />
+          </circle>
+        </g>
+
+        {/* Second dot on middle track */}
+        <g filter="url(#pt-glow)">
+          <circle r="1.8" fill="#818cf8">
+            <animateMotion dur="12s" begin="8s" repeatCount="indefinite" path="M 1540 430 L -100 430" />
+          </circle>
+        </g>
+
+        {/* Right on bottom track */}
+        <g filter="url(#pt-glow)">
+          <circle r="2" fill="#818cf8">
+            <animateMotion dur="10s" begin="5s" repeatCount="indefinite" path="M -100 590 L 900 590" />
+          </circle>
+        </g>
+
+        {/* Diagonal down-right */}
+        <g filter="url(#pt-glow-lg)">
+          <circle r="5" fill="#6366f1" fillOpacity="0.2">
+            <animateMotion dur="10s" begin="1s" repeatCount="indefinite" path="M 280 -20 L 780 720" />
+          </circle>
+        </g>
+        <g filter="url(#pt-glow)">
+          <circle r="2" fill="#818cf8">
+            <animateMotion dur="10s" begin="1s" repeatCount="indefinite" path="M 280 -20 L 780 720" />
+          </circle>
+        </g>
+
+        {/* Diagonal down-left */}
+        <g filter="url(#pt-glow)">
+          <circle r="2" fill="#a78bfa">
+            <animateMotion dur="11s" begin="4s" repeatCount="indefinite" path="M 940 -20 L 520 720" />
+          </circle>
+        </g>
+
+        {/* Partial diagonal top-right */}
+        <g filter="url(#pt-glow)">
+          <circle r="2" fill="#6366f1">
+            <animateMotion dur="7s" begin="2s" repeatCount="indefinite" path="M 1120 -20 L 1540 280" />
+          </circle>
+        </g>
+
+        {/* Vertical down (left connector) */}
+        <g filter="url(#pt-glow)">
+          <circle r="1.5" fill="#6366f1">
+            <animateMotion dur="4s" begin="1s" repeatCount="indefinite" path="M 510 185 L 510 430" />
+          </circle>
+        </g>
+
+        {/* Vertical up (right connector) */}
+        <g filter="url(#pt-glow)">
+          <circle r="1.5" fill="#818cf8">
+            <animateMotion dur="4.5s" begin="3s" repeatCount="indefinite" path="M 920 430 L 920 185" />
+          </circle>
+        </g>
+
+        {/* Vertical down (right connector 2) */}
+        <g filter="url(#pt-glow)">
+          <circle r="1.5" fill="#a78bfa">
+            <animateMotion dur="3.5s" begin="2.5s" repeatCount="indefinite" path="M 920 430 L 920 590" />
+          </circle>
+        </g>
+      </svg>
+    </div>
+  )
+}
 
 function TestimonialCard({ t }: { t: any }) {
   return (
@@ -100,28 +306,6 @@ const serviceIcons: Record<string, typeof ShieldCheck> = {
   emi: Brain,
 }
 
-function ScrollLinkedDashboard() {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
-
-  const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1])
-  const rotateX = useTransform(scrollYProgress, [0, 0.2], [25, 0])
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1])
-
-  return (
-    <motion.div 
-      ref={ref}
-      style={{ scale, rotateX, opacity }}
-      className="w-full flex justify-center"
-    >
-      <DashboardPreview3D />
-    </motion.div>
-  )
-}
-
 function ParallaxShape({ delay = 0, className = "" }: { delay?: number, className?: string }) {
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 1000], [0, -150 + delay * 50])
@@ -134,7 +318,7 @@ function ParallaxShape({ delay = 0, className = "" }: { delay?: number, classNam
   )
 }
 
-export default function Home() {
+export default function AiHome() {
   const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
   const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [ctaError, setCtaError] = useState('')
@@ -191,13 +375,13 @@ export default function Home() {
       const templateParams = {
         from_name: ctaForm.name,
         from_email: ctaForm.email,
-        from_phone: 'Not provided (Home Page)',
-        issue_type: 'General Inquiry (Home Page)',
+        from_phone: 'Not provided (AI Home Page)',
+        issue_type: 'AI Sandbox Inquiry (AI Home Page)',
         preferred_date: ctaForm.preferredDate || 'Not selected',
         preferred_time: ctaForm.preferredTime || 'Not selected',
         message: ctaForm.message,
         to_name: 'Primescore Support',
-        to_email: ctaForm.email, // explicitly passing so the user template can use it
+        to_email: ctaForm.email,
       }
 
       // Send to Admin (original)
@@ -208,7 +392,6 @@ export default function Home() {
 
       // Wait for both to finish
       await Promise.all([adminPromise, userPromise])
-
 
       setCtaStatus('sent')
       setCtaError('')
@@ -221,29 +404,124 @@ export default function Home() {
     }
   }
 
-  const statItems = useMemo(
-    () => [
-      { label: 'Clients Supported', value: 50000, suffix: '+' },
-      { label: 'Value Unlocked', value: 2400, prefix: '₹', suffix: ' Cr+' },
-      { label: 'Cases Tracked', value: 97, suffix: '%' },
-      { label: 'Avg. Turnaround', value: 90, suffix: ' Days' },
-    ],
-    [],
-  )
-
   return (
     <div className="bg-white">
       <div data-theme="light">
         <HeroInteractive />
       </div>
 
+      {/* ═══ INTRODUCING PARTH (ULTRA-MINIMALIST / PREMIUM) ═══ */}
+      <section className="relative bg-black py-32 sm:py-48 overflow-hidden" data-theme="dark">
+        {/* Subtle top border/gradient to transition from the white hero */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[400px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
+        <div className="relative mx-auto max-w-[1200px] px-6 grid lg:grid-cols-[1fr_0.8fr] gap-16 items-center">
+          
+          {/* Left Column: Typography & Stats */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-left"
+            >
+              <h2 className="text-5xl sm:text-[80px] font-medium tracking-tight text-white leading-none mb-10">
+                Meet Parth.
+              </h2>
+              
+              <p className="text-2xl sm:text-3xl text-slate-400 leading-[1.4] font-light max-w-2xl tracking-tight">
+                An autonomous resolution engine that reads bureau data, maps anomalies to RBI directives, and drafts legally-binding disputes. <br className="hidden sm:block"/><span className="text-white font-normal mt-2 inline-block">Zero human intervention required.</span>
+              </p>
+            </motion.div>
 
-      {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
-      <div data-theme="dark">
-        <FeatureScrollShowcase />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-16 sm:mt-24 grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-12 border-t border-white/10 pt-12"
+            >
+              <div>
+                <div className="text-4xl font-medium text-white tracking-tight mb-2">99.8%</div>
+                <div className="text-sm text-slate-500 font-medium tracking-wide uppercase">Parse Accuracy</div>
+              </div>
+              <div>
+                <div className="text-4xl font-medium text-white tracking-tight mb-2">&lt;90s</div>
+                <div className="text-sm text-slate-500 font-medium tracking-wide uppercase">Dispute Assembly</div>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <div className="text-4xl font-medium text-white tracking-tight mb-2">24/7</div>
+                <div className="text-sm text-slate-500 font-medium tracking-wide uppercase">Node Dispatching</div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Column: High-Tech Data Matrix */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="relative hidden lg:flex justify-end items-center h-[500px] overflow-hidden"
+          >
+            <div className="relative w-full h-full flex items-center justify-center">
+              {/* Matrix Grid */}
+              <div 
+                className="grid gap-[8px]" 
+                style={{ 
+                  gridTemplateColumns: 'repeat(16, 1fr)', 
+                  transform: 'perspective(1000px) rotateX(45deg) rotateZ(-30deg) scale(1.5)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                {Array.from({ length: 256 }).map((_, i) => {
+                  const col = i % 16;
+                  const row = Math.floor(i / 16);
+                  // Calculate a wave delay based on grid position
+                  const delay = (col * 0.15) + (row * 0.1);
+                  
+                  return (
+                    <motion.div
+                      key={i}
+                      animate={{ 
+                        opacity: [0.1, 1, 0.1],
+                        scale: [1, 1.5, 1],
+                        backgroundColor: ['rgba(255,255,255,0.2)', 'rgba(99,102,241,1)', 'rgba(255,255,255,0.2)']
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        ease: "easeInOut",
+                        delay: delay 
+                      }}
+                      className="w-1.5 h-1.5 rounded-full bg-white/20"
+                    />
+                  );
+                })}
+              </div>
+
+              {/* Edge fade overlay to blend it perfectly into the black background */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_70%)] pointer-events-none" />
+              
+              {/* Floating accent line scanning across */}
+              <motion.div
+                animate={{ y: [-150, 150] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="absolute w-[300px] h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent pointer-events-none blur-[1px]"
+                style={{ transform: 'rotate(-30deg)' }}
+              />
+            </div>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* ═══ PARTH AI FEATURE SCROLL SHOWCASE (SARVAM STYLE LIGHT CANVAS) ═══ */}
+      <div data-theme="light">
+        <ParthScrollShowcase />
       </div>
-
 
       {/* ═══ SERVICES ═══ */}
       <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services" data-theme="light">
@@ -251,7 +529,6 @@ export default function Home() {
         <ParallaxShape delay={4} className="bottom-1/4 -left-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
         
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
-          {/* Asymmetric header: big left text, right link */}
           <Reveal>
             <div className="flex items-end justify-between gap-8 border-b border-brandNavy/10 pb-12">
               <div>
@@ -270,7 +547,6 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* 2-col left feature + 4-col mini cards */}
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((s, idx) => {
               const Icon = serviceIcons[s.id] || ShieldCheck
@@ -298,7 +574,7 @@ export default function Home() {
                 </Reveal>
               )
             })}
-        </div>
+          </div>
         </div>
       </section>
 
@@ -326,9 +602,8 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Desktop Marquee (hidden on mobile) */}
+          {/* Desktop Marquee */}
           <div className="mt-16 hidden h-[700px] grid-cols-3 gap-6 overflow-hidden md:grid relative [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
-            {/* Column 1 - Up */}
             <motion.div
               animate={{ y: ['0%', '-50%'] }}
               transition={{ ease: 'linear', duration: 35, repeat: Infinity }}
@@ -339,7 +614,6 @@ export default function Home() {
               ))}
             </motion.div>
 
-            {/* Column 2 - Down */}
             <motion.div
               animate={{ y: ['-50%', '0%'] }}
               transition={{ ease: 'linear', duration: 45, repeat: Infinity }}
@@ -350,7 +624,6 @@ export default function Home() {
               ))}
             </motion.div>
 
-            {/* Column 3 - Up */}
             <motion.div
               animate={{ y: ['0%', '-50%'] }}
               transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
@@ -362,7 +635,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Mobile Carousel (hidden on desktop) */}
+          {/* Mobile Carousel */}
           <div className="mt-12 md:hidden">
             <TestimonialCarousel items={testimonials} />
           </div>
@@ -397,6 +670,7 @@ export default function Home() {
       <section className="py-24 sm:py-32 bg-[#F8FAFC]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <div className="grid gap-16 lg:grid-cols-2">
+            
             {/* FAQ Side */}
             <Reveal>
               <div>
@@ -449,6 +723,7 @@ export default function Home() {
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
@@ -472,6 +747,7 @@ export default function Home() {
                       />
                     </div>
                   </div>
+                  
                   <textarea
                     value={ctaForm.message}
                     onChange={(e) => setCtaForm(p => ({ ...p, message: e.target.value }))}
@@ -500,4 +776,3 @@ export default function Home() {
     </div>
   )
 }
-

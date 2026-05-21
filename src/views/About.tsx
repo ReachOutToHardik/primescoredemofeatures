@@ -98,7 +98,7 @@ export default function About() {
                <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
                <img src="/trusted%20by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
                <img src="/trusted%20by/RBIH.png" alt="RBIH" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/Thub.png" alt="T-Hub" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/I-hub.png" alt="I-hub" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
             </div>
           </Reveal>
         </section>
