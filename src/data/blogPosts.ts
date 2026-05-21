@@ -23,7 +23,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Actionable Steps to Start Improving Your Credit Score in 30 Days',
     excerpt: 'Credit repair is a marathon, not a sprint. However, the first 30 days are crucial for setting a foundation. Here is a realistic action plan.',
     category: 'Credit Improvement',
-    date: 'May 10, 2024',
+    date: 'May 12, 2026',
     readTime: '6 min read',
     image: 'https://www.clix.capital/clixblog/wp-content/uploads/sites/3/2023/02/How-to-Boost-Credit-Score-in-30-Days.jpg',
     author: {
@@ -51,7 +51,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Realistic CIBIL Score Expectations for Home Loans in Jaipur (2024)',
     excerpt: 'Understanding the actual credit requirements set by major banks and housing finance companies operating in the Jaipur region.',
     category: 'Home Loans',
-    date: 'May 12, 2024',
+    date: 'May 16, 2026',
     readTime: '5 min read',
     image: 'https://images.unsplash.com/photo-1746597312953-9b58a1ebc991?auto=format&fit=crop&q=80&w=800',
     author: {
@@ -73,7 +73,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'Expert Guide to CIBIL Score Repair in Jodhpur',
     excerpt: 'How to fix credit report errors and improve your score specifically for lenders in Jodhpur and Western Rajasthan.',
     category: 'Credit Improvement',
-    date: 'May 14, 2024',
+    date: 'May 20, 2026',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=800',
     author: {
