@@ -27,9 +27,9 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '6 min read',
     image: 'https://www.clix.capital/clixblog/wp-content/uploads/sites/3/2023/02/How-to-Boost-Credit-Score-in-30-Days.jpg',
     author: {
-      name: 'Aditya Sharma',
+      name: 'Karan',
       role: 'Credit Expert',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
+      image: '/images/karan.jpg'
     },
     content: `
       <h2>Assess Your Current Baseline</h2>
@@ -46,56 +46,6 @@ export const BLOG_POSTS: BlogPost[] = [
     `
   },
   {
-    id: '2',
-    slug: 'understanding-cibil-vs-experian',
-    title: 'Understanding CIBIL vs Experian: Which Score Matters More in India?',
-    excerpt: 'Learn the differences between the major credit bureaus in India and why lenders check multiple reports.',
-    category: 'Guides',
-    date: 'May 8, 2024',
-    readTime: '5 min read',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-    author: {
-      name: 'Priya Verma',
-      role: 'Financial Analyst',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-    },
-    content: `
-      <h2>The Major Players</h2>
-      <p>In India, CIBIL is the oldest and most widely recognized bureau, but Experian and Equifax are catching up fast.</p>
-      
-      <h2>Why the Scores Differ</h2>
-      <p>Each bureau uses its own proprietary algorithm. While the underlying data (your repayment history) is the same, the weightage given to factors like 'Credit Mix' or 'Enquiries' varies.</p>
-      
-      <h2>Which one do lenders prefer?</h2>
-      <p>Most public sector banks still prioritize CIBIL, while many private lenders and Fintechs use a combination of CIBIL and Experian to get a 360-degree view of your creditworthiness.</p>
-    `
-  },
-  {
-    id: '3',
-    slug: 'impact-of-loan-settlement-on-score',
-    title: 'The Hidden Impact of Loan Settlement on Your Credit Score',
-    excerpt: 'Settling a loan might seem like a relief, but it can haunt your credit report for years. Here is how to handle it.',
-    category: 'Debt Management',
-    date: 'May 5, 2024',
-    readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=800',
-    author: {
-      name: 'Rahul Khanna',
-      role: 'Legal Consultant',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100'
-    },
-    content: `
-      <h2>Closed vs. Settled</h2>
-      <p>When you pay off a loan in full, it shows as 'Closed'. When you negotiate a lower amount to close the debt, the bank marks it as 'Settled'.</p>
-      
-      <h2>Why 'Settled' is a Red Flag</h2>
-      <p>A 'Settled' status indicates that you were unable to pay the full amount as per the contract. Lenders view this as a sign of high risk, often rejecting future applications instantly.</p>
-      
-      <h2>How to Fix a 'Settled' Status</h2>
-      <p>The only way to fix this is to reach out to the lender, pay the remaining balance (the 'haircut' amount), and ask them to update the status to 'Closed' or 'Full Paid'.</p>
-    `
-  },
-  {
     id: '4',
     slug: 'minimum-cibil-score-for-home-loan-jaipur',
     title: 'Realistic CIBIL Score Expectations for Home Loans in Jaipur (2024)',
@@ -107,7 +57,7 @@ export const BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Sawai Singh',
       role: 'Finance Strategist',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
+      image: '/images/sawai.jpg'
     },
     content: `
       <h2>The Lending Landscape in Jaipur</h2>
@@ -129,7 +79,7 @@ export const BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Sawai Singh',
       role: 'Credit Expert',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
+      image: '/images/sawai.jpg'
     },
     content: `
       <h2>Why Jodhpur Needs Specialized Credit Repair</h2>
