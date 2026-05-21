@@ -21,7 +21,7 @@ const phases = [
     badge: '01 // BUREAU PARSER',
     title: 'Parth reads your credit report instantly.',
     description:
-      'Upload your bureau report and Parth autonomously parses every line — converting messy, unstructured CIBIL language into clean, actionable dispute records in seconds.',
+      'Parth autonomously fetches and parses every line of your credit report — converting messy, unstructured CIBIL language into clean, actionable dispute records in seconds.',
     bullets: [
       'Ingests CIBIL, Experian, CRIF & Equifax PDFs',
       'Extracts 100+ variables with 99.8% confidence',
