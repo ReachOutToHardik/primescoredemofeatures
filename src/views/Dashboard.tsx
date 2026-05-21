@@ -65,6 +65,7 @@ export default function Dashboard() {
             process.env.NEXT_PUBLIC_WAITLIST_TEMPLATE_ID || '',
             {
               to_email: email,
+              from_name: 'PrimeScore',
             },
             process.env.NEXT_PUBLIC_WAITLIST_PUBLIC_KEY || ''
           )
