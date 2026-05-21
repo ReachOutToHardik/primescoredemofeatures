@@ -58,15 +58,15 @@ export default function Dashboard() {
       })
 
       if (res.status === 200) {
-        // Send Premium Welcome Email via EmailJS
+        // Send Premium Welcome Email via EmailJS (Waitlist specific account)
         try {
           await emailjs.send(
-            process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
-            process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+            process.env.NEXT_PUBLIC_WAITLIST_SERVICE_ID || '',
+            process.env.NEXT_PUBLIC_WAITLIST_TEMPLATE_ID || '',
             {
-              to_email: email, // This matches the {{to_email}} variable in the EmailJS template
+              to_email: email,
             },
-            process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+            process.env.NEXT_PUBLIC_WAITLIST_PUBLIC_KEY || ''
           )
         } catch (emailError) {
           console.error('EmailJS Error:', emailError)
