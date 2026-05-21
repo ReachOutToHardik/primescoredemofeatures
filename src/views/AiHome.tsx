@@ -459,6 +459,12 @@ export default function AiHome() {
           </div>
 
           {/* Right Column: High-Tech Data Matrix */}
+          <style>{`
+            @keyframes matrix-pulse {
+              0%, 100% { opacity: 0.08; transform: scale(1); background: rgba(255,255,255,0.15); }
+              50% { opacity: 1; transform: scale(1.6); background: rgb(99,102,241); }
+            }
+          `}</style>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -467,45 +473,35 @@ export default function AiHome() {
             className="relative hidden lg:flex justify-end items-center h-[500px] overflow-hidden"
           >
             <div className="relative w-full h-full flex items-center justify-center">
-              {/* Matrix Grid */}
-              <div 
-                className="grid gap-[8px]" 
-                style={{ 
-                  gridTemplateColumns: 'repeat(16, 1fr)', 
+              {/* CSS-only Matrix Grid */}
+              <div
+                className="grid gap-[8px]"
+                style={{
+                  gridTemplateColumns: 'repeat(16, 1fr)',
                   transform: 'perspective(1000px) rotateX(45deg) rotateZ(-30deg) scale(1.5)',
                   transformStyle: 'preserve-3d'
                 }}
               >
                 {Array.from({ length: 256 }).map((_, i) => {
-                  const col = i % 16;
-                  const row = Math.floor(i / 16);
-                  // Calculate a wave delay based on grid position
-                  const delay = (col * 0.15) + (row * 0.1);
-                  
+                  const col = i % 16
+                  const row = Math.floor(i / 16)
+                  const delay = ((col * 0.15) + (row * 0.1)) % 3
                   return (
-                    <motion.div
+                    <div
                       key={i}
-                      animate={{ 
-                        opacity: [0.1, 1, 0.1],
-                        scale: [1, 1.5, 1],
-                        backgroundColor: ['rgba(255,255,255,0.2)', 'rgba(99,102,241,1)', 'rgba(255,255,255,0.2)']
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{
+                        animation: `matrix-pulse 3s ease-in-out ${delay.toFixed(2)}s infinite`,
                       }}
-                      transition={{ 
-                        duration: 3, 
-                        repeat: Infinity, 
-                        ease: "easeInOut",
-                        delay: delay 
-                      }}
-                      className="w-1.5 h-1.5 rounded-full bg-white/20"
                     />
-                  );
+                  )
                 })}
               </div>
 
-              {/* Edge fade overlay to blend it perfectly into the black background */}
+              {/* Edge fade overlay */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_70%)] pointer-events-none" />
-              
-              {/* Floating accent line scanning across */}
+
+              {/* Scanning line */}
               <motion.div
                 animate={{ y: [-150, 150] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
