@@ -3,8 +3,8 @@
 import { useState } from 'react'
 
 export default function CreditImpactCalculator() {
-  const [loanAmount, setLoanAmount] = useState(5000000) // 50 Lakhs
-  const [tenureYears, setTenureYears] = useState(20) // 20 years
+  const [loanAmount, setLoanAmount] = useState(1000000) // 10 Lakhs
+  const [tenureYears, setTenureYears] = useState(5) // 5 years
 
   const badRate = 12.5
   const goodRate = 8.5
@@ -54,8 +54,8 @@ export default function CreditImpactCalculator() {
             </div>
             <input 
               type="range" 
-              min={1000000} 
-              max={20000000} 
+              min={100000} 
+              max={10000000} 
               step={100000} 
               value={loanAmount} 
               onChange={(e) => setLoanAmount(Number(e.target.value))}
@@ -70,7 +70,7 @@ export default function CreditImpactCalculator() {
             </div>
             <input 
               type="range" 
-              min={5} 
+              min={1} 
               max={30} 
               step={1} 
               value={tenureYears} 
