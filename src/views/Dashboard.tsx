@@ -64,7 +64,8 @@ export default function Dashboard() {
             'service_z29eucm',
             'template_7fkqtv5',
             {
-              to_email: email,
+              from_email: email,
+              to_email: email, // Keeping just in case
             },
             '4OCw45XN2GQNAs8uy'
           )

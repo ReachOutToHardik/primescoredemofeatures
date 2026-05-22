@@ -371,10 +371,12 @@ function DispatchCanvas() {
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function ParthScrollShowcase() {
   const containerRef = useRef<HTMLDivElement>(null)
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
+
   const sp = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
 
   // ── Pre-declare ALL transforms (no hooks inside loops) ──
@@ -427,7 +429,10 @@ export default function ParthScrollShowcase() {
   ]
 
   return (
-    <div ref={containerRef} className="relative h-[450vh] bg-white border-t border-slate-100">
+    <div 
+      ref={containerRef} 
+      className="relative h-[200vh] lg:h-[450vh] bg-white border-t border-slate-100"
+    >
       <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
 
         {/* Subtle dot-grid background */}
@@ -456,7 +461,7 @@ export default function ParthScrollShowcase() {
         </div>
 
         {/* Main grid */}
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16 xl:px-24 w-full grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative z-10">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16 xl:px-24 w-full grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative z-10 pt-20 lg:pt-0">
 
           {/* ── Left: Scrolling Text ───────────────────────────────── */}
           <div className="relative h-[260px] sm:h-[300px] lg:h-[400px] flex flex-col justify-center">
