@@ -18,14 +18,11 @@ export default function Dashboard() {
   useEffect(() => {
     const targetDate = new Date('2026-06-14T00:00:00Z').getTime()
 
-    const interval = setInterval(() => {
+    const updateTime = () => {
       const now = new Date().getTime()
       const distance = targetDate - now
 
-      if (distance < 0) {
-        clearInterval(interval)
-        return
-      }
+      if (distance < 0) return
 
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -33,7 +30,10 @@ export default function Dashboard() {
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000)
       })
-    }, 1000)
+    }
+
+    updateTime() // Call immediately so it doesn't wait 1 second to show up
+    const interval = setInterval(updateTime, 1000)
 
     return () => clearInterval(interval)
   }, [])
