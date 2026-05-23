@@ -6,6 +6,7 @@ import { ArrowRight, Lock, ShieldCheck, Award, Star, TrendingUp } from 'lucide-r
 import Link from 'next/link'
 import Button from './Button'
 import PhoneShowcase from './PhoneShowcase'
+import PhoneShowcaseDesktop from './PhoneShowcaseDesktop'
 import { useState } from 'react'
 
 const headline = "India's #1 Credit Repair & CIBIL Score Rectification Services"
@@ -117,14 +118,19 @@ export default function HeroInteractive() {
             </motion.div>
           </div>
 
-          {/* Right Phone Showcase */}
+          {/* Right Showcase: Phone on Mobile, Phone Desktop on Desktop */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
             className="lg:justify-self-end w-full relative z-10 mt-16 lg:mt-0"
           >
-            <PhoneShowcase />
+            <div className="block lg:hidden">
+              <PhoneShowcase />
+            </div>
+            <div className="hidden lg:block relative lg:-right-4">
+              <PhoneShowcaseDesktop />
+            </div>
           </motion.div>
         </div>
       </div>
