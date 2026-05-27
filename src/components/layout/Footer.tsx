@@ -49,6 +49,8 @@ export default function Footer() {
                 <Link className={footerLink} href="/contact">Contact</Link>
                 <Link className={footerLink} href="/privacy">Privacy Policy</Link>
                 <Link className={footerLink} href="/terms">Terms of Service</Link>
+                <Link className={footerLink} href="/refund-policy">Refund Policy</Link>
+                <Link className={footerLink} href="/cancellation-policy">Cancellation Policy</Link>
               </div>
             </div>
 
