@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 export default function CreditImpactCalculator() {
   const [loanAmount, setLoanAmount] = useState(1000000) // 10 Lakhs
@@ -79,52 +81,77 @@ export default function CreditImpactCalculator() {
             />
           </div>
 
-          <div className="mt-4 p-5 rounded-2xl bg-brandBlue/10 border border-brandBlue/20 text-center">
+          {/* Mobile Total Savings (Hidden on Desktop) */}
+          <div className="mt-4 p-5 rounded-2xl bg-brandBlue/10 border border-brandBlue/20 text-center block lg:hidden">
             <div className="text-sm font-semibold text-brandBlue uppercase tracking-wider mb-1">Your Total Savings with Primescore</div>
             <div className="font-display text-4xl font-black text-brandBlue">
               {formatCurrency(totalSavings)}
             </div>
           </div>
+
+          {/* Desktop EMI Comparison CTA (Hidden on Mobile) */}
+          <Link 
+            href="/tools/emi-comparison" 
+            className="group mt-4 p-5 rounded-2xl bg-brandNavy/5 border border-brandNavy/10 text-center flex-col items-center justify-center hover:bg-brandNavy/10 transition-all cursor-pointer hidden lg:flex"
+          >
+            <div className="text-sm font-semibold text-brandNavy uppercase tracking-wider mb-2">Want to compare two or more interest rates?</div>
+            <div className="font-display text-2xl font-black text-brandNavy flex items-center justify-center gap-3">
+              Open EMI Comparison Tool
+              <div className="h-8 w-8 rounded-full bg-brandNavy flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-brandBlue transition-all">
+                <ArrowRight className="h-4 w-4 text-white" />
+              </div>
+            </div>
+          </Link>
         </div>
 
-        {/* Side by Side Comparison */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          {/* Bad Score */}
-          <div className="rounded-2xl border border-red-100 bg-red-50/50 p-6 flex flex-col">
-            <div className="text-center pb-4 border-b border-red-100">
-              <div className="text-sm font-bold text-red-600 uppercase tracking-wide">Bad Score (&lt;650)</div>
-              <div className="text-2xl font-black text-red-700 mt-1">{badRate}% <span className="text-sm font-medium">Interest</span></div>
-            </div>
-            <div className="pt-6 flex flex-col gap-4">
-              <div>
-                <div className="text-xs text-red-600/70 font-semibold uppercase">Monthly EMI</div>
-                <div className="text-xl font-bold text-red-900">{formatCurrency(badEMI)}</div>
+        {/* Side by Side Comparison & Savings (Desktop) */}
+        <div className="flex flex-col gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 h-fit">
+            {/* Bad Score */}
+            <div className="rounded-2xl border border-red-100 bg-red-50/50 p-5 flex flex-col justify-between">
+              <div className="text-center pb-3 border-b border-red-100">
+                <div className="text-sm font-bold text-red-600 uppercase tracking-wide">Bad Score (&lt;650)</div>
+                <div className="text-2xl font-black text-red-700 mt-1">{badRate}% <span className="text-sm font-medium">Interest</span></div>
               </div>
-              <div>
-                <div className="text-xs text-red-600/70 font-semibold uppercase">Total Interest Paid</div>
-                <div className="text-xl font-bold text-red-900">{formatCurrency(badTotalInterest)}</div>
+              <div className="pt-4 flex flex-row items-center justify-between gap-2">
+                <div>
+                  <div className="text-[10px] text-red-600/70 font-semibold uppercase">Monthly EMI</div>
+                  <div className="text-sm lg:text-base font-bold text-red-900">{formatCurrency(badEMI)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[10px] text-red-600/70 font-semibold uppercase">Total Interest</div>
+                  <div className="text-sm lg:text-base font-bold text-red-900">{formatCurrency(badTotalInterest)}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Good Score */}
+            <div className="rounded-2xl border border-brandBlue/20 bg-brandBlue/5 p-5 flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 text-brandBlue opacity-10 transform translate-x-1/4 -translate-y-1/4">
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+              <div className="text-center pb-3 border-b border-brandBlue/10 relative z-10">
+                <div className="text-sm font-bold text-brandBlue uppercase tracking-wide">Primescore (750+)</div>
+                <div className="text-2xl font-black text-brandBlue mt-1">{goodRate}% <span className="text-sm font-medium">Interest</span></div>
+              </div>
+              <div className="pt-4 flex flex-row items-center justify-between gap-2 relative z-10">
+                <div>
+                  <div className="text-[10px] text-brandBlue/70 font-semibold uppercase">Monthly EMI</div>
+                  <div className="text-sm lg:text-base font-bold text-brandBlue">{formatCurrency(goodEMI)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[10px] text-brandBlue/70 font-semibold uppercase">Total Interest</div>
+                  <div className="text-sm lg:text-base font-bold text-brandBlue">{formatCurrency(goodTotalInterest)}</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Good Score */}
-          <div className="rounded-2xl border border-brandBlue/20 bg-brandBlue/5 p-6 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 text-brandBlue opacity-10 transform translate-x-1/4 -translate-y-1/4">
-              <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-            <div className="text-center pb-4 border-b border-brandBlue/10 relative z-10">
-              <div className="text-sm font-bold text-brandBlue uppercase tracking-wide">Primescore (750+)</div>
-              <div className="text-2xl font-black text-brandBlue mt-1">{goodRate}% <span className="text-sm font-medium">Interest</span></div>
-            </div>
-            <div className="pt-6 flex flex-col gap-4 relative z-10">
-              <div>
-                <div className="text-xs text-brandBlue/70 font-semibold uppercase">Monthly EMI</div>
-                <div className="text-xl font-bold text-brandBlue">{formatCurrency(goodEMI)}</div>
-              </div>
-              <div>
-                <div className="text-xs text-brandBlue/70 font-semibold uppercase">Total Interest Paid</div>
-                <div className="text-xl font-bold text-brandBlue">{formatCurrency(goodTotalInterest)}</div>
-              </div>
+          {/* Desktop Total Savings Box (Hidden on Mobile) */}
+          <div className="mt-2 p-4 rounded-2xl bg-brandBlue/10 border border-brandBlue/20 text-center flex-col justify-center items-center h-full hidden lg:flex">
+            <div className="text-sm font-semibold text-brandBlue uppercase tracking-wider mb-1">Your Total Savings with Primescore</div>
+            <div className="font-display text-4xl font-black text-brandBlue">
+              {formatCurrency(totalSavings)}
             </div>
           </div>
         </div>
