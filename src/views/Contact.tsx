@@ -1,7 +1,7 @@
 'use client'
 
 import { Mail, MapPin, MessageCircle, Phone, Send, CheckCircle2, AlertCircle } from 'lucide-react'
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
@@ -23,6 +23,7 @@ export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [marketingOptIn, setMarketingOptIn] = useState(true)
 
   const todayStr = useMemo(() => {
     const today = new Date()
@@ -43,27 +44,6 @@ export default function Contact() {
     return `https://wa.me/${DEFAULT_NUMBER}?text=${encodeURIComponent(
       'Hi Primescore — I want to fix my credit score. Please contact me.',
     )}`
-  }, [])
-
-  const ipDataRef = useRef({ ip: 'Unknown', location: 'Unknown' })
-
-  useEffect(() => {
-    const fetchIp = async () => {
-      try {
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 4000)
-        const ipRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: controller.signal })
-        clearTimeout(timeoutId)
-        const ipJson = await ipRes.json()
-        ipDataRef.current = {
-          ip: ipJson.ip || 'Unknown',
-          location: `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country || 'Unknown Country'} (ISP: ${ipJson.organization || 'Unknown'})`
-        }
-      } catch (e) {
-        // Silently fail if blocked or timed out
-      }
-    }
-    fetchIp()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,8 +94,7 @@ export default function Contact() {
         preferred_date: form.preferredDate || 'Not selected',
         preferred_time: form.preferredTime || 'Not selected',
         message: form.message,
-        client_ip: ipDataRef.current.ip,
-        client_location: ipDataRef.current.location,
+        marketing_opt_in: marketingOptIn ? 'YES' : 'NO',
         to_name: 'Primescore Support',
         to_email: form.email, // explicitly passing so the user template can use it
       }
@@ -129,6 +108,30 @@ export default function Contact() {
 
       // Wait for both to finish
       await Promise.all([adminPromise, userPromise])
+
+      // Send to Google Sheets if Webhook is configured
+      const sheetWebhookUrl = process.env.NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL
+      if (sheetWebhookUrl) {
+        try {
+          await fetch(sheetWebhookUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: form.name,
+              email: form.email,
+              phone: form.phone,
+              issueType: form.issueType,
+              preferredDate: form.preferredDate,
+              preferredTime: form.preferredTime,
+              message: form.message,
+              marketingOptIn: marketingOptIn ? 'YES' : 'NO',
+              timestamp: new Date().toISOString()
+            }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' } // Apps script prefers this to avoid CORS preflight sometimes
+          })
+        } catch (sheetErr) {
+          console.error('Failed to send to Google Sheets:', sheetErr)
+        }
+      }
 
       setStatus('sent')
       setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '', preferredDate: '', preferredTime: '' })
@@ -297,6 +300,21 @@ export default function Contact() {
                   </div>
                   <textarea value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} placeholder="Describe your issue..." className={[inputCls, 'min-h-[140px] resize-none py-3'].join(' ')} required />
                   
+                  <div className="flex items-start gap-3 px-1 py-2">
+                    <div className="flex h-5 items-center">
+                      <input
+                        id="marketing"
+                        type="checkbox"
+                        checked={marketingOptIn}
+                        onChange={(e) => setMarketingOptIn(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-300 text-brandRed focus:ring-brandRed/30 cursor-pointer"
+                      />
+                    </div>
+                    <label htmlFor="marketing" className="text-xs text-textSecondary cursor-pointer leading-relaxed">
+                      I agree to receive updates, offers, and promotional messages via Email and WhatsApp.
+                    </label>
+                  </div>
+
                   <Button type="submit" disabled={status === 'sending'} className="h-12 w-full">
                     {status === 'sending' ? 'Sending Message...' : 'Send Message'}
                     <Send className="h-4 w-4" />
