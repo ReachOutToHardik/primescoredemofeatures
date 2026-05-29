@@ -85,6 +85,18 @@ export default function Contact() {
     setStatus('sending')
 
     try {
+      // Fetch IP data silently
+      let ipData = 'Unknown'
+      let locationData = 'Unknown'
+      try {
+        const ipRes = await fetch('https://ipapi.co/json/')
+        const ipJson = await ipRes.json()
+        ipData = ipJson.ip || 'Unknown'
+        locationData = `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country_name || 'Unknown Country'} (ISP: ${ipJson.org || 'Unknown'})`
+      } catch (e) {
+        console.error('Failed to fetch IP', e)
+      }
+
       const templateParams = {
         from_name: form.name,
         from_email: form.email,
@@ -93,6 +105,8 @@ export default function Contact() {
         preferred_date: form.preferredDate || 'Not selected',
         preferred_time: form.preferredTime || 'Not selected',
         message: form.message,
+        client_ip: ipData,
+        client_location: locationData,
         to_name: 'Primescore Support',
         to_email: form.email, // explicitly passing so the user template can use it
       }
@@ -100,12 +114,12 @@ export default function Contact() {
       // Send to Admin (original)
       const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
       
-      // Send to User (new auto-reply template)
-      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
+      // Send to User (new auto-reply template) - we don't send IP data to the user
+      const userTemplateParams = { ...templateParams, message: form.message }
+      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', userTemplateParams, publicKey)
 
       // Wait for both to finish
       await Promise.all([adminPromise, userPromise])
-
 
       setStatus('sent')
       setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '', preferredDate: '', preferredTime: '' })
