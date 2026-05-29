@@ -433,7 +433,7 @@ export default function ParthScrollShowcase() {
       ref={containerRef} 
       className="relative h-[200vh] lg:h-[450vh] bg-white border-t border-slate-100"
     >
-      <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+      <div className="sticky top-0 h-[100dvh] w-full flex items-center overflow-hidden pt-20 lg:pt-0">
 
         {/* Subtle dot-grid background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle,#cbd5e115_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" />
@@ -461,10 +461,10 @@ export default function ParthScrollShowcase() {
         </div>
 
         {/* Main grid */}
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 lg:px-16 xl:px-24 w-full grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative z-10 pt-20 lg:pt-0">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-10 lg:px-16 xl:px-24 w-full grid lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-16 items-center relative z-10">
 
           {/* ── Left: Scrolling Text ───────────────────────────────── */}
-          <div className="relative h-[260px] sm:h-[300px] lg:h-[400px] flex flex-col justify-center">
+          <div className="relative h-[230px] sm:h-[280px] lg:h-[400px] flex flex-col justify-center">
             {phases.map((phase, i) => (
               <motion.div
                 key={phase.badge}
@@ -509,7 +509,7 @@ export default function ParthScrollShowcase() {
 
           {/* ── Right: Workflow Canvas ─────────────────────────────── */}
           <div className="relative">
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white shadow-[0_8px_40px_rgba(0,0,0,0.07)] overflow-hidden h-[400px] lg:h-[470px] relative">
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white shadow-[0_8px_40px_rgba(0,0,0,0.07)] overflow-hidden h-[340px] sm:h-[400px] lg:h-[470px] relative">
 
               {/* Inner dot pattern */}
               <div className="absolute inset-0 bg-[radial-gradient(circle,#94a3b818_1px,transparent_1px)] bg-[size:18px_18px] pointer-events-none" />
