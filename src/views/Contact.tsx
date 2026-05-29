@@ -89,12 +89,12 @@ export default function Contact() {
       let ipData = 'Unknown'
       let locationData = 'Unknown'
       try {
-        const ipRes = await fetch('https://ipapi.co/json/')
+        const ipRes = await fetch('https://ipinfo.io/json')
         const ipJson = await ipRes.json()
         ipData = ipJson.ip || 'Unknown'
-        locationData = `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country_name || 'Unknown Country'} (ISP: ${ipJson.org || 'Unknown'})`
+        locationData = `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country || 'Unknown Country'} (ISP: ${ipJson.org || 'Unknown'})`
       } catch (e) {
-        console.error('Failed to fetch IP', e)
+        // Silently fail if blocked by adblockers/privacy extensions
       }
 
       const templateParams = {
