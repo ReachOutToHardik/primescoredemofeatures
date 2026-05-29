@@ -52,12 +52,12 @@ export default function Contact() {
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 4000)
-        const ipRes = await fetch('/api/location', { signal: controller.signal })
+        const ipRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: controller.signal })
         clearTimeout(timeoutId)
         const ipJson = await ipRes.json()
         ipDataRef.current = {
           ip: ipJson.ip || 'Unknown',
-          location: ipJson.location || 'Unknown'
+          location: `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country || 'Unknown Country'} (ISP: ${ipJson.organization || 'Unknown'})`
         }
       } catch (e) {
         // Silently fail if blocked or timed out
