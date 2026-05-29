@@ -1,7 +1,7 @@
 'use client'
 
 import { Mail, MapPin, MessageCircle, Phone, Send, CheckCircle2, AlertCircle } from 'lucide-react'
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
@@ -45,6 +45,27 @@ export default function Contact() {
     )}`
   }, [])
 
+  const ipDataRef = useRef({ ip: 'Unknown', location: 'Unknown' })
+
+  useEffect(() => {
+    const fetchIp = async () => {
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        const ipRes = await fetch('/api/location', { signal: controller.signal })
+        clearTimeout(timeoutId)
+        const ipJson = await ipRes.json()
+        ipDataRef.current = {
+          ip: ipJson.ip || 'Unknown',
+          location: ipJson.location || 'Unknown'
+        }
+      } catch (e) {
+        // Silently fail if blocked or timed out
+      }
+    }
+    fetchIp()
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -85,18 +106,6 @@ export default function Contact() {
     setStatus('sending')
 
     try {
-      // Fetch IP data silently
-      let ipData = 'Unknown'
-      let locationData = 'Unknown'
-      try {
-        const ipRes = await fetch('https://ipinfo.io/json')
-        const ipJson = await ipRes.json()
-        ipData = ipJson.ip || 'Unknown'
-        locationData = `${ipJson.city || 'Unknown City'}, ${ipJson.region || 'Unknown Region'}, ${ipJson.country || 'Unknown Country'} (ISP: ${ipJson.org || 'Unknown'})`
-      } catch (e) {
-        // Silently fail if blocked by adblockers/privacy extensions
-      }
-
       const templateParams = {
         from_name: form.name,
         from_email: form.email,
@@ -105,8 +114,8 @@ export default function Contact() {
         preferred_date: form.preferredDate || 'Not selected',
         preferred_time: form.preferredTime || 'Not selected',
         message: form.message,
-        client_ip: ipData,
-        client_location: locationData,
+        client_ip: ipDataRef.current.ip,
+        client_location: ipDataRef.current.location,
         to_name: 'Primescore Support',
         to_email: form.email, // explicitly passing so the user template can use it
       }
