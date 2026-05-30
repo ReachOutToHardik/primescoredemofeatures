@@ -110,7 +110,7 @@ export default function Contact() {
       await Promise.all([adminPromise, userPromise])
 
       // Send to Google Sheets if Webhook is configured
-      const sheetWebhookUrl = process.env.NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL
+      const sheetWebhookUrl = 'https://script.google.com/macros/s/AKfycbw5YhcVQoyohMfXIMUu7LjuYNLskdNF6ttGScqDk7H3wwPkgfC5y-BMYTivdnn6tZj4Ag/exec'
       if (sheetWebhookUrl) {
         try {
           await fetch(sheetWebhookUrl, {
