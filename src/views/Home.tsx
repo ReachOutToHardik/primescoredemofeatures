@@ -138,6 +138,7 @@ export default function Home() {
   const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
   const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [ctaError, setCtaError] = useState('')
+  const [ctaMarketingOptIn, setCtaMarketingOptIn] = useState(true)
 
   const todayStr = useMemo(() => {
     const today = new Date()
@@ -196,6 +197,7 @@ export default function Home() {
         preferred_date: ctaForm.preferredDate || 'Not selected',
         preferred_time: ctaForm.preferredTime || 'Not selected',
         message: ctaForm.message,
+        marketing_opt_in: ctaMarketingOptIn ? 'YES' : 'NO',
         to_name: 'Primescore Support',
         to_email: ctaForm.email, // explicitly passing so the user template can use it
       }
@@ -209,6 +211,29 @@ export default function Home() {
       // Wait for both to finish
       await Promise.all([adminPromise, userPromise])
 
+      // Send to Google Sheets
+      const sheetWebhookUrl = 'https://script.google.com/macros/s/AKfycbw5YhcVQoyohMfXIMUu7LjuYNLskdNF6ttGScqDk7H3wwPkgfC5y-BMYTivdnn6tZj4Ag/exec'
+      if (sheetWebhookUrl) {
+        try {
+          await fetch(sheetWebhookUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: ctaForm.name,
+              email: ctaForm.email,
+              phone: 'Not provided (Home Page)',
+              issueType: 'General Inquiry (Home Page)',
+              preferredDate: ctaForm.preferredDate,
+              preferredTime: ctaForm.preferredTime,
+              message: ctaForm.message,
+              marketingOptIn: ctaMarketingOptIn ? 'YES' : 'NO',
+              timestamp: new Date().toISOString()
+            }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+          })
+        } catch (sheetErr) {
+          console.error('Failed to send to Google Sheets:', sheetErr)
+        }
+      }
 
       setCtaStatus('sent')
       setCtaError('')
@@ -483,6 +508,21 @@ export default function Home() {
 
                   <div className="mt-2 text-sm text-textSecondary">
                     Or email us directly at <a href="mailto:info@primescore.in" className="font-bold text-brandRed hover:underline">info@primescore.in</a>
+                  </div>
+
+                  <div className="flex items-start gap-3 px-1 py-2">
+                    <div className="flex h-5 items-center">
+                      <input
+                        id="ctaMarketing"
+                        type="checkbox"
+                        checked={ctaMarketingOptIn}
+                        onChange={(e) => setCtaMarketingOptIn(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-300 text-brandRed focus:ring-brandRed/30 cursor-pointer"
+                      />
+                    </div>
+                    <label htmlFor="ctaMarketing" className="text-xs text-textSecondary cursor-pointer leading-relaxed">
+                      I agree to receive updates, offers, and promotional messages via Email and WhatsApp.
+                    </label>
                   </div>
 
                   <Button type="submit" disabled={ctaStatus === 'sending'} className="mt-4 h-14 w-full text-base shadow-glowRed disabled:opacity-70 disabled:cursor-not-allowed">
