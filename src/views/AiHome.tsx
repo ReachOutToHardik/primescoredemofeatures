@@ -360,10 +360,10 @@ export default function AiHome() {
     }
 
     const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+    const templateId = 'template_37a3wfs'
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
 
-    if (!serviceId || !templateId || !publicKey) {
+    if (!serviceId || !publicKey) {
       console.error('EmailJS config missing')
       setCtaStatus('error')
       setCtaError('Form configuration is missing. Please email us directly.')
