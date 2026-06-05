@@ -1,7 +1,7 @@
 import { Send, X } from 'lucide-react'
 import { useState } from 'react'
 
-const DEFAULT_NUMBER = '919680530334'
+const DEFAULT_NUMBER = '916350671636'
 
 export default function WhatsAppFloat() {
   const [isOpen, setIsOpen] = useState(false)
