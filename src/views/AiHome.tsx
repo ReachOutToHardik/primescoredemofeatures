@@ -27,7 +27,7 @@ import emailjs from '@emailjs/browser'
 
 const Carousel3D = dynamic(() => import('../components/ui/Carousel3D'), { ssr: false })
 const CreditImpactCalculator = dynamic(() => import('../components/ui/CreditImpactCalculator'), { ssr: false })
-const ParthScrollShowcase = dynamic(() => import('../components/ui/ParthScrollShowcase'), { ssr: false })
+const FeatureScrollShowcase = dynamic(() => import('../components/ui/FeatureScrollShowcase'), { ssr: false })
 
 /* ─── AI Chipset Background Pattern ─── */
 function AiChipsetBackground() {
@@ -540,9 +540,9 @@ export default function AiHome() {
         </div>
       </section>
 
-      {/* ═══ PARTH AI FEATURE SCROLL SHOWCASE (SARVAM STYLE LIGHT CANVAS) ═══ */}
-      <div data-theme="light">
-        <ParthScrollShowcase />
+      {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
+      <div data-theme="dark">
+        <FeatureScrollShowcase />
       </div>
 
       {/* ═══ SERVICES ═══ */}
