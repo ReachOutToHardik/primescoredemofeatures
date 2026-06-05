@@ -3,8 +3,6 @@ import { Sora, DM_Sans, JetBrains_Mono, Caveat } from 'next/font/google'
 import '../src/index.css'
 import Navbar from '../src/components/layout/Navbar'
 import Footer from '../src/components/layout/Footer'
-import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import Preloader from '../src/components/ui/Preloader'
 import WhatsAppWidget from '../src/components/ui/WhatsAppWidget'
 
@@ -50,8 +48,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <WhatsAppWidget />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   )
