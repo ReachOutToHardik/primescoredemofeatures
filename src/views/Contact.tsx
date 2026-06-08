@@ -10,7 +10,7 @@ type IssueType = 'CIBIL Rectification' | 'Loan Settlement' | 'Credit Card Disput
 
 type FormState = { name: string; email: string; phone: string; issueType: IssueType; message: string; preferredDate: string; preferredTime: string }
 
-const DEFAULT_NUMBER = '919680530334'
+const DEFAULT_NUMBER = '916350671636'
 const SUPPORT_EMAIL = 'info@primescore.in'
 const DEFAULT_SUPPORT_PHONE = '+91 63506-71636'
 const SECONDARY_SUPPORT_PHONE = '+91 63776-43115'

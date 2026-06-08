@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { X, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const WA_NUMBER = '919680530334'
+const WA_NUMBER = '916350671636'
 
 const WaIcon = ({ size = 28 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="white">

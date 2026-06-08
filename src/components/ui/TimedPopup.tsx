@@ -76,7 +76,7 @@ export default function TimedPopup() {
                   </a>
 
                   <a
-                    href="https://wa.me/919680530334?text=Hi%20Primescore%2C%20I%20want%20a%20free%20credit%20consultation"
+                    href="https://wa.me/916350671636?text=Hi%20Primescore%2C%20I%20want%20a%20free%20credit%20consultation"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 rounded-xl border border-[#25D366]/20 bg-[#25D366]/5 px-4 py-3 text-sm font-semibold text-[#1a8c47] hover:bg-[#25D366]/10 transition-colors"
