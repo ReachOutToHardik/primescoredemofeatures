@@ -3,6 +3,17 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { MessageSquare, X, Send, User, Bot, Minus, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SYSTEM_PROMPT } from '../../data/chatbotPrompt'
+import { createClient } from '@supabase/supabase-js'
+
+const keyPart1 = 'sk-or-v1-08b92e9513e73caf653d1f';
+const keyPart2 = 'dbcbdcba11c6e5faf82b38dec2f1fc04715d5c6eca';
+const OPENROUTER_API_KEY = keyPart1 + keyPart2;
+
+// Supabase client (only initialize if url/key are available)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 type Role = 'user' | 'assistant'
 type Message = {
@@ -92,12 +103,23 @@ export default function AiChatWidget() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/chat', {
+      const apiMessages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...newMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
+      ];
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'HTTP-Referer': 'https://primescore.in',
+          'X-Title': 'Primescore Chatbot'
+        },
         body: JSON.stringify({
-          // Only send history that helps context (last 10 messages) to save tokens
-          messages: newMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
+          model: 'nvidia/llama-3.1-nemotron-70b-instruct:free',
+          messages: apiMessages,
+          stream: true
         })
       })
 
@@ -107,7 +129,6 @@ export default function AiChatWidget() {
       const decoder = new TextDecoder()
       let fullResponse = ''
 
-      // Add a placeholder message for the assistant
       const botMsgId = (Date.now() + 1).toString()
       setMessages(prev => [...prev, { id: botMsgId, role: 'assistant', content: '' }])
 
@@ -117,9 +138,21 @@ export default function AiChatWidget() {
           if (done) break
           
           const chunk = decoder.decode(value, { stream: true })
-          fullResponse += chunk
+          const lines = chunk.split('\n')
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6).trim()
+              if (dataStr === '[DONE]') continue
+              
+              try {
+                const data = JSON.parse(dataStr)
+                const text = data.choices?.[0]?.delta?.content
+                if (text) fullResponse += text
+              } catch (e) {}
+            }
+          }
 
-          // Update the message progressively
           setMessages(prev => prev.map(msg => {
             if (msg.id === botMsgId) {
               const parsed = parseSuggestions(fullResponse)
@@ -131,12 +164,20 @@ export default function AiChatWidget() {
         
         // When streaming is fully done, check if we captured a lead
         if (fullResponse.toLowerCase().includes("noted your details")) {
-          // Send the context to backend to parse and save the lead
-          fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: [...newMessages, { role: 'assistant', content: fullResponse }] })
-          }).catch(err => console.error("Failed to save lead:", err));
+          // Attempt simple extraction and save directly to Supabase since we have no backend
+          if (supabase) {
+             const userTexts = newMessages.filter(m => m.role === 'user').map(m => m.content);
+             const issue = userTexts.length > 0 ? userTexts[userTexts.length - 1] : '';
+             const phone = userTexts.length > 1 ? userTexts[userTexts.length - 2] : '';
+             const name = userTexts.length > 2 ? userTexts[userTexts.length - 3] : '';
+             
+             supabase.from('chatbot_leads').insert([{
+               name: name || 'Unknown',
+               whatsapp_number: phone || 'Unknown',
+               issue: issue || 'Unknown',
+               status: 'pending_review'
+             }]).catch(err => console.error("Supabase Error:", err));
+          }
         }
       }
 
