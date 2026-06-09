@@ -213,7 +213,7 @@ export default function FeatureScrollShowcase() {
                             { name: 'CIBIL', score: 742, color: '#10B981', trend: [40, 55, 75, 100] },
                             { name: 'EXPERIAN', score: 738, color: '#2563EB', trend: [45, 60, 80, 100] },
                             { name: 'CRIF', score: 745, color: '#F59E0B', trend: [60, 50, 75, 90] },
-                            { name: 'EQUIFAX', score: 732, color: '#EF4444', trend: [90, 80, 60, 40] },
+                            { name: 'EQUIFAX', score: 732, color: '#EF4444', trend: [50, 65, 80, 100] },
                           ].map(b => (
                             <div key={b.name} className="p-3 sm:p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex justify-between items-center">
                                <div>
