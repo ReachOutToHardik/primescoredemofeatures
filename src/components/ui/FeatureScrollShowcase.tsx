@@ -210,18 +210,27 @@ export default function FeatureScrollShowcase() {
                        
                        <div className="space-y-2.5 sm:space-y-4">
                           {[
-                            { name: 'CIBIL', score: 742, color: '#10B981' },
-                            { name: 'EXPERIAN', score: 738, color: '#2563EB' },
-                            { name: 'CRIF', score: 745, color: '#F59E0B' },
-                            { name: 'EQUIFAX', score: 732, color: '#EF4444' },
+                            { name: 'CIBIL', score: 742, color: '#10B981', trend: [40, 55, 75, 100] },
+                            { name: 'EXPERIAN', score: 738, color: '#2563EB', trend: [45, 60, 80, 100] },
+                            { name: 'CRIF', score: 745, color: '#F59E0B', trend: [60, 50, 75, 90] },
+                            { name: 'EQUIFAX', score: 732, color: '#EF4444', trend: [90, 80, 60, 40] },
                           ].map(b => (
                             <div key={b.name} className="p-3 sm:p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex justify-between items-center">
                                <div>
                                   <div className="text-[8px] sm:text-[9px] font-black text-slate-400">{b.name}</div>
                                   <div className="text-base sm:text-xl font-black text-brandNavy font-display">{b.score}</div>
                                </div>
-                               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-4 border-slate-100 flex items-center justify-center" style={{ borderColor: b.color + '20' }}>
-                                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: b.color }} />
+                               <div className="flex items-end gap-[3px] h-5 sm:h-6">
+                                  {b.trend.map((h, i) => (
+                                    <motion.div 
+                                      key={i}
+                                      initial={{ height: 0 }}
+                                      whileInView={{ height: `${h}%` }}
+                                      transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
+                                      className="w-1.5 sm:w-2 rounded-t-[2px]" 
+                                      style={{ backgroundColor: i === 3 ? b.color : b.color + '40' }} 
+                                    />
+                                  ))}
                                </div>
                             </div>
                           ))}
