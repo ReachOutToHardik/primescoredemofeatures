@@ -92,7 +92,7 @@ export default function Contact() {
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
-        await supabase.from('leads').insert([{
+        const { error } = await supabase.from('leads').insert([{
           source_page: 'contact_page',
           name: form.name,
           email: form.email,
@@ -103,9 +103,17 @@ export default function Contact() {
           message: form.message,
           marketing_opt_in: marketingOptIn
         }]);
+        if (error) {
+          console.error('Supabase SQL Error:', error);
+          alert('Supabase Insert Error: ' + error.message);
+        }
+      } else {
+        console.error('Supabase credentials missing in env');
+        alert('Supabase credentials missing in AWS environment variables!');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save to Supabase', err);
+      alert('Supabase catch Error: ' + err.message);
     }
 
     try {

@@ -159,7 +159,7 @@ export default function Home() {
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey);
-        await supabase.from('leads').insert([{
+        const { error } = await supabase.from('leads').insert([{
           source_page: 'home_page',
           name: ctaForm.name,
           email: ctaForm.email,
@@ -169,9 +169,17 @@ export default function Home() {
           message: ctaForm.message,
           marketing_opt_in: ctaMarketingOptIn
         }]);
+        if (error) {
+          console.error('Supabase SQL Error:', error);
+          alert('Supabase Insert Error: ' + error.message);
+        }
+      } else {
+        console.error('Supabase credentials missing in env');
+        alert('Supabase credentials missing in AWS environment variables!');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save to Supabase', err);
+      alert('Supabase catch Error: ' + err.message);
     }
     
     // Validate preferred date (cannot be in the past)
