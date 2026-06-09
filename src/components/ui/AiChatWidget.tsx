@@ -117,7 +117,7 @@ export default function AiChatWidget() {
           'X-Title': 'Primescore Chatbot'
         },
         body: JSON.stringify({
-          model: 'nvidia/llama-3.1-nemotron-70b-instruct:free',
+          model: 'nemotron-3-nano-30b-a3b:free',
           messages: apiMessages,
           stream: true
         })
