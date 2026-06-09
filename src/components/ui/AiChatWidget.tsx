@@ -148,7 +148,11 @@ export default function AiChatWidget() {
               try {
                 const data = JSON.parse(dataStr)
                 const text = data.choices?.[0]?.delta?.content
-                if (text) fullResponse += text
+                if (text) {
+                  fullResponse += text
+                  // Artificial delay to make typing look smooth and human-like
+                  await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 20))
+                }
               } catch (e) {}
             }
           }
@@ -176,7 +180,9 @@ export default function AiChatWidget() {
                whatsapp_number: phone || 'Unknown',
                issue: issue || 'Unknown',
                status: 'pending_review'
-             }]).catch(err => console.error("Supabase Error:", err));
+             }]).then(({ error }) => {
+               if (error) console.error("Supabase Error:", error);
+             });
           }
         }
       }
