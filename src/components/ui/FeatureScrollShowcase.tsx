@@ -132,7 +132,7 @@ export default function FeatureScrollShowcase() {
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-24 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-3 sm:gap-8 lg:gap-12 items-start lg:items-center relative z-10 pt-16 sm:pt-28 lg:pt-0">
           
           {/* Left Side: Content */}
-          <div className="relative h-[120px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
+          <div className="relative h-[220px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
             {features.map((feature, i) => {
               const start = i * 0.25
               const end = (i + 1) * 0.25
@@ -151,21 +151,21 @@ export default function FeatureScrollShowcase() {
                   <motion.div 
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 lg:mb-8"
+                    className="inline-flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 lg:mb-8"
                   >
                     <div className="h-px w-6 lg:w-8 bg-white/20" />
-                    <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.5em] text-white/40">{feature.badge}</span>
+                    <span className="text-[10px] lg:text-[12px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.5em] text-white/60">{feature.badge}</span>
                   </motion.div>
-                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-1.5 sm:mb-3 lg:mb-8">
+                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-2 sm:mb-4 lg:mb-8">
                     {feature.title.split(" ").map((w, idx) => (
                       <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
                     ))}
                   </h2>
-                  <p className="text-sm lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium hidden sm:block">
+                  <p className="text-[13px] sm:text-base lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium">
                     {feature.description}
                   </p>
-                  <div className="mt-1 sm:mt-4 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                     <button className="h-9 sm:h-14 px-5 sm:px-8 rounded-full bg-white text-brandNavy font-bold text-[9px] sm:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
+                  <div className="mt-3 sm:mt-6 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                     <button className="h-10 sm:h-14 px-6 sm:px-8 rounded-full bg-white text-brandNavy font-bold text-[10px] sm:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
                         Open Feature
                      </button>
                   </div>
