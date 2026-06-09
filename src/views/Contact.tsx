@@ -85,6 +85,29 @@ export default function Contact() {
 
     setStatus('sending')
 
+    // Save to Supabase
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        await supabase.from('leads').insert([{
+          source_page: 'contact_page',
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          issue_type: form.issueType,
+          preferred_date: form.preferredDate,
+          preferred_time: form.preferredTime,
+          message: form.message,
+          marketing_opt_in: marketingOptIn
+        }]);
+      }
+    } catch (err) {
+      console.error('Failed to save to Supabase', err);
+    }
+
     try {
       const templateParams = {
         from_name: form.name,

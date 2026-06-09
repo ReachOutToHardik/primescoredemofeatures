@@ -135,7 +135,7 @@ function ParallaxShape({ delay = 0, className = "" }: { delay?: number, classNam
 }
 
 export default function Home() {
-  const [ctaForm, setCtaForm] = useState({ name: '', email: '', message: '', preferredDate: '', preferredTime: '' })
+  const [ctaForm, setCtaForm] = useState({ name: '', email: '', phone: '', message: '', preferredDate: '', preferredTime: '' })
   const [ctaStatus, setCtaStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [ctaError, setCtaError] = useState('')
   const [ctaMarketingOptIn, setCtaMarketingOptIn] = useState(true)
@@ -151,6 +151,28 @@ export default function Home() {
   const handleCtaSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!ctaForm.email.trim() || !ctaForm.name.trim()) return
+    
+    // Save to Supabase
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        await supabase.from('leads').insert([{
+          source_page: 'home_page',
+          name: ctaForm.name,
+          email: ctaForm.email,
+          phone: ctaForm.phone,
+          preferred_date: ctaForm.preferredDate,
+          preferred_time: ctaForm.preferredTime,
+          message: ctaForm.message,
+          marketing_opt_in: ctaMarketingOptIn
+        }]);
+      }
+    } catch (err) {
+      console.error('Failed to save to Supabase', err);
+    }
     
     // Validate preferred date (cannot be in the past)
     if (ctaForm.preferredDate) {
@@ -463,6 +485,14 @@ export default function Home() {
                     value={ctaForm.name}
                     onChange={(e) => setCtaForm(p => ({ ...p, name: e.target.value }))}
                     placeholder="Your Name"
+                    className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
+                    required
+                  />
+                  <input
+                    type="tel"
+                    value={ctaForm.phone}
+                    onChange={(e) => setCtaForm(p => ({ ...p, phone: e.target.value }))}
+                    placeholder="WhatsApp number"
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
