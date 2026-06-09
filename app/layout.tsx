@@ -4,7 +4,7 @@ import '../src/index.css'
 import Navbar from '../src/components/layout/Navbar'
 import Footer from '../src/components/layout/Footer'
 import Preloader from '../src/components/ui/Preloader'
-import AiChatWidget from '../src/components/ui/AiChatWidget'
+import WhatsAppWidget from '../src/components/ui/WhatsAppWidget'
 
 const sora = Sora({ subsets: ['latin'], variable: '--font-inter' })
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-outfit' })
@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
-        <AiChatWidget />
+        <WhatsAppWidget />
       </body>
     </html>
   )

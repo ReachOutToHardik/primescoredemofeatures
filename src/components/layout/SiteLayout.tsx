@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import Footer from './Footer'
 import Navbar from './Navbar'
-import AiChatWidget from '../ui/AiChatWidget'
+import WhatsAppWidget from '../ui/WhatsAppWidget'
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -17,7 +17,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-12">{children}</div>
       </main>
       <Footer />
-      <AiChatWidget />
+      <WhatsAppWidget />
     </div>
   )
 }
