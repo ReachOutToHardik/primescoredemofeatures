@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import { createClient, User } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null as any
 
 export default function AdminPortal() {
   const [user, setUser] = useState<User | null>(null)
@@ -31,14 +31,18 @@ export default function AdminPortal() {
   const [triggering, setTriggering] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null)
     })
-    return () => authListener.subscription.unsubscribe()
+    return () => authListener?.subscription?.unsubscribe()
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {

@@ -21,9 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  if (!supabase) return []
+  if (!supabase) return [{ slug: 'empty-fallback' }]
   const { data: blogs } = await supabase.from('blogs').select('slug')
-  return (blogs || []).map(post => ({ slug: post.slug }))
+  if (!blogs || blogs.length === 0) return [{ slug: 'empty-fallback' }]
+  return blogs.map(post => ({ slug: post.slug }))
 }
 
 export default async function BlogPostPage({ params }: Props) {
