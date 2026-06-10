@@ -1,11 +1,35 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, Clock, Share2 } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Share2, Eye } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 export default function BlogPost({ initialPost }: { initialPost?: any }) {
   const post = initialPost;
+  const [views, setViews] = useState(post?.views || 0)
+
+  useEffect(() => {
+    if (!supabase || !post?.slug) return
+    
+    const viewedKey = `viewed_${post.slug}`
+    if (!sessionStorage.getItem(viewedKey)) {
+      sessionStorage.setItem(viewedKey, 'true')
+      
+      const incrementView = async () => {
+        const { error } = await supabase.rpc('increment_blog_views', { blog_slug: post.slug })
+        if (!error) {
+          setViews((prev: number) => prev + 1)
+        }
+      }
+      incrementView()
+    }
+  }, [post?.slug])
 
   if (!post) {
     return (
@@ -65,6 +89,10 @@ export default function BlogPost({ initialPost }: { initialPost?: any }) {
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             <span>{post.read_time || '5 min read'}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            <span>{views} views</span>
           </div>
           <button className="ml-auto flex items-center gap-2 text-gray-400 hover:text-[#10b981] transition-colors font-medium">
             <Share2 className="h-4 w-4" />

@@ -28,9 +28,14 @@ export default function AdminPortal() {
   const [publishMessage, setPublishMessage] = useState('')
   const [previewMode, setPreviewMode] = useState(false)
 
-  // Webhook State
-  const [triggering, setTriggering] = useState(false)
-  const AWS_WEBHOOK_URL = "https://webhooks.amplify.ap-southeast-2.amazonaws.com/prod/webhooks?id=388aa409-ba68-41f5-8584-023f1587812b&token=hVt8caHwhF66OezrVJOQpVXejlYJBomFuaRHc"
+  // Manage Posts State
+  const [allBlogs, setAllBlogs] = useState<any[]>([])
+
+  const fetchBlogs = async () => {
+    if (!supabase) return
+    const { data } = await supabase.from('blogs').select('*').order('published_at', { ascending: false })
+    setAllBlogs(data || [])
+  }
 
   useEffect(() => {
     if (!supabase) {
@@ -39,10 +44,12 @@ export default function AdminPortal() {
     }
     supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null)
+      if (session?.user) fetchBlogs()
       setLoading(false)
     })
     const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null)
+      if (session?.user) fetchBlogs()
     })
     return () => authListener?.subscription?.unsubscribe()
   }, [])
@@ -111,6 +118,7 @@ export default function AdminPortal() {
       setPublishMessage('Blog successfully published to database!')
       // Reset form
       setTitle(''); setSlug(''); setExcerpt(''); setContent(''); setCategory(''); setReadTime(''); setImageFile(null); setPreviewImageUrl(null); setPreviewMode(false);
+      fetchBlogs(); // Refresh list
     } catch (err: any) {
       setPublishMessage(`Error: ${err.message}`)
     } finally {
@@ -118,15 +126,14 @@ export default function AdminPortal() {
     }
   }
 
-  const handleTriggerWebhook = async () => {
-    setTriggering(true)
-    try {
-      await fetch(AWS_WEBHOOK_URL, { method: 'POST', mode: 'no-cors' })
-      alert('Webhook triggered successfully! AWS Amplify is rebuilding your site now.')
-    } catch (err: any) {
-      alert(`Webhook Error: ${err.message}`)
-    } finally {
-      setTriggering(false)
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this post? This cannot be undone.')) return
+    
+    const { error } = await supabase.from('blogs').delete().eq('id', id)
+    if (error) {
+      alert(`Error deleting post: ${error.message}`)
+    } else {
+      fetchBlogs()
     }
   }
 
@@ -251,23 +258,41 @@ export default function AdminPortal() {
             )}
           </div>
 
-          {/* Webhook Column */}
+          {/* Manage Posts Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-32">
-              <div className="w-12 h-12 bg-gray-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
-              </div>
-              <h2 className="text-xl font-display font-bold text-gray-900 mb-4">Go Live</h2>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Because your site is highly optimized and static, new blogs will not automatically appear on the live site. <br/><br/>Click this button to trigger an AWS Amplify rebuild and push your changes to production.
-              </p>
-              <button 
-                onClick={handleTriggerWebhook} 
-                disabled={triggering}
-                className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl disabled:opacity-50 hover:bg-gray-800 transition-colors shadow-md"
-              >
-                {triggering ? 'Triggering Rebuild...' : 'Trigger AWS Rebuild'}
-              </button>
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 h-full max-h-[800px] overflow-y-auto">
+              <h2 className="text-xl font-display font-bold text-gray-900 mb-6 sticky top-0 bg-white pb-2 border-b border-gray-100 z-10">Manage Posts</h2>
+              
+              {allBlogs.length === 0 ? (
+                <p className="text-gray-500 text-sm">No posts found.</p>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {allBlogs.map(blog => (
+                    <div key={blog.id} className="p-4 rounded-xl border border-gray-100 hover:border-gray-300 transition-colors bg-gray-50 flex flex-col gap-3">
+                      <div>
+                        <div className="flex justify-between items-start gap-2 mb-1">
+                          <h3 className="font-bold text-gray-900 text-sm line-clamp-2">{blog.title}</h3>
+                          <button 
+                            onClick={() => handleDelete(blog.id)}
+                            className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors flex-shrink-0"
+                            title="Delete Post"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                          </button>
+                        </div>
+                        <div className="text-xs text-[#10b981] font-bold">{blog.category}</div>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span>{new Date(blog.published_at).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-1 font-medium bg-white px-2 py-1 rounded-md shadow-sm border border-gray-100">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                          {blog.views || 0}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
