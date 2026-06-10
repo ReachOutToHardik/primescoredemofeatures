@@ -177,19 +177,9 @@ export default function Home() {
         }]);
         
         await supabase.auth.signOut();
-        if (error) {
-          console.error('Supabase SQL Error:', error);
-          alert('Supabase Insert Error: ' + error.message);
-        } else {
-          alert('DEBUG: Supabase Insert SUCCESSFUL! If you do not see it in the DB, check which project URL is in your env vars.');
-        }
-      } else {
-        console.error('Supabase credentials missing in env');
-        alert('Supabase credentials missing in AWS environment variables!');
       }
     } catch (err: any) {
       console.error('Failed to save to Supabase', err);
-      alert('Supabase catch Error: ' + err.message);
     }
     
     // Validate preferred date (cannot be in the past)
