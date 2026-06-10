@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { createClient, User } from '@supabase/supabase-js'
+import dynamic from 'next/dynamic'
+import 'react-quill/dist/quill.snow.css'
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -24,9 +28,11 @@ export default function AdminPortal() {
   const [authorName, setAuthorName] = useState('Primescore Team')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null)
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
   const [publishMessage, setPublishMessage] = useState('')
   const [previewMode, setPreviewMode] = useState(false)
+  const [editingPostId, setEditingPostId] = useState<string | null>(null)
 
   // Manage Posts State
   const [allBlogs, setAllBlogs] = useState<any[]>([])
@@ -98,26 +104,29 @@ export default function AdminPortal() {
           .getPublicUrl(filePath)
           
         imageUrl = publicUrlData.publicUrl
+      } else if (existingImageUrl) {
+        imageUrl = existingImageUrl
+      } else {
+        throw new Error("Cover image is required.")
       }
 
-      // 2. Insert into DB
-      const { error: dbError } = await supabase.from('blogs').insert([{
-        slug,
-        title,
-        excerpt,
-        content,
-        category,
-        read_time: readTime,
-        image: imageUrl,
-        author_name: authorName,
-        published_at: new Date().toISOString()
-      }])
+      // 2. Insert or Update DB
+      if (editingPostId) {
+        const { error: dbError } = await supabase.from('blogs').update({
+          slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName
+        }).eq('id', editingPostId)
+        if (dbError) throw new Error(`Database Error: ${dbError.message}`)
+        setPublishMessage('Blog successfully updated!')
+      } else {
+        const { error: dbError } = await supabase.from('blogs').insert([{
+          slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName, published_at: new Date().toISOString()
+        }])
+        if (dbError) throw new Error(`Database Error: ${dbError.message}`)
+        setPublishMessage('Blog successfully published to database!')
+      }
 
-      if (dbError) throw new Error(`Database Error: ${dbError.message}`)
-
-      setPublishMessage('Blog successfully published to database!')
       // Reset form
-      setTitle(''); setSlug(''); setExcerpt(''); setContent(''); setCategory(''); setReadTime(''); setImageFile(null); setPreviewImageUrl(null); setPreviewMode(false);
+      handleCancelEdit()
       fetchBlogs(); // Refresh list
     } catch (err: any) {
       setPublishMessage(`Error: ${err.message}`)
@@ -134,7 +143,29 @@ export default function AdminPortal() {
       alert(`Error deleting post: ${error.message}`)
     } else {
       fetchBlogs()
+      if (editingPostId === id) handleCancelEdit()
     }
+  }
+
+  const handleEdit = (blog: any) => {
+    setEditingPostId(blog.id)
+    setTitle(blog.title)
+    setSlug(blog.slug)
+    setExcerpt(blog.excerpt)
+    setContent(blog.content)
+    setCategory(blog.category)
+    setReadTime(blog.read_time)
+    setAuthorName(blog.author_name)
+    setExistingImageUrl(blog.image)
+    setPreviewImageUrl(blog.image)
+    setImageFile(null)
+    setPreviewMode(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingPostId(null)
+    setTitle(''); setSlug(''); setExcerpt(''); setContent(''); setCategory(''); setReadTime(''); setImageFile(null); setPreviewImageUrl(null); setExistingImageUrl(null); setPreviewMode(false);
   }
 
   if (loading) return <div className="p-20 text-center">Loading...</div>
@@ -178,7 +209,7 @@ export default function AdminPortal() {
           {/* Editor/Preview Column */}
           <div className="lg:col-span-2 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm border border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-              <h2 className="text-2xl font-display font-bold text-gray-900">{previewMode ? 'Blog Preview' : 'Write New Post'}</h2>
+              <h2 className="text-2xl font-display font-bold text-gray-900">{previewMode ? 'Blog Preview' : (editingPostId ? 'Edit Post' : 'Write New Post')}</h2>
               <button 
                 type="button" 
                 onClick={() => setPreviewMode(!previewMode)}
@@ -240,9 +271,11 @@ export default function AdminPortal() {
                 <div className="flex flex-col gap-3 mt-2 sm:mt-4">
                   <label className="text-sm font-bold text-gray-700 flex justify-between">
                     <span>Content Body</span>
-                    <span className="text-gray-400 font-normal text-xs sm:text-sm">HTML formatting supported</span>
+                    <span className="text-gray-400 font-normal text-xs sm:text-sm">Rich formatting available</span>
                   </label>
-                  <textarea placeholder="Write your blog content here... Use <h2>, <p>, <ul> etc." required value={content} onChange={e => setContent(e.target.value)} rows={15} className="w-full p-4 sm:p-5 rounded-2xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-mono text-sm leading-relaxed resize-none" />
+                  <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden focus-within:border-[#10b981] focus-within:ring-1 focus-within:ring-[#10b981] transition-all">
+                    <ReactQuill theme="snow" value={content} onChange={setContent} className="h-64 mb-10" />
+                  </div>
                 </div>
 
                 {publishMessage && (
@@ -251,9 +284,16 @@ export default function AdminPortal() {
                   </div>
                 )}
 
-                <button type="submit" disabled={publishing} className="w-full bg-[#10b981] text-white font-bold py-4 sm:py-5 rounded-xl mt-2 sm:mt-4 disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-base sm:text-lg">
-                  {publishing ? 'Publishing to Database...' : 'Publish Blog Post'}
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3 mt-2 sm:mt-4">
+                  {editingPostId && (
+                    <button type="button" onClick={handleCancelEdit} className="w-full sm:w-1/3 bg-white text-gray-700 border border-gray-200 font-bold py-4 sm:py-5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm text-base sm:text-lg">
+                      Cancel
+                    </button>
+                  )}
+                  <button type="submit" disabled={publishing} className={`w-full ${editingPostId ? 'sm:w-2/3' : ''} bg-[#10b981] text-white font-bold py-4 sm:py-5 rounded-xl disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-base sm:text-lg`}>
+                    {publishing ? (editingPostId ? 'Updating...' : 'Publishing...') : (editingPostId ? 'Save Changes' : 'Publish Blog Post')}
+                  </button>
+                </div>
               </form>
             )}
           </div>
@@ -272,13 +312,22 @@ export default function AdminPortal() {
                       <div>
                         <div className="flex justify-between items-start gap-2 mb-1">
                           <h3 className="font-bold text-gray-900 text-sm line-clamp-2">{blog.title}</h3>
-                          <button 
-                            onClick={() => handleDelete(blog.id)}
-                            className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors flex-shrink-0"
-                            title="Delete Post"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                          </button>
+                          <div className="flex gap-1 flex-shrink-0">
+                            <button 
+                              onClick={() => handleEdit(blog)}
+                              className="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-lg transition-colors"
+                              title="Edit Post"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                            </button>
+                            <button 
+                              onClick={() => handleDelete(blog.id)}
+                              className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors"
+                              title="Delete Post"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                            </button>
+                          </div>
                         </div>
                         <div className="text-xs text-[#10b981] font-bold">{blog.category}</div>
                       </div>
