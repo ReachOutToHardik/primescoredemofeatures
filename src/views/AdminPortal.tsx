@@ -2,10 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { createClient, User } from '@supabase/supabase-js'
-import dynamic from 'next/dynamic'
-import 'react-quill/dist/quill.snow.css'
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -271,11 +267,9 @@ export default function AdminPortal() {
                 <div className="flex flex-col gap-3 mt-2 sm:mt-4">
                   <label className="text-sm font-bold text-gray-700 flex justify-between">
                     <span>Content Body</span>
-                    <span className="text-gray-400 font-normal text-xs sm:text-sm">Rich formatting available</span>
+                    <span className="text-gray-400 font-normal text-xs sm:text-sm">HTML formatting supported</span>
                   </label>
-                  <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden focus-within:border-[#10b981] focus-within:ring-1 focus-within:ring-[#10b981] transition-all">
-                    <ReactQuill theme="snow" value={content} onChange={setContent} className="h-64 mb-10" />
-                  </div>
+                  <textarea placeholder="Write your blog content here... Use <h2>, <p>, <ul> etc." required value={content} onChange={e => setContent(e.target.value)} rows={15} className="w-full p-4 sm:p-5 rounded-2xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-mono text-sm leading-relaxed resize-none" />
                 </div>
 
                 {publishMessage && (
