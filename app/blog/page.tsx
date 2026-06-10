@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import Blog from '../../src/views/Blog'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export const metadata: Metadata = {
   title: 'Knowledge Hub — Credit & Finance Guides for Indians',
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
+  if (!supabaseUrl || !supabaseKey) return <Blog initialBlogs={[]} />
+  
   const supabase = createClient(supabaseUrl, supabaseKey)
   const { data: blogs } = await supabase.from('blogs').select('*').order('published_at', { ascending: false })
   

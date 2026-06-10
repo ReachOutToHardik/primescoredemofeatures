@@ -2,14 +2,15 @@ import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import BlogPostClient from '../../../src/views/BlogPost'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
+  if (!supabase) return { title: 'Article Not Found' }
   const { data: post } = await supabase.from('blogs').select('*').eq('slug', slug).single()
   
   if (!post) return { title: 'Article Not Found' }
@@ -20,12 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
+  if (!supabase) return []
   const { data: blogs } = await supabase.from('blogs').select('slug')
   return (blogs || []).map(post => ({ slug: post.slug }))
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
+  if (!supabase) return <BlogPostClient initialPost={null} />
   const { data: post } = await supabase.from('blogs').select('*').eq('slug', slug).single()
   
   return <BlogPostClient initialPost={post} />

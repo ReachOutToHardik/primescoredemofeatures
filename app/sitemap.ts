@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-static'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 const CITIES = [
   'Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur', 'Bhilwara', 'Alwar',
@@ -46,15 +46,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  const supabase = createClient(supabaseUrl, supabaseKey)
-  const { data: blogs } = await supabase.from('blogs').select('slug, published_at')
+  let blogRoutes: any[] = []
+  
+  if (supabaseUrl && supabaseKey) {
+    const supabase = createClient(supabaseUrl, supabaseKey)
+    const { data: blogs } = await supabase.from('blogs').select('slug, published_at')
 
-  const blogRoutes = (blogs || []).map(post => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.published_at || new Date()),
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
+    blogRoutes = (blogs || []).map(post => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.published_at || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+  }
 
   return [...coreRoutes, ...cityRoutes, ...blogRoutes]
 }
