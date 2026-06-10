@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: 'Expert articles and guides on improving CIBIL score, understanding credit bureaus, loan settlement, and managing your personal finances in India.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function BlogPage() {
   if (!supabaseUrl || !supabaseKey) return <Blog initialBlogs={[]} />
   
