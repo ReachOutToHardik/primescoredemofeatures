@@ -1,10 +1,17 @@
 'use client'
 
 import Link from 'next/link'
-import { BLOG_POSTS } from '../data/blogPosts'
 import { ArrowRight, Clock } from 'lucide-react'
 
-export default function Blog() {
+export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
+  if (!initialBlogs || initialBlogs.length === 0) {
+    return (
+      <div className="pt-32 pb-20 lg:pt-40 lg:pb-24 min-h-screen bg-gray-50 flex justify-center items-center">
+        <p className="text-xl text-gray-500">No blog posts found.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="pt-32 pb-20 lg:pt-40 lg:pb-24 min-h-screen bg-gray-50">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
@@ -23,23 +30,23 @@ export default function Blog() {
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-20 bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100">
           <div className="h-[400px] lg:h-full">
             <img 
-              src={BLOG_POSTS[0].image} 
-              alt={BLOG_POSTS[0].title}
+              src={initialBlogs[0].image || '/placeholder.jpg'} 
+              alt={initialBlogs[0].title}
               className="w-full h-full object-cover"
             />
           </div>
           <div className="p-8 lg:p-12">
             <span className="inline-block px-4 py-1.5 rounded-full bg-green-50 text-[#10b981] text-sm font-bold mb-6">
-              {BLOG_POSTS[0].category}
+              {initialBlogs[0].category}
             </span>
             <h2 className="font-display text-3xl font-bold text-gray-900 mb-6 leading-tight">
-              {BLOG_POSTS[0].title}
+              {initialBlogs[0].title}
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              {BLOG_POSTS[0].excerpt}
+              {initialBlogs[0].excerpt}
             </p>
             <Link 
-              href={`/blog/${BLOG_POSTS[0].slug}`}
+              href={`/blog/${initialBlogs[0].slug}`}
               className="inline-flex items-center gap-2 text-[#10b981] font-bold hover:gap-3 transition-all"
             >
               Read Full Guide <ArrowRight className="h-5 w-5" />
@@ -49,7 +56,7 @@ export default function Blog() {
 
         {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {BLOG_POSTS.slice(1).map((post) => (
+          {initialBlogs.slice(1).map((post) => (
             <Link 
               key={post.id}
               href={`/blog/${post.slug}`}
@@ -57,7 +64,7 @@ export default function Blog() {
             >
               <div className="h-56 overflow-hidden">
                 <img 
-                  src={post.image} 
+                  src={post.image || '/placeholder.jpg'} 
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -74,12 +81,14 @@ export default function Blog() {
                 </p>
                 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-50 mt-auto">
-                  <img src={post.author.image} alt={post.author.name} className="h-8 w-8 rounded-full object-cover" />
+                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 text-xs">
+                    {post.author_name ? post.author_name[0].toUpperCase() : 'P'}
+                  </div>
                   <div className="text-xs">
-                    <p className="font-bold text-gray-900">{post.author.name}</p>
+                    <p className="font-bold text-gray-900">{post.author_name || 'Primescore Team'}</p>
                     <div className="flex items-center gap-2 text-gray-400 mt-0.5">
                       <Clock className="h-3 w-3" />
-                      <span>{post.readTime}</span>
+                      <span>{post.read_time || '5 min read'}</span>
                     </div>
                   </div>
                 </div>

@@ -2,13 +2,10 @@
 
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { BLOG_POSTS } from '../data/blogPosts'
 import { ArrowLeft, Calendar, Clock, Share2 } from 'lucide-react'
 
-export default function BlogPost({ slug: slugProp }: { slug?: string }) {
-  const params = useParams()
-  const slug = slugProp || (params?.slug as string)
-  const post = BLOG_POSTS.find(p => p.slug === slug);
+export default function BlogPost({ initialPost }: { initialPost?: any }) {
+  const post = initialPost;
 
   if (!post) {
     return (
@@ -53,19 +50,21 @@ export default function BlogPost({ slug: slugProp }: { slug?: string }) {
         {/* Author / Meta */}
         <div className="flex flex-wrap items-center gap-8 py-6 border-y border-gray-100 mb-12 text-sm text-gray-500">
           <div className="flex items-center gap-3">
-            <img src={post.author.image} alt={post.author.name} className="h-10 w-10 rounded-full object-cover" />
+            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
+              {post.author_name ? post.author_name[0].toUpperCase() : 'P'}
+            </div>
             <div>
-              <p className="font-bold text-gray-900">{post.author.name}</p>
-              <p className="text-xs">{post.author.role}</p>
+              <p className="font-bold text-gray-900">{post.author_name || 'Primescore Team'}</p>
+              <p className="text-xs">Author</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            <span>{post.date}</span>
+            <span>{new Date(post.published_at || new Date()).toLocaleDateString()}</span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
-            <span>{post.readTime}</span>
+            <span>{post.read_time || '5 min read'}</span>
           </div>
           <button className="ml-auto flex items-center gap-2 text-gray-400 hover:text-[#10b981] transition-colors font-medium">
             <Share2 className="h-4 w-4" />
