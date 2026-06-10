@@ -2,6 +2,28 @@
 
 import React, { useState, useEffect } from 'react'
 import { createClient, User } from '@supabase/supabase-js'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+
+const MenuBar = ({ editor }: { editor: any }) => {
+  if (!editor) {
+    return null
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 border-b border-gray-200 rounded-t-2xl">
+      <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('bold') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>B</button>
+      <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold italic transition-colors ${editor.isActive('italic') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>I</button>
+      <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold line-through transition-colors ${editor.isActive('strike') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>S</button>
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+      <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>H2</button>
+      <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('heading', { level: 3 }) ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>H3</button>
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+      <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('bulletList') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>• List</button>
+      <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('orderedList') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>1. List</button>
+    </div>
+  )
+}
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -38,6 +60,25 @@ export default function AdminPortal() {
     const { data } = await supabase.from('blogs').select('*').order('published_at', { ascending: false })
     setAllBlogs(data || [])
   }
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: content,
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML())
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose-base focus:outline-none min-h-[250px] p-4 sm:p-5 max-w-none',
+      },
+    },
+  })
+
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content)
+    }
+  }, [content, editor])
 
   useEffect(() => {
     if (!supabase) {
@@ -251,7 +292,17 @@ export default function AdminPortal() {
                 <input type="text" placeholder="URL Slug (e.g., how-to-fix-cibil)" required value={slug} onChange={e => setSlug(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                   <input type="text" placeholder="Category" required value={category} onChange={e => setCategory(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
-                  <input type="text" placeholder="Read Time (e.g., 5 min read)" required value={readTime} onChange={e => setReadTime(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
+                  <div className="relative">
+                    <select required value={readTime} onChange={e => setReadTime(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all appearance-none cursor-pointer">
+                      <option value="" disabled>Select Read Time</option>
+                      {[1,2,3,4,5,6,7,8,9,10,12,15].map(min => (
+                        <option key={min} value={`${min} min read`}>{min} min read</option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
                 </div>
                 <input type="text" placeholder="Author Name" required value={authorName} onChange={e => setAuthorName(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
                 <textarea placeholder="Short Excerpt" required value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={3} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all resize-none" />
@@ -267,9 +318,12 @@ export default function AdminPortal() {
                 <div className="flex flex-col gap-3 mt-2 sm:mt-4">
                   <label className="text-sm font-bold text-gray-700 flex justify-between">
                     <span>Content Body</span>
-                    <span className="text-gray-400 font-normal text-xs sm:text-sm">HTML formatting supported</span>
+                    <span className="text-gray-400 font-normal text-xs sm:text-sm">Rich formatting available</span>
                   </label>
-                  <textarea placeholder="Write your blog content here... Use <h2>, <p>, <ul> etc." required value={content} onChange={e => setContent(e.target.value)} rows={15} className="w-full p-4 sm:p-5 rounded-2xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-mono text-sm leading-relaxed resize-none" />
+                  <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden focus-within:border-[#10b981] focus-within:ring-1 focus-within:ring-[#10b981] transition-all">
+                    <MenuBar editor={editor} />
+                    <EditorContent editor={editor} />
+                  </div>
                 </div>
 
                 {publishMessage && (
