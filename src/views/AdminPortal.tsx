@@ -159,10 +159,9 @@ export default function AdminPortal() {
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-20 px-4 sm:px-6 lg:px-12">
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-12 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div className="flex justify-between items-center mb-12 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
-            <img src="/logo.png" alt="Primescore" className="h-8" />
-            <div className="h-6 w-px bg-gray-200"></div>
+            <img src="/Logo-primescore.png" alt="Primescore" className="h-8" />
             <h1 className="text-xl font-display font-bold text-gray-900">Blog Portal</h1>
           </div>
           <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 font-bold transition-colors text-sm px-4 py-2 rounded-lg hover:bg-red-50">Log Out</button>
@@ -170,7 +169,7 @@ export default function AdminPortal() {
 
         <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Editor/Preview Column */}
-          <div className="lg:col-span-2 bg-white p-6 sm:p-8 lg:p-10 rounded-3xl lg:rounded-[2.5rem] shadow-sm border border-gray-100">
+          <div className="lg:col-span-2 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm border border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <h2 className="text-2xl font-display font-bold text-gray-900">{previewMode ? 'Blog Preview' : 'Write New Post'}</h2>
               <button 
@@ -178,7 +177,7 @@ export default function AdminPortal() {
                 onClick={() => setPreviewMode(!previewMode)}
                 className="text-sm font-bold text-[#10b981] bg-green-50 px-5 py-2.5 rounded-xl hover:bg-green-100 transition-colors w-full sm:w-auto"
               >
-                {previewMode ? '← Back to Editor' : '👁️ Preview Blog'}
+                {previewMode ? 'Back to Editor' : 'Preview Blog'}
               </button>
             </div>
 
@@ -245,8 +244,8 @@ export default function AdminPortal() {
                   </div>
                 )}
 
-                <button type="submit" disabled={publishing} className="w-full bg-[#10b981] text-white font-bold py-4 sm:py-5 rounded-2xl mt-2 sm:mt-4 disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-base sm:text-lg">
-                  {publishing ? 'Publishing to Database...' : '🚀 Publish Blog Post'}
+                <button type="submit" disabled={publishing} className="w-full bg-[#10b981] text-white font-bold py-4 sm:py-5 rounded-xl mt-2 sm:mt-4 disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-base sm:text-lg">
+                  {publishing ? 'Publishing to Database...' : 'Publish Blog Post'}
                 </button>
               </form>
             )}
@@ -254,7 +253,7 @@ export default function AdminPortal() {
 
           {/* Webhook Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 sm:p-8 rounded-3xl lg:rounded-[2.5rem] shadow-sm border border-gray-100 lg:sticky lg:top-32">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-32">
               <div className="w-12 h-12 bg-gray-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
               </div>
