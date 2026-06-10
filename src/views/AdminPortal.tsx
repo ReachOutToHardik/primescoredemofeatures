@@ -131,20 +131,23 @@ export default function AdminPortal() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-sm w-full max-w-md border border-gray-100">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Admin Login</h1>
-          <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            {loginError && <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">{loginError}</div>}
+        <div className="bg-white p-10 rounded-[2.5rem] shadow-sm w-full max-w-md border border-gray-100">
+          <div className="flex justify-center mb-8">
+            <img src="/logo.png" alt="Primescore" className="h-10" />
+          </div>
+          <h1 className="text-2xl font-display font-bold text-gray-900 mb-8 text-center">Admin Access</h1>
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            {loginError && <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">{loginError}</div>}
             <input 
-              type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required
-              className="p-3 rounded-lg border border-gray-200 outline-none focus:border-[#10b981]"
+              type="email" placeholder="Admin Email" value={email} onChange={e => setEmail(e.target.value)} required
+              className="w-full p-4 rounded-xl border border-gray-200 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all bg-gray-50"
             />
             <input 
               type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required
-              className="p-3 rounded-lg border border-gray-200 outline-none focus:border-[#10b981]"
+              className="w-full p-4 rounded-xl border border-gray-200 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all bg-gray-50"
             />
-            <button type="submit" className="bg-[#10b981] text-white font-bold p-3 rounded-lg mt-2">
-              Login
+            <button type="submit" className="bg-[#10b981] text-white font-bold p-4 rounded-xl mt-4 hover:bg-emerald-600 transition-colors shadow-sm">
+              Secure Login
             </button>
           </form>
         </div>
@@ -154,61 +157,73 @@ export default function AdminPortal() {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-20 px-4 sm:px-6 lg:px-12">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Blog Admin Dashboard</h1>
-          <button onClick={handleLogout} className="text-gray-500 hover:text-gray-900 font-medium">Logout</button>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-12 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-4">
+            <img src="/logo.png" alt="Primescore" className="h-8" />
+            <div className="h-6 w-px bg-gray-200"></div>
+            <h1 className="text-xl font-display font-bold text-gray-900">Blog Portal</h1>
+          </div>
+          <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 font-bold transition-colors text-sm px-4 py-2 rounded-lg hover:bg-red-50">Log Out</button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Editor Column */}
-          <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold mb-6">Write New Post</h2>
-            <form onSubmit={handlePublish} className="flex flex-col gap-4">
-              <input type="text" placeholder="Post Title" required value={title} onChange={e => setTitle(e.target.value)} className="p-3 rounded-lg border border-gray-200" />
-              <input type="text" placeholder="URL Slug (e.g., how-to-fix-cibil)" required value={slug} onChange={e => setSlug(e.target.value)} className="p-3 rounded-lg border border-gray-200" />
-              <div className="grid grid-cols-2 gap-4">
-                <input type="text" placeholder="Category" required value={category} onChange={e => setCategory(e.target.value)} className="p-3 rounded-lg border border-gray-200" />
-                <input type="text" placeholder="Read Time (e.g., 5 min read)" required value={readTime} onChange={e => setReadTime(e.target.value)} className="p-3 rounded-lg border border-gray-200" />
+          <div className="lg:col-span-2 bg-white p-8 lg:p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+            <h2 className="text-2xl font-display font-bold text-gray-900 mb-8">Write New Post</h2>
+            <form onSubmit={handlePublish} className="flex flex-col gap-6">
+              <input type="text" placeholder="Post Title" required value={title} onChange={e => setTitle(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-bold text-lg" />
+              <input type="text" placeholder="URL Slug (e.g., how-to-fix-cibil)" required value={slug} onChange={e => setSlug(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
+              <div className="grid md:grid-cols-2 gap-6">
+                <input type="text" placeholder="Category" required value={category} onChange={e => setCategory(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
+                <input type="text" placeholder="Read Time (e.g., 5 min read)" required value={readTime} onChange={e => setReadTime(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
               </div>
-              <input type="text" placeholder="Author Name" required value={authorName} onChange={e => setAuthorName(e.target.value)} className="p-3 rounded-lg border border-gray-200" />
-              <textarea placeholder="Short Excerpt" required value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={2} className="p-3 rounded-lg border border-gray-200" />
+              <input type="text" placeholder="Author Name" required value={authorName} onChange={e => setAuthorName(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
+              <textarea placeholder="Short Excerpt" required value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={3} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all resize-none" />
               
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <label className="text-sm font-bold text-gray-700">Cover Image</label>
-                <input type="file" accept="image/*" onChange={handleImageChange} required className="text-sm" />
+                <div className="p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-green-50 hover:border-green-200 transition-colors">
+                  <input type="file" accept="image/*" onChange={handleImageChange} required className="w-full text-sm font-medium text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#10b981] file:text-white hover:file:bg-emerald-600" />
+                </div>
               </div>
 
-              <div className="flex flex-col gap-2 mt-2">
-                <label className="text-sm font-bold text-gray-700">Content (HTML allowed)</label>
-                <textarea placeholder="Write your blog content here..." required value={content} onChange={e => setContent(e.target.value)} rows={15} className="p-3 rounded-lg border border-gray-200 font-mono text-sm" />
+              <div className="flex flex-col gap-3 mt-4">
+                <label className="text-sm font-bold text-gray-700 flex justify-between">
+                  <span>Content Body</span>
+                  <span className="text-gray-400 font-normal">HTML formatting supported</span>
+                </label>
+                <textarea placeholder="Write your blog content here... Use <h2>, <p>, <ul> etc." required value={content} onChange={e => setContent(e.target.value)} rows={18} className="w-full p-5 rounded-2xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-mono text-sm leading-relaxed resize-none" />
               </div>
 
               {publishMessage && (
-                <div className={`p-4 rounded-xl text-sm font-bold ${publishMessage.includes('Error') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-[#10b981]'}`}>
+                <div className={`p-5 rounded-2xl text-sm font-bold ${publishMessage.includes('Error') ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-green-50 text-[#10b981] border border-green-100'}`}>
                   {publishMessage}
                 </div>
               )}
 
-              <button type="submit" disabled={publishing} className="bg-[#10b981] text-white font-bold py-4 rounded-xl mt-4 disabled:opacity-50">
-                {publishing ? 'Publishing to Database...' : 'Publish Blog Post'}
+              <button type="submit" disabled={publishing} className="w-full bg-[#10b981] text-white font-bold py-5 rounded-2xl mt-4 disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-lg">
+                {publishing ? 'Publishing to Database...' : '🚀 Publish Blog Post'}
               </button>
             </form>
           </div>
 
           {/* Webhook Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h2 className="text-lg font-bold mb-4">Live Site Rebuild</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Because your site is highly optimized and static, new blogs will not appear on the live site until you trigger a rebuild.
+            <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 sticky top-32">
+              <div className="w-12 h-12 bg-gray-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+              </div>
+              <h2 className="text-xl font-display font-bold text-gray-900 mb-4">Go Live</h2>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Because your site is highly optimized and static, new blogs will not automatically appear on the live site. <br/><br/>Click this button to trigger an AWS Amplify rebuild and push your changes to production.
               </p>
               <button 
                 onClick={handleTriggerWebhook} 
                 disabled={triggering}
-                className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl disabled:opacity-50"
+                className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl disabled:opacity-50 hover:bg-gray-800 transition-colors shadow-md"
               >
-                {triggering ? 'Triggering...' : 'Trigger AWS Rebuild'}
+                {triggering ? 'Triggering Rebuild...' : 'Trigger AWS Rebuild'}
               </button>
             </div>
           </div>
