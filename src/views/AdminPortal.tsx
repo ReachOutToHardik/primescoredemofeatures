@@ -27,8 +27,8 @@ export default function AdminPortal() {
   const [publishMessage, setPublishMessage] = useState('')
 
   // Webhook State
-  const [webhookUrl, setWebhookUrl] = useState('')
   const [triggering, setTriggering] = useState(false)
+  const AWS_WEBHOOK_URL = "https://webhooks.amplify.ap-southeast-2.amazonaws.com/prod/webhooks?id=388aa409-ba68-41f5-8584-023f1587812b&token=hVt8caHwhF66OezrVJOQpVXejlYJBomFuaRHc"
 
   useEffect(() => {
     if (!supabase) {
@@ -115,11 +115,9 @@ export default function AdminPortal() {
   }
 
   const handleTriggerWebhook = async () => {
-    if (!webhookUrl) return alert('Please enter your AWS Webhook URL')
     setTriggering(true)
     try {
-      const res = await fetch(webhookUrl, { method: 'POST' })
-      if (!res.ok) throw new Error('Webhook failed')
+      await fetch(AWS_WEBHOOK_URL, { method: 'POST', mode: 'no-cors' })
       alert('Webhook triggered successfully! AWS Amplify is rebuilding your site now.')
     } catch (err: any) {
       alert(`Webhook Error: ${err.message}`)
@@ -205,13 +203,6 @@ export default function AdminPortal() {
               <p className="text-sm text-gray-600 mb-4">
                 Because your site is highly optimized and static, new blogs will not appear on the live site until you trigger a rebuild.
               </p>
-              <input 
-                type="text" 
-                placeholder="AWS Amplify Incoming Webhook URL" 
-                value={webhookUrl}
-                onChange={e => setWebhookUrl(e.target.value)}
-                className="w-full p-3 rounded-lg border border-gray-200 mb-4 text-sm" 
-              />
               <button 
                 onClick={handleTriggerWebhook} 
                 disabled={triggering}
