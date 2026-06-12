@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import { Sora, DM_Sans, JetBrains_Mono, Caveat } from 'next/font/google'
 import '../src/index.css'
-import Navbar from '../src/components/layout/Navbar'
-import Footer from '../src/components/layout/Footer'
+import { ConditionalHeader, ConditionalFooter } from '../src/components/layout/ConditionalHeaderFooter'
 import Preloader from '../src/components/ui/Preloader'
-import WhatsAppWidget from '../src/components/ui/WhatsAppWidget'
+import AnalyticsTracker from '../src/components/layout/AnalyticsTracker'
 
 const sora = Sora({ subsets: ['latin'], variable: '--font-inter' })
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-outfit' })
@@ -42,12 +41,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="absolute inset-0 bg-heroRadial" />
           <div className="absolute inset-0 bg-dots opacity-[0.4]" />
         </div>
-        <Navbar />
+        <AnalyticsTracker />
+        <ConditionalHeader />
         <main className="relative w-full">
           {children}
         </main>
-        <Footer />
-        <WhatsAppWidget />
+        <ConditionalFooter />
       </body>
     </html>
   )
