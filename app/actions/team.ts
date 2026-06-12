@@ -9,7 +9,9 @@ export async function createTeamMember(formData: FormData) {
   const role = formData.get('role') as string
   
   if (!supabaseAdmin) {
-    return { error: 'Server configuration error: Missing Service Role Key.' }
+    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
+    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
   }
 
   try {
@@ -40,7 +42,11 @@ export async function createTeamMember(formData: FormData) {
 }
 
 export async function deleteTeamMember(userId: string) {
-  if (!supabaseAdmin) return { error: 'Server configuration error.' }
+  if (!supabaseAdmin) {
+    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
+    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
+  }
   try {
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
     if (error) throw error
@@ -52,7 +58,11 @@ export async function deleteTeamMember(userId: string) {
 }
 
 export async function getTeamMembers() {
-  if (!supabaseAdmin) return { error: 'Server configuration error.', users: [] }
+  if (!supabaseAdmin) {
+    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
+    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}`, users: [] }
+  }
   try {
     const { data: roles } = await supabaseAdmin.from('user_roles').select('*')
     const { data: authData } = await supabaseAdmin.auth.admin.listUsers()

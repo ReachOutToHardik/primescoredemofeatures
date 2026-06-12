@@ -18,13 +18,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const fetchSessionAndRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
-        setRole(data?.role || 'writer') // Default to lowest permission if missing
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        setUser(session?.user ?? null)
+        if (session?.user) {
+          const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
+          setRole(data?.role || 'writer')
+        }
+      } catch (err) {
+        console.error('Failed to load session:', err)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
     
     fetchSessionAndRole()
