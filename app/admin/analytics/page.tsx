@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
       <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-gray-100">
         <h2 className="text-xl font-bold text-gray-900 mb-8">Traffic (Last 7 Days)</h2>
         <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={0}>
             <AreaChart data={timelineData()} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
