@@ -2,6 +2,22 @@
 
 import { supabaseAdmin } from '../../src/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
+
+// Helper to check if caller is super_admin
+async function isSuperAdmin() {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
+  )
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return false
+  const { data } = await supabaseAdmin?.from('user_roles').select('role').eq('id', session.user.id).single() || { data: null }
+  return data?.role === 'super_admin'
+}
 
 export async function createTeamMember(formData: FormData) {
   const email = formData.get('email') as string
@@ -12,6 +28,10 @@ export async function createTeamMember(formData: FormData) {
     const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
     const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
+  }
+
+  if (!(await isSuperAdmin())) {
+    return { error: 'Unauthorized: Only Super Admins can perform this action.' }
   }
 
   try {
@@ -47,6 +67,9 @@ export async function deleteTeamMember(userId: string) {
     const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
   }
+  if (!(await isSuperAdmin())) {
+    return { error: 'Unauthorized: Only Super Admins can perform this action.' }
+  }
   try {
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
     if (error) throw error
@@ -63,6 +86,7 @@ export async function getTeamMembers() {
     const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}`, users: [] }
   }
+  if (!(await isSuperAdmin())) return { error: 'Unauthorized.', users: [] }
   try {
     const { data: roles } = await supabaseAdmin.from('user_roles').select('*')
     const { data: authData } = await supabaseAdmin.auth.admin.listUsers()

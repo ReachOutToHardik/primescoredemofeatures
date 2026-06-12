@@ -115,6 +115,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
+  if (pathname === '/admin/team' && role !== 'super_admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <h1 className="text-3xl font-display font-bold text-gray-900 mb-4">Access Denied</h1>
+        <p className="text-gray-500 mb-8">Only Super Admins can manage the team and access control.</p>
+        <Link href="/admin" className="bg-gray-900 text-white font-bold px-6 py-3 rounded-lg hover:bg-black transition-colors">Go to Dashboard</Link>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative z-50">
       {/* Top Navigation Bar */}
