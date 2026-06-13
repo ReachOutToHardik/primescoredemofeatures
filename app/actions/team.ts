@@ -7,16 +7,25 @@ import { createServerClient } from '@supabase/ssr'
 
 // Helper to check if caller is super_admin
 async function isSuperAdmin() {
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
-  )
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) return false
-  const { data } = await supabaseAdmin?.from('user_roles').select('role').eq('id', session.user.id).single() || { data: null }
-  return data?.role === 'super_admin'
+  try {
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
+    )
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    if (!session) return { authorized: false, reason: `No session. Cookie count: ${cookieStore.getAll().length}. Auth error: ${sessionError?.message}` }
+    
+    if (!supabaseAdmin) return { authorized: false, reason: 'supabaseAdmin is null' }
+    
+    const { data, error: dbError } = await supabaseAdmin.from('user_roles').select('role').eq('id', session.user.id).single()
+    if (data?.role !== 'super_admin') return { authorized: false, reason: `Role is ${data?.role}. DB Error: ${dbError?.message}` }
+    
+    return { authorized: true }
+  } catch (err: any) {
+    return { authorized: false, reason: `Exception: ${err.message}` }
+  }
 }
 
 export async function createTeamMember(formData: FormData) {
@@ -30,8 +39,9 @@ export async function createTeamMember(formData: FormData) {
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
   }
 
-  if (!(await isSuperAdmin())) {
-    return { error: 'Unauthorized: Only Super Admins can perform this action.' }
+  const adminCheck = await isSuperAdmin();
+  if (!adminCheck.authorized) {
+    return { error: `Unauthorized: ${adminCheck.reason}` }
   }
 
   try {
@@ -67,8 +77,9 @@ export async function deleteTeamMember(userId: string) {
     const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
   }
-  if (!(await isSuperAdmin())) {
-    return { error: 'Unauthorized: Only Super Admins can perform this action.' }
+  const adminCheck = await isSuperAdmin();
+  if (!adminCheck.authorized) {
+    return { error: `Unauthorized: ${adminCheck.reason}` }
   }
   try {
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
@@ -86,7 +97,8 @@ export async function getTeamMembers() {
     const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
     return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}`, users: [] }
   }
-  if (!(await isSuperAdmin())) return { error: 'Unauthorized.', users: [] }
+  const adminCheck = await isSuperAdmin();
+  if (!adminCheck.authorized) return { error: `Unauthorized: ${adminCheck.reason}`, users: [] }
   try {
     const { data: roles } = await supabaseAdmin.from('user_roles').select('*')
     const { data: authData } = await supabaseAdmin.auth.admin.listUsers()
