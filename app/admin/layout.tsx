@@ -17,35 +17,51 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
 
   useEffect(() => {
+    let isMounted = true;
     const fetchSessionAndRole = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
+        if (!isMounted) return;
         setUser(session?.user ?? null)
         if (session?.user) {
           const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
-          setRole(data?.role || 'writer')
+          if (isMounted) setRole(data?.role || 'writer')
         }
       } catch (err) {
         console.error('Failed to load session:', err)
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
     
     fetchSessionAndRole()
     
+    // Safety fallback: Never let loading screen stick for more than 3 seconds
+    const fallbackTimeout = setTimeout(() => {
+      if (isMounted && loading) {
+        console.warn('Auth fetch took too long, bypassing skeleton loader.')
+        setLoading(false)
+      }
+    }, 3000)
+    
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!isMounted) return;
       setUser(session?.user ?? null)
       if (session?.user) {
         const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
-        setRole(data?.role || 'writer')
+        if (isMounted) setRole(data?.role || 'writer')
       } else {
-        setRole(null)
+        if (isMounted) setRole(null)
       }
+      if (isMounted) setLoading(false)
     })
     
-    return () => authListener?.subscription?.unsubscribe()
-  }, [])
+    return () => {
+      isMounted = false;
+      clearTimeout(fallbackTimeout);
+      authListener?.subscription?.unsubscribe()
+    }
+  }, [loading])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
