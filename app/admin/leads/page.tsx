@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
 
@@ -25,16 +27,21 @@ export default function LeadsCRMPage() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const fetchLeads = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false })
-      
-    if (!error && data) {
-      setLeads(data)
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false })
+        
+      if (!error && data) {
+        setLeads(data)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
