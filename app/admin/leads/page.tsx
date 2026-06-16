@@ -88,7 +88,8 @@ export default function LeadsCRMPage() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.setAttribute('download', 'primescore-leads.csv')
+    const dateStr = new Date().toISOString().split('T')[0]
+    link.setAttribute('download', `primescore-leads-${dateStr}.csv`)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -104,7 +105,8 @@ export default function LeadsCRMPage() {
     const worksheet = XLSX.utils.json_to_sheet(data)
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, "Leads")
-    XLSX.writeFile(workbook, "primescore-leads.xlsx")
+    const dateStr = new Date().toISOString().split('T')[0]
+    XLSX.writeFile(workbook, `primescore-leads-${dateStr}.xlsx`)
   }
 
   const exportToPDF = () => {
@@ -123,7 +125,8 @@ export default function LeadsCRMPage() {
       body: tableRows,
       startY: 20,
     })
-    doc.save("primescore-leads.pdf")
+    const dateStr = new Date().toISOString().split('T')[0]
+    doc.save(`primescore-leads-${dateStr}.pdf`)
   }
 
   const getStatusColor = (status: string) => {
