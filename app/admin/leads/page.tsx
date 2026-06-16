@@ -4,6 +4,9 @@ export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
+import * as XLSX from 'xlsx'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 type Lead = {
   id: string
@@ -25,6 +28,7 @@ export default function LeadsCRMPage() {
   const [loading, setLoading] = useState(true)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [exportMenuOpen, setExportMenuOpen] = useState(false)
 
   const fetchLeads = async () => {
     try {
@@ -67,6 +71,59 @@ export default function LeadsCRMPage() {
     if (!error) {
       setLeads(leads.filter(lead => lead.id !== leadId))
     }
+  }
+
+  const exportToCSV = () => {
+    if (filteredLeads.length === 0) return alert('No leads to export.')
+    const csvContent = [
+      ['Name', 'Email', 'Phone', 'Issue Type', 'Status', 'Message', 'Date Submitted'],
+      ...filteredLeads.map(l => [
+        `"${l.name || ''}"`, `"${l.email || ''}"`, `"${l.phone || ''}"`,
+        `"${l.issue_type || ''}"`, `"${l.status || 'New'}"`,
+        `"${(l.message || '').replace(/"/g, '""')}"`,
+        `"${new Date(l.created_at).toLocaleDateString()}"`
+      ])
+    ].map(e => e.join(',')).join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.setAttribute('download', 'primescore-leads.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const exportToExcel = () => {
+    if (filteredLeads.length === 0) return alert('No leads to export.')
+    const data = filteredLeads.map(l => ({
+      Name: l.name, Email: l.email, Phone: l.phone, 'Issue Type': l.issue_type,
+      Status: l.status || 'New', Message: l.message,
+      'Date Submitted': new Date(l.created_at).toLocaleDateString()
+    }))
+    const worksheet = XLSX.utils.json_to_sheet(data)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Leads")
+    XLSX.writeFile(workbook, "primescore-leads.xlsx")
+  }
+
+  const exportToPDF = () => {
+    if (filteredLeads.length === 0) return alert('No leads to export.')
+    const doc = new jsPDF()
+    doc.text("Primescore Leads Export", 14, 15)
+    
+    const tableColumn = ["Name", "Email", "Phone", "Status", "Date"]
+    const tableRows = filteredLeads.map(l => [
+      l.name || 'N/A', l.email || 'N/A', l.phone || 'N/A', 
+      l.status || 'New', new Date(l.created_at).toLocaleDateString()
+    ])
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    })
+    doc.save("primescore-leads.pdf")
   }
 
   const getStatusColor = (status: string) => {
@@ -130,6 +187,34 @@ export default function LeadsCRMPage() {
           <div className="bg-white px-5 py-2.5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 w-full sm:w-auto justify-center">
             <span className="text-sm font-bold text-gray-500">Total Leads</span>
             <span className="bg-green-100 text-[#10b981] font-bold px-3 py-0.5 rounded-lg">{leads.length}</span>
+          </div>
+          
+          {/* Export Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setExportMenuOpen(!exportMenuOpen)}
+              className="bg-gray-900 text-white px-5 py-2.5 rounded-xl shadow-sm hover:bg-black font-bold text-sm flex items-center gap-2 transition-colors w-full sm:w-auto justify-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export
+            </button>
+            
+            {exportMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                <button onClick={() => { exportToPDF(); setExportMenuOpen(false) }} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                  Export as PDF
+                </button>
+                <button onClick={() => { exportToExcel(); setExportMenuOpen(false) }} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h2"></path><path d="M8 17h2"></path><path d="M14 13h2"></path><path d="M14 17h2"></path></svg>
+                  Export as Excel
+                </button>
+                <button onClick={() => { exportToCSV(); setExportMenuOpen(false) }} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><line x1="10" y1="9" x2="14" y2="9"></line></svg>
+                  Export as CSV
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
