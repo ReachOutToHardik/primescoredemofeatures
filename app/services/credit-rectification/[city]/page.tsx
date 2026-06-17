@@ -12,7 +12,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export const dynamic = 'force-dynamic'
+export async function generateStaticParams() {
+  const cities = [
+    'jaipur', 'jodhpur', 'kota', 'bikaner', 'ajmer', 'udaipur', 'bhilwara', 'alwar',
+    'bharatpur', 'sikar', 'pali', 'sri-ganganagar', 'jhunjhunu', 'chittorgarh', 'jaisalmer', 'nagaur',
+    'mumbai', 'delhi', 'bangalore', 'hyderabad', 'ahmedabad', 'chennai', 'kolkata', 'surat',
+    'pune', 'lucknow', 'kanpur', 'indore', 'thane', 'bhopal', 'visakhapatnam', 'patna',
+    'vadodara', 'ghaziabad', 'ludhiana'
+  ]
+  return cities.map(city => ({ city }))
+}
 
 export default async function CityServicePage({ params }: Props) {
   const { city } = await params
