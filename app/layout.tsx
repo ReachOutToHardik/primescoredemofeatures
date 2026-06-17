@@ -12,6 +12,7 @@ const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
 
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.primescore.in'),
   title: {
     default: 'Primescore — Fix Your CIBIL Score. Unlock Your Future.',
     template: '%s | Primescore',

@@ -15,7 +15,7 @@ const CITIES = [
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://primescore.in'
+  const baseUrl = 'https://www.primescore.in'
   
   const coreRoutes = [
     '',
