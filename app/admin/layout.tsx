@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
+import Script from 'next/script'
 import { usePathname } from 'next/navigation'
 import { supabase } from '../../src/lib/supabase'
 
@@ -143,6 +144,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative z-50">
+      {/* Google Analytics */}
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-0VV0R0ELZS" strategy="afterInteractive" />
+      <Script id="google-analytics" strategy="afterInteractive">{`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-0VV0R0ELZS');
+      `}</Script>
       {/* Top Navigation Bar */}
       <nav className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
         <div className="flex items-center gap-10">
