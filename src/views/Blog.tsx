@@ -27,32 +27,32 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
         </div>
 
         {/* Featured Post */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-20 bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100">
-          <div className="h-[400px] lg:h-full">
+        <Link 
+          href={`/blog/${initialBlogs[0].slug}`}
+          className="group grid lg:grid-cols-2 gap-12 items-center mb-20 bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer"
+        >
+          <div className="h-[400px] lg:h-full overflow-hidden">
             <img 
               src={initialBlogs[0].image || '/placeholder.jpg'} 
               alt={initialBlogs[0].title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
           <div className="p-8 lg:p-12">
             <span className="inline-block px-4 py-1.5 rounded-full bg-green-50 text-[#10b981] text-sm font-bold mb-6">
               {initialBlogs[0].category}
             </span>
-            <h2 className="font-display text-3xl font-bold text-gray-900 mb-6 leading-tight">
+            <h2 className="font-display text-3xl font-bold text-gray-900 mb-6 leading-tight group-hover:text-[#10b981] transition-colors">
               {initialBlogs[0].title}
             </h2>
             <p className="text-lg text-gray-600 mb-8">
               {initialBlogs[0].excerpt}
             </p>
-            <Link 
-              href={`/blog/${initialBlogs[0].slug}`}
-              className="inline-flex items-center gap-2 text-[#10b981] font-bold hover:gap-3 transition-all"
-            >
+            <div className="inline-flex items-center gap-2 text-[#10b981] font-bold group-hover:gap-3 transition-all">
               Read Full Guide <ArrowRight className="h-5 w-5" />
-            </Link>
+            </div>
           </div>
-        </div>
+        </Link>
 
         {/* Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
