@@ -18,6 +18,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    
     let isMounted = true;
     const fetchSessionAndRole = async () => {
       try {
@@ -39,8 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     
     // Safety fallback: Never let loading screen stick for more than 3 seconds
     const fallbackTimeout = setTimeout(() => {
-      if (isMounted && loading) {
-        console.warn('Auth fetch took too long, bypassing skeleton loader.')
+      if (isMounted) {
         setLoading(false)
       }
     }, 3000)
@@ -62,16 +66,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       clearTimeout(fallbackTimeout);
       authListener?.subscription?.unsubscribe()
     }
-  }, [loading])
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!supabase) return
     setLoginError('')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) setLoginError(error.message)
   }
 
   const handleLogout = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
   }
 

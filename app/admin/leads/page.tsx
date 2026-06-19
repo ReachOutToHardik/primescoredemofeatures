@@ -31,6 +31,7 @@ export default function LeadsCRMPage() {
   const [exportMenuOpen, setExportMenuOpen] = useState(false)
 
   const fetchLeads = async () => {
+    if (!supabase) { setLoading(false); return }
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -53,6 +54,7 @@ export default function LeadsCRMPage() {
   }, [])
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
+    if (!supabase) return
     setUpdatingId(leadId)
     const { error } = await supabase
       .from('leads')
@@ -66,6 +68,7 @@ export default function LeadsCRMPage() {
   }
 
   const handleDelete = async (leadId: string) => {
+    if (!supabase) return
     if (!confirm('Are you sure you want to delete this lead?')) return
     const { error } = await supabase.from('leads').delete().eq('id', leadId)
     if (!error) {
