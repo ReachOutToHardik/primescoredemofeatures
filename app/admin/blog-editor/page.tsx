@@ -48,6 +48,7 @@ export default function BlogEditorPage() {
   const [allBlogs, setAllBlogs] = useState<any[]>([])
 
   const fetchBlogs = async () => {
+    if (!supabase) return
     const { data } = await supabase.from('blogs').select('*').order('published_at', { ascending: false })
     setAllBlogs(data || [])
   }
@@ -85,6 +86,10 @@ export default function BlogEditorPage() {
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!supabase) {
+      setPublishMessage('Error: Supabase is not initialized.')
+      return
+    }
     setPublishing(true)
     setPublishMessage('')
 
@@ -141,6 +146,10 @@ export default function BlogEditorPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post? This cannot be undone.')) return
+    if (!supabase) {
+      alert('Error: Supabase is not initialized.')
+      return
+    }
     
     const { error } = await supabase.from('blogs').delete().eq('id', id)
     if (error) {
