@@ -18,7 +18,8 @@ import {
   Clock,
   Sparkles,
   MessageSquare,
-  FileText
+  FileText,
+  AlertTriangle
 } from 'lucide-react'
 import Link from 'next/link'
 import Reveal from '../components/ui/Reveal'
@@ -69,98 +70,74 @@ const fixesByService: Record<string, string[]> = {
   emi: [
     'Analyzes court case records and legal notice warnings',
     'Coordinates directly with bank legal advocates',
-    'Drafts proper settlement proposals for court cases',
+    'Drafts proper court settlement proposals',
     'Deletes the active "Suit Filed" marker post-resolution'
   ]
 }
 
-const TABS = [
-  { id: 'rectification', label: 'CIBIL Error Rectification', subtitle: 'Fix incorrect data & late payments', icon: ShieldCheck },
-  { id: 'settlement', label: 'Loan Settlement Negotiation', subtitle: 'Close settled status correctly', icon: Handshake },
-  { id: 'card-disputes', label: 'Written-Off Resolution', subtitle: 'Clear active default & loss markers', icon: FileWarning },
-  { id: 'emi', label: 'Suit Filed Assistance', subtitle: 'Remove legal litigation case tags', icon: Wallet },
-  { id: 'monitoring', label: 'Score Monitoring & Alerts', subtitle: 'Detect fraud & unauthorized queries', icon: Activity },
-  { id: 'coaching', label: '750+ CIBIL Score Coaching', subtitle: 'Personal finance habits & advice', icon: LineChart },
+const ISSUES = [
+  {
+    id: 'rectification',
+    problem: 'Incorrect Late Payments (DPD)',
+    badState: '30 / 60 DPD Overdue ❌',
+    goodState: '000 (No Dues) ✅',
+    summary: 'You paid your EMI on time, but the bank incorrectly reported delayed payments.',
+    seoHeading: 'Fix Incorrect CIBIL Late Payments & DPD Records',
+    icon: ShieldCheck
+  },
+  {
+    id: 'settlement',
+    problem: 'Settled Loan Accounts',
+    badState: 'Settled status ❌',
+    goodState: 'Closed & Resolved ✅',
+    summary: 'You cleared your loan, but the negative "Settled" status blocks future approvals.',
+    seoHeading: 'Remove Negative "Settled" Status From CIBIL Report',
+    icon: Handshake
+  },
+  {
+    id: 'card-disputes',
+    problem: 'Written-Off Defaults',
+    badState: 'Written-off ❌',
+    goodState: 'Closed / NOC Issued ✅',
+    summary: 'An old dispute or credit card balance is reported as a bank loss (Written-off).',
+    seoHeading: 'Resolve Written-Off Status & CIBIL Default Records',
+    icon: FileWarning
+  },
+  {
+    id: 'emi',
+    problem: 'Active Litigation / Suit Filed',
+    badState: 'Suit Filed status ❌',
+    goodState: 'Suit Dismissed / Closed ✅',
+    summary: 'The bank has filed a legal court case against you, visible on your credit history.',
+    seoHeading: 'Remove Suit Filed Markers From Credit Profile',
+    icon: Wallet
+  },
+  {
+    id: 'duplicate-loans',
+    problem: 'Duplicate Loan Entries',
+    badState: 'Duplicate Accounts ❌',
+    goodState: 'Clean / Single Entry ✅',
+    summary: 'A single loan is reported multiple times, artificially doubling your total debt.',
+    seoHeading: 'Fix Duplicate Active Loans & Bureau Accounts',
+    icon: Activity
+  },
+  {
+    id: 'coaching',
+    problem: 'CIBIL stuck below 750',
+    badState: '620 Score ❌',
+    goodState: '750+ Excellent ✅',
+    summary: 'No active defaults, but your score is low and you face constant credit rejection.',
+    seoHeading: '90-Day Credit Builder Guide to Cross 750+',
+    icon: LineChart
+  }
 ]
 
-const serviceMockups: Record<string, {
-  accountName: string
-  badLabel: string
-  badValue: string
-  goodLabel: string
-  goodValue: string
-  issueDescription: string
-  seoHeading: string
-  seoBody: string
-}> = {
-  rectification: {
-    accountName: 'Personal Loan / Credit Card',
-    badLabel: 'Late Payments (DPD)',
-    badValue: '30 / 60 Days Overdue ❌',
-    goodLabel: 'Corrected Status',
-    goodValue: '000 (No Dues / Current) ✅',
-    issueDescription: 'Incorrect late payment entries reported by the bank due to processing delays or technical glitches.',
-    seoHeading: 'Fix Incorrect CIBIL Late Payments & DPD Records',
-    seoBody: 'If you paid your EMI on time but the bank mistakenly reported a delay, we file legal disputes to correct your payment history and rebuild your credit score.'
-  },
-  settlement: {
-    accountName: 'Settled Credit Card / Loan',
-    badLabel: 'Account Status',
-    badValue: 'Settled (Blocks Loans for 7 Years) ❌',
-    goodLabel: 'Corrected Status',
-    goodValue: 'Closed / No Dues (Clean Profile) ✅',
-    issueDescription: 'You settled a loan with a bank, but the "Settled" tag remains on CIBIL, causing future loan rejections.',
-    seoHeading: 'Remove Negative "Settled" Status From CIBIL Report',
-    seoBody: 'We help you negotiate proper closure terms with your bank, secure a valid No Objection Certificate (NOC), and legally dispute old settlement markers.'
-  },
-  'card-disputes': {
-    accountName: 'Written-Off Credit Card',
-    badLabel: 'Account Status',
-    badValue: 'Written-off (Severe Default) ❌',
-    goodLabel: 'Corrected Status',
-    goodValue: 'Closed / Post-Settled NOC ✅',
-    issueDescription: 'The bank wrote off your outstanding balance as a loss. This severe status completely stops new loan approvals.',
-    seoHeading: 'Resolve Written-Off Status & CIBIL Default Records',
-    seoBody: 'We coordinate with bank recovery teams, resolve the underlying balance dispute, obtain clearance NOCs, and update the status to "Closed".'
-  },
-  emi: {
-    accountName: 'Litigated Banking Account',
-    badLabel: 'Legal Status',
-    badValue: 'Suit Filed (Active Court Case) ❌',
-    goodLabel: 'Corrected Status',
-    goodValue: 'Suit Withdrawn / Account Closed ✅',
-    issueDescription: 'The bank has filed a legal court case against you, which is visible on your CIBIL profile and blocks all credit.',
-    seoHeading: 'Remove Suit Filed Markers From Credit Profile',
-    seoBody: 'We assist you in drafting settlement proposals for bank advocates, coordinate litigation withdrawal, and remove the "Suit Filed" marker.'
-  },
-  monitoring: {
-    accountName: 'Your PAN & Personal Identity',
-    badLabel: 'Active Enquiries',
-    badValue: '12 Unknown Inquiries (High Risk) ❌',
-    goodLabel: 'Corrected Status',
-    goodValue: 'Inquiries Cleaned & Monitored ✅',
-    issueDescription: 'Identity theft, fake loans registered in your name, or credit bureaus tracking excessive bank searches.',
-    seoHeading: 'Track CIBIL Score & Catch Fraudulent Inquiries',
-    seoBody: 'We configure real-time alerts. If a financial institution checks your credit profile or opens an account without your consent, you can block it.'
-  },
-  coaching: {
-    accountName: 'Overall Credit Profile',
-    badLabel: 'CIBIL Score',
-    badValue: '620 (Low Loan Eligibility) ❌',
-    goodLabel: 'Target CIBIL',
-    goodValue: '750+ (Excellent Credit Health) ✅',
-    issueDescription: 'No major defaults or legal issues, but your credit score remains stuck and you keep getting rejected.',
-    seoHeading: '90-Day Credit Builder Guide to Cross 750+',
-    seoBody: 'Work one-on-one with Indian credit experts. We design a simple plan to pay credit card bills correctly, mix loans safely, and increase your score.'
-  }
-}
-
 export default function Services() {
-  const [activeTab, setActiveTab] = useState('rectification')
+  const [selectedIssueId, setSelectedIssueId] = useState<string>('rectification')
   
-  const currentService = services.find((s) => s.id === activeTab) || services[0]
-  const currentMockup = serviceMockups[activeTab] || serviceMockups.rectification
-  const currentFixes = fixesByService[activeTab] || []
+  const currentService = services.find((s) => s.id === selectedIssueId) || services[0]
+  const currentIssue = ISSUES.find((i) => i.id === selectedIssueId) || ISSUES[0]
+  const currentFixes = fixesByService[selectedIssueId] || []
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24 text-brandNavy bg-night">
@@ -177,13 +154,13 @@ export default function Services() {
               CIBIL Score Repair &amp; <span className="text-brandRed">Credit Rectification</span>
             </h1>
             
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-textSecondary">
+            <p className="mt-6 max-w-3xl text-base sm:text-lg leading-relaxed text-textSecondary">
               Simple, document-backed legal credit repair services in India. We help you dispute incorrect late payments, 
               negotiate loan closures, remove negative defaults, and resolve court markers from your credit history.
             </p>
 
             {/* Trust badges */}
-            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm font-semibold text-brandNavy/75 border-b border-brandNavy/10 pb-8">
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-xs sm:text-sm font-semibold text-brandNavy/75 border-b border-brandNavy/10 pb-8">
               <div className="flex items-center gap-2">
                 <Check className="h-4.5 w-4.5 text-brandGreen" />
                 <span>iStart Govt. Recognized Startup</span>
@@ -201,218 +178,256 @@ export default function Services() {
         </Reveal>
       </section>
 
-      {/* 2. INTERACTIVE SERVICE CONSOLE */}
-      <section className="mt-16">
+      {/* 2. BENTO DIAGNOSTIC CENTER */}
+      <section className="mt-14">
         <Reveal>
-          <div className="rounded-2xl border border-brandNavy/8 bg-white p-6 sm:p-8 lg:p-10 shadow-card">
-            <div className="mb-8 border-b border-brandNavy/5 pb-6">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Interactive Troubleshooter</span>
-              <h2 className="mt-2 font-display text-2xl font-black tracking-tight text-brandNavy sm:text-3xl">
-                CIBIL Resolution Command Center
-              </h2>
-              <p className="mt-1.5 text-sm text-textSecondary max-w-2xl">
-                Select your credit issue on the left to see exactly how Primescore resolves it, what we fix, and the detailed resolution roadmap.
-              </p>
-            </div>
+          {/* Header */}
+          <div className="mb-8">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-brandRed">Diagnostic Locator</span>
+            <h2 className="mt-2 font-display text-2xl font-black tracking-tight text-brandNavy sm:text-3xl">
+              CIBIL Resolution Diagnostic Center
+            </h2>
+            <p className="mt-1.5 text-sm text-textSecondary max-w-2xl">
+              Select your specific credit issue below. Our bento command board will dynamically load the exact bank resolution pathway.
+            </p>
+          </div>
 
-            <div className="grid gap-8 lg:grid-cols-12 items-start">
-              {/* Left Column: Vertical Custom Navigation Tabs */}
-              <div className="lg:col-span-4 space-y-2">
-                {/* Desktop Tabs */}
-                <div className="hidden lg:block space-y-2">
-                  {TABS.map((tab) => {
-                    const TabIcon = tab.icon
-                    const isActive = activeTab === tab.id
-                    return (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setActiveTab(tab.id)}
-                        className={[
-                          'w-full text-left p-4 rounded-xl border transition-all duration-200 outline-none flex items-center gap-4 group',
-                          isActive
-                            ? 'border-brandNavy/15 bg-brandNavy/[0.03] shadow-sm font-semibold'
-                            : 'border-transparent hover:bg-brandNavy/[0.01] hover:border-brandNavy/5'
-                        ].join(' ')}
-                      >
-                        <div className={[
-                          'p-2 rounded-lg transition-colors',
-                          isActive ? 'bg-brandRed text-white shadow-glowRed' : 'bg-brandNavy/5 text-brandNavy/60 group-hover:bg-brandNavy/10'
-                        ].join(' ')}>
-                          <TabIcon className="h-5 w-5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-bold text-brandNavy truncate">{tab.label}</div>
-                          <div className="text-xs text-textSecondary truncate">{tab.subtitle}</div>
-                        </div>
-                        <ChevronRight className={[
-                          'h-4 w-4 text-brandNavy/35 transition-transform group-hover:translate-x-0.5',
-                          isActive ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'
-                        ].join(' ')} />
-                      </button>
-                    )
-                  })}
+          {/* Diagnostic Grid of Cards */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ISSUES.map((issue) => {
+              const IssueIcon = issue.icon
+              const isSelected = selectedIssueId === issue.id
+              return (
+                <button
+                  key={issue.id}
+                  type="button"
+                  onClick={() => setSelectedIssueId(issue.id)}
+                  className={[
+                    'group text-left p-5 rounded-xl border transition-all duration-200 outline-none flex flex-col justify-between h-full relative overflow-hidden',
+                    isSelected
+                      ? 'border-brandNavy bg-brandNavy text-white shadow-glowNavy scale-[1.01]'
+                      : 'border-brandNavy/10 bg-white hover:border-brandNavy/25 hover:bg-brandNavy/[0.01] text-brandNavy'
+                  ].join(' ')}
+                >
+                  <div>
+                    {/* Top row */}
+                    <div className="flex items-center justify-between">
+                      <div className={[
+                        'p-2.5 rounded-lg transition-colors',
+                        isSelected ? 'bg-white/10 text-white' : 'bg-brandNavy/5 text-brandNavy/70 group-hover:bg-brandNavy/10'
+                      ].join(' ')}>
+                        <IssueIcon className="h-5 w-5" />
+                      </div>
+                      
+                      {/* Interactive Badge Stamp */}
+                      <span className={[
+                        'text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded border',
+                        isSelected ? 'bg-white/10 border-white/20 text-brandYellow' : 'bg-red-50 border-red-100 text-brandRed'
+                      ].join(' ')}>
+                        {issue.badState.replace(' ❌', '')}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-4 font-display text-base font-bold leading-tight">{issue.problem}</h3>
+                    <p className={[
+                      'mt-2 text-xs leading-relaxed',
+                      isSelected ? 'text-white/80' : 'text-textSecondary'
+                    ].join(' ')}>{issue.summary}</p>
+                  </div>
+
+                  {/* Click trigger indicator */}
+                  <div className="mt-5 flex items-center gap-1.5 text-xs font-bold transition-all">
+                    <span className={isSelected ? 'text-brandYellow' : 'text-brandRed'}>
+                      {isSelected ? 'Viewing Resolution Board' : 'View resolution steps'}
+                    </span>
+                    <ArrowRight className={[
+                      'h-3.5 w-3.5 transition-transform',
+                      isSelected ? 'translate-x-1 text-brandYellow' : 'group-hover:translate-x-1 text-brandRed'
+                    ].join(' ')} />
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* DYNAMIC BENTO GRID PANEL */}
+          <div className="mt-8 rounded-2xl border border-brandNavy/8 bg-white p-5 sm:p-8 lg:p-10 shadow-card">
+            
+            {/* Bento Grid layout */}
+            <div className="grid gap-6 lg:grid-cols-12">
+              
+              {/* TILE 1: Visual Credit File Simulator (Understanding element) */}
+              <div className="lg:col-span-7 border border-brandNavy/6 rounded-xl bg-brandNavy/[0.005] p-5 sm:p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-brandNavy/5 pb-3.5 mb-4">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-textSecondary flex items-center gap-1.5">
+                      <FileText className="h-4 w-4" />
+                      <span>Credit file simulation</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-brandRed bg-brandRed/10 px-2 py-0.5 rounded font-bold">
+                      TRANSFORMATION PREVIEW
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-lg sm:text-xl font-black text-brandNavy tracking-tight leading-snug">
+                    {currentIssue.seoHeading}
+                  </h3>
+                  
+                  <p className="mt-2 text-xs sm:text-sm text-textSecondary leading-relaxed">
+                    {currentService.description}
+                  </p>
+
+                  {/* Simulator Grid */}
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {/* Before */}
+                    <div className="rounded-lg border border-red-100 bg-red-50/40 p-4">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-brandRed">Status (Before)</div>
+                      <div className="mt-1.5 font-display text-xs font-bold text-brandNavy">ACC: ****1948</div>
+                      <div className="mt-3 flex flex-col gap-0.5 text-xs">
+                        <span className="text-textSecondary">Report Marker:</span>
+                        <span className="font-bold text-brandRed">{currentIssue.badState}</span>
+                      </div>
+                    </div>
+
+                    {/* After */}
+                    <div className="rounded-lg border border-emerald-100 bg-emerald-50/40 p-4 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 translate-x-2 -translate-y-2 h-8 w-8 rounded-full bg-brandGreen/10" />
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-brandGreen">Status (After Primescore)</div>
+                      <div className="mt-1.5 font-display text-xs font-bold text-brandNavy">ACC: ****1948</div>
+                      <div className="mt-3 flex flex-col gap-0.5 text-xs">
+                        <span className="text-textSecondary">Report Marker:</span>
+                        <span className="font-bold text-brandGreen font-semibold">{currentIssue.goodState}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Mobile Horizontal Pill Scroll */}
-                <div className="lg:hidden flex gap-2.5 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2 scroll-smooth">
-                  {TABS.map((tab) => {
-                    const TabIcon = tab.icon
-                    const isActive = activeTab === tab.id
-                    return (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setActiveTab(tab.id)}
-                        className={[
-                          'flex items-center gap-2 px-4 py-3 rounded-full border text-xs font-bold whitespace-nowrap shrink-0 transition-all outline-none',
-                          isActive
-                            ? 'bg-brandNavy text-white border-brandNavy'
-                            : 'bg-white text-brandNavy border-brandNavy/10 hover:border-brandNavy/25'
-                        ].join(' ')}
-                      >
-                        <TabIcon className="h-4 w-4" />
-                        <span>{tab.label}</span>
-                      </button>
-                    )
-                  })}
+                <div className="mt-4 flex items-start gap-2 text-xs text-textSecondary bg-brandNavy/[0.03] p-3 rounded-lg">
+                  <Info className="h-4.5 w-4.5 text-brandBlue shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Resolution Path:</strong> We dispute this directly with bank litigation teams &amp; credit bureaus using CIC Act regulatory guidelines.
+                  </span>
                 </div>
               </div>
 
-              {/* Right Column: Dynamic Deep-Dive Console */}
-              <div className="lg:col-span-8 border border-brandNavy/8 rounded-xl bg-brandNavy/[0.005] p-5 sm:p-8">
-                {/* Heading */}
-                <h3 className="font-display text-xl sm:text-2xl font-black text-brandNavy tracking-tight">
-                  {currentMockup.seoHeading}
-                </h3>
+              {/* TILE 2: What We Resolve Checklist (High delivering detail) */}
+              <div className="lg:col-span-5 border border-brandNavy/6 rounded-xl bg-brandNavy/[0.005] p-5 sm:p-6">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-textSecondary block mb-3.5">
+                  Direct Deliverables
+                </span>
+                <h4 className="font-display text-base font-bold text-brandNavy mb-4">
+                  What we correct in this service:
+                </h4>
                 
-                {/* Explanation */}
-                <p className="mt-3 text-sm sm:text-base leading-relaxed text-textSecondary">
-                  {currentMockup.seoBody}
-                </p>
+                <ul className="space-y-3">
+                  {currentFixes.map((fix) => (
+                    <li key={fix} className="flex items-start gap-2.5 text-xs sm:text-sm text-brandNavy/80">
+                      <CheckCircle2 className="h-4.5 w-4.5 text-brandGreen shrink-0 mt-0.5" />
+                      <span>{fix}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                {/* Visual Before/After Credit Report Preview */}
-                <div className="mt-6 rounded-xl border border-brandNavy/10 bg-brandNavy/[0.01] p-4 shadow-sm">
-                  <div className="flex items-center justify-between border-b border-brandNavy/5 pb-2.5 mb-4">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-textSecondary flex items-center gap-1.5">
-                      <FileText className="h-3.5 w-3.5" />
-                      <span>Credit Report simulator</span>
-                    </span>
-                    <span className="text-[10px] font-bold uppercase text-brandRed bg-brandRed/10 px-2 py-0.5 rounded">
-                      CIBIL audit
-                    </span>
-                  </div>
+                <div className="mt-6 border-t border-brandNavy/5 pt-5 text-xs text-textSecondary">
+                  <span className="font-bold text-brandNavy block mb-1">Guaranteed Transparency:</span>
+                  All changes are reflected directly inside credit report updates from CIBIL, Experian, and Equifax.
+                </div>
+              </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {/* Before Card */}
-                    <div className="rounded-lg border border-red-100 bg-red-50/40 p-4">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-brandRed">Report Status (Before)</div>
-                      <div className="mt-2 font-display text-sm font-bold text-brandNavy">{currentMockup.accountName}</div>
-                      <div className="mt-4 flex flex-col gap-1 text-xs">
-                        <span className="text-textSecondary">{currentMockup.badLabel}:</span>
-                        <span className="font-bold text-brandRed">{currentMockup.badValue}</span>
-                      </div>
-                    </div>
-
-                    {/* After Card */}
-                    <div className="rounded-lg border border-emerald-100 bg-emerald-50/40 p-4 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 translate-x-3 -translate-y-3 h-10 w-10 rounded-full bg-brandGreen/10" />
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-brandGreen">Report Status (After Primescore)</div>
-                      <div className="mt-2 font-display text-sm font-bold text-brandNavy">{currentMockup.accountName}</div>
-                      <div className="mt-4 flex flex-col gap-1 text-xs">
-                        <span className="text-textSecondary">{currentMockup.goodLabel}:</span>
-                        <span className="font-bold text-brandGreen">{currentMockup.goodValue}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-3 flex items-start gap-2 text-xs text-textSecondary bg-brandNavy/[0.03] p-3 rounded-lg">
-                    <Info className="h-4.5 w-4.5 text-brandBlue shrink-0 mt-0.5" />
-                    <span>
-                      <strong>Report Issue:</strong> {currentMockup.issueDescription}
-                    </span>
-                  </div>
+              {/* TILE 3: The Escalation Timeline Roadmap (Workflow timeline) */}
+              <div className="lg:col-span-8 border border-brandNavy/6 rounded-xl bg-brandNavy/[0.005] p-5 sm:p-6">
+                <div className="flex items-center justify-between mb-5 border-b border-brandNavy/5 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-textSecondary">
+                    Escalation Milestones
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-brandRed bg-brandRed/5 px-2 py-0.5 rounded">
+                    30-90 Days SLA
+                  </span>
                 </div>
 
-                {/* What We Resolve (The Checklist) */}
-                <div className="mt-8">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-brandNavy/40 mb-3.5">
-                    What Primescore Resolves:
-                  </h4>
-                  <ul className="grid gap-3 sm:grid-cols-2">
-                    {currentFixes.map((fix) => (
-                      <li key={fix} className="flex items-start gap-2.5 text-xs sm:text-sm text-brandNavy/80">
-                        <CheckCircle2 className="h-4.5 w-4.5 text-brandGreen shrink-0 mt-0.5" />
-                        <span>{fix}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <div className="relative border-l border-brandNavy/10 pl-5 ml-2 space-y-6">
+                  {currentService.timeline.map((step, sIdx) => (
+                    <div key={step.title} className="relative group/step">
+                      {/* Timeline node */}
+                      <div className="absolute -left-[26px] top-1.5 grid h-3 w-3 place-items-center rounded-full bg-white border-2 border-brandNavy/35 group-hover/step:border-brandRed transition-colors">
+                        <div className="h-1 w-1 rounded-full bg-brandNavy/10" />
+                      </div>
 
-                {/* Legal Resolution Pipeline (Timeline) */}
-                <div className="mt-8 pt-8 border-t border-brandNavy/10">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-brandNavy/40 mb-5 flex items-center gap-1.5">
-                    <span>Legal Escalation Milestones</span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-brandNavy/20"></span>
-                    <span className="text-[10px] lowercase text-textSecondary font-normal">
-                      tracked live on dashboard
-                    </span>
-                  </h4>
-
-                  <div className="relative border-l border-brandNavy/10 pl-5 ml-2.5 space-y-6">
-                    {currentService.timeline.map((step, sIdx) => (
-                      <div key={step.title} className="relative group/step">
-                        {/* Bullet point node */}
-                        <div className="absolute -left-[26px] top-1.5 grid h-3 w-3 place-items-center rounded-full bg-white border-2 border-brandNavy/35 group-hover/step:border-brandRed transition-colors">
-                          <div className="h-1 w-1 rounded-full bg-brandNavy/10" />
-                        </div>
-
-                        <div>
-                          <div className="flex flex-wrap items-baseline gap-x-2">
+                      <div className="grid gap-1 sm:grid-cols-12 sm:items-start">
+                        {/* Title and ETA */}
+                        <div className="sm:col-span-5">
+                          <div className="flex items-center gap-2">
                             <span className="font-mono text-[9px] font-bold text-brandNavy/40">STAGE 0{sIdx + 1}</span>
-                            <span className="font-mono text-[9px] font-semibold text-brandRed bg-brandRed/10 px-1.5 py-0.25 rounded">
+                            <span className="font-mono text-[9px] font-bold text-brandRed bg-brandRed/5 px-1.5 py-0.25 rounded">
                               {step.eta}
                             </span>
                           </div>
                           <h5 className="mt-0.5 font-display text-sm font-bold text-brandNavy leading-tight">
                             {step.title}
                           </h5>
-                          <p className="mt-1 text-xs leading-relaxed text-textSecondary">
-                            {step.detail}
-                          </p>
                         </div>
+                        {/* Detail text */}
+                        <p className="sm:col-span-7 text-xs leading-relaxed text-textSecondary sm:mt-1">
+                          {step.detail}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Transparency Pricing & CTAs */}
-                <div className="mt-8 pt-8 border-t border-brandNavy/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-left w-full sm:w-auto">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 block">Pricing Range</span>
-                    <span className="text-lg font-black text-brandNavy">{currentService.priceRange}</span>
-                    <span className="text-[10px] text-textSecondary block">No hidden fees, full invoice transparency</span>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
-                    <Link href="/contact" className="w-full sm:w-auto">
-                      <Button variant="primary" className="w-full h-11 text-xs sm:text-sm shadow-glowRed">
-                        Book Case Assessment
-                      </Button>
-                    </Link>
-                    <a href="tel:+916350671636" className="w-full sm:w-auto">
-                      <button
-                        type="button"
-                        className="w-full sm:w-auto h-11 border border-brandNavy/15 bg-transparent text-brandNavy hover:bg-brandNavy/[0.04] rounded-xl px-5 py-3 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.97] flex items-center justify-center gap-1.5"
-                      >
-                        <Phone className="h-4 w-4 text-brandNavy/65" /> 
-                        <span>Talk to Advisor</span>
-                      </button>
-                    </a>
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+
+              {/* TILE 4: Pricing & Actions */}
+              <div className="lg:col-span-4 border border-brandNavy/6 rounded-xl bg-brandNavy/95 text-white p-5 sm:p-6 flex flex-col justify-between shadow-glowNavy relative overflow-hidden">
+                <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 h-32 w-32 rounded-full bg-brandRed/10 blur-xl pointer-events-none" />
+                
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/50 block">Pricing &amp; Details</span>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-3xl font-black tracking-tight">{currentService.priceRange}</span>
+                  </div>
+                  <p className="mt-2 text-xs text-white/70 leading-relaxed">
+                    A flat structure with zero hidden or recurring monthly retainers. All invoices are provided with a complete tax breakdown.
+                  </p>
+
+                  <ul className="mt-5 space-y-2 text-xs text-white/95 border-t border-white/10 pt-4">
+                    <li className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-brandYellow shrink-0" />
+                      <span>Dedicated Case Analyst</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-brandYellow shrink-0" />
+                      <span>RBI Dispute ID tracking</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-brandYellow shrink-0" />
+                      <span>NOC validity confirmation</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 space-y-2.5">
+                  <Link href="/contact" className="w-full block">
+                    <button
+                      type="button"
+                      className="w-full h-11 bg-white text-brandNavy hover:bg-white/95 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 active:scale-[0.97] flex items-center justify-center shadow-sm"
+                    >
+                      Book Case Assessment
+                    </button>
+                  </Link>
+                  <a href="tel:+916350671636" className="w-full block">
+                    <button
+                      type="button"
+                      className="w-full h-11 border border-white/20 bg-transparent text-white hover:bg-white/5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.97] flex items-center justify-center gap-1.5"
+                    >
+                      <Phone className="h-4 w-4 text-white/70" /> 
+                      <span>Talk to Advisor</span>
+                    </button>
+                  </a>
+                </div>
+              </div>
+
             </div>
+
           </div>
         </Reveal>
       </section>
