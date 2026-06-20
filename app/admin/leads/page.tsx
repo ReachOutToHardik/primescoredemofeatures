@@ -50,7 +50,21 @@ export default function LeadsCRMPage() {
   }
 
   useEffect(() => {
+    if (!supabase) return
+    
+    // Fetch immediately
     fetchLeads()
+
+    // Also listen for session updates in case of late init
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        fetchLeads()
+      }
+    })
+
+    return () => {
+      authListener?.subscription?.unsubscribe()
+    }
   }, [supabase])
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {

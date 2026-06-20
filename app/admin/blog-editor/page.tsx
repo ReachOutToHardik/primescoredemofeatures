@@ -73,7 +73,21 @@ export default function BlogEditorPage() {
   }, [content, editor])
 
   useEffect(() => {
+    if (!supabase) return
+    
+    // Fetch immediately
     fetchBlogs()
+
+    // Also listen for session updates in case of late init
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        fetchBlogs()
+      }
+    })
+
+    return () => {
+      authListener?.subscription?.unsubscribe()
+    }
   }, [supabase])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,10 +179,14 @@ export default function BlogEditorPage() {
       return
     }
     
+    console.log('Attempting to delete blog post id:', id)
     const { error } = await supabase.from('blogs').delete().eq('id', id)
     if (error) {
-      alert(`Error deleting post: ${error.message}`)
+      console.error('Delete error details:', error)
+      alert(`Error deleting post: ${error.message}. Check if you have permission to delete entries in the 'blogs' table.`)
     } else {
+      console.log('Blog post deleted successfully:', id)
+      alert('Blog post deleted successfully!')
       fetchBlogs()
       if (editingPostId === id) handleCancelEdit()
     }
