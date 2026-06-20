@@ -87,6 +87,7 @@ export default function BlogEditorPage() {
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!supabase) {
+      alert('Error: Supabase is not initialized. Please try logging out and logging back in.')
       setPublishMessage('Error: Supabase is not initialized.')
       return
     }
@@ -102,17 +103,25 @@ export default function BlogEditorPage() {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
         const filePath = `blog-covers/${fileName}`
         
+        console.log('Uploading image to supabase...', filePath)
         const { error: uploadError } = await supabase.storage
           .from('blog-images')
-          .upload(filePath, imageFile)
+          .upload(filePath, imageFile, {
+            cacheControl: '3600',
+            upsert: false
+          })
 
-        if (uploadError) throw new Error(`Image Upload Failed: ${uploadError.message}`)
+        if (uploadError) {
+          console.error('Upload error details:', uploadError)
+          throw new Error(`Image Upload Failed: ${uploadError.message}. Make sure the 'blog-images' storage bucket is public and has correct RLS policies.`)
+        }
 
         const { data: publicUrlData } = supabase.storage
           .from('blog-images')
           .getPublicUrl(filePath)
           
         imageUrl = publicUrlData.publicUrl
+        console.log('Image uploaded successfully. URL:', imageUrl)
       } else if (existingImageUrl) {
         imageUrl = existingImageUrl
       } else {
@@ -120,25 +129,30 @@ export default function BlogEditorPage() {
       }
 
       // 2. Insert or Update DB
+      console.log('Inserting/updating blog details in database...')
       if (editingPostId) {
         const { error: dbError } = await supabase.from('blogs').update({
           slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName
         }).eq('id', editingPostId)
         if (dbError) throw new Error(`Database Error: ${dbError.message}`)
         setPublishMessage('Blog successfully updated!')
+        alert('Blog successfully updated!')
       } else {
         const { error: dbError } = await supabase.from('blogs').insert([{
           slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName, published_at: new Date().toISOString()
         }])
         if (dbError) throw new Error(`Database Error: ${dbError.message}`)
         setPublishMessage('Blog successfully published to database!')
+        alert('Blog successfully published to database!')
       }
 
       // Reset form
       handleCancelEdit()
       fetchBlogs(); // Refresh list
     } catch (err: any) {
+      console.error('Publish error:', err)
       setPublishMessage(`Error: ${err.message}`)
+      alert(`Failed to publish: ${err.message}`)
     } finally {
       setPublishing(false)
     }
