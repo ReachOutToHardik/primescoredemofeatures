@@ -23,47 +23,72 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return
     }
     
-    let isMounted = true;
-    const fetchSessionAndRole = async () => {
+    let isMounted = true
+    
+    const checkUserRole = async (userId: string) => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        if (!isMounted) return;
-        setUser(session?.user ?? null)
-        if (session?.user) {
-          const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
-          if (isMounted) setRole(data?.role || 'writer')
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('id', userId)
+          .single()
+        
+        if (isMounted) {
+          if (error) {
+            console.warn('No custom role found, defaulting to writer:', error.message)
+            setRole('writer')
+          } else {
+            setRole(data?.role || 'writer')
+          }
         }
       } catch (err) {
-        console.error('Failed to load session:', err)
+        console.error('Error fetching role:', err)
+        if (isMounted) setRole('writer')
+      }
+    }
+
+    const initAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!isMounted) return
+        
+        if (session?.user) {
+          setUser(session.user)
+          await checkUserRole(session.user.id)
+        } else {
+          setUser(null)
+          setRole(null)
+        }
+      } catch (err) {
+        console.error('Failed to initialize session:', err)
       } finally {
         if (isMounted) setLoading(false)
       }
     }
     
-    fetchSessionAndRole()
+    initAuth()
     
-    // Safety fallback: Never let loading screen stick for more than 3 seconds
-    const fallbackTimeout = setTimeout(() => {
-      if (isMounted) {
-        setLoading(false)
-      }
-    }, 3000)
-    
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!isMounted) return;
-      setUser(session?.user ?? null)
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!isMounted) return
+      console.log('Auth state changed event:', event)
+      
       if (session?.user) {
-        const { data } = await supabase.from('user_roles').select('role').eq('id', session.user.id).single()
-        if (isMounted) setRole(data?.role || 'writer')
+        setUser(session.user)
+        await checkUserRole(session.user.id)
       } else {
-        if (isMounted) setRole(null)
+        setUser(null)
+        setRole(null)
       }
-      if (isMounted) setLoading(false)
+      setLoading(false)
     })
     
+    const fallbackTimeout = setTimeout(() => {
+      if (isMounted) setLoading(false)
+    }, 4000)
+    
     return () => {
-      isMounted = false;
-      clearTimeout(fallbackTimeout);
+      isMounted = false
+      clearTimeout(fallbackTimeout)
       authListener?.subscription?.unsubscribe()
     }
   }, [])
