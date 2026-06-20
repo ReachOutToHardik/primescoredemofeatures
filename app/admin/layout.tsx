@@ -78,7 +78,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     if (!supabase) return
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+      // Completely clear auth states locally
+      setUser(null)
+      setRole(null)
+      // Force page reload to clear any cached states/clients and redirect cleanly
+      window.location.href = '/admin'
+    } catch (err) {
+      console.error('Failed to log out:', err)
+      // Fallback reload
+      window.location.href = '/admin'
+    }
   }
 
   if (loading) {

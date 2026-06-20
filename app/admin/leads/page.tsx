@@ -51,7 +51,7 @@ export default function LeadsCRMPage() {
 
   useEffect(() => {
     fetchLeads()
-  }, [])
+  }, [supabase])
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     if (!supabase) return
