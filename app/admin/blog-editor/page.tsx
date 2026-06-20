@@ -145,17 +145,27 @@ export default function BlogEditorPage() {
       // 2. Insert or Update DB
       console.log('Inserting/updating blog details in database...')
       if (editingPostId) {
+        console.log('Updating existing post id:', editingPostId)
         const { error: dbError } = await supabase.from('blogs').update({
           slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName
         }).eq('id', editingPostId)
-        if (dbError) throw new Error(`Database Error: ${dbError.message}`)
+        if (dbError) {
+          console.error('Update database error details:', dbError)
+          throw new Error(`Database Error: ${dbError.message}`)
+        }
         setPublishMessage('Blog successfully updated!')
         alert('Blog successfully updated!')
       } else {
-        const { error: dbError } = await supabase.from('blogs').insert([{
+        console.log('Inserting new blog post entry...')
+        const { data: dbData, error: dbError } = await supabase.from('blogs').insert([{
           slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName, published_at: new Date().toISOString()
-        }])
-        if (dbError) throw new Error(`Database Error: ${dbError.message}`)
+        }]).select()
+        
+        if (dbError) {
+          console.error('Insert database error details:', dbError)
+          throw new Error(`Database Error: ${dbError.message}`)
+        }
+        console.log('Database insert success response:', dbData)
         setPublishMessage('Blog successfully published to database!')
         alert('Blog successfully published to database!')
       }
