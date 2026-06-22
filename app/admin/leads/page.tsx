@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect } from 'react'
-import { supabase } from '../../../src/lib/supabase'
+import { getLeadsServer, updateLeadStatusServer, deleteLeadServer } from '../../actions/leads'
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -31,16 +31,13 @@ export default function LeadsCRMPage() {
   const [exportMenuOpen, setExportMenuOpen] = useState(false)
 
   const fetchLeads = async () => {
-    if (!supabase) { setLoading(false); return }
     try {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false })
-        
-      if (!error && data) {
-        setLeads(data)
+      const res = await getLeadsServer()
+      if (res.success) {
+        setLeads(res.leads)
+      } else {
+        console.error('Error fetching leads:', res.error)
       }
     } catch (err) {
       console.error(err)
@@ -50,43 +47,27 @@ export default function LeadsCRMPage() {
   }
 
   useEffect(() => {
-    if (!supabase) return
-    
-    // Fetch immediately
     fetchLeads()
-
-    // Also listen for session updates in case of late init
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        fetchLeads()
-      }
-    })
-
-    return () => {
-      authListener?.subscription?.unsubscribe()
-    }
-  }, [supabase])
+  }, [])
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
-    if (!supabase) return
     setUpdatingId(leadId)
-    const { error } = await supabase
-      .from('leads')
-      .update({ status: newStatus })
-      .eq('id', leadId)
-
-    if (!error) {
+    const res = await updateLeadStatusServer(leadId, newStatus)
+    if (res.success) {
       setLeads(leads.map(lead => lead.id === leadId ? { ...lead, status: newStatus } : lead))
+    } else {
+      alert(`Failed to update status: ${res.error}`)
     }
     setUpdatingId(null)
   }
 
   const handleDelete = async (leadId: string) => {
-    if (!supabase) return
     if (!confirm('Are you sure you want to delete this lead?')) return
-    const { error } = await supabase.from('leads').delete().eq('id', leadId)
-    if (!error) {
+    const res = await deleteLeadServer(leadId)
+    if (res.success) {
       setLeads(leads.filter(lead => lead.id !== leadId))
+    } else {
+      alert(`Failed to delete lead: ${res.error}`)
     }
   }
 
@@ -130,10 +111,10 @@ export default function LeadsCRMPage() {
     if (filteredLeads.length === 0) return alert('No leads to export.')
     const doc = new jsPDF()
     doc.text("Primescore Leads Export", 14, 15)
-    
+
     const tableColumn = ["Name", "Email", "Phone", "Status", "Date"]
     const tableRows = filteredLeads.map(l => [
-      l.name || 'N/A', l.email || 'N/A', l.phone || 'N/A', 
+      l.name || 'N/A', l.email || 'N/A', l.phone || 'N/A',
       l.status || 'New', new Date(l.created_at).toLocaleDateString()
     ])
 
@@ -162,8 +143,8 @@ export default function LeadsCRMPage() {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
   }
 
-  const filteredLeads = leads.filter(lead => 
-    lead.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredLeads = leads.filter(lead =>
+    lead.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     lead.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     lead.phone?.includes(searchQuery)
   )
@@ -195,9 +176,9 @@ export default function LeadsCRMPage() {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             </div>
-            <input 
-              type="text" 
-              placeholder="Search by name, email, or phone..." 
+            <input
+              type="text"
+              placeholder="Search by name, email, or phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all shadow-sm text-sm"
@@ -208,17 +189,17 @@ export default function LeadsCRMPage() {
             <span className="text-sm font-bold text-gray-500">Total Leads</span>
             <span className="bg-green-100 text-[#10b981] font-bold px-3 py-0.5 rounded-lg">{leads.length}</span>
           </div>
-          
+
           {/* Export Dropdown */}
           <div className="relative">
-            <button 
+            <button
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
               className="bg-gray-900 text-white px-5 py-2.5 rounded-xl shadow-sm hover:bg-black font-bold text-sm flex items-center gap-2 transition-colors w-full sm:w-auto justify-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               Export
             </button>
-            
+
             {exportMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                 <button onClick={() => { exportToPDF(); setExportMenuOpen(false) }} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 font-medium">
@@ -312,8 +293,8 @@ export default function LeadsCRMPage() {
                     </td>
                     <td className="p-5 align-top">
                       <div className="relative inline-block w-full max-w-[140px]">
-                        <select 
-                          value={lead.status || 'New'} 
+                        <select
+                          value={lead.status || 'New'}
                           onChange={(e) => handleStatusChange(lead.id, e.target.value)}
                           disabled={updatingId === lead.id}
                           className={`w-full text-xs font-bold px-3 py-2.5 rounded-xl border appearance-none cursor-pointer outline-none transition-all shadow-sm ${getStatusColor(lead.status || 'New')} ${updatingId === lead.id ? 'opacity-50' : ''}`}
@@ -325,12 +306,12 @@ export default function LeadsCRMPage() {
                           <option value="Dead">Dead Lead</option>
                         </select>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-current opacity-70">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                         </div>
                       </div>
                     </td>
                     <td className="py-5 pl-4 pr-6 align-top text-right">
-                      <button 
+                      <button
                         onClick={() => handleDelete(lead.id)}
                         className="text-gray-400 hover:text-red-600 p-2.5 rounded-xl hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100 border border-transparent hover:border-red-100"
                         title="Delete Lead"

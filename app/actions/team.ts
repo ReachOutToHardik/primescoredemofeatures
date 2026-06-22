@@ -15,16 +15,73 @@ async function isSuperAdmin() {
       { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
     )
     const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    if (!session) return { authorized: false, reason: `No session. Cookie count: ${cookieStore.getAll().length}. Auth error: ${sessionError?.message}` }
+    if (!session) return { authorized: false, reason: `No session. Auth error: ${sessionError?.message}` }
     
     if (!supabaseAdmin) return { authorized: false, reason: 'supabaseAdmin is null' }
     
     const { data, error: dbError } = await supabaseAdmin.from('user_roles').select('role').eq('id', session.user.id).single()
-    if (data?.role !== 'super_admin') return { authorized: false, reason: `Role is ${data?.role}. DB Error: ${dbError?.message}` }
+    if (data?.role !== 'super_admin') return { authorized: false, reason: `Role is ${data?.role || 'none'}. DB Error: ${dbError?.message}` }
     
     return { authorized: true }
   } catch (err: any) {
     return { authorized: false, reason: `Exception: ${err.message}` }
+  }
+}
+
+// Bootstrap Action: Allow promoting first user to super_admin if none exist
+export async function bootstrapSuperAdmin() {
+  if (!supabaseAdmin) return { error: 'Supabase admin client not initialized' }
+  try {
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
+    )
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) return { error: 'No active session. Please log in first.' }
+
+    // Check if any super admin exists in user_roles table
+    const { data: existingRoles, error: checkError } = await supabaseAdmin
+      .from('user_roles')
+      .select('id')
+      .eq('role', 'super_admin')
+
+    if (!checkError && existingRoles && existingRoles.length > 0) {
+      return { error: 'A Super Admin already exists. Bootstrapping is disabled.' }
+    }
+
+    // Insert/upsert the current user as super_admin
+    const { error: insertError } = await supabaseAdmin
+      .from('user_roles')
+      .upsert({ id: session.user.id, role: 'super_admin' })
+
+    if (insertError) throw insertError
+
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Failed to bootstrap.' }
+  }
+}
+
+// Get if bootstrap is allowed (no super_admin exists yet)
+export async function isBootstrapAllowed() {
+  if (!supabaseAdmin) return { allowed: false }
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('user_roles')
+      .select('id')
+      .eq('role', 'super_admin')
+      .limit(1)
+
+    if (error) {
+      // If table doesn't exist or roles empty, allow bootstrap
+      return { allowed: true }
+    }
+    return { allowed: !data || data.length === 0 }
+  } catch {
+    return { allowed: true }
   }
 }
 
@@ -34,9 +91,7 @@ export async function createTeamMember(formData: FormData) {
   const role = formData.get('role') as string
   
   if (!supabaseAdmin) {
-    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
-    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
+    return { error: 'Server config error: Supabase admin client not initialized.' }
   }
 
   const adminCheck = await isSuperAdmin();
@@ -73,9 +128,7 @@ export async function createTeamMember(formData: FormData) {
 
 export async function deleteTeamMember(userId: string) {
   if (!supabaseAdmin) {
-    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
-    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}` }
+    return { error: 'Server config error: Supabase admin client not initialized.' }
   }
   const adminCheck = await isSuperAdmin();
   if (!adminCheck.authorized) {
@@ -93,9 +146,7 @@ export async function deleteTeamMember(userId: string) {
 
 export async function getTeamMembers() {
   if (!supabaseAdmin) {
-    const missingUrl = !process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const missingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
-    return { error: `Server config error. AWS missing URL: ${missingUrl}, AWS missing Key: ${missingKey}`, users: [] }
+    return { error: 'Server config error: Supabase admin client not initialized.', users: [] }
   }
   const adminCheck = await isSuperAdmin();
   if (!adminCheck.authorized) return { error: `Unauthorized: ${adminCheck.reason}`, users: [] }
@@ -118,3 +169,4 @@ export async function getTeamMembers() {
     return { error: err.message || 'Failed to fetch users.', users: [] }
   }
 }
+

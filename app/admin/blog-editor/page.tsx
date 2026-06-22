@@ -4,25 +4,62 @@ export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
+import { getBlogsServer, deleteBlogServer } from '../../actions/blogs'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { 
+  Eye, 
+  Edit, 
+  Trash2, 
+  Upload, 
+  Link2, 
+  ArrowLeft, 
+  Save, 
+  FileText,
+  Plus,
+  Compass,
+  Clock,
+  User,
+  Search,
+  CheckCircle2,
+  AlertCircle
+} from 'lucide-react'
 
 const MenuBar = ({ editor }: { editor: any }) => {
-  if (!editor) {
-    return null
-  }
+  if (!editor) return null
+
+  const items = [
+    { label: 'B', action: () => editor.chain().focus().toggleBold().run(), active: 'bold', style: 'font-bold' },
+    { label: 'I', action: () => editor.chain().focus().toggleItalic().run(), active: 'italic', style: 'italic' },
+    { label: 'S', action: () => editor.chain().focus().toggleStrike().run(), active: 'strike', style: 'line-through' },
+    { label: 'H2', action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), active: 'heading' },
+    { label: 'H3', action: () => editor.chain().focus().toggleHeading({ level: 3 }).run(), active: 'heading' },
+    { label: '• List', action: () => editor.chain().focus().toggleBulletList().run(), active: 'bulletList' },
+    { label: '1. List', action: () => editor.chain().focus().toggleOrderedList().run(), active: 'orderedList' },
+  ]
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 border-b border-gray-200 rounded-t-2xl">
-      <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('bold') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>B</button>
-      <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold italic transition-colors ${editor.isActive('italic') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>I</button>
-      <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold line-through transition-colors ${editor.isActive('strike') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>S</button>
-      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-      <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>H2</button>
-      <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('heading', { level: 3 }) ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>H3</button>
-      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-      <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('bulletList') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>• List</button>
-      <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors ${editor.isActive('orderedList') ? 'bg-[#10b981] text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'}`}>1. List</button>
+    <div className="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50 border-b border-slate-200 rounded-t-2xl">
+      {items.map((item, idx) => {
+        const isActive = item.active === 'heading' 
+          ? editor.isActive('heading', { level: item.label === 'H2' ? 2 : 3 }) 
+          : editor.isActive(item.active)
+
+        return (
+          <button
+            key={idx}
+            type="button"
+            onClick={item.action}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              isActive 
+                ? 'bg-[#10b981] text-white' 
+                : 'bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'
+            } ${item.style || ''}`}
+          >
+            {item.label}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -31,27 +68,58 @@ export default function BlogEditorPage() {
   // Blog Form State
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
+  const [isSlugManual, setIsSlugManual] = useState(false)
   const [excerpt, setExcerpt] = useState('')
   const [content, setContent] = useState('')
   const [category, setCategory] = useState('')
   const [readTime, setReadTime] = useState('')
   const [authorName, setAuthorName] = useState('Primescore Team')
+  
+  // Image Setup (Dual mode: file or URL)
+  const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageUrlInput, setImageUrlInput] = useState('')
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null)
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null)
+  
   const [publishing, setPublishing] = useState(false)
-  const [publishMessage, setPublishMessage] = useState('')
+  const [publishMessage, setPublishMessage] = useState<{ text: string, type: 'success' | 'error' | null }>({ text: '', type: null })
   const [previewMode, setPreviewMode] = useState(false)
   const [editingPostId, setEditingPostId] = useState<string | null>(null)
-
+  
   // Manage Posts State
   const [allBlogs, setAllBlogs] = useState<any[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [loadingBlogs, setLoadingBlogs] = useState(true)
 
   const fetchBlogs = async () => {
-    if (!supabase) return
-    const { data } = await supabase.from('blogs').select('*').order('published_at', { ascending: false })
-    setAllBlogs(data || [])
+    try {
+      setLoadingBlogs(true)
+      const res = await getBlogsServer()
+      if (res.success) {
+        setAllBlogs(res.blogs)
+      } else {
+        console.error('Error fetching blogs:', res.error)
+      }
+    } catch (err) {
+      console.error('Error fetching blogs:', err)
+    } finally {
+      setLoadingBlogs(false)
+    }
   }
+
+  // Slug auto-generation from Title
+  useEffect(() => {
+    if (!isSlugManual && !editingPostId) {
+      const generated = title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') 
+        .replace(/\s+/g, '-')         
+        .replace(/-+/g, '-')          
+        .trim()
+      setSlug(generated)
+    }
+  }, [title, isSlugManual, editingPostId])
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -61,11 +129,12 @@ export default function BlogEditorPage() {
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose-base focus:outline-none min-h-[250px] p-4 sm:p-5 max-w-none',
+        class: 'prose prose-slate prose-sm sm:prose-base focus:outline-none min-h-[300px] p-5 max-w-none text-slate-800',
       },
     },
   })
 
+  // Keep editor content in sync with state when editing
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content)
@@ -73,51 +142,43 @@ export default function BlogEditorPage() {
   }, [content, editor])
 
   useEffect(() => {
-    if (!supabase) return
-    
-    // Fetch immediately
     fetchBlogs()
-
-    // Also listen for session updates in case of late init
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        fetchBlogs()
-      }
-    })
-
-    return () => {
-      authListener?.subscription?.unsubscribe()
-    }
-  }, [supabase])
+  }, [])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
       setImageFile(file)
       setPreviewImageUrl(URL.createObjectURL(file))
+      setImageUrlInput('')
     }
+  }
+
+  const handleUrlImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setImageUrlInput(val)
+    setPreviewImageUrl(val)
+    setImageFile(null)
   }
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!supabase) {
-      alert('Error: Supabase is not initialized. Please try logging out and logging back in.')
-      setPublishMessage('Error: Supabase is not initialized.')
+      setPublishMessage({ text: 'Supabase client is not initialized.', type: 'error' })
       return
     }
     setPublishing(true)
-    setPublishMessage('')
+    setPublishMessage({ text: '', type: null })
 
     try {
-      let imageUrl = ''
+      let finalImageUrl = ''
       
-      // 1. Upload Image
-      if (imageFile) {
+      // 1. Upload Image (if in upload mode and file selected)
+      if (imageMode === 'upload' && imageFile) {
         const fileExt = imageFile.name.split('.').pop()
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
         const filePath = `blog-covers/${fileName}`
         
-        console.log('Uploading image to supabase...', filePath)
         const { error: uploadError } = await supabase.storage
           .from('blog-images')
           .upload(filePath, imageFile, {
@@ -126,57 +187,57 @@ export default function BlogEditorPage() {
           })
 
         if (uploadError) {
-          console.error('Upload error details:', uploadError)
-          throw new Error(`Image Upload Failed: ${uploadError.message}. Make sure the 'blog-images' storage bucket is public and has correct RLS policies.`)
+          throw new Error(`Image Upload Failed: ${uploadError.message}. (Try switching to "Image URL" mode instead if bucket RLS restricts you)`)
         }
 
         const { data: publicUrlData } = supabase.storage
           .from('blog-images')
           .getPublicUrl(filePath)
           
-        imageUrl = publicUrlData.publicUrl
-        console.log('Image uploaded successfully. URL:', imageUrl)
+        finalImageUrl = publicUrlData.publicUrl
+      } else if (imageMode === 'url' && imageUrlInput) {
+        finalImageUrl = imageUrlInput
       } else if (existingImageUrl) {
-        imageUrl = existingImageUrl
+        finalImageUrl = existingImageUrl
       } else {
-        throw new Error("Cover image is required.")
+        throw new Error("Cover image is required. Provide an upload file or direct image URL link.")
       }
 
       // 2. Insert or Update DB
-      console.log('Inserting/updating blog details in database...')
-      if (editingPostId) {
-        console.log('Updating existing post id:', editingPostId)
-        const { error: dbError } = await supabase.from('blogs').update({
-          slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName
-        }).eq('id', editingPostId)
-        if (dbError) {
-          console.error('Update database error details:', dbError)
-          throw new Error(`Database Error: ${dbError.message}`)
-        }
-        setPublishMessage('Blog successfully updated!')
-        alert('Blog successfully updated!')
-      } else {
-        console.log('Inserting new blog post entry...')
-        const { data: dbData, error: dbError } = await supabase.from('blogs').insert([{
-          slug, title, excerpt, content, category, read_time: readTime, image: imageUrl, author_name: authorName, published_at: new Date().toISOString()
-        }]).select()
-        
-        if (dbError) {
-          console.error('Insert database error details:', dbError)
-          throw new Error(`Database Error: ${dbError.message}`)
-        }
-        console.log('Database insert success response:', dbData)
-        setPublishMessage('Blog successfully published to database!')
-        alert('Blog successfully published to database!')
+      const blogPayload = {
+        slug, 
+        title, 
+        excerpt, 
+        content, 
+        category, 
+        read_time: readTime, 
+        image: finalImageUrl, 
+        author_name: authorName
       }
 
-      // Reset form
-      handleCancelEdit()
-      fetchBlogs(); // Refresh list
+      if (editingPostId) {
+        const { error: dbError } = await supabase.from('blogs').update(blogPayload).eq('id', editingPostId)
+        if (dbError) throw new Error(`Database Update Error: ${dbError.message}. Make sure the table allows writes under RLS settings.`)
+        setPublishMessage({ text: 'Blog post successfully updated!', type: 'success' })
+      } else {
+        const { error: dbError } = await supabase.from('blogs').insert([{
+          ...blogPayload,
+          published_at: new Date().toISOString()
+        }])
+        
+        if (dbError) throw new Error(`Database Insert Error: ${dbError.message}. Make sure the table allows writes under RLS settings.`)
+        setPublishMessage({ text: 'Blog post successfully published!', type: 'success' })
+      }
+
+      // Refresh list & reset form
+      fetchBlogs()
+      setTimeout(() => {
+        handleCancelEdit()
+        setPublishMessage({ text: '', type: null })
+      }, 1500)
     } catch (err: any) {
       console.error('Publish error:', err)
-      setPublishMessage(`Error: ${err.message}`)
-      alert(`Failed to publish: ${err.message}`)
+      setPublishMessage({ text: err.message || 'Operation failed.', type: 'error' })
     } finally {
       setPublishing(false)
     }
@@ -184,21 +245,18 @@ export default function BlogEditorPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post? This cannot be undone.')) return
-    if (!supabase) {
-      alert('Error: Supabase is not initialized.')
-      return
-    }
     
-    console.log('Attempting to delete blog post id:', id)
-    const { error } = await supabase.from('blogs').delete().eq('id', id)
-    if (error) {
-      console.error('Delete error details:', error)
-      alert(`Error deleting post: ${error.message}. Check if you have permission to delete entries in the 'blogs' table.`)
-    } else {
-      console.log('Blog post deleted successfully:', id)
-      alert('Blog post deleted successfully!')
-      fetchBlogs()
-      if (editingPostId === id) handleCancelEdit()
+    try {
+      const res = await deleteBlogServer(id)
+      if (!res.success) {
+        alert(`Error deleting post: ${res.error}`)
+      } else {
+        alert('Blog post deleted successfully!')
+        fetchBlogs()
+        if (editingPostId === id) handleCancelEdit()
+      }
+    } catch (err: any) {
+      alert(`Delete operation failed: ${err.message}`)
     }
   }
 
@@ -206,6 +264,7 @@ export default function BlogEditorPage() {
     setEditingPostId(blog.id)
     setTitle(blog.title)
     setSlug(blog.slug)
+    setIsSlugManual(true)
     setExcerpt(blog.excerpt)
     setContent(blog.content)
     setCategory(blog.category)
@@ -214,168 +273,364 @@ export default function BlogEditorPage() {
     setExistingImageUrl(blog.image)
     setPreviewImageUrl(blog.image)
     setImageFile(null)
+    
+    if (blog.image?.includes('blog-covers/')) {
+      setImageMode('upload')
+    } else {
+      setImageMode('url')
+      setImageUrlInput(blog.image || '')
+    }
+
     setPreviewMode(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleCancelEdit = () => {
     setEditingPostId(null)
-    setTitle(''); setSlug(''); setExcerpt(''); setContent(''); setCategory(''); setReadTime(''); setImageFile(null); setPreviewImageUrl(null); setExistingImageUrl(null); setPreviewMode(false);
+    setTitle('')
+    setSlug('')
+    setIsSlugManual(false)
+    setExcerpt('')
+    setContent('')
+    setCategory('')
+    setReadTime('')
+    setImageFile(null)
+    setImageUrlInput('')
+    setPreviewImageUrl(null)
+    setExistingImageUrl(null)
+    setPreviewMode(false)
   }
 
-  return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Editor/Preview Column */}
-        <div className="lg:col-span-2 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm border border-gray-100">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h2 className="text-2xl font-display font-bold text-gray-900">{previewMode ? 'Blog Preview' : (editingPostId ? 'Edit Post' : 'Write New Post')}</h2>
-            <button 
-              type="button" 
-              onClick={() => setPreviewMode(!previewMode)}
-              className="text-sm font-bold text-[#10b981] bg-green-50 px-5 py-2.5 rounded-xl hover:bg-green-100 transition-colors w-full sm:w-auto"
-            >
-              {previewMode ? 'Back to Editor' : 'Preview Blog'}
-            </button>
-          </div>
+  const filteredBlogs = allBlogs.filter(blog => 
+    blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    blog.category?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
+  return (
+    <div className="py-2 flex flex-col gap-8 text-slate-800">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Blog Editor</h1>
+          <p className="text-slate-500 text-sm mt-1">Create, update, and manage your credit guides and articles.</p>
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto">
+          <button 
+            type="button" 
+            onClick={() => setPreviewMode(!previewMode)}
+            className="flex items-center justify-center gap-2 text-sm font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-5 py-2.5 rounded-xl hover:bg-emerald-100 transition-all w-full sm:w-auto active:scale-95 shadow-sm"
+          >
+            {previewMode ? <Edit size={16} /> : <Eye size={16} />}
+            {previewMode ? 'Back to Editor' : 'Live Preview'}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8 items-start">
+        {/* Editor Form / Preview Column */}
+        <div className="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
           {previewMode ? (
-            <div className="preview-container">
+            <div className="preview-container text-slate-800">
               <div className="mb-8">
-                <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-6">
-                  <span className="bg-green-100 text-[#10b981] px-4 py-1.5 rounded-full font-bold">{category || 'Category'}</span>
-                  <span>{readTime || 'Read Time'}</span>
+                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4">
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 px-3.5 py-1 rounded-full font-bold uppercase tracking-wider">{category || 'Category'}</span>
+                  <span className="flex items-center gap-1"><Clock size={12} /> {readTime || '5 min read'}</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 leading-tight mb-6">
-                  {title || 'Your Blog Title'}
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight mb-6">
+                  {title || 'Your Blog Post Title'}
                 </h1>
-                <p className="text-lg sm:text-xl text-gray-600 leading-relaxed mb-6">
-                  {excerpt || 'Your short excerpt will appear here.'}
+                <p className="text-lg text-slate-600 leading-relaxed mb-6 border-l-2 border-[#10b981] pl-4 italic">
+                  {excerpt || 'Your short post summary/excerpt will appear here.'}
                 </p>
-                <div className="flex items-center gap-4 border-y border-gray-100 py-6 mb-8">
+                <div className="flex items-center gap-3 border-y border-slate-100 py-4 mb-8">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">
+                    {authorName[0]?.toUpperCase() || 'P'}
+                  </div>
                   <div>
-                    <div className="font-bold text-gray-900">{authorName || 'Author Name'}</div>
-                    <div className="text-sm text-gray-500">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                    <div className="font-bold text-sm text-slate-900">{authorName || 'Author Name'}</div>
+                    <div className="text-xs text-slate-400">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                   </div>
                 </div>
                 {previewImageUrl ? (
-                  <img src={previewImageUrl} alt="Cover" className="w-full aspect-video sm:aspect-[21/9] object-cover rounded-2xl sm:rounded-3xl mb-10 shadow-sm" />
+                  <img src={previewImageUrl} alt="Cover Preview" className="w-full aspect-[21/9] object-cover rounded-2xl mb-8 border border-slate-200 shadow-sm" />
                 ) : (
-                  <div className="w-full aspect-video sm:aspect-[21/9] bg-gray-100 rounded-2xl sm:rounded-3xl mb-10 flex items-center justify-center text-gray-400 font-medium">No Cover Image Selected</div>
+                  <div className="w-full aspect-[21/9] bg-slate-50 border border-slate-200 rounded-2xl mb-8 flex items-center justify-center text-slate-400 text-sm font-medium">
+                    No Cover Image Configured
+                  </div>
                 )}
               </div>
               <div 
-                className="prose prose-lg max-w-none text-gray-800 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content || '<p class="text-gray-400 italic">Start writing your content to see it here...</p>' }}
+                className="prose prose-slate max-w-none text-slate-700 leading-relaxed border-t border-slate-100 pt-6"
+                dangerouslySetInnerHTML={{ __html: content || '<p class="text-slate-400 italic">No content written yet...</p>' }}
               />
             </div>
           ) : (
-            <form onSubmit={handlePublish} className="flex flex-col gap-5 sm:gap-6">
-              <input type="text" placeholder="Post Title" required value={title} onChange={e => setTitle(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all font-bold text-lg" />
-              <input type="text" placeholder="URL Slug (e.g., how-to-fix-cibil)" required value={slug} onChange={e => setSlug(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                <input type="text" placeholder="Category" required value={category} onChange={e => setCategory(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
-                <div className="relative">
-                  <select required value={readTime} onChange={e => setReadTime(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all appearance-none cursor-pointer">
-                    <option value="" disabled>Select Read Time</option>
-                    {[1,2,3,4,5,6,7,8,9,10,12,15].map(min => (
+            <form onSubmit={handlePublish} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Post Title</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g., How to Repair Your CIBIL Score After Default" 
+                  required 
+                  value={title} 
+                  onChange={e => setTitle(e.target.value)} 
+                  className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm font-bold placeholder-slate-400" 
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">URL Slug</label>
+                  <input 
+                    type="text" 
+                    placeholder="how-to-repair-cibil-score" 
+                    required 
+                    value={slug} 
+                    onChange={e => {
+                      setSlug(e.target.value)
+                      setIsSlugManual(true)
+                    }} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm placeholder-slate-400 font-mono" 
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Category</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g., Credit Repair, Loans" 
+                    required 
+                    value={category} 
+                    onChange={e => setCategory(e.target.value)} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm placeholder-slate-400" 
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Estimated Read Time</label>
+                  <select 
+                    required 
+                    value={readTime} 
+                    onChange={e => setReadTime(e.target.value)} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm cursor-pointer"
+                  >
+                    <option value="" disabled className="text-slate-450">Select duration</option>
+                    {[2,3,4,5,6,7,8,9,10,12,15].map(min => (
                       <option key={min} value={`${min} min read`}>{min} min read</option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Author Credit</label>
+                  <input 
+                    type="text" 
+                    placeholder="Primescore Team" 
+                    required 
+                    value={authorName} 
+                    onChange={e => setAuthorName(e.target.value)} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm placeholder-slate-400" 
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Short Summary (Excerpt)</label>
+                <textarea 
+                  placeholder="Summarize the article in 2-3 sentences. Displays on the blog cards." 
+                  required 
+                  value={excerpt} 
+                  onChange={e => setExcerpt(e.target.value)} 
+                  rows={2} 
+                  className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm resize-none placeholder-slate-400 leading-relaxed" 
+                />
+              </div>
+
+              {/* Cover Image Setup (Dual mode upload vs. text URL input) */}
+              <div className="flex flex-col gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Cover Image</span>
+                  <div className="flex bg-white p-1 rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('upload')}
+                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        imageMode === 'upload' ? 'bg-[#10b981] text-white' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      <Upload size={12} /> Upload File
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('url')}
+                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        imageMode === 'url' ? 'bg-[#10b981] text-white' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      <Link2 size={12} /> Image URL
+                    </button>
+                  </div>
+                </div>
+
+                {imageMode === 'upload' ? (
+                  <div className="flex flex-col gap-3">
+                    <div className="border-2 border-dashed border-slate-200 hover:border-emerald-500/40 p-5 rounded-xl bg-white flex flex-col items-center justify-center text-center cursor-pointer transition-all relative shadow-sm">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageChange} 
+                        required={!existingImageUrl && !imageFile}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                      />
+                      <Upload className="text-slate-400 mb-2" size={24} />
+                      <span className="text-xs font-semibold text-slate-500">
+                        {imageFile ? imageFile.name : 'Select cover image file'}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <input 
+                    type="url" 
+                    placeholder="https://images.unsplash.com/photo-..." 
+                    value={imageUrlInput} 
+                    onChange={handleUrlImageChange} 
+                    required={!existingImageUrl && !imageUrlInput}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm placeholder-slate-400 font-mono" 
+                  />
+                )}
+
+                {previewImageUrl && (
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <img src={previewImageUrl} alt="Mini Preview" className="h-10 w-16 object-cover rounded-lg border border-slate-200" />
+                    <span className="text-xs text-slate-500 truncate max-w-xs font-mono">Image Configured</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Tiptap rich editor */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Content Body</label>
+                <div className="bg-white border border-slate-250 rounded-2xl overflow-hidden focus-within:border-[#10b981] transition-all shadow-sm">
+                  <MenuBar editor={editor} />
+                  <div className="min-h-[300px]">
+                    <EditorContent editor={editor} />
                   </div>
                 </div>
               </div>
-              <input type="text" placeholder="Author Name" required value={authorName} onChange={e => setAuthorName(e.target.value)} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all" />
-              <textarea placeholder="Short Excerpt" required value={excerpt} onChange={e => setExcerpt(e.target.value)} rows={3} className="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] transition-all resize-none" />
-              
-              <div className="flex flex-col gap-3">
-                <label className="text-sm font-bold text-gray-700">Cover Image</label>
-                <div className="p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-green-50 hover:border-green-200 transition-colors">
-                  <input type="file" accept="image/*" onChange={handleImageChange} required={!imageFile} className="w-full text-sm font-medium text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#10b981] file:text-white hover:file:bg-emerald-600 file:cursor-pointer" />
-                </div>
-                {previewImageUrl && <img src={previewImageUrl} alt="Preview" className="h-20 w-32 object-cover rounded-lg border border-gray-200 shadow-sm mt-2" />}
-              </div>
 
-              <div className="flex flex-col gap-3 mt-2 sm:mt-4">
-                <label className="text-sm font-bold text-gray-700 flex justify-between">
-                  <span>Content Body</span>
-                  <span className="text-gray-400 font-normal text-xs sm:text-sm">Rich formatting available</span>
-                </label>
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden focus-within:border-[#10b981] focus-within:ring-1 focus-within:ring-[#10b981] transition-all">
-                  <MenuBar editor={editor} />
-                  <EditorContent editor={editor} />
-                </div>
-              </div>
-
-              {publishMessage && (
-                <div className={`p-4 sm:p-5 rounded-2xl text-sm font-bold ${publishMessage.includes('Error') ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-green-50 text-[#10b981] border border-green-100'}`}>
-                  {publishMessage}
+              {/* Status Message */}
+              {publishMessage.text && (
+                <div className={`p-4 rounded-xl text-xs font-bold flex items-center gap-2 border ${
+                  publishMessage.type === 'success' 
+                    ? 'bg-emerald-50 border-emerald-100 text-emerald-800' 
+                    : 'bg-red-50 border-red-100 text-red-700'
+                }`}>
+                  {publishMessage.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                  {publishMessage.text}
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-3 mt-2 sm:mt-4">
+              {/* Action buttons */}
+              <div className="flex gap-4">
                 {editingPostId && (
-                  <button type="button" onClick={handleCancelEdit} className="w-full sm:w-1/3 bg-white text-gray-700 border border-gray-200 font-bold py-4 sm:py-5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm text-base sm:text-lg">
+                  <button 
+                    type="button" 
+                    onClick={handleCancelEdit} 
+                    className="w-1/3 bg-transparent text-slate-500 border border-slate-200 hover:bg-slate-50 hover:text-slate-800 py-3.5 rounded-xl transition-all text-sm font-semibold active:scale-95"
+                  >
                     Cancel
                   </button>
                 )}
-                <button type="submit" disabled={publishing} className={`w-full ${editingPostId ? 'sm:w-2/3' : ''} bg-[#10b981] text-white font-bold py-4 sm:py-5 rounded-xl disabled:opacity-50 hover:bg-emerald-600 transition-colors shadow-sm text-base sm:text-lg`}>
-                  {publishing ? (editingPostId ? 'Updating...' : 'Publishing...') : (editingPostId ? 'Save Changes' : 'Publish Blog Post')}
+                <button 
+                  type="submit" 
+                  disabled={publishing} 
+                  className={`flex items-center justify-center gap-2 font-bold py-3.5 px-6 rounded-xl disabled:opacity-50 text-sm transition-all text-white bg-[#10b981] hover:bg-emerald-600 shadow-lg shadow-emerald-500/10 active:scale-95 ${
+                    editingPostId ? 'w-2/3' : 'w-full'
+                  }`}
+                >
+                  <Save size={16} />
+                  {publishing ? (editingPostId ? 'Updating Post...' : 'Publishing Post...') : (editingPostId ? 'Save Changes' : 'Publish Blog Post')}
                 </button>
               </div>
             </form>
           )}
         </div>
 
-        {/* Manage Posts Column */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 h-full max-h-[800px] overflow-y-auto">
-            <h2 className="text-xl font-display font-bold text-gray-900 mb-6 sticky top-0 bg-white pb-2 border-b border-gray-100 z-10">Manage Posts</h2>
-            
-            {allBlogs.length === 0 ? (
-              <p className="text-gray-500 text-sm">No posts found.</p>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {allBlogs.map(blog => (
-                  <div key={blog.id} className="p-4 rounded-xl border border-gray-100 hover:border-gray-300 transition-colors bg-gray-50 flex flex-col gap-3">
-                    <div>
-                      <div className="flex justify-between items-start gap-2 mb-1">
-                        <h3 className="font-bold text-gray-900 text-sm line-clamp-2">{blog.title}</h3>
-                        <div className="flex gap-1 flex-shrink-0">
-                          <button 
-                            onClick={() => handleEdit(blog)}
-                            className="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-lg transition-colors"
-                            title="Edit Post"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(blog.id)}
-                            className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors"
-                            title="Delete Post"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                          </button>
-                        </div>
-                      </div>
-                      <div className="text-xs text-[#10b981] font-bold">{blog.category}</div>
+        {/* Manage Posts Sidebar */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 flex flex-col gap-6 max-h-[850px] shadow-sm">
+          <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+            <h2 className="text-md font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileText size={18} className="text-emerald-600" /> Manage Posts
+            </h2>
+            <span className="text-[10px] font-bold text-slate-500 bg-slate-55 border border-slate-150 px-2 py-0.5 rounded-md">
+              {filteredBlogs.length} posts
+            </span>
+          </div>
+
+          {/* Search bar */}
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 outline-none focus:border-[#10b981] transition-all text-xs placeholder-slate-400"
+            />
+          </div>
+
+          {loadingBlogs ? (
+            <div className="flex flex-col gap-3 animate-pulse">
+              <div className="h-20 w-full bg-slate-50 rounded-2xl"></div>
+              <div className="h-20 w-full bg-slate-50 rounded-2xl"></div>
+            </div>
+          ) : filteredBlogs.length === 0 ? (
+            <p className="text-slate-500 text-xs py-8 text-center">No matching posts found.</p>
+          ) : (
+            <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+              {filteredBlogs.map(blog => (
+                <div key={blog.id} className="p-4 rounded-2xl border border-slate-150 bg-slate-50/50 hover:bg-slate-50 transition-all flex flex-col gap-3">
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-slate-900 text-xs truncate" title={blog.title}>{blog.title}</h3>
+                      <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full inline-block mt-1 uppercase tracking-wider">
+                        {blog.category}
+                      </span>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{new Date(blog.published_at).toLocaleDateString()}</span>
-                      <div className="flex items-center gap-1 font-medium bg-white px-2 py-1 rounded-md shadow-sm border border-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        {blog.views || 0}
-                      </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <button 
+                        onClick={() => handleEdit(blog)}
+                        className="text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-100 p-1.5 rounded-lg transition-all active:scale-90"
+                        title="Edit Post"
+                      >
+                        <Edit size={12} />
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(blog.id)}
+                        className="text-rose-600 hover:text-rose-800 bg-rose-50 border border-rose-100 p-1.5 rounded-lg transition-all active:scale-90"
+                        title="Delete Post"
+                      >
+                        <Trash2 size={12} />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-450 border-t border-slate-100 pt-2.5">
+                    <span>{blog.published_at ? new Date(blog.published_at).toLocaleDateString() : 'Draft'}</span>
+                    <span className="flex items-center gap-1 bg-white border border-slate-150 px-2 py-0.5 rounded-md font-medium text-slate-500">
+                      <Eye size={10} /> {blog.views || 0}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
   )
 }
+
+

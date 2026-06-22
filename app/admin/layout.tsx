@@ -4,8 +4,23 @@ import React, { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import Script from 'next/script'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '../../src/lib/supabase'
+import { isBootstrapAllowed, bootstrapSuperAdmin } from '../actions/team'
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  Users, 
+  BarChart3, 
+  Contact, 
+  LogOut, 
+  Lock, 
+  ShieldCheck, 
+  Menu, 
+  X,
+  Eye,
+  EyeOff
+} from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -15,7 +30,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState('')
+  const [loggingIn, setLoggingIn] = useState(false)
+  const [canBootstrap, setCanBootstrap] = useState(false)
+  const [bootstrapping, setBootstrapping] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  
   const pathname = usePathname()
+  const router = useRouter()
+
+  const checkUserRole = async (userId: string) => {
+    try {
+      if (!supabase) return
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('id', userId)
+        .single()
+      
+      if (error) {
+        console.warn('No custom role found, checking bootstrap status')
+        const bootCheck = await isBootstrapAllowed()
+        setCanBootstrap(bootCheck.allowed)
+        setRole(null)
+      } else {
+        setRole(data?.role || null)
+        setCanBootstrap(false)
+      }
+    } catch (err) {
+      console.error('Error fetching role:', err)
+      setRole(null)
+    }
+  }
 
   useEffect(() => {
     if (!supabase) {
@@ -25,28 +70,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     
     let isMounted = true
     
-    const checkUserRole = async (userId: string) => {
-      try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('id', userId)
-          .single()
-        
-        if (isMounted) {
-          if (error) {
-            console.warn('No custom role found, defaulting to writer:', error.message)
-            setRole('writer')
-          } else {
-            setRole(data?.role || 'writer')
-          }
-        }
-      } catch (err) {
-        console.error('Error fetching role:', err)
-        if (isMounted) setRole('writer')
-      }
-    }
-
     const initAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
@@ -70,7 +93,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!isMounted) return
-      console.log('Auth state changed event:', event)
       
       if (session?.user) {
         setUser(session.user)
@@ -78,13 +100,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       } else {
         setUser(null)
         setRole(null)
+        setCanBootstrap(false)
       }
       setLoading(false)
     })
     
     const fallbackTimeout = setTimeout(() => {
       if (isMounted) setLoading(false)
-    }, 4000)
+    }, 3000)
     
     return () => {
       isMounted = false
@@ -97,96 +120,261 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     e.preventDefault()
     if (!supabase) return
     setLoginError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setLoginError(error.message)
+    setLoggingIn(true)
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) setLoginError(error.message)
+    } catch (err: any) {
+      setLoginError(err.message || 'An unexpected error occurred.')
+    } finally {
+      setLoggingIn(false)
+    }
   }
 
   const handleLogout = async () => {
-    if (!supabase) return
     try {
-      await supabase.auth.signOut()
-      // Completely clear auth states locally
-      setUser(null)
-      setRole(null)
-      // Force page reload to clear any cached states/clients and redirect cleanly
-      window.location.href = '/admin'
+      if (supabase) {
+        await supabase.auth.signOut()
+      }
     } catch (err) {
       console.error('Failed to log out:', err)
-      // Fallback reload
+    } finally {
+      setUser(null)
+      setRole(null)
+      setCanBootstrap(false)
       window.location.href = '/admin'
     }
   }
 
+  const handleBootstrap = async () => {
+    setBootstrapping(true)
+    const res = await bootstrapSuperAdmin()
+    if (res.success) {
+      alert('You are now the Super Admin of Primescore!')
+      if (user) await checkUserRole(user.id)
+    } else {
+      alert(res.error || 'Failed to bootstrap.')
+    }
+    setBootstrapping(false)
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="h-8 w-32 bg-gray-200 rounded-lg mb-4"></div>
-          <div className="h-4 w-48 bg-gray-200 rounded-lg"></div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 rounded-full border-4 border-t-[#10b981] border-emerald-100 animate-spin"></div>
+          <p className="text-slate-500 text-sm font-medium tracking-wide">Securing Admin Environment...</p>
         </div>
       </div>
     )
   }
 
+  // LOGIN PAGE DESIGN (Light Theme Premium Card)
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white p-10 rounded-2xl shadow-sm w-full max-w-md border border-gray-200">
-          <h1 className="text-2xl font-display font-bold text-gray-900 mb-8 text-center">Admin Access</h1>
+      <div className="min-h-screen bg-slate-50 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(255,255,255,0))] flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#10b981] rounded-full filter blur-[150px] opacity-10 pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-300/30 rounded-full filter blur-[150px] opacity-10 pointer-events-none"></div>
+
+        <div className="bg-white/80 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-slate-200 w-full max-w-md shadow-xl relative z-10">
+          <div className="flex flex-col items-center mb-8">
+            <img src="/lightmode_Logo.png" alt="Primescore" className="h-10 w-auto mb-4" />
+            <h1 className="text-2xl font-display font-bold text-slate-900 tracking-tight">Admin Gate</h1>
+            <p className="text-slate-500 text-xs mt-1">Authorized access points only</p>
+          </div>
+
           <form onSubmit={handleLogin} className="flex flex-col gap-5">
-            {loginError && <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm font-medium">{loginError}</div>}
-            <input type="email" placeholder="Admin Email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-3 rounded-lg border border-gray-300 outline-none focus:border-gray-900 transition-all bg-white" />
-            <div className="relative w-full">
-              <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-3 pr-10 rounded-lg border border-gray-300 outline-none focus:border-gray-900 transition-all bg-white" />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
-                {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                )}
-              </button>
+            {loginError && (
+              <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+                {loginError}
+              </div>
+            )}
+            
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Email Address</label>
+              <input 
+                type="email" 
+                placeholder="admin@primescore.in" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                required 
+                className="w-full px-4 py-3 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm" 
+              />
             </div>
-            <button type="submit" className="bg-gray-900 text-white font-bold py-3 px-4 rounded-lg mt-2 hover:bg-black transition-colors shadow-sm border border-transparent">Secure Login</button>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Security Key</label>
+              <div className="relative w-full">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                  required 
+                  className="w-full px-4 py-3 pr-11 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-[#10b981] transition-all text-sm" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)} 
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              disabled={loggingIn}
+              className="bg-[#10b981] text-white font-extrabold py-3.5 px-4 rounded-xl mt-3 hover:bg-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-emerald-500/10 active:scale-[0.99] text-sm"
+            >
+              {loggingIn ? 'Decrypting credentials...' : 'Access Console'}
+            </button>
           </form>
         </div>
       </div>
     )
   }
 
-  // RBAC Checks
-  if (role === 'writer' && pathname !== '/admin/blog-editor') {
+  // Bootstrapping Request (Database holds no Roles yet)
+  if (canBootstrap) {
+    const sqlSetupScript = `-- Run this in your Supabase SQL Editor:
+create table if not exists public.user_roles (
+  id uuid references auth.users on delete cascade primary key,
+  role text not null check (role in ('super_admin', 'manager', 'sales', 'writer', 'analyst'))
+);
+
+-- Enable Row Level Security
+alter table public.user_roles enable row level security;
+
+-- Client only needs select access. All write actions are processed via Server Actions bypassing RLS.
+create policy "Allow read for all users" on public.user_roles
+  for select using (true);`
+
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl font-display font-bold text-gray-900 mb-4">Access Denied</h1>
-        <p className="text-gray-500 mb-8">Your account role (Writer) only has access to the Knowledge Hub Editor.</p>
-        <Link href="/admin/blog-editor" className="bg-gray-900 text-white font-bold px-6 py-3 rounded-lg hover:bg-black transition-colors">Go to Editor</Link>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-yellow-250 max-w-lg w-full shadow-lg text-center flex flex-col gap-6">
+          <div className="w-12 h-12 bg-yellow-50 border border-yellow-100 rounded-full flex items-center justify-center mx-auto text-yellow-600 animate-pulse">
+            <Lock size={20} />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 mb-2">Uninitialized Platform</h1>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              The <strong>user_roles</strong> table is missing or empty. Please run the SQL command below in your <strong>Supabase SQL Editor</strong> first, then click "Make Me Super Admin".
+            </p>
+          </div>
+
+          <div className="text-left">
+            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">SQL Setup Command</label>
+            <pre className="p-3 bg-slate-950 text-slate-350 font-mono text-[10px] rounded-xl overflow-x-auto border border-slate-800 max-h-[160px]">
+              {sqlSetupScript}
+            </pre>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={handleBootstrap} 
+              disabled={bootstrapping}
+              className="w-full bg-yellow-500 text-white font-extrabold py-3 px-4 rounded-xl hover:bg-yellow-600 disabled:opacity-50 transition-all text-sm"
+            >
+              {bootstrapping ? 'Configuring Role...' : 'Make Me Super Admin'}
+            </button>
+            <button 
+              onClick={handleLogout}
+              className="text-xs text-slate-400 hover:text-slate-600 font-bold transition-colors py-1"
+            >
+              Log Out
+            </button>
+          </div>
+        </div>
       </div>
     )
   }
 
-  if (role === 'analyst' && pathname !== '/admin/analytics') {
+  // Denied access check
+  const isWriter = role === 'writer'
+  const isAnalyst = role === 'analyst'
+  const isSales = role === 'sales'
+  const isManager = role === 'manager'
+  const isSuperAdminUser = role === 'super_admin'
+
+  let isAuthorized = false
+  if (isSuperAdminUser) isAuthorized = true
+  else if (isWriter && pathname === '/admin/blog-editor') isAuthorized = true
+  else if (isAnalyst && pathname === '/admin/analytics') isAuthorized = true
+  else if (isSales && pathname === '/admin/leads') isAuthorized = true
+  else if (isManager && (pathname === '/admin' || pathname === '/admin/blog-editor' || pathname === '/admin/leads' || pathname === '/admin/analytics')) isAuthorized = true
+  else if (pathname === '/admin') isAuthorized = true 
+
+  if (!isAuthorized) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl font-display font-bold text-gray-900 mb-4">Access Denied</h1>
-        <p className="text-gray-500 mb-8">Your account role (Analyst) only has access to Live Analytics.</p>
-        <Link href="/admin/analytics" className="bg-gray-900 text-white font-bold px-6 py-3 rounded-lg hover:bg-black transition-colors">Go to Analytics</Link>
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 bg-red-50 border border-red-100 rounded-full flex items-center justify-center mb-6 text-red-500">
+          <ShieldCheck size={28} />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Restrained</h1>
+        <p className="text-slate-500 text-sm max-w-sm mb-6 leading-relaxed">
+          Your role ({role?.replace('_', ' ') || 'Guest'}) does not have authorization to view this panel interface.
+        </p>
+        <div className="flex gap-4">
+          <button 
+            onClick={() => {
+              if (isWriter) router.push('/admin/blog-editor')
+              else if (isAnalyst) router.push('/admin/analytics')
+              else if (isSales) router.push('/admin/leads')
+              else router.push('/admin')
+            }}
+            className="bg-[#10b981] text-white font-extrabold px-5 py-2.5 rounded-xl hover:bg-emerald-600 transition-colors text-sm"
+          >
+            Go to My Panel
+          </button>
+          <button 
+            onClick={handleLogout} 
+            className="bg-transparent text-slate-500 border border-slate-250 hover:text-slate-900 px-5 py-2.5 rounded-xl transition-colors text-sm"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     )
   }
 
-  if (pathname === '/admin/team' && role !== 'super_admin') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl font-display font-bold text-gray-900 mb-4">Access Denied</h1>
-        <p className="text-gray-500 mb-8">Only Super Admins can manage the team and access control.</p>
-        <Link href="/admin" className="bg-gray-900 text-white font-bold px-6 py-3 rounded-lg hover:bg-black transition-colors">Go to Dashboard</Link>
-      </div>
-    )
-  }
+  // Navigation Options Array
+  const navItems = [
+    {
+      name: 'Overview',
+      path: '/admin',
+      icon: LayoutDashboard,
+      roles: ['super_admin', 'manager']
+    },
+    {
+      name: 'Blog Editor',
+      path: '/admin/blog-editor',
+      icon: BookOpen,
+      roles: ['super_admin', 'manager', 'writer']
+    },
+    {
+      name: 'Leads CRM',
+      path: '/admin/leads',
+      icon: Contact,
+      roles: ['super_admin', 'manager', 'sales']
+    },
+    {
+      name: 'Analytics',
+      path: '/admin/analytics',
+      icon: BarChart3,
+      roles: ['super_admin', 'manager', 'analyst']
+    },
+    {
+      name: 'Access Control',
+      path: '/admin/team',
+      icon: Users,
+      roles: ['super_admin']
+    }
+  ].filter(item => item.roles.includes(role || ''))
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col relative z-50">
-      {/* Google Analytics */}
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col lg:flex-row relative z-50 font-sans">
       <Script src="https://www.googletagmanager.com/gtag/js?id=G-0VV0R0ELZS" strategy="afterInteractive" />
       <Script id="google-analytics" strategy="afterInteractive">{`
         window.dataLayer = window.dataLayer || [];
@@ -194,38 +382,87 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         gtag('js', new Date());
         gtag('config', 'G-0VV0R0ELZS');
       `}</Script>
-      {/* Top Navigation Bar */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-10">
-          <Link href="/admin" className="hover:opacity-80 transition-opacity flex items-center gap-3">
-            <img src="/lightmode_Logo.png" alt="Primescore Admin" className="h-6 sm:h-8 w-auto" />
-            <span className="text-lg font-display font-bold text-gray-900 hidden sm:block tracking-tight">Admin Portal</span>
+
+      {/* Mobile Top Bar */}
+      <div className="lg:hidden w-full bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <Link href="/admin" className="flex items-center gap-3">
+          <img src="/lightmode_Logo.png" alt="Primescore" className="h-6 w-auto" />
+          <span className="text-md font-bold tracking-tight text-slate-900">Portal</span>
+        </Link>
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 text-slate-500 hover:text-slate-900 transition-colors">
+          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Sidebar Navigation */}
+      <aside className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-6 h-screen sticky top-0`}>
+        <div className="flex flex-col gap-8">
+          {/* Logo / Title */}
+          <Link href="/admin" className="hidden lg:flex items-center gap-3 py-2">
+            <img src="/lightmode_Logo.png" alt="Primescore" className="h-8 w-auto" />
+            <span className="text-lg font-bold tracking-tight text-slate-900">Admin</span>
           </Link>
-          <div className="hidden lg:flex gap-1">
-            {(role === 'super_admin' || role === 'analyst') && (
-              <Link href="/admin/analytics" className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-colors ${pathname === '/admin/analytics' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>Analytics</Link>
-            )}
-            {role === 'super_admin' && (
-              <Link href="/admin/team" className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-colors ${pathname === '/admin/team' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>Access Control</Link>
-            )}
-            {(role === 'super_admin' || role === 'writer') && (
-              <Link href="/admin/blog-editor" className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-colors ${pathname === '/admin/blog-editor' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>Blog Editor</Link>
-            )}
-            {(role === 'super_admin' || role === 'sales') && (
-              <Link href="/admin/leads" className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-colors ${pathname === '/admin/leads' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>Leads CRM</Link>
-            )}
+
+          {/* Navigation Links */}
+          <nav className="flex flex-col gap-1.5">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.path
+              return (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all relative group ${
+                    isActive 
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-sm' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent'
+                  }`}
+                >
+                  <Icon size={18} className={isActive ? 'text-emerald-600' : 'text-slate-400 group-hover:text-slate-600 transition-colors'} />
+                  {item.name}
+                  {isActive && <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-emerald-600"></div>}
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
+
+        {/* User Footer Profile */}
+        <div className="flex flex-col gap-4 border-t border-slate-200 pt-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center font-bold text-sm">
+              {email[0]?.toUpperCase() || 'A'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase">{role?.replace('_', ' ')}</p>
+              <p className="text-xs text-slate-600 font-medium truncate">{email}</p>
+            </div>
           </div>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all text-xs font-semibold"
+          >
+            <LogOut size={14} />
+            Sign Out
+          </button>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2.5 py-1 rounded uppercase tracking-widest">{role?.replace('_', ' ')}</div>
-          <button onClick={handleLogout} className="text-gray-500 hover:text-red-600 font-bold transition-colors text-sm px-3 py-1.5 rounded-md hover:bg-red-50">Log Out</button>
-        </div>
-      </nav>
+      </aside>
+
+      {/* Background shadow for mobile sidebar */}
+      {sidebarOpen && (
+        <div 
+          onClick={() => setSidebarOpen(false)} 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
+        ></div>
+      )}
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full relative">
+      <main className="flex-1 min-w-0 p-6 sm:p-8 lg:p-10 relative overflow-y-auto max-h-screen">
         {children}
       </main>
     </div>
   )
 }
+
+
