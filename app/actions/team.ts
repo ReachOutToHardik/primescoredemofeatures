@@ -28,7 +28,7 @@ async function isSuperAdmin() {
   }
 }
 
-// Bootstrap Action: Allow promoting first user to super_admin if none exist
+// Bootstrap Action: Allow promoting logged-in user to super_admin
 export async function bootstrapSuperAdmin() {
   if (!supabaseAdmin) return { error: 'Supabase admin client not initialized' }
   try {
@@ -40,16 +40,6 @@ export async function bootstrapSuperAdmin() {
     )
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) return { error: 'No active session. Please log in first.' }
-
-    // Check if any super admin exists in user_roles table
-    const { data: existingRoles, error: checkError } = await supabaseAdmin
-      .from('user_roles')
-      .select('id')
-      .eq('role', 'super_admin')
-
-    if (!checkError && existingRoles && existingRoles.length > 0) {
-      return { error: 'A Super Admin already exists. Bootstrapping is disabled.' }
-    }
 
     // Insert/upsert the current user as super_admin
     const { error: insertError } = await supabaseAdmin

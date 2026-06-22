@@ -316,24 +316,35 @@ create policy "Allow read for all users" on public.user_roles
         <p className="text-slate-500 text-sm max-w-sm mb-6 leading-relaxed">
           Your role ({role?.replace('_', ' ') || 'Guest'}) does not have authorization to view this panel interface.
         </p>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => {
-              if (isWriter) router.push('/admin/blog-editor')
-              else if (isAnalyst) router.push('/admin/analytics')
-              else if (isSales) router.push('/admin/leads')
-              else router.push('/admin')
-            }}
-            className="bg-[#10b981] text-white font-extrabold px-5 py-2.5 rounded-xl hover:bg-emerald-600 transition-colors text-sm"
-          >
-            Go to My Panel
-          </button>
-          <button 
-            onClick={handleLogout} 
-            className="bg-transparent text-slate-500 border border-slate-250 hover:text-slate-900 px-5 py-2.5 rounded-xl transition-colors text-sm"
-          >
-            Sign Out
-          </button>
+        <div className="flex flex-col gap-3 items-center w-full max-w-xs">
+          {role !== 'super_admin' && (
+            <button 
+              onClick={handleBootstrap} 
+              disabled={bootstrapping}
+              className="w-full bg-yellow-500 text-white font-extrabold px-5 py-3 rounded-xl hover:bg-yellow-600 transition-colors text-sm shadow-sm"
+            >
+              {bootstrapping ? 'Promoting Account...' : 'Promote Account to Super Admin'}
+            </button>
+          )}
+          <div className="flex gap-3 w-full">
+            <button 
+              onClick={() => {
+                if (isWriter) router.push('/admin/blog-editor')
+                else if (isAnalyst) router.push('/admin/analytics')
+                else if (isSales) router.push('/admin/leads')
+                else router.push('/admin')
+              }}
+              className="w-1/2 bg-[#10b981] text-white font-bold py-2.5 rounded-xl hover:bg-emerald-600 transition-colors text-xs"
+            >
+              Go to My Panel
+            </button>
+            <button 
+              onClick={handleLogout} 
+              className="w-1/2 bg-white text-slate-500 border border-slate-250 hover:text-slate-900 py-2.5 rounded-xl transition-colors text-xs"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     )
