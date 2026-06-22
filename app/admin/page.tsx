@@ -2,8 +2,9 @@
 
 export const dynamic = 'force-dynamic'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { supabase } from '../../src/lib/supabase'
 import { 
   Contact, 
   BookOpen, 
@@ -18,12 +19,40 @@ import {
   ChevronDown,
   ChevronUp,
   Copy,
-  Check
+  Check,
+  Lock
 } from 'lucide-react'
 
 export default function AdminDashboardPage() {
   const [showSqlHelper, setShowSqlHelper] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [role, setRole] = useState<string | null>(null)
+  const [loadingRole, setLoadingRole] = useState(true)
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        if (!supabase) return
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          const { data, error } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (!error && data) {
+            setRole(data.role)
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching role:', err)
+      } finally {
+        setLoadingRole(false)
+      }
+    }
+    fetchRole()
+  }, [])
 
   const sqlScript = `-- 1. USER ROLES TABLE (Access Control)
 create table if not exists public.user_roles (
@@ -116,32 +145,36 @@ create policy "Allow authorized team to manage leads" on public.leads
       desc: 'Access consultation requests, user details, status metrics, and export data in PDF, Excel or CSV.',
       href: '/admin/leads',
       icon: Contact,
-      color: 'bg-blue-50/50 hover:bg-blue-50 border-blue-100 hover:border-blue-300 text-blue-600',
-      actionText: 'Open CRM'
+      color: 'bg-blue-50/50 border-blue-100 text-blue-600',
+      actionText: 'Open CRM',
+      roles: ['super_admin', 'manager', 'sales']
     },
     {
       title: 'Blog Editor',
       desc: 'Write, update, and manage financial and credit health articles for the Knowledge Hub.',
       href: '/admin/blog-editor',
       icon: BookOpen,
-      color: 'bg-emerald-50/50 hover:bg-emerald-50 border-emerald-100 hover:border-emerald-300 text-emerald-600',
-      actionText: 'Write Blog'
+      color: 'bg-emerald-50/50 border-emerald-100 text-emerald-600',
+      actionText: 'Write Blog',
+      roles: ['super_admin', 'manager', 'writer']
     },
     {
       title: 'Live Analytics',
       desc: 'Track live visitors, geographic regions, top content views, and traffic trends in real-time.',
       href: '/admin/analytics',
       icon: BarChart3,
-      color: 'bg-purple-50/50 hover:bg-purple-50 border-purple-100 hover:border-purple-300 text-purple-600',
-      actionText: 'View Metrics'
+      color: 'bg-purple-50/50 border-purple-100 text-purple-600',
+      actionText: 'View Metrics',
+      roles: ['super_admin', 'manager', 'analyst']
     },
     {
       title: 'Access Control',
       desc: 'Add team members, edit roles, configure permissions, and manage platform staff access.',
       href: '/admin/team',
       icon: Users,
-      color: 'bg-amber-50/50 hover:bg-amber-50 border-amber-100 hover:border-amber-300 text-amber-600',
-      actionText: 'Manage Staff'
+      color: 'bg-amber-50/50 border-amber-100 text-amber-600',
+      actionText: 'Manage Staff',
+      roles: ['super_admin']
     }
   ]
 
@@ -176,21 +209,39 @@ create policy "Allow authorized team to manage leads" on public.leads
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {cards.map((card, idx) => {
             const Icon = card.icon
+            const hasAccess = loadingRole || card.roles.includes(role || '')
+            
             return (
               <Link 
                 key={idx} 
                 href={card.href} 
-                className={`group flex flex-col justify-between p-8 rounded-3xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 h-full`}
+                className={`group flex flex-col justify-between p-8 rounded-3xl bg-white border border-slate-200 hover:border-slate-350 hover:shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 h-full relative overflow-hidden ${!hasAccess ? 'opacity-85' : ''}`}
               >
+                {!hasAccess && (
+                  <div className="absolute top-4 right-4 p-1.5 bg-rose-50 border border-rose-100 rounded-xl text-rose-500 flex items-center gap-1.5 text-xs font-semibold">
+                    <Lock size={12} />
+                    Locked
+                  </div>
+                )}
                 <div>
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-115 transition-transform border ${card.color}`}>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border ${card.color}`}>
                     <Icon size={22} />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">{card.title}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight flex items-center gap-2">
+                    {card.title}
+                  </h3>
                   <p className="text-slate-500 text-sm leading-relaxed mb-8">{card.desc}</p>
                 </div>
-                <div className="inline-flex items-center gap-2 font-bold text-sm text-[#10b981] group-hover:gap-3 transition-all">
-                  {card.actionText} <ArrowRight size={16} />
+                <div className={`inline-flex items-center gap-2 font-bold text-sm transition-all ${!hasAccess ? 'text-rose-500' : 'text-[#10b981] group-hover:gap-3'}`}>
+                  {hasAccess ? (
+                    <>
+                      {card.actionText} <ArrowRight size={16} />
+                    </>
+                  ) : (
+                    <>
+                      Restricted Access <Lock size={14} />
+                    </>
+                  )}
                 </div>
               </Link>
             )
@@ -200,5 +251,3 @@ create policy "Allow authorized team to manage leads" on public.leads
     </div>
   )
 }
-
-

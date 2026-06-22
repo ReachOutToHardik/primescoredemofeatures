@@ -32,6 +32,12 @@ async function isSuperAdmin() {
 export async function bootstrapSuperAdmin() {
   if (!supabaseAdmin) return { error: 'Supabase admin client not initialized' }
   try {
+    // Check if bootstrap is allowed (no super_admin exists yet)
+    const bootCheck = await isBootstrapAllowed()
+    if (!bootCheck.allowed) {
+      return { error: 'Access Denied: The system has already been initialized with a Super Admin.' }
+    }
+
     const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

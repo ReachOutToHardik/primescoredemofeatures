@@ -62,6 +62,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }
 
+  // Clean implementation of logout to ensure storage keys are cleared
+  const handleSignOut = async () => {
+    try {
+      if (supabase) {
+        await supabase.auth.signOut()
+      }
+    } catch (err) {
+      console.error('Failed to log out:', err)
+    } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('session_start_time')
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i)
+          if (key && (key.includes('sb-') || key.includes('supabase'))) {
+            localStorage.removeItem(key)
+            i--
+          }
+        }
+      }
+      setUser(null)
+      setRole(null)
+      setCanBootstrap(false)
+      window.location.href = '/admin'
+    }
+  }
+
   useEffect(() => {
     if (!supabase) {
       setLoading(false)
@@ -116,6 +142,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [])
 
+  // Absolute Session Timer: Auto-logout exactly 4 hours after session starts
+  useEffect(() => {
+    if (!user) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('session_start_time')
+      }
+      return
+    }
+
+    // 4 hours in milliseconds = 4 * 60 * 60 * 1000 = 14,400,000 ms
+    const ABSOLUTE_TIMEOUT = 4 * 60 * 60 * 1000 
+    
+    let startTimeStr = localStorage.getItem('session_start_time')
+    let startTime = startTimeStr ? parseInt(startTimeStr, 10) : null
+
+    if (!startTime) {
+      startTime = Date.now()
+      localStorage.setItem('session_start_time', startTime.toString())
+    }
+
+    const elapsed = Date.now() - startTime
+    const remaining = ABSOLUTE_TIMEOUT - elapsed
+
+    let timeoutId: NodeJS.Timeout
+
+    if (remaining <= 0) {
+      alert("Your 4-hour session limit has been reached. Please sign in again.")
+      handleSignOut()
+    } else {
+      timeoutId = setTimeout(() => {
+        alert("Your 4-hour session limit has been reached. Please sign in again.")
+        handleSignOut()
+      }, remaining)
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [user])
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!supabase) return
@@ -131,19 +197,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }
 
-  const handleLogout = async () => {
-    try {
-      if (supabase) {
-        await supabase.auth.signOut()
-      }
-    } catch (err) {
-      console.error('Failed to log out:', err)
-    } finally {
-      setUser(null)
-      setRole(null)
-      setCanBootstrap(false)
-      window.location.href = '/admin'
-    }
+  const handleLogout = () => {
+    handleSignOut()
   }
 
   const handleBootstrap = async () => {
@@ -291,22 +346,11 @@ create policy "Allow read for all users" on public.user_roles
     )
   }
 
-  // Denied access check
-  const isWriter = role === 'writer'
-  const isAnalyst = role === 'analyst'
-  const isSales = role === 'sales'
-  const isManager = role === 'manager'
-  const isSuperAdminUser = role === 'super_admin'
+  // Denied access check for users with no console role (Guests)
+  const ALLOWED_CONSOLE_ROLES = ['super_admin', 'manager', 'writer', 'sales', 'analyst']
+  const hasConsoleAccess = ALLOWED_CONSOLE_ROLES.includes(role || '')
 
-  let isAuthorized = false
-  if (isSuperAdminUser) isAuthorized = true
-  else if (isWriter && pathname === '/admin/blog-editor') isAuthorized = true
-  else if (isAnalyst && pathname === '/admin/analytics') isAuthorized = true
-  else if (isSales && pathname === '/admin/leads') isAuthorized = true
-  else if (isManager && (pathname === '/admin' || pathname === '/admin/blog-editor' || pathname === '/admin/leads' || pathname === '/admin/analytics')) isAuthorized = true
-  else if (pathname === '/admin') isAuthorized = true 
-
-  if (!isAuthorized) {
+  if (!hasConsoleAccess) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
         <div className="w-16 h-16 bg-red-50 border border-red-100 rounded-full flex items-center justify-center mb-6 text-red-500">
@@ -314,41 +358,40 @@ create policy "Allow read for all users" on public.user_roles
         </div>
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Restrained</h1>
         <p className="text-slate-500 text-sm max-w-sm mb-6 leading-relaxed">
-          Your role ({role?.replace('_', ' ') || 'Guest'}) does not have authorization to view this panel interface.
+          Your account ({email}) does not have authorization to view this panel interface.
         </p>
         <div className="flex flex-col gap-3 items-center w-full max-w-xs">
-          {role !== 'super_admin' && (
-            <button 
-              onClick={handleBootstrap} 
-              disabled={bootstrapping}
-              className="w-full bg-yellow-500 text-white font-extrabold px-5 py-3 rounded-xl hover:bg-yellow-600 transition-colors text-sm shadow-sm"
-            >
-              {bootstrapping ? 'Promoting Account...' : 'Promote Account to Super Admin'}
-            </button>
-          )}
-          <div className="flex gap-3 w-full">
-            <button 
-              onClick={() => {
-                if (isWriter) router.push('/admin/blog-editor')
-                else if (isAnalyst) router.push('/admin/analytics')
-                else if (isSales) router.push('/admin/leads')
-                else router.push('/admin')
-              }}
-              className="w-1/2 bg-[#10b981] text-white font-bold py-2.5 rounded-xl hover:bg-emerald-600 transition-colors text-xs"
-            >
-              Go to My Panel
-            </button>
-            <button 
-              onClick={handleLogout} 
-              className="w-1/2 bg-white text-slate-500 border border-slate-250 hover:text-slate-900 py-2.5 rounded-xl transition-colors text-xs"
-            >
-              Sign Out
-            </button>
-          </div>
+          <button 
+            onClick={handleSignOut} 
+            className="w-full bg-white text-slate-500 border border-slate-250 hover:text-slate-900 py-2.5 rounded-xl transition-colors text-sm font-semibold shadow-sm"
+          >
+            Sign Out / Switch Account
+          </button>
         </div>
       </div>
     )
   }
+
+  // Denied access check
+  const isAuthorized = (() => {
+    if (role === 'super_admin') return true
+    if (pathname === '/admin') {
+      return ['super_admin', 'manager'].includes(role || '')
+    }
+    if (pathname.startsWith('/admin/blog-editor')) {
+      return ['super_admin', 'manager', 'writer'].includes(role || '')
+    }
+    if (pathname.startsWith('/admin/leads')) {
+      return ['super_admin', 'manager', 'sales'].includes(role || '')
+    }
+    if (pathname.startsWith('/admin/analytics')) {
+      return ['super_admin', 'manager', 'analyst'].includes(role || '')
+    }
+    if (pathname.startsWith('/admin/team')) {
+      return ['super_admin'].includes(role || '')
+    }
+    return true // Default fallback for unknown sub-paths
+  })()
 
   // Navigation Options Array
   const navItems = [
@@ -382,7 +425,14 @@ create policy "Allow read for all users" on public.user_roles
       icon: Users,
       roles: ['super_admin']
     }
-  ].filter(item => item.roles.includes(role || ''))
+  ]
+
+  const currentNavItem = navItems.find(item => 
+    item.path === '/admin' ? pathname === '/admin' : pathname.startsWith(item.path)
+  )
+  const currentModuleName = currentNavItem ? currentNavItem.name : 'this panel'
+
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col lg:flex-row relative z-50 font-sans">
@@ -419,20 +469,26 @@ create policy "Allow read for all users" on public.user_roles
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.path
+              const hasAccess = item.roles.includes(role || '')
               return (
                 <Link
                   key={item.path}
                   href={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all relative group ${
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all relative group ${
                     isActive 
                       ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-sm' 
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent'
                   }`}
                 >
-                  <Icon size={18} className={isActive ? 'text-emerald-600' : 'text-slate-400 group-hover:text-slate-600 transition-colors'} />
-                  {item.name}
-                  {isActive && <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-emerald-600"></div>}
+                  <div className="flex items-center gap-3">
+                    <Icon size={18} className={isActive ? 'text-emerald-600' : 'text-slate-400 group-hover:text-slate-600 transition-colors'} />
+                    {item.name}
+                  </div>
+                  {!hasAccess && (
+                    <Lock size={14} className="text-slate-400 group-hover:text-slate-500 transition-colors" />
+                  )}
+                  {isActive && hasAccess && <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-emerald-600"></div>}
                 </Link>
               )
             })}
@@ -446,12 +502,12 @@ create policy "Allow read for all users" on public.user_roles
               {email[0]?.toUpperCase() || 'A'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase">{role?.replace('_', ' ')}</p>
+              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase">{role?.replace('_', ' ') || 'Guest'}</p>
               <p className="text-xs text-slate-600 font-medium truncate">{email}</p>
             </div>
           </div>
           <button 
-            onClick={handleLogout}
+            onClick={handleSignOut}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-100 hover:bg-red-50 transition-all text-xs font-semibold"
           >
             <LogOut size={14} />
@@ -470,7 +526,23 @@ create policy "Allow read for all users" on public.user_roles
 
       {/* Main Content Area */}
       <main className="flex-1 min-w-0 p-6 sm:p-8 lg:p-10 relative overflow-y-auto max-h-screen">
-        {children}
+        {isAuthorized ? (
+          children
+        ) : (
+          <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center bg-white rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.03),transparent_50%)] pointer-events-none"></div>
+            <div className="w-16 h-16 bg-rose-50 border border-rose-100 rounded-2xl flex items-center justify-center mb-6 text-rose-500 shadow-sm">
+              <Lock size={28} className="animate-pulse" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Module Locked</h1>
+            <p className="text-slate-500 text-sm max-w-md mb-6 leading-relaxed">
+              Your current account role (<span className="font-semibold text-slate-700 capitalize">{role?.replace('_', ' ') || 'Guest'}</span>) is restricted from viewing the <span className="font-semibold text-slate-700">{currentModuleName}</span> module.
+            </p>
+            <p className="text-slate-400 text-xs max-w-xs leading-relaxed">
+              Please contact a Super Admin or manager if you believe this is an error or if you need access privileges.
+            </p>
+          </div>
+        )}
       </main>
     </div>
   )
