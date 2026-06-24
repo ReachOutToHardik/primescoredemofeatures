@@ -101,3 +101,35 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* --- Google Translate Custom Styling --- */
+/* Hide the top Google Translate banner frame */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame,
+.goog-te-banner {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+/* Prevent Google Translate from shifting the body top position */
+body {
+  top: 0px !important;
+  position: static !important;
+}
+/* Hide translation helper tooltips and highlights */
+.goog-tooltip,
+.goog-tooltip:hover,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+/* Hide standard translation widgets if rendered */
+.skiptranslate {
+  display: none !important;
+}

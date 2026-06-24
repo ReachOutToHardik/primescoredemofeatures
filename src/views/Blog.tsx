@@ -4,14 +4,26 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Clock } from 'lucide-react'
 
-export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
+export default function Blog({ initialBlogs = [], dict, locale = 'en' }: { initialBlogs: any[]; dict?: any; locale?: string }) {
   const [selectedCategory, setSelectedCategory] = useState('All')
   
+  // Translation values helper
+  const t = dict?.blog || {
+    title: "Knowledge Hub",
+    titleColored: "Hub",
+    subtitle: "Expert insights, step-by-step guides, and financial tips from industry specialists to help you build and maintain exceptional credit health.",
+    noBlogsFound: "No blog posts found.",
+    allCategory: "All",
+    readFullArticle: "Read Full Article",
+    noPostsInCategory: "No posts found in this category.",
+    readTimeSuffix: "read"
+  }
+
   if (!initialBlogs || initialBlogs.length === 0) {
     return (
       <div className="pt-32 pb-20 lg:pt-40 lg:pb-24 min-h-screen bg-gray-50 flex flex-col justify-center items-center gap-4">
         <div className="h-12 w-12 rounded-full border-4 border-t-[#10b981] border-green-100 animate-spin"></div>
-        <p className="text-xl text-gray-500 font-medium">No blog posts found.</p>
+        <p className="text-xl text-gray-500 font-medium">{t.noBlogsFound}</p>
       </div>
     )
   }
@@ -27,6 +39,8 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
   const featuredPost = filteredBlogs[0]
   const restPosts = filteredBlogs.slice(1)
 
+  const localePath = locale === 'en' ? '' : `/${locale}`
+
   return (
     <div className="pt-32 pb-24 lg:pt-40 lg:pb-32 min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,10 +48,10 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
         {/* Header */}
         <div className="max-w-3xl mb-16 text-left">
           <h1 className="font-display text-5xl font-extrabold text-gray-900 sm:text-7xl tracking-tight leading-none mb-6">
-            Knowledge <span className="text-[#10b981]">Hub</span>
+            {t.title.split(' ')[0]} <span className="text-[#10b981]">{t.titleColored}</span>
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed font-medium">
-            Expert insights, step-by-step guides, and financial tips from industry specialists to help you build and maintain exceptional credit health.
+            {t.subtitle}
           </p>
         </div>
 
@@ -46,14 +60,14 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => setSelectedCategory(cat === 'All' ? 'All' : cat)}
               className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
                 selectedCategory === cat
                   ? 'bg-gray-900 text-white shadow-md scale-[1.02]'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              {cat}
+              {cat === 'All' ? t.allCategory : cat}
             </button>
           ))}
         </div>
@@ -61,7 +75,7 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
         {/* Featured Post */}
         {featuredPost && (
           <Link 
-            href={`/blog/${featuredPost.slug}`}
+            href={`${localePath}/blog/${featuredPost.slug}`}
             className="group grid lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-20 bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 transition-all duration-300 cursor-pointer"
           >
             <div className="lg:col-span-7 h-[300px] sm:h-[400px] lg:h-auto overflow-hidden relative">
@@ -85,7 +99,7 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 text-[#10b981] font-bold group-hover:gap-3 transition-all duration-300">
-                Read Full Article <ArrowRight className="h-5 w-5 animate-pulse" />
+                {t.readFullArticle} <ArrowRight className="h-5 w-5 animate-pulse" />
               </div>
             </div>
           </Link>
@@ -96,7 +110,7 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
           {restPosts.map((post) => (
             <Link 
               key={post.id}
-              href={`/blog/${post.slug}`}
+              href={`${localePath}/blog/${post.slug}`}
               className="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="h-56 overflow-hidden relative">
@@ -125,7 +139,7 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
                     <p className="font-bold text-gray-900">{post.author_name || 'Primescore Team'}</p>
                     <div className="flex items-center gap-2 text-gray-400 mt-0.5 font-medium">
                       <Clock className="h-3.5 w-3.5" />
-                      <span>{post.read_time || '5 min read'}</span>
+                      <span>{post.read_time ? post.read_time.replace('read', t.readTimeSuffix) : `5 ${t.readTimeSuffix}`}</span>
                     </div>
                   </div>
                 </div>
@@ -137,7 +151,7 @@ export default function Blog({ initialBlogs = [] }: { initialBlogs: any[] }) {
         {/* Empty State */}
         {filteredBlogs.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-gray-500 font-medium">No posts found in this category.</p>
+            <p className="text-gray-500 font-medium">{t.noPostsInCategory}</p>
           </div>
         )}
 

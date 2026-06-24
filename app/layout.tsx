@@ -48,6 +48,19 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://www.primescore.in',
+    languages: {
+      'en-IN': 'https://www.primescore.in',
+      'hi-IN': 'https://www.primescore.in/hi',
+      'ta-IN': 'https://www.primescore.in/ta',
+      'te-IN': 'https://www.primescore.in/te',
+      'kn-IN': 'https://www.primescore.in/kn',
+      'ml-IN': 'https://www.primescore.in/ml',
+      'mr-IN': 'https://www.primescore.in/mr',
+      'gu-IN': 'https://www.primescore.in/gu',
+      'bn-IN': 'https://www.primescore.in/bn',
+      'pa-IN': 'https://www.primescore.in/pa',
+      'ur-IN': 'https://www.primescore.in/ur',
+    }
   },
 }
 
@@ -171,6 +184,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}</Script>
 
         <Preloader />
+        
+        {/* Invisible Google Translate Element */}
+        <div id="google_translate_element" style={{ display: 'none' }} />
+        <Script id="google-translate-config" strategy="afterInteractive">{`
+          window.googleTranslateElementInit = function() {
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'en',
+              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+              autoDisplay: false
+            }, 'google_translate_element');
+          }
+        `}</Script>
+        <Script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="afterInteractive" />
+
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute inset-0 bg-heroRadial" />
           <div className="absolute inset-0 bg-dots opacity-[0.4]" />

@@ -17,6 +17,8 @@ const CITIES = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.primescore.in'
   
+  const locales = ['hi', 'ta', 'te', 'kn', 'ml', 'mr', 'gu', 'bn', 'pa', 'ur']
+
   const coreRoutes = [
     '',
     '/services',
@@ -39,6 +41,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1.0 : route.startsWith('/tools') ? 0.9 : 0.8,
   }))
 
+  // Generate localized versions for core routes
+  const localizedCoreRoutes = locales.flatMap(locale => 
+    [
+      '',
+      '/services',
+      '/pricing',
+      '/about',
+      '/blog',
+      '/contact'
+    ].map(route => ({
+      url: `${baseUrl}/${locale}${route}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: route === '' ? 0.9 : 0.7,
+    }))
+  )
+
   const cityRoutes = CITIES.map(city => ({
     url: `${baseUrl}/services/credit-rectification/${city.toLowerCase().replace(/\s+/g, '-')}`,
     lastModified: new Date(),
@@ -47,6 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   let blogRoutes: any[] = []
+  let localizedBlogRoutes: any[] = []
   
   if (supabaseUrl && supabaseKey) {
     const supabase = createClient(supabaseUrl, supabaseKey)
@@ -58,7 +78,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))
+
+    localizedBlogRoutes = locales.flatMap(locale => 
+      (blogs || []).map(post => ({
+        url: `${baseUrl}/${locale}/blog/${post.slug}`,
+        lastModified: new Date(post.published_at || new Date()),
+        changeFrequency: 'weekly' as const,
+        priority: 0.6,
+      }))
+    )
   }
 
-  return [...coreRoutes, ...cityRoutes, ...blogRoutes]
+  return [...coreRoutes, ...localizedCoreRoutes, ...cityRoutes, ...blogRoutes, ...localizedBlogRoutes]
 }

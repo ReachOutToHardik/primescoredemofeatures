@@ -1,0 +1,22 @@
+{
+  "blog": {
+    "title": "Knowledge Hub",
+    "titleColored": "Hub",
+    "subtitle": "Expert insights, step-by-step guides, and financial tips from industry specialists to help you build and maintain exceptional credit health.",
+    "noBlogsFound": "No blog posts found.",
+    "allCategory": "All",
+    "readFullArticle": "Read Full Article",
+    "noPostsInCategory": "No posts found in this category.",
+    "readTimeSuffix": "read"
+  },
+  "blogPost": {
+    "backToHub": "Back to Hub",
+    "authorLabel": "Author",
+    "viewsLabel": "views",
+    "shareLabel": "Share",
+    "ctaTitle": "Struggling with your credit score?",
+    "ctaText": "Our experts can help you dispute errors and build a roadmap to financial freedom. Join thousands of users who have transformed their credit with Primescore.",
+    "ctaConsultation": "Get Free Consultation",
+    "ctaReport": "Analyze My Report"
+  }
+}
