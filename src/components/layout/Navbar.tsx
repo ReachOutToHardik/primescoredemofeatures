@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
@@ -33,8 +33,10 @@ function NavItem({ to, label, onClick }: { to: string; label: string; onClick?: 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [langOpen, setLangOpen] = useState(false)
   const [theme, setTheme] = useState<'dark' | 'light'>('light') // Default to light for better visibility on most pages
   const pathname = usePathname()
+  const langRef = useRef<HTMLDivElement>(null)
 
   const links = useMemo(
     () => [
@@ -50,7 +52,18 @@ export default function Navbar() {
 
   useEffect(() => {
     setMobileOpen(false)
+    setLangOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
 
   useEffect(() => {
     // Intersection Observer to detect section themes
@@ -251,9 +264,10 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-4 md:flex">
           {/* Language Switcher Dropdown */}
-          <div className="relative group/lang">
+          <div className="relative" ref={langRef}>
             <button
               type="button"
+              onClick={() => setLangOpen(!langOpen)}
               className={[
                 'rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-widest border transition-all flex items-center gap-1.5',
                 theme === 'dark' 
@@ -264,7 +278,10 @@ export default function Navbar() {
               🌐 {pathname.split('/')[1] && ['hi','ta','te','kn','ml','mr','gu','bn','pa','ur'].includes(pathname.split('/')[1]) ? pathname.split('/')[1] : 'en'}
             </button>
             <div className={[
-              'absolute top-full right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl p-2 border shadow-2xl opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-50 flex flex-col gap-1',
+              'absolute top-full right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-2xl p-2 border shadow-2xl transition-all duration-200 z-50 flex flex-col gap-1',
+              langOpen
+                ? 'opacity-100 scale-100 pointer-events-auto'
+                : 'opacity-0 scale-95 pointer-events-none',
               theme === 'dark' 
                 ? 'bg-black/90 border-white/10 text-white' 
                 : 'bg-white border-brandNavy/10 text-brandNavy'
