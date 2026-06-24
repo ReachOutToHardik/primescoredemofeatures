@@ -576,11 +576,11 @@ export default function Home() {
 
           <Reveal delay={0.2}>
             <div className="mt-16 flex flex-wrap items-center justify-center gap-10 lg:gap-20 opacity-80 hover:opacity-100 transition-all duration-700">
-               <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/MSME.png" alt="MSME" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/RBIH.png" alt="RBIH" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/I-hub.png" alt="I-hub" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/MSME.png" alt="MSME" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/RBIH.png" alt="RBIH" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+               <img src="/trusted%20by/I-hub.png" alt="I-hub" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
             </div>
           </Reveal>
         </div>

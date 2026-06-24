@@ -19,7 +19,7 @@ export default function Preloader() {
 
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 2200) // Adjust time for the animation
+    }, 1000) // Adjust time for the animation
     return () => clearTimeout(timer)
   }, [])
 
@@ -30,7 +30,7 @@ export default function Preloader() {
           initial={{ opacity: 1 }}
           exit={{ 
             opacity: 0,
-            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+            transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } 
           }}
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-night"
         >
@@ -42,7 +42,7 @@ export default function Preloader() {
                 scale: 1, 
                 opacity: 1, 
                 filter: 'blur(0px)',
-                transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } 
+                transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
               }}
               className="mb-8"
             >
@@ -60,7 +60,7 @@ export default function Preloader() {
                 initial={{ x: '-100%' }}
                 animate={{ 
                   x: '0%',
-                  transition: { duration: 2, ease: "easeInOut" } 
+                  transition: { duration: 0.8, ease: "easeInOut" } 
                 }}
                 className="h-full w-full bg-brandRed"
               />
@@ -71,7 +71,7 @@ export default function Preloader() {
               animate={{ 
                 opacity: 1, 
                 y: 0,
-                transition: { delay: 0.5, duration: 0.5 } 
+                transition: { delay: 0.3, duration: 0.3 } 
               }}
               className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40"
             >
