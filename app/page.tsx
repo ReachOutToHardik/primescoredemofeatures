@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-// import Home from '../src/views/Home' // [ORIGINAL]
-import AiHome from '../src/views/AiHome'
+import Home from '../src/views/Home'
 
 export const metadata: Metadata = {
   title: 'Primescore — Fix Your CIBIL Score. Unlock Your Future.',
@@ -8,6 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  // return <Home /> // [ORIGINAL]
-  return <AiHome />
+  return <Home />
 }

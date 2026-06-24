@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import AiHome from '../../src/views/AiHome'
+import Home from '../../src/views/Home'
 
 export const metadata: Metadata = {
   title: 'PrimeScore AI — Autonomous Credit Rectification',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function AiHomePage() {
-  return <AiHome />
+  return <Home />
 }

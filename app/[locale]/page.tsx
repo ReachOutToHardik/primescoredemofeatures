@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import AiHome from '../../src/views/AiHome'
+import Home from '../../src/views/Home'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -46,5 +46,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function LocalizedHomePage() {
   // Return the main Homepage view directly
-  return <AiHome />
+  return <Home />
 }
