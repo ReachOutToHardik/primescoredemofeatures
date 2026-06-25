@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
-import { Briefcase, User, Mail, Phone, FileText, Globe, Check, X, Clock, Plus, Trash, MapPin } from 'lucide-react'
+import { Briefcase, User, Mail, Phone, FileText, Globe, Check, X, Clock, Plus, Trash, MapPin, Pencil } from 'lucide-react'
 import { FaLinkedin } from 'react-icons/fa6'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -87,8 +87,9 @@ export default function AdminCareersPage() {
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
 
-  // New Opening Form State
+  // New/Editing Opening Form State
   const [showAddForm, setShowAddForm] = useState(false)
+  const [editingJobId, setEditingJobId] = useState<string | null>(null)
   const [newJob, setNewJob] = useState({
     title: '',
     type: 'job' as 'job' | 'internship',
@@ -120,10 +121,10 @@ export default function AdminCareersPage() {
 
   // Sync editor content when resetting form
   useEffect(() => {
-    if (editor && !showAddForm) {
+    if (editor && !showAddForm && !editingJobId) {
       editor.commands.setContent('<p>Describe the role responsibilities and overview here...</p>')
     }
-  }, [showAddForm, editor])
+  }, [showAddForm, editingJobId, editor])
 
   const fetchData = async () => {
     try {
@@ -174,11 +175,20 @@ export default function AdminCareersPage() {
         duration_months: newJob.duration_months === '' ? null : Number(newJob.duration_months)
       }
 
-      const { error } = await supabase
-        .from('job_openings')
-        .insert(payload)
+      if (editingJobId) {
+        const { error } = await supabase
+          .from('job_openings')
+          .update(payload)
+          .eq('id', editingJobId)
 
-      if (error) throw error
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from('job_openings')
+          .insert(payload)
+
+        if (error) throw error
+      }
 
       setNewJob({
         title: '',
@@ -193,13 +203,35 @@ export default function AdminCareersPage() {
         location_type: 'Remote',
         duration_months: ''
       })
+      setEditingJobId(null)
       setShowAddForm(false)
       fetchData()
     } catch (err) {
-      alert('Failed to add job opening: ' + (err as Error).message)
+      alert('Failed to save job opening: ' + (err as Error).message)
     } finally {
       setActionLoading(false)
     }
+  }
+
+  const handleStartEdit = (job: JobOpening) => {
+    setEditingJobId(job.id)
+    setNewJob({
+      title: job.title,
+      type: job.type,
+      department: job.department,
+      location: job.location,
+      description: job.description,
+      requirements: job.requirements,
+      min_pay: job.min_pay ?? '',
+      max_pay: job.max_pay ?? '',
+      hide_pay: job.hide_pay ?? false,
+      location_type: job.location_type || 'Remote',
+      duration_months: job.duration_months ?? ''
+    })
+    if (editor) {
+      editor.commands.setContent(job.description)
+    }
+    setShowAddForm(true)
   }
 
   const handleToggleJobActive = async (id: string, currentStatus: boolean) => {
@@ -295,7 +327,9 @@ export default function AdminCareersPage() {
 
           {showAddForm && (
             <form onSubmit={handleAddJob} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-8 flex flex-col gap-5">
-              <h3 className="text-sm font-bold uppercase tracking-wide text-slate-400 mb-2">Create New Position</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wide text-slate-400 mb-2">
+                {editingJobId ? 'Edit Position' : 'Create New Position'}
+              </h3>
               
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
@@ -430,7 +464,23 @@ export default function AdminCareersPage() {
               <div className="flex gap-3 justify-end mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowAddForm(false)}
+                  onClick={() => {
+                    setShowAddForm(false)
+                    setEditingJobId(null)
+                    setNewJob({
+                      title: '',
+                      type: 'job',
+                      department: '',
+                      location: '',
+                      description: '',
+                      requirements: '',
+                      min_pay: '',
+                      max_pay: '',
+                      hide_pay: false,
+                      location_type: 'Remote',
+                      duration_months: ''
+                    })
+                  }}
                   className="px-4 py-2.5 rounded-xl border border-slate-250 text-slate-500 hover:text-slate-800 text-xs font-bold uppercase tracking-wider transition-all"
                 >
                   Cancel
@@ -440,7 +490,7 @@ export default function AdminCareersPage() {
                   disabled={actionLoading}
                   className="bg-[#10b981] hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50"
                 >
-                  {actionLoading ? 'Publishing...' : 'Publish Listing'}
+                  {actionLoading ? 'Saving...' : editingJobId ? 'Save Changes' : 'Publish Listing'}
                 </button>
               </div>
             </form>
@@ -488,8 +538,16 @@ export default function AdminCareersPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
+                          onClick={() => handleStartEdit(job)}
+                          className="p-1.5 text-slate-400 hover:text-[#10b981] transition-colors rounded-lg hover:bg-emerald-50 mr-2 inline-flex items-center"
+                          title="Edit Position"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
                           onClick={() => handleDeleteJob(job.id)}
-                          className="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
+                          className="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50 inline-flex items-center"
+                          title="Delete Position"
                         >
                           <Trash size={16} />
                         </button>
