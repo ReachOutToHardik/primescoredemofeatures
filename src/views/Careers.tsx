@@ -537,10 +537,7 @@ export default function Careers() {
               
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-slate-100">
                 <div className="w-full">
-                  <span className="text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 bg-slate-100 rounded-lg text-slate-500 border border-slate-200">
-                    {selectedJob.department}
-                  </span>
-                  <h1 className="text-2xl sm:text-4xl font-extrabold text-brandNavy tracking-tight leading-tight mt-4">
+                  <h1 className="text-2xl sm:text-4xl font-extrabold text-brandNavy tracking-tight leading-tight mt-2">
                     {selectedJob.title}
                   </h1>
                 </div>
@@ -692,10 +689,7 @@ export default function Careers() {
                       className="bg-white border border-brandNavy/10 rounded-2xl p-6 shadow-sm hover:shadow-card hover:-translate-y-1 hover:border-brandNavy/25 transition-all duration-300 cursor-pointer flex flex-col justify-between text-left"
                     >
                       <div>
-                        <span className="text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 bg-slate-100 rounded-lg text-slate-500 border border-slate-200 inline-block">
-                          {job.department}
-                        </span>
-                        <h3 className="text-lg font-extrabold text-brandNavy tracking-tight leading-snug mt-3 line-clamp-2">
+                        <h3 className="text-lg font-extrabold text-brandNavy tracking-tight leading-snug mt-1 line-clamp-2">
                           {job.title}
                         </h3>
                         
