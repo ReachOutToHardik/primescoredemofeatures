@@ -19,7 +19,9 @@ import {
   Menu, 
   X,
   Eye,
-  EyeOff
+  EyeOff,
+  Briefcase,
+  Award
 } from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -188,8 +190,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setLoginError('')
     setLoggingIn(true)
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) setLoginError(error.message)
+      const { data: { session }, error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setLoginError(error.message)
+        return
+      }
+
+      if (session?.user) {
+        // Retrieve and check the user's role immediately
+        const { data: roleData, error: roleErr } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single()
+
+        const ALLOWED_CONSOLE_ROLES = ['super_admin', 'manager', 'writer', 'sales', 'analyst']
+        
+        if (roleErr || !roleData || !ALLOWED_CONSOLE_ROLES.includes(roleData.role)) {
+          // Instantly sign out to revoke session tokens since user is not authorized
+          await supabase.auth.signOut()
+          setLoginError('Access denied: Your account is not registered as an authorized console user.')
+          setUser(null)
+          setRole(null)
+        }
+      }
     } catch (err: any) {
       setLoginError(err.message || 'An unexpected error occurred.')
     } finally {
@@ -390,6 +414,12 @@ create policy "Allow read for all users" on public.user_roles
     if (pathname.startsWith('/admin/team')) {
       return ['super_admin'].includes(role || '')
     }
+    if (pathname.startsWith('/admin/careers')) {
+      return ['super_admin', 'manager'].includes(role || '')
+    }
+    if (pathname.startsWith('/admin/credentials')) {
+      return ['super_admin', 'manager'].includes(role || '')
+    }
     return true // Default fallback for unknown sub-paths
   })()
 
@@ -412,6 +442,18 @@ create policy "Allow read for all users" on public.user_roles
       path: '/admin/leads',
       icon: Contact,
       roles: ['super_admin', 'manager', 'sales']
+    },
+    {
+      name: 'Careers',
+      path: '/admin/careers',
+      icon: Briefcase,
+      roles: ['super_admin', 'manager']
+    },
+    {
+      name: 'Credentials',
+      path: '/admin/credentials',
+      icon: Award,
+      roles: ['super_admin', 'manager']
     },
     {
       name: 'Analytics',

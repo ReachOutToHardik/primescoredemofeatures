@@ -53,6 +53,10 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false)
     setLangOpen(false)
+    
+    // Set initial theme based on whether route requires dark background
+    const isDarkRoute = false
+    setTheme(isDarkRoute ? 'dark' : 'light')
   }, [pathname])
 
   useEffect(() => {
@@ -66,6 +70,8 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
+    const isDarkRoute = false
+
     // Intersection Observer to detect section themes
     const observerOptions = {
       root: null,
@@ -88,13 +94,17 @@ export default function Navbar() {
       if (activeTheme) {
         setTheme(activeTheme)
       } else if (window.scrollY < 100) {
-        // If no section is clearly intersecting and we are at the top,
-        // check if the very first section has a theme
-        const firstSection = document.querySelector('[data-theme]')
-        if (firstSection) {
-          const firstTheme = firstSection.getAttribute('data-theme')
-          if (firstTheme === 'dark' || firstTheme === 'light') {
-            setTheme(firstTheme as 'dark' | 'light')
+        if (isDarkRoute) {
+          setTheme('dark')
+        } else {
+          // If no section is clearly intersecting and we are at the top,
+          // check if the very first section has a theme
+          const firstSection = document.querySelector('[data-theme]')
+          if (firstSection) {
+            const firstTheme = firstSection.getAttribute('data-theme')
+            if (firstTheme === 'dark' || firstTheme === 'light') {
+              setTheme(firstTheme as 'dark' | 'light')
+            }
           }
         }
       }
@@ -107,7 +117,7 @@ export default function Navbar() {
       sections.forEach((section) => observer.observe(section))
     } else {
       // Fallback for pages with no data-theme markers
-      setTheme('light')
+      setTheme(isDarkRoute ? 'dark' : 'light')
     }
 
     const scrollHandler = () => setIsScrolled(window.scrollY > 20)

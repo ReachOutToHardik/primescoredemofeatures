@@ -1,6 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-signature {
+  font-family: 'Alex Brush', cursive;
+}
+
+.font-serif-certificate {
+  font-family: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+
 
 html {
   scroll-behavior: smooth;

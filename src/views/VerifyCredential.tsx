@@ -1,0 +1,224 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { ShieldCheck, Calendar, Award, XCircle } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+import Link from 'next/link'
+
+interface Credential {
+  id: string
+  intern_name: string
+  role: string
+  start_date: string
+  end_date: string
+  issue_date: string
+  status: 'active' | 'revoked'
+}
+
+export default function VerifyCredential({ id }: { id: string }) {
+  const [credential, setCredential] = useState<Credential | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const fetchCredential = async () => {
+      try {
+        if (!supabase) {
+          setLoading(false)
+          return
+        }
+        const { data, error } = await supabase
+          .from('intern_credentials')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error || !data) {
+          setError(true)
+        } else {
+          setCredential(data)
+        }
+      } catch (err) {
+        console.error('Error fetching credential:', err)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCredential()
+  }, [id])
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F8F9FB] font-body text-brandNavy pt-28 pb-24 flex items-center justify-center relative overflow-hidden" data-theme="light">
+      {/* Background lights */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute inset-0 bg-heroRadial opacity-[0.8]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brandBlue/10 blur-[150px] rounded-full" />
+      </div>
+
+      <div className="w-full max-w-4xl px-4 relative z-10">
+        {loading ? (
+          <div className="text-center py-20 flex flex-col items-center gap-4">
+            <div className="h-10 w-10 rounded-full border-2 border-t-brandBlue border-brandNavy/15 animate-spin" />
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Verifying credential ledger...</p>
+          </div>
+        ) : error || !credential ? (
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="rounded-3xl border border-red-500/20 bg-white p-10 text-center shadow-md backdrop-blur-md max-w-md mx-auto"
+          >
+            <div className="grid h-16 w-16 place-items-center rounded-2xl bg-red-500/10 mx-auto mb-6 text-red-500">
+              <XCircle className="h-8 w-8" />
+            </div>
+            <h1 className="text-2xl font-black text-brandNavy mb-2">Invalid Credential ID</h1>
+            <p className="text-textSecondary text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+              This certificate code could not be verified in the Primescore credential registry. Please check the URL or check with the issuer.
+            </p>
+            <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brandBlue hover:text-blue-600 transition-colors">
+              Return to Homepage
+            </Link>
+          </motion.div>
+        ) : (
+          <div className="flex flex-col gap-10 items-center w-full">
+            
+            {/* 1. The Verification Registry Card */}
+            <motion.div
+              initial={{ scale: 0.97, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="relative w-full max-w-2xl rounded-3xl border border-brandNavy/10 bg-white p-8 sm:p-12 shadow-card backdrop-blur-xl overflow-hidden"
+            >
+              {/* Hologram/Gold seal overlay */}
+              <div className="absolute top-0 right-0 h-40 w-40 translate-x-12 -translate-y-12 rounded-full bg-brandBlue/20 blur-3xl pointer-events-none" />
+
+              {/* Top Seal Banner */}
+              <div className="flex justify-between items-center gap-4 flex-col sm:flex-row pb-8 border-b border-brandNavy/10">
+                <div>
+                  <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-[0.2em] mb-2 bg-emerald-500/10 rounded-full px-3 py-1 w-max">
+                    <ShieldCheck className="h-4 w-4" /> SECURELY VERIFIED
+                  </div>
+                  <h1 className="text-xs font-mono text-textSecondary mt-2">Ledger ID: {credential.id}</h1>
+                </div>
+                <img id="primescore-logo" src="/lightmode_Logo.png" alt="Primescore" className="h-8 w-auto" />
+              </div>
+
+              {/* Recipient Details */}
+              <div className="mt-8 text-center sm:text-left">
+                <p className="text-xs font-bold uppercase tracking-widest text-textSecondary">This certifies that</p>
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-brandNavy mt-3 font-display">{credential.intern_name}</h2>
+                <p className="text-textSecondary mt-6 text-sm sm:text-base leading-relaxed">
+                  has successfully completed their internship at Primescore. They served as an active contributor in the domain of <span className="text-brandNavy font-bold">{credential.role}</span>.
+                </p>
+              </div>
+
+              {/* Date Details */}
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 bg-slate-50 p-5 rounded-2xl border border-brandNavy/5">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tenure Period</p>
+                  <div className="flex items-center gap-2 mt-1.5 text-sm text-brandNavy font-semibold">
+                    <Calendar className="h-4 w-4 text-brandBlue" />
+                    {formatDate(credential.start_date)} – {formatDate(credential.end_date)}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Date of Issuance</p>
+                  <div className="flex items-center gap-2 mt-1.5 text-sm text-brandNavy font-semibold">
+                    <Award className="h-4 w-4 text-brandBlue" />
+                    {formatDate(credential.issue_date)}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Separator / Headline */}
+            <div className="text-center mt-2 flex flex-col items-center">
+              <div className="h-px w-20 bg-slate-200 mb-3" />
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400">Verifiable Internship Certificate</h4>
+            </div>
+
+            {/* 2. The Visual Certificate Card */}
+            <motion.div
+              initial={{ scale: 0.97, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="relative w-full aspect-[297/210] rounded-2xl border border-brandNavy/10 bg-white shadow-2xl overflow-hidden p-8 sm:p-12 md:p-14 lg:p-16 flex flex-col justify-between"
+              style={{
+                backgroundImage: "url('/certificate_bg.png')",
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            >
+              {/* Top Spacing to align with background elements */}
+              <div className="h-4 sm:h-6 md:h-8" />
+
+              {/* Certificate Content Body */}
+              <div className="text-center flex-grow flex flex-col justify-center select-text">
+                <h2 className="text-xs sm:text-lg md:text-xl lg:text-3xl font-extrabold uppercase tracking-[0.22em] text-[#1A254B]">
+                  Certificate of Internship
+                </h2>
+                <p className="text-[8px] sm:text-[10px] md:text-xs text-slate-450 uppercase tracking-[0.2em] mt-3 sm:mt-5">
+                  This is to certify that
+                </p>
+                <h3 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#1A254B] tracking-tight mt-2 sm:mt-4">
+                  {credential.intern_name}
+                </h3>
+                <p className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-slate-650 max-w-2xl mx-auto mt-4 sm:mt-6 leading-relaxed px-6">
+                  has successfully completed a professional internship program as a <span className="font-bold text-[#1A254B]">{credential.role}</span> at <span className="font-bold text-[#1A254B]">Primescore</span> from <span className="font-bold text-[#1A254B]">{formatDate(credential.start_date)}</span> to <span className="font-bold text-[#1A254B]">{formatDate(credential.end_date)}</span>.
+                </p>
+              </div>
+
+              {/* Accreditations Logos */}
+              <div className="my-3 sm:my-5 text-center">
+                <p className="text-[5px] sm:text-[7px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Primescore is Certified & Recognized By</p>
+                <div className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 px-6">
+                  <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
+                  <img src="/trusted%20by/IStart.png" alt="iStart" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
+                  <img src="/trusted%20by/MSME.png" alt="MSME" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
+                  <img src="/trusted%20by/RBIH.png" alt="RBIH" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
+                  <img src="/trusted%20by/I-hub.png" alt="iHub" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
+                </div>
+              </div>
+
+              {/* Bottom Footer Section: Verification & Signature */}
+              <div className="pt-3 sm:pt-4 border-t border-slate-200/50 flex flex-row justify-between items-center px-4 sm:px-10">
+                
+                {/* Verification Detail Box */}
+                <div className="text-left">
+                  <p className="text-[6px] sm:text-[8px] font-bold text-[#1A254B] uppercase tracking-wider">Date of Issuance</p>
+                  <p className="text-[7px] sm:text-[9px] font-bold text-slate-700 mt-0.5">{formatDate(credential.issue_date)}</p>
+                  <p className="text-[5px] sm:text-[7px] text-slate-400 font-mono mt-1">LEDGER ID: {credential.id}</p>
+                  <p className="text-[5px] sm:text-[6px] text-slate-400 font-mono truncate">Verify at: primescore.in/verify/{credential.id}</p>
+                </div>
+
+                 {/* CEO Signature Block */}
+                 <div className="text-center">
+                   <span className="text-[10px] sm:text-sm font-bold text-[#1A254B] block mb-1.5 select-none">
+                     Sawai Singh
+                   </span>
+                   <div className="w-16 sm:w-24 h-px bg-slate-300 mx-auto" />
+                   <p className="text-[6px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                     Founder & CEO
+                   </p>
+                 </div>
+
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
