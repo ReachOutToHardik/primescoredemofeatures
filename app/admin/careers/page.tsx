@@ -87,13 +87,18 @@ export default function AdminCareersPage() {
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
 
+  // Search & Filter State
+  const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [jobNameFilter, setJobNameFilter] = useState<string>('all')
+
   // New/Editing Opening Form State
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingJobId, setEditingJobId] = useState<string | null>(null)
   const [newJob, setNewJob] = useState({
     title: '',
     type: 'job' as 'job' | 'internship',
-    department: '',
     location: '',
     description: '',
     requirements: '',
@@ -164,7 +169,6 @@ export default function AdminCareersPage() {
       const payload = {
         title: newJob.title,
         type: newJob.type,
-        department: newJob.department,
         location: newJob.location || 'Remote',
         description: newJob.description || '<p>Describe the role responsibilities and overview here...</p>',
         requirements: newJob.requirements,
@@ -193,7 +197,6 @@ export default function AdminCareersPage() {
       setNewJob({
         title: '',
         type: 'job',
-        department: '',
         location: '',
         description: '',
         requirements: '',
@@ -218,7 +221,6 @@ export default function AdminCareersPage() {
     setNewJob({
       title: job.title,
       type: job.type,
-      department: job.department,
       location: job.location,
       description: job.description,
       requirements: job.requirements,
@@ -265,7 +267,10 @@ export default function AdminCareersPage() {
     }
   }
 
-  const handleUpdateAppStatus = async (appId: string, status: string) => {
+  const handleUpdateAppStatus = async (appId: string, status: 'pending' | 'reviewed' | 'shortlisted' | 'rejected') => {
+    // Optimistic UI update
+    setApplications(prev => prev.map(app => app.id === appId ? { ...app, status } : app))
+
     try {
       if (!supabase) return
       const { error } = await supabase
@@ -274,9 +279,16 @@ export default function AdminCareersPage() {
         .eq('id', appId)
 
       if (error) throw error
-      fetchData()
+      
+      // Fetch latest updates
+      const { data: updatedApps } = await supabase
+        .from('job_applications')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (updatedApps) setApplications(updatedApps)
     } catch (err) {
-      alert('Failed to update status: ' + (err as Error).message)
+      alert('Failed to update status in database: ' + (err as Error).message)
+      fetchData() // Revert
     }
   }
 
@@ -340,17 +352,6 @@ export default function AdminCareersPage() {
                     placeholder="Senior React Developer"
                     value={newJob.title}
                     onChange={e => setNewJob(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-slate-500">Department</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Engineering"
-                    value={newJob.department}
-                    onChange={e => setNewJob(prev => ({ ...prev, department: e.target.value }))}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm"
                   />
                 </div>
@@ -506,7 +507,6 @@ export default function AdminCareersPage() {
                 <thead className="bg-slate-50 text-[10px] font-bold uppercase text-slate-400 tracking-widest border-b border-slate-200">
                   <tr>
                     <th className="px-6 py-4">Title</th>
-                    <th className="px-6 py-4">Department</th>
                     <th className="px-6 py-4">Type</th>
                     <th className="px-6 py-4">Location</th>
                     <th className="px-6 py-4">Status</th>
@@ -517,7 +517,6 @@ export default function AdminCareersPage() {
                   {openings.map(job => (
                     <tr key={job.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-6 py-4 font-bold text-slate-900">{job.title}</td>
-                      <td className="px-6 py-4">{job.department}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full ${
                           job.type === 'job' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
@@ -561,16 +560,93 @@ export default function AdminCareersPage() {
         </div>
       ) : (
         <div>
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Candidate Applications</h2>
+          {(() => {
+            const uniqueJobNames = Array.from(new Set(applications
+              .filter(app => {
+                if (typeFilter === 'all') return true
+                const isInternship = app.role_applied.toLowerCase().includes('internship')
+                return typeFilter === 'internship' ? isInternship : !isInternship
+              })
+              .map(app => app.role_applied)
+            ))
 
-          {applications.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-500 text-sm font-medium">
-              No job applications received yet.
-            </div>
-          ) : (
-            <div className="flex flex-col gap-6">
-              {applications.map(app => (
-                <div key={app.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative flex flex-col justify-between gap-6 hover:shadow-md transition-shadow">
+            const filteredApps = applications.filter(app => {
+              const searchLower = searchQuery.toLowerCase()
+              const matchesSearch = 
+                app.name.toLowerCase().includes(searchLower) ||
+                app.email.toLowerCase().includes(searchLower) ||
+                app.phone.toLowerCase().includes(searchLower) ||
+                app.role_applied.toLowerCase().includes(searchLower)
+
+              const matchesStatus = statusFilter === 'all' || app.status === statusFilter
+
+              const isInternship = app.role_applied.toLowerCase().includes('internship')
+              const matchesType = typeFilter === 'all' || (typeFilter === 'internship' ? isInternship : !isInternship)
+
+              const matchesJobName = jobNameFilter === 'all' || app.role_applied === jobNameFilter
+
+              return matchesSearch && matchesStatus && matchesType && matchesJobName
+            })
+
+            return (
+              <>
+                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
+                  <h2 className="text-xl font-bold text-slate-900">Candidate Applications ({filteredApps.length})</h2>
+                  
+                  <div className="flex flex-wrap gap-3 w-full xl:w-auto">
+                    <input
+                      type="text"
+                      placeholder="Search name, email, role..."
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm w-full sm:w-64"
+                    />
+                    <select
+                      value={statusFilter}
+                      onChange={e => setStatusFilter(e.target.value)}
+                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm font-semibold cursor-pointer"
+                    >
+                      <option value="all">All Statuses</option>
+                      <option value="pending">Pending</option>
+                      <option value="reviewed">Reviewed</option>
+                      <option value="shortlisted">Shortlisted</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+
+                    <select
+                      value={typeFilter}
+                      onChange={e => {
+                        setTypeFilter(e.target.value)
+                        setJobNameFilter('all')
+                      }}
+                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm font-semibold cursor-pointer"
+                    >
+                      <option value="all">All Types</option>
+                      <option value="job">Jobs Only</option>
+                      <option value="internship">Internships Only</option>
+                    </select>
+
+                    <select
+                      value={jobNameFilter}
+                      onChange={e => setJobNameFilter(e.target.value)}
+                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm font-semibold cursor-pointer max-w-xs"
+                    >
+                      <option value="all">All Positions</option>
+                      {uniqueJobNames.map(name => (
+                        <option key={name} value={name}>{name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {filteredApps.length === 0 ? (
+                  <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-500 text-sm font-medium">
+                    No matching applications found.
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-6">
+                    {filteredApps.map(app => (
+                      <div key={app.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative flex flex-col justify-between gap-6 hover:shadow-md transition-shadow">
                   <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                     <div className="flex items-start gap-4">
                       <div className="grid h-12 w-12 place-items-center rounded-xl bg-slate-100 text-slate-600">
@@ -679,7 +755,10 @@ export default function AdminCareersPage() {
               ))}
             </div>
           )}
-        </div>
+        </>
+      )
+    })()}
+  </div>
       )}
     </div>
   )
