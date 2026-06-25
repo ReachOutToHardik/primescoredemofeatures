@@ -152,7 +152,7 @@ export default function VerifyCredential({ id }: { id: string }) {
               initial={{ scale: 0.97, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative w-full aspect-[297/210] rounded-2xl border border-brandNavy/10 bg-white shadow-2xl overflow-hidden p-8 sm:p-12 md:p-14 lg:p-16 flex flex-col justify-between"
+              className="relative w-full aspect-[297/210] rounded-2xl border border-brandNavy/10 bg-white shadow-2xl overflow-hidden"
               style={{
                 backgroundImage: "url('/certificate_bg.png')",
                 backgroundSize: '100% 100%',
@@ -160,61 +160,44 @@ export default function VerifyCredential({ id }: { id: string }) {
                 backgroundRepeat: 'no-repeat'
               }}
             >
-              {/* Top Spacing to align with background elements */}
-              <div className="h-4 sm:h-6 md:h-8" />
+              {/* Overlay Content */}
+              <div className="absolute inset-0 flex flex-col justify-between p-8 sm:p-12 md:p-14 lg:p-16 pointer-events-none select-text">
+                {/* Top Spacer to push content down past the background header */}
+                <div className="h-[28%] sm:h-[30%]" />
 
-              {/* Certificate Content Body */}
-              <div className="text-center flex-grow flex flex-col justify-center select-text">
-                <h2 className="text-xs sm:text-lg md:text-xl lg:text-3xl font-extrabold uppercase tracking-[0.22em] text-[#1A254B]">
-                  Certificate of Internship
-                </h2>
-                <p className="text-[8px] sm:text-[10px] md:text-xs text-slate-450 uppercase tracking-[0.2em] mt-3 sm:mt-5">
-                  This is to certify that
-                </p>
-                <h3 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#1A254B] tracking-tight mt-2 sm:mt-4">
-                  {credential.intern_name}
-                </h3>
-                <p className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-slate-650 max-w-2xl mx-auto mt-4 sm:mt-6 leading-relaxed px-6">
-                  has successfully completed a professional internship program as a <span className="font-bold text-[#1A254B]">{credential.role}</span> at <span className="font-bold text-[#1A254B]">Primescore</span> from <span className="font-bold text-[#1A254B]">{formatDate(credential.start_date)}</span> to <span className="font-bold text-[#1A254B]">{formatDate(credential.end_date)}</span>.
-                </p>
-              </div>
-
-              {/* Accreditations Logos */}
-              <div className="my-3 sm:my-5 text-center">
-                <p className="text-[5px] sm:text-[7px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Primescore is Certified & Recognized By</p>
-                <div className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 px-6">
-                  <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
-                  <img src="/trusted%20by/IStart.png" alt="iStart" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
-                  <img src="/trusted%20by/MSME.png" alt="MSME" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
-                  <img src="/trusted%20by/RBIH.png" alt="RBIH" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
-                  <img src="/trusted%20by/I-hub.png" alt="iHub" className="h-4 sm:h-6 md:h-7 lg:h-8 w-auto object-contain" />
-                </div>
-              </div>
-
-              {/* Bottom Footer Section: Verification & Signature */}
-              <div className="pt-3 sm:pt-4 border-t border-slate-200/50 flex flex-row justify-between items-center px-4 sm:px-10">
-                
-                {/* Verification Detail Box */}
-                <div className="text-left">
-                  <p className="text-[6px] sm:text-[8px] font-bold text-[#1A254B] uppercase tracking-wider">Date of Issuance</p>
-                  <p className="text-[7px] sm:text-[9px] font-bold text-slate-700 mt-0.5">{formatDate(credential.issue_date)}</p>
-                  <p className="text-[5px] sm:text-[7px] text-slate-400 font-mono mt-1">LEDGER ID: {credential.id}</p>
-                  <p className="text-[5px] sm:text-[6px] text-slate-400 font-mono truncate">Verify at: primescore.in/verify/{credential.id}</p>
+                {/* Certifying Paragraph Section */}
+                <div className="text-center flex-grow flex flex-col justify-center items-center px-6 sm:px-12 md:px-16 lg:px-20">
+                  <p className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-slate-400 uppercase tracking-[0.25em] font-bold">
+                    This is to certify that
+                  </p>
+                  <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-[#1A254B] tracking-tight mt-1 sm:mt-2.5 mb-1.5 sm:mb-3">
+                    {credential.intern_name}
+                  </h3>
+                  <p className="text-[7px] sm:text-[10px] md:text-[12px] lg:text-sm text-slate-600 font-medium leading-relaxed max-w-xl sm:max-w-2xl mt-1 sm:mt-2">
+                    has successfully completed a professional internship program as a{" "}
+                    <span className="font-bold text-[#1A254B]">{credential.role}</span>{" "}
+                    at <span className="font-semibold text-brandBlue">Primescore</span> from{" "}
+                    <span className="font-bold text-[#1A254B]">{formatDate(credential.start_date)}</span> to{" "}
+                    <span className="font-bold text-[#1A254B]">{formatDate(credential.end_date)}</span> and has demonstrated outstanding dedication and conduct.
+                  </p>
                 </div>
 
-                 {/* CEO Signature Block */}
-                 <div className="text-center">
-                   <span className="text-[10px] sm:text-sm font-bold text-[#1A254B] block mb-1.5 select-none">
-                     Sawai Singh
-                   </span>
-                   <div className="w-16 sm:w-24 h-px bg-slate-300 mx-auto" />
-                   <p className="text-[6px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                     Founder & CEO
-                   </p>
-                 </div>
+                {/* Bottom Footer Section */}
+                <div className="h-[25%] sm:h-[28%] flex items-end justify-between px-2 sm:px-6 pb-1 sm:pb-3">
+                  {/* Left Corner: Date of Issuance & Credential ID */}
+                  <div className="text-left font-body text-[5px] sm:text-[7px] md:text-[8px] lg:text-[10px] leading-normal text-slate-500">
+                    <div className="font-bold text-[#1A254B] uppercase tracking-wider">Date of Issuance</div>
+                    <div className="font-semibold text-slate-700 mt-0.5">{formatDate(credential.issue_date)}</div>
+                    <div className="font-mono text-slate-450 mt-1 uppercase tracking-wide">ID: {credential.id}</div>
+                  </div>
 
+                  {/* Right Corner: Verification Info */}
+                  <div className="text-right font-body text-[4px] sm:text-[6px] md:text-[7px] lg:text-[8px] leading-normal text-slate-400 font-mono">
+                    <div>Verify authenticity at:</div>
+                    <div className="font-semibold text-brandBlue">primescore.in/verify/{credential.id}</div>
+                  </div>
+                </div>
               </div>
-
             </motion.div>
           </div>
         )}
