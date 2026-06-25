@@ -114,7 +114,7 @@ export default function AdminCareersPage() {
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none focus:outline-none min-h-[150px] p-4 text-slate-800',
+        class: 'prose prose-base max-w-none focus:outline-none min-h-[350px] p-6 text-slate-800',
       },
     },
   })
@@ -443,7 +443,7 @@ export default function AdminCareersPage() {
                 <label className="text-xs font-bold text-slate-500">Position Description (Rich Text Body)</label>
                 <div className="bg-white border border-slate-250 rounded-2xl overflow-hidden focus-within:border-emerald-500 transition-all shadow-sm">
                   <MenuBar editor={editor} />
-                  <div className="min-h-[180px]">
+                  <div className="min-h-[350px]">
                     <EditorContent editor={editor} />
                   </div>
                 </div>

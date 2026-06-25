@@ -588,7 +588,7 @@ export default function Careers() {
               </div>
 
               {/* Full Description Rich Text Body */}
-              <div className="text-slate-600 text-sm sm:text-base leading-relaxed prose max-w-none py-4">
+              <div className="text-slate-700 text-base sm:text-lg leading-relaxed prose max-w-none py-6">
                 <div dangerouslySetInnerHTML={{ __html: selectedJob.description }} />
               </div>
 
