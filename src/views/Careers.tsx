@@ -22,17 +22,20 @@ interface JobOpening {
   hide_pay?: boolean
   location_type?: string
   duration_months?: number | null
+  questions?: any[] | null
 }
 
 export default function Careers() {
   const [openings, setOpenings] = useState<JobOpening[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'job' | 'internship'>('job')
+  const [activeTab, setActiveTab] = useState<'all' | 'job' | 'internship'>('all')
   const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   
   // Application Form State
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [selectedAnswersForSelect, setSelectedAnswersForSelect] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -130,10 +133,12 @@ export default function Careers() {
     fetchOpenings()
   }, [])
 
-  const filteredOpenings = openings.filter(o => o.type === activeTab)
+  const filteredOpenings = openings.filter(o => activeTab === 'all' || o.type === activeTab)
 
   const handleOpenApply = (job: JobOpening) => {
     setSelectedJob(job)
+    setAnswers({})
+    setSelectedAnswersForSelect({})
     setFormData({
       name: '',
       email: '',
@@ -213,7 +218,15 @@ export default function Careers() {
           portfolio_link: formData.portfolioLink || null,
           resume_link: finalResumeLink,
           cover_letter: formData.coverLetter || null,
-          status: 'pending'
+          status: 'pending',
+          answers: Object.entries(answers).map(([questionId, answerText]) => {
+            const q = selectedJob?.questions?.find((x: any) => x.id === questionId)
+            return {
+              questionId,
+              questionText: q?.text || questionId,
+              answer: answerText
+            }
+          })
         })
 
       if (error) throw error
@@ -231,6 +244,8 @@ export default function Careers() {
         coverLetter: '',
         roleApplied: ''
       })
+      setAnswers({})
+      setSelectedAnswersForSelect({})
       setFile(null)
       setTimeout(() => {
         setIsFormOpen(false)
@@ -491,6 +506,70 @@ export default function Careers() {
                     )}
                   </div>
 
+                  {/* Screening Questions */}
+                  {selectedJob?.questions && selectedJob.questions.length > 0 && (
+                    <div className="flex flex-col gap-4 border-t border-slate-100 pt-4">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Screening Questions</label>
+                      {selectedJob.questions.map((q: any) => (
+                        <div key={q.id} className="flex flex-col gap-2">
+                          <label className="text-xs font-semibold text-slate-700">
+                            {q.text} {q.required && <span className="text-brandRed">*</span>}
+                          </label>
+                          
+                          {q.type === 'select' ? (
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-wrap gap-2">
+                                {q.options?.map((opt: string) => {
+                                  const isSelected = selectedAnswersForSelect[q.id] === opt;
+                                  return (
+                                    <button
+                                      key={opt}
+                                      type="button"
+                                      onClick={() => {
+                                        setSelectedAnswersForSelect(prev => ({ ...prev, [q.id]: opt }));
+                                        if (opt !== 'Custom') {
+                                          setAnswers(prev => ({ ...prev, [q.id]: opt }));
+                                        } else {
+                                          setAnswers(prev => ({ ...prev, [q.id]: '' }));
+                                        }
+                                      }}
+                                      className={`px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                                        isSelected 
+                                          ? 'border-brandBlue bg-brandBlue/5 text-brandBlue border-brandBlue' 
+                                          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                                      }`}
+                                    >
+                                      {opt}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                              {selectedAnswersForSelect[q.id] === 'Custom' && (
+                                <input
+                                  type="text"
+                                  required={q.required}
+                                  value={answers[q.id] || ''}
+                                  onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                                  placeholder="Please specify..."
+                                  className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-brandBlue focus:bg-slate-50/50 outline-none transition-all text-xs font-light"
+                                />
+                              )}
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              required={q.required}
+                              value={answers[q.id] || ''}
+                              onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                              placeholder="Your answer..."
+                              className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-brandBlue focus:bg-slate-50/50 outline-none transition-all text-xs font-light"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Cover Letter & Details</label>
                     <textarea
@@ -630,6 +709,16 @@ export default function Careers() {
               </div>
 
               <div className="flex gap-2 bg-slate-200/50 p-1.5 rounded-xl border border-slate-300/40 w-full md:w-auto justify-center">
+                <button
+                  onClick={() => setActiveTab('all')}
+                  className={`rounded-lg px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 md:flex-none text-center ${
+                    activeTab === 'all'
+                      ? 'bg-brandNavy text-white shadow-sm'
+                      : 'text-textSecondary hover:text-brandNavy'
+                  }`}
+                >
+                  All
+                </button>
                 <button
                   onClick={() => setActiveTab('job')}
                   className={`rounded-lg px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 md:flex-none text-center ${

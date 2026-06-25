@@ -96,6 +96,7 @@ export default function AdminCareersPage() {
   // New/Editing Opening Form State
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingJobId, setEditingJobId] = useState<string | null>(null)
+  const [newJobQuestions, setNewJobQuestions] = useState<any[]>([])
   const [newJob, setNewJob] = useState({
     title: '',
     type: 'job' as 'job' | 'internship',
@@ -176,7 +177,8 @@ export default function AdminCareersPage() {
         max_pay: newJob.max_pay === '' ? null : Number(newJob.max_pay),
         hide_pay: newJob.hide_pay,
         location_type: newJob.location_type,
-        duration_months: newJob.duration_months === '' ? null : Number(newJob.duration_months)
+        duration_months: newJob.duration_months === '' ? null : Number(newJob.duration_months),
+        questions: newJobQuestions
       }
 
       if (editingJobId) {
@@ -206,6 +208,7 @@ export default function AdminCareersPage() {
         location_type: 'Remote',
         duration_months: ''
       })
+      setNewJobQuestions([])
       setEditingJobId(null)
       setShowAddForm(false)
       fetchData()
@@ -218,6 +221,7 @@ export default function AdminCareersPage() {
 
   const handleStartEdit = (job: JobOpening) => {
     setEditingJobId(job.id)
+    setNewJobQuestions(job.questions || [])
     setNewJob({
       title: job.title,
       type: job.type,
@@ -234,6 +238,41 @@ export default function AdminCareersPage() {
       editor.commands.setContent(job.description)
     }
     setShowAddForm(true)
+  }
+
+  const handleToggleNoticePeriodQuestion = (checked: boolean) => {
+    if (checked) {
+      setNewJobQuestions(prev => [
+        ...prev, 
+        { id: 'notice_period', text: 'When are you able to join? (Notice Period)', type: 'select', options: ['3 Days', '15 Days', '1 Month', 'Custom'], required: true }
+      ])
+    } else {
+      setNewJobQuestions(prev => prev.filter(q => q.id !== 'notice_period'))
+    }
+  }
+
+  const handleAddTemplateQuestion = (id: string, text: string, type: 'text' | 'select', options?: string[]) => {
+    if (newJobQuestions.some(q => q.id === id)) return
+    setNewJobQuestions(prev => [
+      ...prev,
+      { id, text, type, options, required: true }
+    ])
+  }
+
+  const handleAddCustomQuestion = () => {
+    const customId = `custom_${Math.random().toString(36).substring(2, 9)}`
+    setNewJobQuestions(prev => [
+      ...prev,
+      { id: customId, text: '', type: 'text', required: true }
+    ])
+  }
+
+  const handleUpdateQuestion = (id: string, field: string, value: any) => {
+    setNewJobQuestions(prev => prev.map(q => q.id === id ? { ...q, [field]: value } : q))
+  }
+
+  const handleRemoveQuestion = (id: string) => {
+    setNewJobQuestions(prev => prev.filter(q => q.id !== id))
   }
 
   const handleToggleJobActive = async (id: string, currentStatus: boolean) => {
@@ -450,16 +489,122 @@ export default function AdminCareersPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-500">Key Requirements (Text lines)</label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="Key skills, academic requirements, or prerequisites..."
-                  value={newJob.requirements}
-                  onChange={e => setNewJob(prev => ({ ...prev, requirements: e.target.value }))}
-                  className="w-full p-4 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm resize-none"
-                />
+              {/* Questions Section */}
+              <div className="border-t border-slate-100 pt-4 flex flex-col gap-4">
+                <h4 className="text-xs font-bold uppercase tracking-wide text-slate-400">Screening Questions</h4>
+                
+                {/* Notice Period Question Template */}
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox"
+                        id="q_notice_period"
+                        checked={newJobQuestions.some(q => q.id === 'notice_period')}
+                        onChange={(e) => handleToggleNoticePeriodQuestion(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-350 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                      />
+                      <label htmlFor="q_notice_period" className="text-xs font-bold text-slate-700 select-none cursor-pointer">
+                        Include "When are you able to join?" (Notice Period)
+                      </label>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">Template</span>
+                  </div>
+                  {newJobQuestions.some(q => q.id === 'notice_period') && (
+                    <p className="text-xs text-slate-450 italic">
+                      Provides choices: 3 days, 15 days, 1 month, and custom input.
+                    </p>
+                  )}
+                </div>
+
+                {/* Templates list */}
+                <div className="flex flex-wrap gap-2 items-center">
+                  <span className="text-xs font-bold text-slate-400 mr-1">Add Template:</span>
+                  <button
+                    type="button"
+                    onClick={() => handleAddTemplateQuestion('why_join', 'Why do you want to join Primescore?', 'text')}
+                    className="text-xs bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                  >
+                    + Why join us?
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddTemplateQuestion('best_project', 'Link to your best project / GitHub repo', 'text')}
+                    className="text-xs bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                  >
+                    + Best Project Link
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddTemplateQuestion('hours_available', 'How many hours per week are you available?', 'select', ['10-20 hours', '20-30 hours', 'Full-time (40+ hours)'])}
+                    className="text-xs bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold"
+                  >
+                    + Weekly Hours
+                  </button>
+                </div>
+
+                {/* List of active custom/template questions */}
+                {newJobQuestions.length > 0 && (
+                  <div className="flex flex-col gap-3 mt-2">
+                    {newJobQuestions.map((q, idx) => (
+                      <div key={q.id || idx} className="bg-slate-50 p-4 rounded-xl border border-slate-150 flex flex-col gap-3 relative">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveQuestion(q.id)}
+                          className="absolute right-3.5 top-3.5 text-slate-400 hover:text-red-500 transition-colors"
+                          title="Remove Question"
+                        >
+                          <X size={16} />
+                        </button>
+                        
+                        <div className="grid sm:grid-cols-3 gap-3 pr-8">
+                          <div className="sm:col-span-2 flex flex-col gap-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase">Question Text</label>
+                            <input
+                              type="text"
+                              value={q.text}
+                              onChange={(e) => handleUpdateQuestion(q.id, 'text', e.target.value)}
+                              className="px-3 py-1.5 rounded-lg border border-slate-250 bg-white text-slate-900 outline-none text-xs font-semibold"
+                              placeholder="e.g. Do you have experience with TypeScript?"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase">Input Type</label>
+                            <select
+                              value={q.type}
+                              onChange={(e) => handleUpdateQuestion(q.id, 'type', e.target.value)}
+                              className="px-3 py-1.5 rounded-lg border border-slate-250 bg-white text-slate-900 outline-none text-xs font-semibold"
+                            >
+                              <option value="text">Short Answer</option>
+                              <option value="select">Multiple Choice</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {q.type === 'select' && (
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase">Options (comma separated)</label>
+                            <input
+                              type="text"
+                              value={q.options ? q.options.join(', ') : ''}
+                              onChange={(e) => handleUpdateQuestion(q.id, 'options', e.target.value.split(',').map(s => s.trim()))}
+                              className="px-3 py-1.5 rounded-lg border border-slate-250 bg-white text-slate-900 outline-none text-xs font-semibold"
+                              placeholder="e.g. Yes, No, Intermediate"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleAddCustomQuestion}
+                  className="text-xs text-slate-700 font-bold border border-dashed border-slate-350 hover:border-slate-400 py-3 rounded-xl transition-all w-full text-center flex items-center justify-center gap-1 bg-white hover:bg-slate-50/50 mt-1 shadow-sm"
+                >
+                  <Plus size={14} /> Add Custom Question
+                </button>
               </div>
 
               <div className="flex gap-3 justify-end mt-2">
@@ -693,6 +838,20 @@ export default function AdminCareersPage() {
                     <div className="bg-slate-50 p-4 rounded-xl text-sm text-slate-650 leading-relaxed border border-slate-100">
                       <strong>Cover letter / details:</strong><br />
                       <p className="mt-1 font-light italic text-slate-600">"{app.cover_letter}"</p>
+                    </div>
+                  )}
+
+                  {app.answers && (app.answers as any).length > 0 && (
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-2">
+                      <strong className="text-xs text-slate-500 uppercase tracking-wider block">Screening Answers:</strong>
+                      <div className="grid gap-3 sm:grid-cols-2 mt-1">
+                        {(app.answers as any).map((ans: any, idx: number) => (
+                          <div key={idx} className="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+                            <span className="text-slate-400 block font-semibold mb-1">{ans.questionText}</span>
+                            <span className="text-slate-800 font-bold">{ans.answer}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
