@@ -382,7 +382,7 @@ create policy "Allow read for all users" on public.user_roles
         </div>
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Restrained</h1>
         <p className="text-slate-500 text-sm max-w-sm mb-6 leading-relaxed">
-          Your account ({email}) does not have authorization to view this panel interface.
+          Your account ({user?.email || email}) does not have authorization to view this panel interface.
         </p>
         <div className="flex flex-col gap-3 items-center w-full max-w-xs">
           <button 
