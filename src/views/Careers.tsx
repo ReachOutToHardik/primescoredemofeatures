@@ -684,34 +684,30 @@ export default function Careers() {
           /* Normal Listings List View */
           <>
             {/* Header Hero Section (Simple & Short) */}
-            <div className="max-w-4xl text-left pb-16">
+            <div className="max-w-3xl text-left pb-8">
               <Reveal>
-                <div className="inline-flex items-center gap-2 mb-6 bg-brandRed/10 rounded-full px-4 py-1.5 border border-brandRed/20">
-                  <Sparkles className="h-3.5 w-3.5 text-brandRed" />
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brandRed">Join Primescore</p>
-                </div>
-                <h1 className="font-display text-5xl font-black tracking-tight text-brandNavy sm:text-6xl lg:text-7xl leading-none">
-                  Join Primescore.
+                <h1 className="font-display text-3xl font-extrabold tracking-tight text-brandNavy sm:text-4xl lg:text-5xl leading-tight">
+                  Careers at <span className="bg-gradient-to-r from-brandBlue to-brandNavy bg-clip-text text-transparent">Primescore.</span>
                 </h1>
-                <p className="mt-6 text-lg sm:text-xl text-textSecondary font-light leading-relaxed max-w-3xl">
-                  Learn more about us and see our open job and internship positions below.
+                <p className="mt-3 text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-2xl">
+                  Build the future of finance with us. Explore our open positions and internship opportunities below.
                 </p>
               </Reveal>
             </div>
 
             {/* Tab Switcher & Headline */}
-            <div className="mt-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-brandNavy/10 pb-8">
+            <div className="mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-brandNavy/10 pb-6">
               <div>
                 <Reveal>
-                  <h2 className="text-3xl font-black tracking-tight text-brandNavy font-display">Open Positions</h2>
-                  <p className="text-textSecondary text-sm mt-2">Find a job or internship match below.</p>
+                  <h2 className="text-lg font-bold tracking-tight text-brandNavy">Open Positions</h2>
+                  <p className="text-slate-400 text-xs mt-1">Find your match below</p>
                 </Reveal>
               </div>
 
-              <div className="flex gap-2 bg-slate-200/50 p-1.5 rounded-xl border border-slate-300/40 w-full md:w-auto justify-center">
+              <div className="flex gap-2 bg-slate-200/50 p-1.5 rounded-xl border border-slate-300/40 w-full sm:w-auto justify-center">
                 <button
                   onClick={() => setActiveTab('all')}
-                  className={`rounded-lg px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 md:flex-none text-center ${
+                  className={`rounded-lg px-5 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 sm:flex-none text-center ${
                     activeTab === 'all'
                       ? 'bg-brandNavy text-white shadow-sm'
                       : 'text-textSecondary hover:text-brandNavy'
@@ -721,7 +717,7 @@ export default function Careers() {
                 </button>
                 <button
                   onClick={() => setActiveTab('job')}
-                  className={`rounded-lg px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 md:flex-none text-center ${
+                  className={`rounded-lg px-5 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 sm:flex-none text-center ${
                     activeTab === 'job'
                       ? 'bg-brandNavy text-white shadow-sm'
                       : 'text-textSecondary hover:text-brandNavy'
@@ -731,7 +727,7 @@ export default function Careers() {
                 </button>
                 <button
                   onClick={() => setActiveTab('internship')}
-                  className={`rounded-lg px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 md:flex-none text-center ${
+                  className={`rounded-lg px-5 py-2 text-xs font-bold uppercase tracking-widest transition-all flex-1 sm:flex-none text-center ${
                     activeTab === 'internship'
                       ? 'bg-brandNavy text-white shadow-sm'
                       : 'text-textSecondary hover:text-brandNavy'
