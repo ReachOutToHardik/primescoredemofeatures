@@ -125,15 +125,69 @@ export default function FdCalculator() {
           </div>
         </div>
         
-        <div className="mt-20 prose prose-lg prose-gray max-w-none">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">What is a Fixed Deposit (FD)?</h2>
-          <p className="text-gray-600 mb-6">
-            A Fixed Deposit (FD) is a financial instrument provided by banks or NBFCs which provides investors a higher rate of interest than a regular savings account, until the given maturity date. It is considered one of the safest investment options in India.
+        <div className="mt-20 prose prose-lg prose-slate max-w-none border-t border-gray-100 pt-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">What is a Fixed Deposit (FD) and How Does the Calculator Help?</h2>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            A Fixed Deposit (FD) is a secure financial instrument provided by banks or Non-Banking Financial Companies (NBFCs) in India. It offers a higher rate of interest than a standard savings account until a specified maturity date. Using a reliable <strong>fixed deposit calculator</strong> is essential to estimate the final <strong>fd amount calculator</strong> yields before making an investment.
           </p>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">How FD Interest is Calculated</h2>
-          <p className="text-gray-600 mb-6">
-            In India, most banks compound FD interest on a quarterly basis. Our calculator uses this standard quarterly compounding method to give you the most accurate maturity estimate. The interest earned is taxable as per your income tax slab, unless it's a tax-saving FD with a 5-year lock-in.
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">How is FD Interest Calculated?</h2>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            Most Indian financial institutions calculate compound interest on a quarterly basis. This <strong>fd interest calculator</strong> utilizes the standard quarterly compounding formula:
           </p>
+          <div className="bg-gray-50 p-5 rounded-2xl border border-gray-250/30 mb-6 text-center font-mono text-sm text-gray-800 max-w-xs mx-auto">
+            A = P &times; (1 + r / n)<sup>n &times; t</sup>
+          </div>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            Where <strong>P</strong> is the principal investment amount, <strong>r</strong> is the annual interest rate, <strong>t</strong> is the tenure in years, and <strong>n</strong> represents the compounding frequency per year (n = 4 for a <strong>fd quarterly interest calculator</strong>). The difference between the maturity value (A) and principal (P) is the total interest earned.
+          </p>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Use the Fixed Deposit Return Calculator</h2>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            This <strong>fixed deposit return calculator</strong> makes it incredibly easy to compare various scenarios. Simply adjust the sliders or type the values:
+          </p>
+          <ul className="list-disc pl-6 text-gray-600 mb-6 text-base font-light space-y-2">
+            <li><strong>Total Investment:</strong> Set the initial principal amount you want to lock in.</li>
+            <li><strong>Rate of Interest:</strong> Enter the active interest rate offered by your chosen bank.</li>
+            <li><strong>Time Period:</strong> Set the tenure of your deposit in years.</li>
+          </ul>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            Our <strong>fixed deposit interest calculator</strong> instantly visualizes the principal versus the interest yield in a clean interactive chart.
+          </p>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Checking Bank FD Interest Rates</h2>
+          <p className="text-gray-600 mb-6 text-base font-light leading-relaxed">
+            To maximize your returns, check the latest <strong>fd interest rates calculator</strong> schedules across banks. Senior citizens typically receive an additional 0.50% to 0.75% interest premium. Always use an accurate <strong>fd rate calculator</strong> to determine the post-tax yields as interest earned above ₹40,000 (₹50,000 for senior citizens) is subject to Tax Deducted at Source (TDS).
+          </p>
+
+          {/* On-page FAQs matching Schema */}
+          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 border-t border-gray-100 pt-8">Frequently Asked Questions (FAQs)</h2>
+          <div className="space-y-6">
+            <div className="border-b border-gray-100 pb-4">
+              <h3 className="text-base font-bold text-gray-900 mb-2">How does a Fixed Deposit (FD) calculator work?</h3>
+              <p className="text-gray-650 text-sm font-light leading-relaxed">
+                An FD calculator computes the interest earned and maturity value of your investment based on the principal amount, tenure, and applicable interest rate. Primescore's FD return calculator compounds interest quarterly, which is the standard methodology followed by Indian banks.
+              </p>
+            </div>
+            <div className="border-b border-gray-100 pb-4">
+              <h3 className="text-base font-bold text-gray-900 mb-2">What is a fixed deposit return calculator?</h3>
+              <p className="text-gray-650 text-sm font-light leading-relaxed">
+                A fixed deposit return calculator is an online tool that helps investors determine the returns they will get upon maturity. By entering the investment amount, duration, and FD interest rate, the tool instantly displays the maturity value and interest earned.
+              </p>
+            </div>
+            <div className="border-b border-gray-100 pb-4">
+              <h3 className="text-base font-bold text-gray-900 mb-2">How is quarterly compounding interest calculated on an FD?</h3>
+              <p className="text-gray-650 text-sm font-light leading-relaxed">
+                FD quarterly interest is calculated using the compound interest formula: A = P(1 + r/n)^(n*t), where P is the principal amount, r is the annual rate of interest, t is the time in years, and n is the compounding frequency per year (n = 4 for quarterly compounding).
+              </p>
+            </div>
+            <div className="pb-4">
+              <h3 className="text-base font-bold text-gray-900 mb-2">Which bank offers the highest FD interest rates?</h3>
+              <p className="text-gray-650 text-sm font-light leading-relaxed">
+                FD interest rates vary by bank, investment tenure, and whether the investor is a senior citizen. Most leading Indian banks offer interest rates ranging from 6% to 8% per annum. You can use our FD rate calculator to check returns for any custom interest rate.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
