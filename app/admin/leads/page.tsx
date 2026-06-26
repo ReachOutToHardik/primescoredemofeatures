@@ -244,8 +244,8 @@ export default function LeadsCRMPage() {
                 <tr className="bg-gray-50/50 border-b border-gray-100">
                   <th className="py-4 pl-6 pr-4 font-bold text-xs uppercase tracking-wider text-gray-500 whitespace-nowrap">Contact Info</th>
                   <th className="p-4 font-bold text-xs uppercase tracking-wider text-gray-500 whitespace-nowrap">Issue Type</th>
-                  <th className="p-4 font-bold text-xs uppercase tracking-wider text-gray-500 min-w-[250px]">Message</th>
-                  <th className="p-4 font-bold text-xs uppercase tracking-wider text-gray-500 whitespace-nowrap">Status</th>
+                  <th className="p-4 font-bold text-xs uppercase tracking-wider text-gray-500 min-w-[250px] max-w-[450px]">Message</th>
+                  <th className="p-4 font-bold text-xs uppercase tracking-wider text-gray-500 whitespace-nowrap min-w-[160px]">Status</th>
                   <th className="py-4 pl-4 pr-6 font-bold text-xs uppercase tracking-wider text-gray-500 whitespace-nowrap text-right">Actions</th>
                 </tr>
               </thead>
@@ -286,12 +286,12 @@ export default function LeadsCRMPage() {
                         </div>
                       )}
                     </td>
-                    <td className="p-5 align-top">
+                    <td className="p-5 align-top max-w-[450px]">
                       <div className="bg-gray-50/80 p-3 rounded-xl border border-gray-100">
-                        <p className="text-sm text-gray-600 line-clamp-3">{lead.message || <span className="italic text-gray-400">No message provided.</span>}</p>
+                        <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-wrap break-words">{lead.message || <span className="italic text-gray-400">No message provided.</span>}</p>
                       </div>
                     </td>
-                    <td className="p-5 align-top">
+                    <td className="p-5 align-top min-w-[160px]">
                       <div className="relative inline-block w-full max-w-[140px]">
                         <select
                           value={lead.status || 'New'}
