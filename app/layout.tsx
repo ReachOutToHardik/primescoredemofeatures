@@ -20,8 +20,25 @@ export const metadata: Metadata = {
     template: '%s | Primescore',
   },
   description:
-    'Primescore helps you dispute credit report errors, remove illegitimate defaults, and boost your CIBIL score legally in 90 days. Trusted by 50,000+ Indians.',
-  keywords: ['credit repair India', 'CIBIL score repair', 'credit rectification services', 'boost CIBIL score', 'remove CIBIL defaults', 'Primescore', 'credit score improvement India'],
+    'Primescore is India’s leading CIBIL repair and correction agency. We dispute credit report errors, remove illegitimate defaults, and boost your credit score legally in 90 days. Trusted by 50,000+ Indians.',
+  keywords: [
+    'credit repair India', 
+    'CIBIL score repair', 
+    'credit rectification services', 
+    'boost CIBIL score', 
+    'remove CIBIL defaults', 
+    'Primescore', 
+    'credit score improvement India',
+    'cibil repair agency',
+    'cibil correction agency',
+    'cibil rectification agency',
+    'cibil repair services',
+    'cibil score rectification services',
+    'cibil score repair agency near me',
+    'primescore financial',
+    'prime score financial',
+    'primescore fintech private limited'
+  ],
   icons: {
     icon: '/primescore-logo-tab.png',
     apple: '/primescore-logo-tab.png',
