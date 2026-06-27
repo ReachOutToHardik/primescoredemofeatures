@@ -7,6 +7,7 @@ import { supabase } from '../../../src/lib/supabase'
 import { getBlogsServer, deleteBlogServer } from '../../actions/blogs'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { useAdminContext } from '../AdminContext'
 import { 
   Eye, 
   Edit, 
@@ -91,6 +92,7 @@ export default function BlogEditorPage() {
   const [allBlogs, setAllBlogs] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loadingBlogs, setLoadingBlogs] = useState(true)
+  const { fetchSignal } = useAdminContext()
 
   const fetchBlogs = async () => {
     try {
@@ -143,7 +145,7 @@ export default function BlogEditorPage() {
 
   useEffect(() => {
     fetchBlogs()
-  }, [])
+  }, [fetchSignal])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

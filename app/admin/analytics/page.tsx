@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
+import { useAdminContext } from '../AdminContext'
 
 type PageView = {
   id: string
@@ -19,6 +20,7 @@ type PageView = {
 export default function AnalyticsPage() {
   const [views, setViews] = useState<PageView[]>([])
   const [loading, setLoading] = useState(true)
+  const { fetchSignal } = useAdminContext()
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -35,7 +37,7 @@ export default function AnalyticsPage() {
     }
 
     fetchAnalytics()
-  }, [])
+  }, [fetchSignal])
 
   // Process data for charts
   const uniqueVisitors = new Set(views.map(v => v.session_id)).size

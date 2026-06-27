@@ -7,6 +7,7 @@ import { getLeadsServer, updateLeadStatusServer, deleteLeadServer } from '../../
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { useAdminContext } from '../AdminContext'
 
 type Lead = {
   id: string
@@ -29,6 +30,7 @@ export default function LeadsCRMPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [exportMenuOpen, setExportMenuOpen] = useState(false)
+  const { fetchSignal } = useAdminContext()
 
   const fetchLeads = async () => {
     try {
@@ -48,7 +50,7 @@ export default function LeadsCRMPage() {
 
   useEffect(() => {
     fetchLeads()
-  }, [])
+  }, [fetchSignal])
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     setUpdatingId(leadId)

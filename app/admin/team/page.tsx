@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect } from 'react'
 import { createTeamMember, getTeamMembers, deleteTeamMember } from '../../actions/team'
+import { useAdminContext } from '../AdminContext'
 
 type TeamMember = {
   id: string
@@ -23,6 +24,7 @@ export default function TeamManagementPage() {
   const [role, setRole] = useState('writer')
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const { fetchSignal } = useAdminContext()
 
   const fetchMembers = async () => {
     setLoading(true)
@@ -37,7 +39,7 @@ export default function TeamManagementPage() {
 
   useEffect(() => {
     fetchMembers()
-  }, [])
+  }, [fetchSignal])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

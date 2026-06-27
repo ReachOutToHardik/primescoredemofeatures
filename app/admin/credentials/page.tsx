@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../../src/lib/supabase'
 import { Award, Plus, Copy, Check, ShieldAlert, CheckCircle, RefreshCw, Download } from 'lucide-react'
+import { useAdminContext } from '../AdminContext'
 
 interface Credential {
   id: string
@@ -31,6 +32,7 @@ export default function AdminCredentialsPage() {
     end_date: ''
   })
   const [actionLoading, setActionLoading] = useState(false)
+  const { fetchSignal } = useAdminContext()
 
   const fetchCredentials = async () => {
     try {
@@ -54,7 +56,7 @@ export default function AdminCredentialsPage() {
 
   useEffect(() => {
     fetchCredentials()
-  }, [])
+  }, [fetchSignal])
 
   // Auto-generate a suggestion ID when form is opened
   useEffect(() => {

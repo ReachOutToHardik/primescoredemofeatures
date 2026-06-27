@@ -2,9 +2,9 @@
 
 export const dynamic = 'force-dynamic'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { supabase } from '../../src/lib/supabase'
+import { useAdminContext } from './AdminContext'
 import { 
   Contact, 
   BookOpen, 
@@ -26,33 +26,7 @@ import {
 export default function AdminDashboardPage() {
   const [showSqlHelper, setShowSqlHelper] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [role, setRole] = useState<string | null>(null)
-  const [loadingRole, setLoadingRole] = useState(true)
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        if (!supabase) return
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session?.user) {
-          const { data, error } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single()
-          
-          if (!error && data) {
-            setRole(data.role)
-          }
-        }
-      } catch (err) {
-        console.error('Error fetching role:', err)
-      } finally {
-        setLoadingRole(false)
-      }
-    }
-    fetchRole()
-  }, [])
+  const { role } = useAdminContext()
 
   const sqlScript = `-- 1. USER ROLES TABLE (Access Control)
 create table if not exists public.user_roles (
@@ -209,7 +183,7 @@ create policy "Allow authorized team to manage leads" on public.leads
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {cards.map((card, idx) => {
             const Icon = card.icon
-            const hasAccess = loadingRole || card.roles.includes(role || '')
+            const hasAccess = card.roles.includes(role || '')
             
             return (
               <Link 

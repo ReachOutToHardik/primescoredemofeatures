@@ -2,8 +2,12 @@
 
 import { supabaseAdmin } from '../../src/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
+import { verifyRole } from './auth'
 
 export async function getBlogsServer() {
+  const auth = await verifyRole(['super_admin', 'manager', 'writer'])
+  if (!auth.authorized) return { success: false, error: 'Unauthorized: ' + auth.reason, blogs: [] }
+
   try {
     const { data, error } = await supabaseAdmin
       .from('blogs')
@@ -18,6 +22,9 @@ export async function getBlogsServer() {
 }
 
 export async function deleteBlogServer(id: string) {
+  const auth = await verifyRole(['super_admin', 'manager', 'writer'])
+  if (!auth.authorized) return { success: false, error: 'Unauthorized: ' + auth.reason }
+
   try {
     const { error } = await supabaseAdmin
       .from('blogs')

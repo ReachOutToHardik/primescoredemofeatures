@@ -6,6 +6,7 @@ import { Briefcase, User, Mail, Phone, FileText, Globe, Check, X, Clock, Plus, T
 import { FaLinkedin } from 'react-icons/fa6'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { useAdminContext } from '../AdminContext'
 
 interface JobOpening {
   id: string
@@ -110,6 +111,7 @@ export default function AdminCareersPage() {
     duration_months: '' as string | number
   })
   const [actionLoading, setActionLoading] = useState(false)
+  const { fetchSignal } = useAdminContext()
 
   // Tiptap Rich text editor setup
   const editor = useEditor({
@@ -158,7 +160,7 @@ export default function AdminCareersPage() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchSignal])
 
   const handleAddJob = async (e: React.FormEvent) => {
     e.preventDefault()
