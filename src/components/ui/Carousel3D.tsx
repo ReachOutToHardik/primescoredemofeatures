@@ -1,26 +1,42 @@
+'use client'
 
-import { motion, useAnimationFrame, useMotionValue, useSpring } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 
 const FEATURES = [
-  { id: 1, image: '/carousel/c_img1.jpg' },
-  { id: 2, image: '/carousel/c_img2.jpg' },
-  { id: 3, image: '/carousel/c_img3.jpg' },
-  { id: 4, image: '/carousel/c_img4.jpg' },
-  { id: 5, image: '/carousel/c_img5.jpg' },
-  { id: 6, image: '/carousel/c_img6.jpg' },
-  { id: 7, image: '/carousel/c_img7.jpg' }
+  { id: 1, image: '/carousel/c_img1.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557167/1_ccikoi.mp4' },
+  { id: 2, image: '/carousel/c_img2.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/2_p5ryxd.mp4' },
+  { id: 3, image: '/carousel/c_img3.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/3_wa61vt.mp4' },
+  { id: 4, image: '/carousel/c_img4.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/4_onxebr.mp4' },
+  { id: 5, image: '/carousel/c_img5.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/5_eipppp.mp4' },
+  { id: 6, image: '/carousel/c_img6.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/6_ekvkrs.mp4' },
+  { id: 7, image: '/carousel/c_img7.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557167/1_ccikoi.mp4' }
 ];
 
-function FeatureCard({ image }: { image: string }) {
+function FeatureCard({ image, video }: { image: string; video?: string }) {
   return (
     <div
-      className="group relative flex-shrink-0 w-96 h-[540px] rounded-[1rem] overflow-hidden shadow-2xl border border-white/10 cursor-pointer origin-center transition-all duration-500 hover:scale-[1.02] hover:brightness-110"
+      className="group relative flex-shrink-0 w-96 h-[540px] rounded-[1rem] overflow-hidden shadow-2xl border border-white/10 cursor-pointer origin-center transition-all duration-500 hover:scale-[1.02] hover:brightness-110 bg-slate-900 gpu-accelerated"
+      style={{ transform: 'translateZ(0)', willChange: 'transform' }}
     >
-      <img
-        src={image}
-        alt="Poster Placeholder"
-        className="w-full h-full object-cover"
-      />
+      {video ? (
+        <video
+          src={video}
+          poster={image}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          className="w-full h-full object-cover"
+          style={{ transform: 'translateZ(0)' }}
+        />
+      ) : (
+        <img
+          src={image}
+          alt="Poster Placeholder"
+          className="w-full h-full object-cover"
+        />
+      )}
 
       <div className="absolute inset-0 border border-white/20 rounded-[1rem] pointer-events-none"></div>
     </div>
@@ -28,22 +44,27 @@ function FeatureCard({ image }: { image: string }) {
 }
 
 export default function Carousel3D() {
-  const rotationValue = useMotionValue(0);
-  const rotation = useSpring(rotationValue, { stiffness: 30, damping: 20 });
+  // Distribute the items across the loop so identical cards are never side-by-side
+  const displayFeatures = [
+    FEATURES[0], // 1
+    FEATURES[2], // 3
+    FEATURES[4], // 5
+    FEATURES[6], // 7
+    FEATURES[1], // 2
+    FEATURES[3], // 4
+    FEATURES[5], // 6
+    FEATURES[0], // 1 (duplicate)
+    FEATURES[3], // 4 (duplicate)
+    FEATURES[1], // 2 (duplicate)
+    FEATURES[4], // 5 (duplicate)
+    FEATURES[6], // 7 (duplicate)
+    FEATURES[2], // 3 (duplicate)
+    FEATURES[5]  // 6 (duplicate)
+  ];
 
-  const displayFeatures = [...FEATURES, ...FEATURES];
   const totalCards = displayFeatures.length;
-  // Larger radius makes the circle bigger
   const radius = 950;
-
   const step = 360 / totalCards;
-
-  // Smooth continuous rotation
-  useAnimationFrame((_t, delta) => {
-    // Rotate by 12 degrees per second (slightly faster smooth spin)
-    const moveAmount = (delta / 1000) * 12;
-    rotationValue.set(rotationValue.get() - moveAmount);
-  });
 
   return (
     <div className="relative w-full bg-gray-50 overflow-hidden pt-20">
@@ -56,14 +77,28 @@ export default function Carousel3D() {
         </p>
       </div>
 
+      {/* Inject custom CSS Keyframe animation on compiling */}
+      <style jsx global>{`
+        @keyframes spin3D {
+          from {
+            transform: rotateY(0deg);
+          }
+          to {
+            transform: rotateY(-360deg);
+          }
+        }
+        .carousel-track-3d {
+          animation: spin3D 45s linear infinite;
+          transform-style: preserve-3d;
+          will-change: transform;
+        }
+      `}</style>
+
       <div
         className="relative w-full h-[650px] overflow-hidden flex items-center justify-center mt-10"
         style={{ perspective: "1000px" }}
       >
-        <motion.div
-          className="relative w-full h-full flex items-center justify-center"
-          style={{ rotateY: rotation, transformStyle: "preserve-3d" }}
-        >
+        <div className="relative w-full h-full flex items-center justify-center carousel-track-3d">
           {displayFeatures.map((lang, i) => {
             const angle = (i * step);
             return (
@@ -71,17 +106,20 @@ export default function Carousel3D() {
                 key={`${lang.id}-${i}`}
                 className="absolute"
                 style={{
-                  // Position cards on a large ring that surrounds the camera
                   transform: `rotateY(${angle}deg) translateZ(${radius}px) rotateY(180deg)`,
                   backfaceVisibility: 'hidden',
-                  transformStyle: "preserve-3d"
+                  transformStyle: "preserve-3d",
+                  willChange: 'transform'
                 }}
               >
-                <FeatureCard image={lang.image} />
+                <FeatureCard 
+                  image={lang.image} 
+                  video={lang.video} 
+                />
               </div>
             );
           })}
-        </motion.div>
+        </div>
 
       </div>
     </div>

@@ -14,9 +14,9 @@ export default function Dashboard() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
-  // Countdown to July 1, 2026
+  // Countdown to July 10, 2026
   useEffect(() => {
-    const targetDate = new Date('2026-07-01T00:00:00Z').getTime()
+    const targetDate = new Date('2026-07-10T00:00:00Z').getTime()
 
     const updateTime = () => {
       const now = new Date().getTime()
@@ -86,38 +86,15 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen pt-32 pb-20 flex flex-col items-center justify-center bg-white px-4 sm:px-6 relative overflow-hidden selection:bg-brandNavy/10">
       
-      {/* Ultra-Premium Background Effects */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.03] pointer-events-none" />
-      <div className="absolute top-0 w-full h-[600px] bg-gradient-to-b from-brandNavy/[0.04] to-transparent pointer-events-none" />
+      {/* Ultra-Premium Background Effects (Safe & Intense 3D Blue-Green Flares) */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.04] pointer-events-none" />
+      <div className="absolute top-0 w-full h-[600px] bg-gradient-to-b from-brandNavy/[0.06] to-transparent pointer-events-none" />
       
-      {/* Engaging Background Graphic 1 */}
-      <motion.div
-        animate={{ 
-          y: [0, -20, 0],
-          rotate: [0, 5, 0],
-        }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] left-[10%] w-64 h-64 border-[1px] border-brandNavy/5 rounded-full pointer-events-none hidden lg:block"
-      />
-      {/* Engaging Background Graphic 2 */}
-      <motion.div
-        animate={{ 
-          y: [0, 30, 0],
-          rotate: [45, 60, 45],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[20%] right-[10%] w-72 h-72 border-[1px] border-brandNavy/5 rounded-[40px] pointer-events-none hidden lg:block"
-      />
+      {/* Intense Safe 3D Blue & Green Light Flares */}
+      <div className="absolute top-[10%] left-[15%] w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] bg-gradient-to-br from-brandBlue/25 to-cyan-500/10 rounded-full filter blur-[130px] pointer-events-none animate-pulse opacity-90" style={{ animationDuration: '6s' }} />
+      <div className="absolute bottom-[10%] right-[15%] w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] bg-gradient-to-tr from-[#10b981]/25 to-emerald-400/10 rounded-full filter blur-[130px] pointer-events-none animate-pulse opacity-90" style={{ animationDuration: '9s' }} />
       
-      {/* Animated Subtle Glow */}
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.5, 0.3] 
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-brandNavy/[0.03] blur-[120px] rounded-full pointer-events-none"
-      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-brandNavy/[0.04] blur-[150px] rounded-full pointer-events-none" />
 
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
