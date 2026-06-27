@@ -44,7 +44,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function LocalizedHomePage() {
+import { notFound } from 'next/navigation'
+
+const SUPPORTED_LOCALES = ['hi', 'ta', 'te', 'kn', 'ml', 'mr', 'gu', 'bn', 'pa', 'ur']
+
+export default async function LocalizedHomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  
+  if (!SUPPORTED_LOCALES.includes(locale)) {
+    notFound()
+  }
+
   // Return the main Homepage view directly
   return <Home />
 }

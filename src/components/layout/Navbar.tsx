@@ -277,6 +277,7 @@ export default function Navbar() {
           <div className="relative" ref={langRef}>
             <button
               type="button"
+              suppressHydrationWarning
               onClick={() => setLangOpen(!langOpen)}
               className={[
                 'rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-widest border transition-all flex items-center gap-1.5',
@@ -320,6 +321,7 @@ export default function Navbar() {
                   <Link 
                     key={lang.code} 
                     href={targetUrl}
+                    suppressHydrationWarning
                     onClick={(e) => handleLangSwitch(e, lang.code, targetUrl)}
                     className={[
                       'px-3 py-1.5 rounded-lg text-left text-xs font-bold transition-colors',
@@ -337,6 +339,7 @@ export default function Navbar() {
 
           <Link
             href="/dashboard"
+            suppressHydrationWarning
             className={[
               'rounded-full px-5 py-2 text-[11px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg',
               theme === 'dark' ? 'bg-white text-brandNavy' : 'bg-brandNavy text-white'
@@ -348,6 +351,7 @@ export default function Navbar() {
 
         <button
           type="button"
+          suppressHydrationWarning
           onClick={() => setMobileOpen((v) => !v)}
           className={`p-2 transition-colors md:hidden ${theme === 'dark' ? 'text-white' : 'text-brandNavy'}`}
         >
