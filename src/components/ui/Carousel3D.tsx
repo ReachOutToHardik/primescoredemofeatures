@@ -9,7 +9,7 @@ const FEATURES = [
   { id: 4, image: '/carousel/c_img4.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/4_onxebr.mp4' },
   { id: 5, image: '/carousel/c_img5.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/5_eipppp.mp4' },
   { id: 6, image: '/carousel/c_img6.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/6_ekvkrs.mp4' },
-  { id: 7, image: '/carousel/c_img7.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557167/1_ccikoi.mp4' }
+  { id: 7, image: '/carousel/c_img7.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782718917/VN20260627_125056_1_muvezm.mp4' }
 ];
 
 function FeatureCard({ image, video }: { image: string; video?: string }) {
@@ -44,22 +44,22 @@ function FeatureCard({ image, video }: { image: string; video?: string }) {
 }
 
 export default function Carousel3D() {
-  // Distribute the items across the loop so identical cards are never side-by-side
+  // Display items in continuous sequential order: 1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7
   const displayFeatures = [
     FEATURES[0], // 1
-    FEATURES[2], // 3
-    FEATURES[4], // 5
-    FEATURES[6], // 7
     FEATURES[1], // 2
+    FEATURES[2], // 3
     FEATURES[3], // 4
+    FEATURES[4], // 5
     FEATURES[5], // 6
-    FEATURES[0], // 1 (duplicate)
-    FEATURES[3], // 4 (duplicate)
-    FEATURES[1], // 2 (duplicate)
-    FEATURES[4], // 5 (duplicate)
-    FEATURES[6], // 7 (duplicate)
-    FEATURES[2], // 3 (duplicate)
-    FEATURES[5]  // 6 (duplicate)
+    FEATURES[6], // 7
+    FEATURES[0], // 1
+    FEATURES[1], // 2
+    FEATURES[2], // 3
+    FEATURES[3], // 4
+    FEATURES[4], // 5
+    FEATURES[5], // 6
+    FEATURES[6]  // 7
   ];
 
   const totalCards = displayFeatures.length;
