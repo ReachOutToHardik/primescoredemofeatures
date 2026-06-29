@@ -4,6 +4,9 @@
 import { ShieldCheck, Sparkles, Target, Users } from 'lucide-react'
 import Reveal from '../components/ui/Reveal'
 import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+
+const IndiaMap = dynamic(() => import('../components/ui/IndiaMap'), { ssr: false })
 
 export default function About() {
   return (
@@ -14,21 +17,31 @@ export default function About() {
       
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24 relative z-10">
         <section className="pt-28 sm:pt-36">
-          <Reveal>
-            <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 mb-6">
-                <div className="h-1 w-10 bg-brandRed rounded-full" />
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed">Our Mission</p>
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            {/* Left: Text Content */}
+            <Reveal>
+              <div className="max-w-2xl flex-1 -mt-8 lg:-mt-16">
+                <div className="inline-flex items-center gap-2 mb-6">
+                  <div className="h-1 w-10 bg-brandRed rounded-full" />
+                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed">Our Mission</p>
+                </div>
+                <h1 className="font-display text-5xl font-black tracking-tight text-brandNavy sm:text-7xl lg:text-8xl leading-[0.95]">
+                  Fair credit for <br /><span className="text-brandBlue">every Indian.</span>
+                </h1>
+                <p className="mt-8 max-w-2xl text-lg leading-relaxed text-textSecondary font-medium">
+                  A single inaccurate tag can block home loans, business credit, even rentals. Primescore exists to
+                  correct what's wrong — with documentation, discipline, and absolute transparency.
+                </p>
               </div>
-              <h1 className="font-display text-5xl font-black tracking-tight text-brandNavy sm:text-7xl lg:text-8xl leading-[0.95]">
-                Fair credit for <br /><span className="text-brandBlue">every Indian.</span>
-              </h1>
-              <p className="mt-8 max-w-2xl text-lg leading-relaxed text-textSecondary font-medium">
-                A single inaccurate tag can block home loans, business credit, even rentals. Primescore exists to
-                correct what's wrong — with documentation, discipline, and absolute transparency.
-              </p>
-            </div>
-          </Reveal>
+            </Reveal>
+
+            {/* Right: India Map */}
+            <Reveal delay={0.2}>
+              <div className="relative flex-shrink-0 w-full max-w-[440px] lg:max-w-[540px]">
+                <IndiaMap />
+              </div>
+            </Reveal>
+          </div>
         </section>
 
         <section className="mt-20">

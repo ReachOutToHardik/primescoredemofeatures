@@ -8,7 +8,7 @@ import Link from 'next/link'
 export default function Pricing() {
   const plan = {
     name: 'Report Fetch & Lifetime Dashboard Access',
-    price: 299,
+    price: 199,
     description: 'Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.',
     features: [
       'Official 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
@@ -23,7 +23,7 @@ export default function Pricing() {
   const comparisonRows = [
     { 
       metric: 'Pricing Model', 
-      primescore: '₹299 One-time (No recurring fees)', 
+      primescore: '₹199 One-time (No recurring fees)', 
       freeApps: 'Free (But constant spam & upselling)', 
       agencies: '₹5,000+ Upfront Retainers' 
     },
@@ -68,7 +68,7 @@ export default function Pricing() {
               Lifetime dashboard access.
             </h1>
             <p className="mt-5 text-sm sm:text-base leading-relaxed text-textSecondary max-w-2xl">
-              Pay ₹299 once to pull your official 4-bureau credit reports and keep them saved securely in your PrimeScore account forever. Zero monthly subscriptions. Zero ad spam.
+              Pay ₹199 once to pull your official 4-bureau credit reports and keep them saved securely in your PrimeScore account forever. Zero monthly subscriptions. Zero ad spam.
             </p>
           </div>
         </Reveal>
@@ -89,8 +89,9 @@ export default function Pricing() {
 
               <div className="mt-8 pt-8 border-t border-slate-100">
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display text-5xl font-extrabold text-brandNavy tracking-tight">₹299</span>
+                  <span className="font-display text-5xl font-extrabold text-brandNavy tracking-tight">₹199</span>
                   <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
+                  <span className="text-[10px] font-semibold text-textSecondary/70">+GST</span>
                 </div>
                 <p className="mt-2 text-[10px] font-semibold text-textSecondary uppercase tracking-wider">
                   No recurring charges · No automatic renewals
@@ -171,7 +172,7 @@ export default function Pricing() {
         <div className="mt-8 hidden overflow-hidden rounded-2xl border border-slate-200 bg-white sm:block shadow-sm">
           <div className="grid grid-cols-12 border-b border-slate-200 bg-slate-50/50 p-4 text-xs font-bold uppercase tracking-wider text-brandNavy">
             <div className="col-span-3">Feature</div>
-            <div className="col-span-3 text-[#10b981]">PrimeScore (₹299 One-time)</div>
+            <div className="col-span-3 text-[#10b981]">PrimeScore (₹199 One-time)</div>
             <div className="col-span-3">Free Score Apps</div>
             <div className="col-span-3">Traditional Bureaus</div>
           </div>

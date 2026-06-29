@@ -2,7 +2,7 @@
 'use client'
 
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowRight, Lock, ShieldCheck, Award, Star, TrendingUp } from 'lucide-react'
+import { ArrowRight, Lock, Award, Star, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import Button from './Button'
 import PhoneShowcase from './PhoneShowcase'
@@ -29,7 +29,7 @@ export default function HeroInteractive() {
 
   return (
     <section
-      className="relative flex min-h-[100svh] items-center pb-12 pt-28 lg:pt-32 sm:pb-16 overflow-hidden bg-white"
+      className="relative flex min-h-[100svh] items-center pb-12 pt-20 lg:pt-24 sm:pb-16 overflow-hidden bg-white"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -72,15 +72,6 @@ export default function HeroInteractive() {
         <div className="grid items-center gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] text-center lg:text-left">
           {/* Left Text */}
           <div className="flex flex-col items-center lg:items-start relative z-20">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-brandBlue/5 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-brandBlue border border-brandBlue/10"
-            >
-              <ShieldCheck className="h-3.5 w-3.5 text-brandBlue" />
-              CIBIL Repair & Correction Agency
-            </motion.div>
             <h1 className="font-display text-4xl font-black leading-[1.0] tracking-tighter text-brandNavy sm:text-6xl lg:text-[82px] flex flex-col items-center lg:items-start text-center lg:text-left w-full">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] }}>
                 <span className="text-brandNavy">Your Entire</span>
