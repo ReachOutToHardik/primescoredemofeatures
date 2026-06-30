@@ -9,10 +9,9 @@ export default function IndiaMap() {
         style={{ filter: 'blur(60px)' }}
       >
         <div
-          className="w-3/4 h-3/4 rounded-full animate-pulse"
+          className="w-3/4 h-3/4 rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(29,78,216,0.12) 0%, rgba(15,37,87,0.06) 60%, transparent 100%)',
-            animationDuration: '5s',
           }}
         />
       </div>

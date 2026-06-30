@@ -36,11 +36,9 @@ export default function About() {
             </Reveal>
 
             {/* Right: India Map */}
-            <Reveal delay={0.2}>
-              <div className="relative flex-shrink-0 w-full max-w-[440px] lg:max-w-[540px]">
-                <IndiaMap />
-              </div>
-            </Reveal>
+            <div className="relative flex-shrink-0 w-full max-w-[440px] lg:max-w-[540px]">
+              <IndiaMap />
+            </div>
           </div>
         </section>
 
