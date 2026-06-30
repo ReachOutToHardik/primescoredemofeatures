@@ -326,8 +326,8 @@ export default function IfscCode() {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="space-y-6">
+             <div className="grid lg:grid-cols-2 gap-8 w-full max-w-full overflow-hidden">
+              <div className="space-y-6 w-full min-w-0">
                 <div>
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">IFSC Code</label>
                   <p className="text-xl font-mono font-bold text-[#10b981] mt-1">{data.IFSC}</p>
@@ -338,11 +338,11 @@ export default function IfscCode() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Location</label>
-                  <div className="flex items-start gap-2 mt-1">
+                  <div className="flex items-start gap-2 mt-1 w-full min-w-0">
                     <MapPin className="h-5 w-5 text-gray-400 shrink-0 mt-0.5" />
-                    <p className="text-gray-900 leading-relaxed break-words overflow-hidden">{data.ADDRESS}</p>
+                    <p className="text-gray-900 leading-relaxed break-all overflow-hidden flex-1">{data.ADDRESS}</p>
                   </div>
-                  <p className="text-gray-600 ml-7 mt-1">{data.CITY}, {data.STATE}</p>
+                  <p className="text-gray-600 ml-7 mt-1 break-words">{data.CITY}, {data.STATE}</p>
                 </div>
               </div>
 
