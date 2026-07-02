@@ -158,35 +158,22 @@ export default function AdminCredentialsPage() {
         })
       }
 
-      // Load background and logos
-      const [bgImg, dpiit, istart, msme, rbih, ihub] = await Promise.all([
-        loadImage('/certificate_bg.png'),
-        loadImage('/trusted%20by/DPIIT%20startupindia.png'),
-        loadImage('/trusted%20by/IStart.png'),
-        loadImage('/trusted%20by/MSME.png'),
-        loadImage('/trusted%20by/RBIH.png'),
-        loadImage('/trusted%20by/I-hub.png')
-      ])
+      // Load background image
+      const bgImg = await loadImage('/certificate_bg.png')
 
       // 1. Draw background image
       doc.addImage(bgImg, 'PNG', 0, 0, pageWidth, pageHeight)
 
-      // 2. Title
-      doc.setFont('Helvetica', 'bold')
-      doc.setFontSize(22)
-      doc.setTextColor(26, 37, 75)
-      doc.text('CERTIFICATE OF INTERNSHIP', pageWidth / 2, 54, { align: 'center' })
-
       doc.setFont('Helvetica', 'normal')
-      doc.setFontSize(9)
+      doc.setFontSize(10)
       doc.setTextColor(148, 163, 184)
-      doc.text('THIS IS TO CERTIFY THAT', pageWidth / 2, 64, { align: 'center' })
+      doc.text('THIS IS TO CERTIFY THAT', pageWidth / 2, 85, { align: 'center' })
 
       // 3. Candidate Name
       doc.setFont('Helvetica', 'bold')
       doc.setFontSize(28)
       doc.setTextColor(26, 37, 75)
-      doc.text(cred.intern_name, pageWidth / 2, 78, { align: 'center' })
+      doc.text(cred.intern_name, pageWidth / 2, 102, { align: 'center' })
 
       // 4. Internship details text paragraph
       doc.setFont('Helvetica', 'normal')
@@ -204,74 +191,35 @@ export default function AdminCredentialsPage() {
       const detailText = `has successfully completed a professional internship program as a ${cred.role}`
       const detailText2 = `at Primescore from ${formatDate(cred.start_date)} to ${formatDate(cred.end_date)}.`
       
-      doc.text(detailText, pageWidth / 2, 90, { align: 'center' })
-      doc.text(detailText2, pageWidth / 2, 95, { align: 'center' })
+      doc.text(detailText, pageWidth / 2, 118, { align: 'center' })
+      doc.text(detailText2, pageWidth / 2, 124, { align: 'center' })
 
-      // 5. Certified By Logos
-      doc.setFont('Helvetica', 'bold')
-      doc.setFontSize(7.5)
-      doc.setTextColor(148, 163, 184)
-      doc.text('PRIMESCORE IS CERTIFIED & RECOGNIZED BY', pageWidth / 2, 134, { align: 'center' })
+      // 5. Certified By Logos (Cleaned up - unused text overlay removed)
 
-      let currentX = 40
-      const gaps = 25
-      const centerY = 144
-
-      // Logo 1: DPIIT (w: 26, h: 8)
-      doc.addImage(dpiit, 'PNG', currentX, centerY - 4, 26, 8)
-      currentX += 26 + gaps
-
-      // Logo 2: iStart (w: 22, h: 9)
-      doc.addImage(istart, 'PNG', currentX, centerY - 4.5, 22, 9)
-      currentX += 22 + gaps
-
-      // Logo 3: MSME (w: 22, h: 9)
-      doc.addImage(msme, 'PNG', currentX, centerY - 4.5, 22, 9)
-      currentX += 22 + gaps
-
-      // Logo 4: RBIH (w: 24, h: 8)
-      doc.addImage(rbih, 'PNG', currentX, centerY - 4, 24, 8)
-      currentX += 24 + gaps
-
-      // Logo 5: iHub (w: 20, h: 9)
-      doc.addImage(ihub, 'PNG', currentX, centerY - 4.5, 20, 9)
-
-      // Divider Line above footer
-      doc.setDrawColor(226, 232, 240)
-      doc.setLineWidth(0.5)
-      doc.line(40, 165, pageWidth - 40, 165)
-
-      // 6. Verification & Signature
+      // 6. Verification Info (Cleanly aligned at the bottom left)
       doc.setFont('Helvetica', 'bold')
       doc.setFontSize(8)
       doc.setTextColor(26, 37, 75)
-      doc.text('Date of Issuance', 40, 172)
+      doc.text('Date of Issuance', 40, 158)
       
       doc.setFont('Helvetica', 'normal')
       doc.setFontSize(9)
       doc.setTextColor(71, 85, 105)
-      doc.text(formatDate(cred.issue_date), 40, 177)
+      doc.text(formatDate(cred.issue_date), 40, 163)
       
+      doc.setFont('Helvetica', 'normal')
+      doc.setFontSize(7)
+      doc.setTextColor(148, 163, 184)
+      doc.text(`ID: ${cred.id}`, 40, 169)
+
+      // Verification url (Cleanly aligned at the bottom right matching verify view)
       doc.setFont('Helvetica', 'normal')
       doc.setFontSize(6.5)
       doc.setTextColor(148, 163, 184)
-      doc.text(`LEDGER ID: ${cred.id}`, 40, 184)
-      doc.text(`Verify online at: primescore.in/verify/${cred.id}`, 40, 188)
-
-      // CEO Signature (Centered at pageWidth - 75 to keep it away from right corner stripe)
+      doc.text('Verify authenticity at:', pageWidth - 80, 168)
       doc.setFont('Helvetica', 'bold')
-      doc.setFontSize(10)
-      doc.setTextColor(26, 37, 75)
-      doc.text('Sawai Singh', pageWidth - 75, 175, { align: 'center' })
-
-      doc.setDrawColor(203, 213, 225)
-      doc.setLineWidth(0.5)
-      doc.line(pageWidth - 100, 179, pageWidth - 50, 179)
-
-      doc.setFont('Helvetica', 'bold')
-      doc.setFontSize(8)
-      doc.setTextColor(26, 37, 75)
-      doc.text('Founder & CEO', pageWidth - 75, 184, { align: 'center' })
+      doc.setTextColor(37, 99, 235)
+      doc.text(`primescore.in/verify/${cred.id}`, pageWidth - 80, 172)
 
       // Save
       doc.save(`Primescore-Certificate-${cred.intern_name.replace(/\s+/g, '-')}.pdf`)
