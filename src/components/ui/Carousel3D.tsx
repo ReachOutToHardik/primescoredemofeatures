@@ -3,40 +3,26 @@
 import { useState, useEffect, useRef } from 'react';
 
 const FEATURES = [
-  { id: 1, image: '/carousel/c_img1.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557167/1_ccikoi.mp4' },
-  { id: 2, image: '/carousel/c_img2.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/2_p5ryxd.mp4' },
-  { id: 3, image: '/carousel/c_img3.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/3_wa61vt.mp4' },
-  { id: 4, image: '/carousel/c_img4.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/4_onxebr.mp4' },
-  { id: 5, image: '/carousel/c_img5.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/5_eipppp.mp4' },
-  { id: 6, image: '/carousel/c_img6.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782557166/6_ekvkrs.mp4' },
-  { id: 7, image: '/carousel/c_img7.jpg', video: 'https://res.cloudinary.com/dd7z42urh/video/upload/v1782718917/VN20260627_125056_1_muvezm.mp4' }
+  { id: 1, image: '/carousel/c_img1.jpg' },
+  { id: 2, image: '/carousel/c_img2.jpg' },
+  { id: 3, image: '/carousel/c_img3.jpg' },
+  { id: 4, image: '/carousel/c_img4.jpg' },
+  { id: 5, image: '/carousel/c_img5.jpg' },
+  { id: 6, image: '/carousel/c_img6.jpg' },
+  { id: 7, image: '/carousel/c_img7.jpg' }
 ];
 
-function FeatureCard({ image, video }: { image: string; video?: string }) {
+function FeatureCard({ image }: { image: string }) {
   return (
     <div
       className="group relative flex-shrink-0 w-96 h-[540px] rounded-[1rem] overflow-hidden shadow-2xl border border-white/10 cursor-pointer origin-center transition-all duration-500 hover:scale-[1.02] hover:brightness-110 bg-slate-900 gpu-accelerated"
       style={{ transform: 'translateZ(0)', willChange: 'transform' }}
     >
-      {video ? (
-        <video
-          src={video}
-          poster={image}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          className="w-full h-full object-cover"
-          style={{ transform: 'translateZ(0)' }}
-        />
-      ) : (
-        <img
-          src={image}
-          alt="Poster Placeholder"
-          className="w-full h-full object-cover"
-        />
-      )}
+      <img
+        src={image}
+        alt="Feature Preview"
+        className="w-full h-full object-cover"
+      />
 
       <div className="absolute inset-0 border border-white/20 rounded-[1rem] pointer-events-none"></div>
     </div>
@@ -114,7 +100,6 @@ export default function Carousel3D() {
               >
                 <FeatureCard 
                   image={lang.image} 
-                  video={lang.video} 
                 />
               </div>
             );
