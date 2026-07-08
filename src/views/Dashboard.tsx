@@ -14,9 +14,9 @@ export default function Dashboard() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
-  // Countdown to July 10, 2026
+  // Countdown to July 19, 2026 at 1:00 PM IST (07:30 UTC)
   useEffect(() => {
-    const targetDate = new Date('2026-07-10T00:00:00Z').getTime()
+    const targetDate = new Date('2026-07-19T07:30:00Z').getTime()
 
     const updateTime = () => {
       const now = new Date().getTime()
