@@ -40,9 +40,23 @@ export default function Dashboard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!email.trim()) return
     setStatus('loading')
 
     try {
+      // 1. Submit to Supabase table
+      const { supabase } = await import('../lib/supabase')
+      if (supabase) {
+        const { error: dbError } = await supabase
+          .from('dashboard_wishlist')
+          .insert([{ email: email.trim(), status: 'Pending' }])
+        
+        if (dbError) {
+          console.error('Supabase DB Insert Error:', dbError)
+        }
+      }
+
+      // 2. Submit to Web3Forms
       const res = await fetch(WEB3FORMS_URL, {
         method: 'POST',
         headers: {
@@ -79,6 +93,7 @@ export default function Dashboard() {
         setStatus('error')
       }
     } catch (err) {
+      console.error('Submit Error:', err)
       setStatus('error')
     }
   }

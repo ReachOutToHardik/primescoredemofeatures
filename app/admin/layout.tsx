@@ -22,18 +22,21 @@ import {
   Eye,
   EyeOff,
   Briefcase,
-  Award
+  Award,
+  Building2
 } from 'lucide-react'
 
 // ─── Navigation Config ───────────────────────────────────────
 const NAV_ITEMS = [
-  { name: 'Overview',       path: '/admin',              icon: LayoutDashboard, roles: ['super_admin', 'manager'] },
-  { name: 'Blog Editor',    path: '/admin/blog-editor',  icon: BookOpen,        roles: ['super_admin', 'manager', 'writer'] },
-  { name: 'Leads CRM',      path: '/admin/leads',        icon: Contact,         roles: ['super_admin', 'manager', 'sales'] },
-  { name: 'Careers',        path: '/admin/careers',      icon: Briefcase,       roles: ['super_admin', 'manager'] },
-  { name: 'Credentials',    path: '/admin/credentials',  icon: Award,           roles: ['super_admin', 'manager'] },
-  { name: 'Analytics',      path: '/admin/analytics',    icon: BarChart3,       roles: ['super_admin', 'manager', 'analyst'] },
-  { name: 'Access Control', path: '/admin/team',         icon: Users,           roles: ['super_admin'] },
+  { name: 'Overview',          path: '/admin',                    icon: LayoutDashboard, roles: ['super_admin', 'manager'] },
+  { name: 'Blog Editor',       path: '/admin/blog-editor',        icon: BookOpen,        roles: ['super_admin', 'manager', 'writer'] },
+  { name: 'Leads CRM',         path: '/admin/leads',              icon: Contact,         roles: ['super_admin', 'manager', 'sales'] },
+  { name: 'Commercial Leads',  path: '/admin/commercial-leads',   icon: Building2,       roles: ['super_admin', 'manager', 'sales'] },
+  { name: 'Dashboard Wishlist', path: '/admin/dashboard-wishlist', icon: Users,           roles: ['super_admin', 'manager', 'sales'] },
+  { name: 'Careers',           path: '/admin/careers',            icon: Briefcase,       roles: ['super_admin', 'manager'] },
+  { name: 'Credentials',       path: '/admin/credentials',        icon: Award,           roles: ['super_admin', 'manager'] },
+  { name: 'Analytics',         path: '/admin/analytics',          icon: BarChart3,       roles: ['super_admin', 'manager', 'analyst'] },
+  { name: 'Access Control',    path: '/admin/team',               icon: Users,           roles: ['super_admin'] },
 ]
 
 const ALLOWED_CONSOLE_ROLES = ['super_admin', 'manager', 'writer', 'sales', 'analyst']
