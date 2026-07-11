@@ -656,7 +656,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                 <h2 className="mt-3 font-display text-3xl font-extrabold text-brandNavy sm:text-4xl">
                   Initiate Commercial Audit Consultation
                 </h2>
-                <p className="mt-4 text-base sm:text-lg leading-relaxed text-textSecondary font-light">
+                <p className="mt-4 text-base text-textSecondary font-light leading-relaxed">
                   Find out what's hiding in your Company Credit Report. Our commercial desk offers a free preliminary assessment of your CCR for qualified corporate entities. Discuss your reporting requirements here.
                 </p>
 
