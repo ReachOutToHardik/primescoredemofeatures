@@ -510,11 +510,11 @@ export default function BusinessPricing() {
               Trusted By & Supported Under
             </span>
             <div className="flex flex-wrap items-center justify-center gap-12 opacity-95 transition-all duration-300">
-              <img src="/trusted by/MSME.png" alt="MSME Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
-              <img src="/trusted by/RBIH.png" alt="RBIH Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
-              <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT Startup India Logo" className="h-8 sm:h-10 w-auto object-contain hover:scale-105 transition-transform duration-200" />
-              <img src="/trusted by/IStart.png" alt="iStart Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
-              <img src="/trusted by/I-hub.png" alt="i-Hub Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/MSME.png" alt="MSME Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/RBIH.png" alt="RBIH Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT Startup India Logo" className="h-9 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/IStart.png" alt="iStart Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/I-hub.png" alt="i-Hub Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
             </div>
           </div>
         </div>
@@ -537,22 +537,22 @@ export default function BusinessPricing() {
 
                 <div className="mt-12 space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm">
-                      <Mail className="h-4.5 w-4.5" />
+                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
+                      <Mail className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#2563EB]">Direct Email Link</h4>
-                      <a href="mailto:info@primescore.in" className="text-xs text-textSecondary hover:underline">info@primescore.in</a>
+                      <h4 className="text-sm font-bold text-[#2563EB]">Direct Email Link</h4>
+                      <a href="mailto:info@primescore.in" className="text-base text-brandNavy font-semibold hover:underline">info@primescore.in</a>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm">
-                      <Phone className="h-4.5 w-4.5" />
+                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
+                      <Phone className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#2563EB]">Operational Hours</h4>
-                      <p className="text-xs text-textSecondary">Monday – Saturday, 10 AM to 6 PM IST</p>
+                      <h4 className="text-sm font-bold text-[#2563EB]">Operational Hours</h4>
+                      <p className="text-sm text-textSecondary font-medium">Monday – Saturday, 10 AM to 6 PM IST</p>
                     </div>
                   </div>
                 </div>
