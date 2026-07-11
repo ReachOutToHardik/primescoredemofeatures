@@ -53,12 +53,12 @@ export default function Carousel3D() {
   const step = 360 / totalCards;
 
   return (
-    <div className="relative w-full bg-gray-50 overflow-hidden pt-20">
+    <div className="relative w-full overflow-hidden pt-10">
       <div className="text-center relative z-30 px-4">
         <h2 className="font-display text-4xl font-black tracking-tight text-brandNavy sm:text-5xl">
           Everything you need,<br />in one place
         </h2>
-        <p className="mt-4 text-lg text-textSecondary">
+        <p className="mt-4 text-base text-textSecondary">
           A premium suite of tools to take back control of your financial future.
         </p>
       </div>
