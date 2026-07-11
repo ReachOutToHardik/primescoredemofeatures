@@ -1,7 +1,8 @@
 'use client'
 
-import React from 'react'
-import { Check, ShieldCheck, FileText, Users, Mail } from 'lucide-react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
+import { Check, ShieldCheck, FileText, Users, Mail, Phone, AlertCircle, CheckCircle2, ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Reveal from '../components/ui/Reveal'
 
 type PlanConfig = {
@@ -12,6 +13,17 @@ type PlanConfig = {
   unlimitedPrice: string
   features: string[]
   freeRectificationsText: string
+}
+
+type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+
+type FormState = {
+  companyName: string
+  contactName: string
+  email: string
+  phone: string
+  issueType: IssueType
+  message: string
 }
 
 const PLANS: PlanConfig[] = [
@@ -131,7 +143,155 @@ const PROCESS_STEPS = [
   { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly reports are delivered for the duration of your plan. We flag new issues proactively.' },
 ]
 
+interface FAQItemProps {
+  faq: { q: string; a: string }
+  index: number
+  isOpen: boolean
+  onToggle: () => void
+}
+
+function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return (
+    <div className="border border-slate-200/80 rounded-2xl bg-slate-50/50 hover:bg-slate-50 transition-colors overflow-hidden">
+      <button
+        onClick={onToggle}
+        className="w-full px-6 py-5 flex items-center justify-between text-left font-display text-sm font-bold text-brandNavy focus:outline-none"
+      >
+        <span>{faq.q}</span>
+        <ChevronDown 
+          className={`h-4.5 w-4.5 text-slate-400 transition-transform duration-300 shrink-0 ml-4 ${isOpen && mounted ? 'rotate-180 text-[#2563EB]' : ''}`} 
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && mounted && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.04, 0.62, 0.23, 0.98] }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-5 text-xs leading-relaxed text-textSecondary border-t border-slate-200/40 pt-3 bg-white">
+              {faq.a}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 export default function BusinessPricing() {
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+
+  const [form, setForm] = useState<FormState>({
+    companyName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    issueType: 'Not sure',
+    message: ''
+  })
+
+  const issueTypes: IssueType[] = [
+    'Commercial CIBIL Audit',
+    'Vendor Risk Monitoring',
+    'Company dispute',
+    'Not sure'
+  ]
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.email.trim() || !form.companyName.trim()) return
+
+    setStatus('sending')
+
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+    const templateId = 'template_37a3wfs'
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+    if (!serviceId || !publicKey) {
+      setStatus('error')
+      setErrorMessage('Form configuration is missing. Please contact us via WhatsApp.')
+      return
+    }
+
+    try {
+      const emailjs = (await import('@emailjs/browser')).default
+      const templateParams = {
+        from_name: `${form.contactName} (${form.companyName})`,
+        from_email: form.email,
+        from_phone: form.phone,
+        issue_type: `B2B: ${form.issueType}`,
+        message: form.message,
+        to_name: 'Primescore Support',
+        to_email: form.email
+      }
+
+      const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
+      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
+
+      await Promise.all([adminPromise, userPromise])
+
+      const sheetWebhookUrl = 'https://script.google.com/macros/s/AKfycbw5YhcVQoyohMfXIMUu7LjuYNLskdNF6ttGScqDk7H3wwPkgfC5y-BMYTivdnn6tZj4Ag/exec'
+      if (sheetWebhookUrl) {
+        try {
+          await fetch(sheetWebhookUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: `${form.contactName} (${form.companyName})`,
+              email: form.email,
+              phone: form.phone,
+              issueType: `B2B: ${form.issueType}`,
+              message: form.message,
+              timestamp: new Date().toISOString()
+            }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+          })
+        } catch (sheetErr) {
+          console.error('Failed to send to Google Sheets:', sheetErr)
+        }
+      }
+
+      try {
+        const { createClient } = await import('@supabase/supabase-js')
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+        if (supabaseUrl && supabaseKey) {
+          const supabase = createClient(supabaseUrl, supabaseKey)
+          await supabase.from('commercial_leads').insert([{
+            source_page: 'pricing_page',
+            company_name: form.companyName,
+            contact_name: form.contactName,
+            email: form.email,
+            phone: form.phone,
+            service_type: form.issueType,
+            message: form.message,
+            status: 'New'
+          }])
+        }
+      } catch (dbErr) {
+        console.error('Failed to save lead to Supabase:', dbErr)
+      }
+
+      setStatus('sent')
+      setErrorMessage('')
+      setForm({ companyName: '', contactName: '', email: '', phone: '', issueType: 'Not sure', message: '' })
+      setTimeout(() => setStatus('idle'), 5000)
+    } catch (err) {
+      console.error('Submit Error:', err)
+      setStatus('error')
+      setErrorMessage('Failed to send message. Please try again or use WhatsApp.')
+    }
+  }
+
   return (
     <div className="w-full bg-white text-slate-900">
 
@@ -213,7 +373,7 @@ export default function BusinessPricing() {
 
                     <div className="mt-12">
                       <a
-                        href="/business#audit-form"
+                        href="#audit-form"
                         className="block text-center w-full py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-200 bg-brandNavy text-white hover:bg-brandNavy/90 shadow-md"
                       >
                         Get Started
@@ -232,6 +392,8 @@ export default function BusinessPricing() {
           </Reveal>
         </div>
       </section>
+
+
 
       {/* ── WHY PRIMESCORE ───────────────────────────────── */}
       <section className="border-b border-slate-100">
@@ -274,7 +436,6 @@ export default function BusinessPricing() {
           </Reveal>
 
           <div className="relative">
-            {/* Connector line */}
             <div className="hidden lg:block absolute top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
             <div className="grid lg:grid-cols-5 gap-8 relative">
               {PROCESS_STEPS.map((step, i) => (
@@ -315,48 +476,237 @@ export default function BusinessPricing() {
         </div>
       </section>
 
-      {/* ── CTA STRIP ───────────────────────────────────── */}
-      <section className="bg-brandNavy relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_rgba(232,92,13,0.15)_0%,_transparent_60%)] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none opacity-5">
-          <svg width="100%" height="100%">
-            <defs>
-              <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1.5" fill="white"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#dots)" />
-          </svg>
-        </div>
-        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 py-16 flex flex-col lg:flex-row items-center justify-between gap-8">
+      {/* ── FAQ SECTION ─────────────────────────────────── */}
+      <section className="border-b border-slate-100 bg-[#f8fafc]">
+        <div className="mx-auto max-w-[840px] px-6 sm:px-10 py-20">
           <Reveal>
-            <div>
-              <h2 className="font-display text-2xl sm:text-3xl font-black text-white leading-tight max-w-xl">
-                Ready to clean up your company's credit profile?
-              </h2>
-              <p className="mt-3 text-sm text-white/60 font-light max-w-lg">
-                Talk to our commercial desk and get a free preliminary assessment of your Company Credit Report.
-              </p>
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-8 bg-[#2563EB]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">FAQ</span>
+              </div>
+              <h2 className="font-display text-3xl font-black text-brandNavy">Common questions answered.</h2>
             </div>
           </Reveal>
-          <Reveal delay={0.1}>
-            <div className="flex flex-col sm:flex-row gap-4 shrink-0">
-              <a
-                href="/business#audit-form"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white text-brandNavy text-xs font-black uppercase tracking-widest rounded-xl hover:bg-white/90 transition-all shadow-lg"
-              >
-                Request Audit
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-              <a
-                href="mailto:info@primescore.in"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-white/20 text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all"
-              >
-                <Mail className="h-3.5 w-3.5" />
-                info@primescore.in
-              </a>
+          <div className="space-y-4">
+            {[
+              { q: 'What is a Commercial CIBIL Audit?', a: 'A Commercial CIBIL Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
+              { q: 'How long does it take to identify duplicate profiles?', a: 'Our analysts typically complete preliminary file auditing and duplicate account reconciliation mapping within 48 to 72 hours of document submission.' },
+              { q: 'Does auditing damage my company\'s credit score?', a: 'No. Checking or auditing your commercial bureau reports through our analyst desk does not count as a hard inquiry and has zero negative impact on your company\'s credit health.' },
+              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from CIBIL, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
+              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the CIBIL and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
+            ].map((faq, index) => (
+              <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUSTED BY LOGOS STRIP (COLORFUL & VIBRANT - BELOW FAQ) ───── */}
+      <section className="bg-slate-50/70 border-b border-slate-100 py-12">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <div className="flex flex-col items-center justify-center gap-6">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#2563EB]">
+              Trusted By & Supported Under
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-12 opacity-95 transition-all duration-300">
+              <img src="/trusted by/MSME.png" alt="MSME Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/RBIH.png" alt="RBIH Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT Startup India Logo" className="h-8 sm:h-10 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/IStart.png" alt="iStart Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/I-hub.png" alt="i-Hub Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
             </div>
-          </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT FORM SECTION */}
+      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 items-start">
+            
+            <Reveal>
+              <div className="max-w-md">
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">CONTACT DESK</span>
+                <h2 className="mt-3 font-display text-3xl font-extrabold text-brandNavy sm:text-4xl">
+                  Initiate Commercial Audit Consultation
+                </h2>
+                <p className="mt-4 text-base sm:text-lg leading-relaxed text-textSecondary font-light">
+                  Find out what's hiding in your Company Credit Report. Our commercial desk offers a free preliminary assessment of your CCR for qualified corporate entities. Discuss your reporting requirements here.
+                </p>
+
+                <div className="mt-12 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm">
+                      <Mail className="h-4.5 w-4.5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#2563EB]">Direct Email Link</h4>
+                      <a href="mailto:info@primescore.in" className="text-xs text-textSecondary hover:underline">info@primescore.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm">
+                      <Phone className="h-4.5 w-4.5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#2563EB]">Operational Hours</h4>
+                      <p className="text-xs text-textSecondary">Monday – Saturday, 10 AM to 6 PM IST</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Map location embed */}
+                <div className="mt-8 w-full h-[260px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
+                  <iframe 
+                    src="https://maps.google.com/maps?q=iStart%20Nest%20Incubation%20Center,%20Gov.%20Polytechnic%20College,%20Jodhpur&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    className="absolute top-0 left-0 w-full h-full border-0"
+                    allowFullScreen={false} 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.15}>
+              <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+                {status === 'sent' ? (
+                  <div className="flex flex-col py-8 animate-in fade-in zoom-in-95 duration-300 items-center text-center">
+                    <div className="h-16 w-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-5 text-emerald-500 shadow-sm">
+                      <CheckCircle2 className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-base font-bold text-brandNavy mb-1">Details Submitted</h3>
+                    <p className="text-textSecondary text-xs max-w-xs leading-relaxed">
+                      A corporate analyst will review your profile details and reach out.
+                    </p>
+                  </div>
+                ) : (
+                  <form className="space-y-5" onSubmit={handleSubmit}>
+                    {status === 'error' && (
+                      <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600 mb-2">
+                        <AlertCircle className="h-5 w-5 shrink-0" />
+                        <p className="text-xs font-semibold">{errorMessage}</p>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="companyName">
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        id="companyName"
+                        value={form.companyName}
+                        onChange={(e) => setForm((p) => ({ ...p, companyName: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                        placeholder="Company Name"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="contactName">
+                        Contact Person Name
+                      </label>
+                      <input
+                        type="text"
+                        id="contactName"
+                        value={form.contactName}
+                        onChange={(e) => setForm((p) => ({ ...p, contactName: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                        placeholder="Contact Person Name"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="email">
+                          Company Email
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          value={form.email}
+                          onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                          className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                          placeholder="Company Email"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="phone">
+                          Contact Number
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          value={form.phone}
+                          onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                          className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                          placeholder="Contact Number"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block">
+                        Required Service
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {issueTypes.map((type) => {
+                          const isSelected = form.issueType === type
+                          return (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => setForm((p) => ({ ...p, issueType: type }))}
+                              className={[
+                                'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
+                                isSelected
+                                  ? 'bg-brandNavy text-white border-brandNavy'
+                                  : 'bg-white text-textSecondary border-slate-200 hover:border-brandNavy/35 hover:text-brandNavy'
+                              ].join(' ')}
+                            >
+                              {type}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="message">
+                        Briefly state your requirements
+                      </label>
+                      <textarea
+                        id="message"
+                        value={form.message}
+                        onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors min-h-[90px] resize-none"
+                        placeholder="Briefly state your requirements..."
+                        required
+                      />
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        disabled={status === 'sending'}
+                        className="w-full py-4 bg-brandNavy text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-brandNavy/90 transition-all shadow-md disabled:opacity-50"
+                      >
+                        {status === 'sending' ? 'Sending Request...' : 'Submit Form'}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </Reveal>
+
+          </div>
         </div>
       </section>
 

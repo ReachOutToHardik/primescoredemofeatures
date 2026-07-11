@@ -296,6 +296,8 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
         </div>
       </section>
 
+
+
       {/* ── THE PROBLEM ──────────────────────────────────── */}
       <section className="border-b border-slate-100">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
@@ -621,6 +623,24 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
             ].map((faq, index) => (
               <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUSTED BY LOGOS STRIP (COLORFUL & VIBRANT - BELOW FAQ) ───── */}
+      <section className="bg-slate-50/70 border-b border-slate-100 py-12">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <div className="flex flex-col items-center justify-center gap-6">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#2563EB]">
+              Trusted By & Supported Under
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-12 opacity-95 transition-all duration-300">
+              <img src="/trusted by/MSME.png" alt="MSME Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/RBIH.png" alt="RBIH Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT Startup India Logo" className="h-8 sm:h-10 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/IStart.png" alt="iStart Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/I-hub.png" alt="i-Hub Logo" className="h-10 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+            </div>
           </div>
         </div>
       </section>
