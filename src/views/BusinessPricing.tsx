@@ -1,23 +1,48 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Check, ArrowRight, ShieldCheck, FileText, Users, Phone, Mail } from 'lucide-react'
+import React from 'react'
+import { Check, ShieldCheck, FileText, Users, Mail } from 'lucide-react'
 import Reveal from '../components/ui/Reveal'
 
-const HALF_YEARLY_FEATURES = [
-  { label: 'Company Credit Report', detail: 'Monthly · 6 months' },
-  { label: "Director's Credit Report", detail: 'Monthly · 6 months' },
-  { label: 'Company CRIF Credit Report', detail: 'Quarterly · 2 reports' },
-  { label: "Director's CRIF Report", detail: 'Monthly · 6 months' },
-  { label: 'Free Rectification', detail: '1 per user' },
-]
+type PlanConfig = {
+  title: string
+  subtitle: string
+  duration: string
+  basePrice: string
+  unlimitedPrice: string
+  features: string[]
+  freeRectificationsText: string
+}
 
-const YEARLY_FEATURES = [
-  { label: 'Company Credit Report', detail: 'Monthly · 12 months' },
-  { label: "Director's Credit Report", detail: 'Monthly · 12 months' },
-  { label: 'Company CRIF Credit Report', detail: 'Quarterly · 4 reports' },
-  { label: "Director's CRIF Report", detail: 'Monthly · 12 months' },
-  { label: 'Free Rectifications', detail: '2 per user' },
+const PLANS: PlanConfig[] = [
+  {
+    title: 'Half Yearly Plan',
+    subtitle: 'Standard audit & bureau monitoring',
+    duration: '6 Months coverage',
+    basePrice: '35,000',
+    unlimitedPrice: '40,000',
+    freeRectificationsText: 'One Free Rectification (Per User)',
+    features: [
+      'Monthly company credit report for 6 months',
+      'Monthly Director\'s credit report for 6 months',
+      'Quarterly company CRIF credit report for 6 months (2 reports)',
+      'Monthly Director\'s CRIF Report for 6 months',
+    ]
+  },
+  {
+    title: 'Yearly Plan',
+    subtitle: 'Comprehensive annual monitoring',
+    duration: '12 Months coverage',
+    basePrice: '60,000',
+    unlimitedPrice: '80,000',
+    freeRectificationsText: 'Two Free Rectifications (Per User)',
+    features: [
+      'Monthly company credit report for 12 months',
+      'Monthly Director\'s credit report for 12 months',
+      'Quarterly company CRIF credit report for 12 months (4 reports)',
+      'Monthly Director\'s CRIF Report for 12 months',
+    ]
+  }
 ]
 
 const WHY_US = [
@@ -107,78 +132,103 @@ const PROCESS_STEPS = [
 ]
 
 export default function BusinessPricing() {
-  const [activePlan, setActivePlan] = useState<'half' | 'yearly'>('yearly')
-
   return (
     <div className="w-full bg-white text-slate-900">
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-slate-100">
-        {/* Background grid */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-50/80 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-orange-50/60 to-transparent" />
-        </div>
-
-        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 pt-20 pb-24">
+      {/* ── PREMIUM PRICING (ENGAGEMENT COSTS FIRST) ─────── */}
+      <section className="bg-slate-50/50 border-b border-slate-100 py-24">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
           <Reveal>
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-brandNavy leading-[1.08] mb-6">
-                  Your company's credit profile deserves more than a checklist.
-                </h1>
-                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed mb-10 max-w-xl">
-                  Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <a
-                    href="/business#audit-form"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-brandNavy text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-brandNavy/90 transition-all shadow-md"
-                  >
-                    Request Commercial Audit
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </a>
-                  <a
-                    href="#how-it-works"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-200 text-brandNavy text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 transition-all"
-                  >
-                    See How It Works
-                  </a>
-                </div>
-              </div>
-
-              {/* Stats panel */}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { n: '₹420Cr+', l: 'Disputed Credit\nAudited', accent: '#2563EB' },
-                  { n: '180+', l: 'Corporate Entities\nSupported', accent: '#E85C0D' },
-                  { n: '100%', l: 'Bureau Compliant\nOperations', accent: '#10b981' },
-                  { n: '2 Hrs', l: 'Response SLA\nGuaranteed', accent: '#0B192C' },
-                ].map((s, i) => (
-                  <div
-                    key={s.l}
-                    className="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm relative overflow-hidden"
-                  >
-                    <div
-                      className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-10 blur-xl"
-                      style={{ background: s.accent }}
-                    />
-                    <div className="text-3xl font-black text-brandNavy leading-none mb-2">{s.n}</div>
-                    <div className="text-[11px] text-slate-500 font-medium leading-snug whitespace-pre-line">{s.l}</div>
-                    <div className="mt-3 h-0.5 w-8 rounded-full" style={{ background: s.accent }} />
-                  </div>
-                ))}
-              </div>
+            <div className="max-w-2xl mb-16 text-left">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3">ENGAGEMENT COSTS</p>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-black text-[#0B192C] leading-tight">
+                Simple plans, tailored execution.
+              </h1>
+              <p className="mt-4 text-sm text-textSecondary font-light leading-relaxed">
+                Choose the duration of monitoring and audit support your enterprise requires. Options for standard or unlimited rectification packages are listed clearly below.
+              </p>
             </div>
+          </Reveal>
+
+          <div className="grid lg:grid-cols-2 gap-10 items-stretch">
+            {PLANS.map((plan, idx) => {
+              return (
+                <Reveal key={plan.title} delay={idx * 0.08}>
+                  <div className="bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between h-full p-8 sm:p-10 relative transition-all duration-300 hover:shadow-md hover:border-slate-300">
+                    <div>
+                      {/* Top Label info */}
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 px-3 py-1 rounded-full">
+                          {plan.duration}
+                        </span>
+                      </div>
+
+                      <h3 className="text-2xl font-black text-brandNavy mb-1">{plan.title}</h3>
+                      <p className="text-xs text-slate-400 mb-8">{plan.subtitle}</p>
+
+                      {/* Pricing block 1: Standard Option */}
+                      <div className="mb-6 pb-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                          <div className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Standard Tiers</div>
+                          <div className="flex items-baseline gap-1 mt-1">
+                            <span className="text-3xl font-black text-brandNavy tracking-tight">₹{plan.basePrice}</span>
+                            <span className="text-[10px] text-slate-400 font-semibold">+ GST</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-semibold text-slate-600">
+                            {plan.freeRectificationsText}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Pricing block 2: Unlimited Option */}
+                      <div className="mb-8 pb-8 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                          <div className="text-[10px] font-black uppercase text-brandNavy tracking-widest">Unlimited Rectification</div>
+                          <div className="flex items-baseline gap-1 mt-1">
+                            <span className="text-3xl font-black text-[#2563EB] tracking-tight">₹{plan.unlimitedPrice}</span>
+                            <span className="text-[10px] text-slate-400 font-semibold">+ GST</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-bold text-[#2563EB]">
+                            All rectifications included
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Features */}
+                      <ul className="space-y-4">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <div className="mt-1 shrink-0 h-4 w-4 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center">
+                              <Check className="h-2.5 w-2.5 text-[#2563EB] stroke-[3]" />
+                            </div>
+                            <span className="text-xs sm:text-sm text-slate-700 leading-normal">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-12">
+                      <a
+                        href="/business#audit-form"
+                        className="block text-center w-full py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-200 bg-brandNavy text-white hover:bg-brandNavy/90 shadow-md"
+                      >
+                        Get Started
+                      </a>
+                    </div>
+                  </div>
+                </Reveal>
+              )
+            })}
+          </div>
+
+          <Reveal delay={0.1}>
+            <p className="mt-8 text-xs text-slate-400 text-center">
+              GST applicable at 18% · Fixed-term contracts with zero surprises · Custom multi-entity billing available upon request.
+            </p>
           </Reveal>
         </div>
       </section>
@@ -243,182 +293,6 @@ export default function BusinessPricing() {
         </div>
       </section>
 
-      {/* ── PRICING ─────────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
-          <Reveal>
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3">Engagement Plans</p>
-                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight">
-                  Transparent pricing.<br />No surprise retainers.
-                </h2>
-                <p className="mt-4 text-sm text-textSecondary font-light max-w-lg leading-relaxed">
-                  Two plan durations. Two rectification tiers. All prices are fixed-term engagement contracts — no auto-renewals, no hidden escalation clauses.
-                </p>
-              </div>
-              {/* Toggle */}
-              <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start lg:self-end">
-                {(['half', 'yearly'] as const).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setActivePlan(p)}
-                    className={`px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
-                      activePlan === p
-                        ? 'bg-white text-brandNavy shadow-sm'
-                        : 'text-slate-500 hover:text-brandNavy'
-                    }`}
-                  >
-                    {p === 'half' ? '6 Months' : '12 Months'}
-                    {p === 'yearly' && activePlan !== 'yearly' && (
-                      <span className="ml-2 text-[8px] bg-brandRed text-white px-1.5 py-0.5 rounded-full">BEST</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.05}>
-            <div className="grid lg:grid-cols-2 border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-
-              {/* Standard Tier */}
-              <div className="p-8 sm:p-10 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col bg-white">
-                <div className="flex items-start justify-between mb-8">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 mb-2">Standard</div>
-                    <h3 className="text-2xl font-black text-brandNavy">Audit & Monitoring</h3>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-slate-400" />
-                  </div>
-                </div>
-
-                <div className="mb-8 pb-8 border-b border-slate-100">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-5xl font-black text-brandNavy tracking-tight">
-                      {activePlan === 'half' ? '₹35,000' : '₹60,000'}
-                    </span>
-                    <span className="text-sm text-slate-400">+ GST</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 uppercase tracking-wider font-medium">
-                    Fixed · {activePlan === 'half' ? '6-month' : '12-month'} engagement
-                  </div>
-                  <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    1 free rectification per user included
-                  </div>
-                </div>
-
-                <ul className="space-y-3.5 flex-1">
-                  {(activePlan === 'half' ? HALF_YEARLY_FEATURES : YEARLY_FEATURES).map((f, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="mt-0.5 h-5 w-5 rounded-full border border-emerald-200 bg-emerald-50 flex items-center justify-center shrink-0">
-                        <Check className="h-3 w-3 text-emerald-600 stroke-[3]" />
-                      </div>
-                      <div className="text-sm text-slate-700">
-                        <span className="font-semibold">{f.label}</span>
-                        <span className="text-slate-400 text-xs ml-1.5">— {f.detail}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <a
-                  href="/business#audit-form"
-                  className="mt-10 flex items-center justify-center gap-2 w-full py-4 border-2 border-brandNavy text-brandNavy hover:bg-brandNavy hover:text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-200"
-                >
-                  Request Consultation
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </a>
-              </div>
-
-              {/* Unlimited Tier */}
-              <div className="p-8 sm:p-10 bg-brandNavy flex flex-col relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(232,92,13,0.15)_0%,_transparent_55%)] pointer-events-none" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(37,99,235,0.12)_0%,_transparent_55%)] pointer-events-none" />
-
-                {/* Decorative SVG */}
-                <div className="absolute bottom-0 right-0 opacity-5 pointer-events-none">
-                  <svg width="240" height="240" viewBox="0 0 240 240" fill="none">
-                    <circle cx="120" cy="120" r="100" stroke="white" strokeWidth="1.5"/>
-                    <circle cx="120" cy="120" r="70" stroke="white" strokeWidth="1"/>
-                    <circle cx="120" cy="120" r="40" stroke="white" strokeWidth="0.5"/>
-                    <line x1="20" y1="120" x2="220" y2="120" stroke="white" strokeWidth="0.5"/>
-                    <line x1="120" y1="20" x2="120" y2="220" stroke="white" strokeWidth="0.5"/>
-                  </svg>
-                </div>
-
-                <div className="flex items-start justify-between mb-8 relative z-10">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40 mb-2">Unlimited</div>
-                    <h3 className="text-2xl font-black text-white">Rectification Plan</h3>
-                  </div>
-                  <span className="text-[9px] font-black text-brandRed bg-brandRed/10 border border-brandRed/20 px-2.5 py-1.5 rounded-lg uppercase tracking-widest">
-                    Recommended
-                  </span>
-                </div>
-
-                <div className="mb-8 pb-8 border-b border-white/10 relative z-10">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-5xl font-black text-white tracking-tight">
-                      {activePlan === 'half' ? '₹40,000' : '₹80,000'}
-                    </span>
-                    <span className="text-sm text-white/40">+ GST</span>
-                  </div>
-                  <div className="text-[11px] text-white/40 uppercase tracking-wider font-medium">
-                    Fixed · {activePlan === 'half' ? '6-month' : '12-month'} engagement
-                  </div>
-                  <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    Unlimited rectifications — no cap, no additional charges
-                  </div>
-                </div>
-
-                <ul className="space-y-3.5 flex-1 relative z-10">
-                  {(activePlan === 'half' ? HALF_YEARLY_FEATURES : YEARLY_FEATURES).map((f, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="mt-0.5 h-5 w-5 rounded-full border border-white/20 bg-white/10 flex items-center justify-center shrink-0">
-                        <Check className="h-3 w-3 text-white/70 stroke-[3]" />
-                      </div>
-                      <div className="text-sm text-white/75">
-                        <span className="font-semibold text-white">{f.label}</span>
-                        <span className="text-white/40 text-xs ml-1.5">— {f.detail}</span>
-                      </div>
-                    </li>
-                  ))}
-                  {/* Bonus row */}
-                  <li className="flex items-start gap-3 mt-2 pt-4 border-t border-white/10">
-                    <div className="mt-0.5 h-5 w-5 rounded-full border border-brandRed/40 bg-brandRed/15 flex items-center justify-center shrink-0">
-                      <Check className="h-3 w-3 text-brandRed stroke-[3]" />
-                    </div>
-                    <div className="text-sm">
-                      <span className="font-black text-white">Unlimited Rectifications</span>
-                      <span className="text-white/40 text-xs ml-1.5">— no per-dispute charges</span>
-                    </div>
-                  </li>
-                </ul>
-
-                <a
-                  href="/business#audit-form"
-                  className="relative z-10 mt-10 flex items-center justify-center gap-2 w-full py-4 bg-white text-brandNavy hover:bg-white/90 text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-200 shadow-xl"
-                >
-                  Request Consultation
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </a>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Fine print */}
-          <Reveal delay={0.1}>
-            <p className="mt-6 text-xs text-slate-400 text-center">
-              GST applicable at 18% · All plans are fixed-term contracts · Volume pricing available for group company portfolios
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
       {/* ── INCLUDED IN ALL PLANS ────────────────────────── */}
       <section className="bg-[#f8fafc] border-b border-slate-200">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-16">
@@ -472,7 +346,7 @@ export default function BusinessPricing() {
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white text-brandNavy text-xs font-black uppercase tracking-widest rounded-xl hover:bg-white/90 transition-all shadow-lg"
               >
                 Request Audit
-                <ArrowRight className="h-3.5 w-3.5" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
               <a
                 href="mailto:info@primescore.in"

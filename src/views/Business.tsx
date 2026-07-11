@@ -207,12 +207,11 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
     'Company dispute',
     'Not sure'
   ]
-
   const stats = useMemo(() => [
     { value: '₹420Cr+', label: 'Disputed Credit Audited' },
     { value: '180+', label: 'Corporate Entities Supported' },
     { value: '100%', label: 'Bureau Compliant Operations' },
-    { value: '2 Hours', label: 'Response SLA Time' }
+    { value: '2 Hrs', label: 'Response SLA Guaranteed' }
   ], [])
 
   const corporateTestimonials = useMemo(() => [
@@ -239,73 +238,57 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
           <div className="absolute top-0 right-0 w-[700px] h-[500px] bg-gradient-to-bl from-blue-50/70 to-transparent" />
         </div>
 
-        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 pt-16 pb-20">
-          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
-            <Reveal>
+        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 pt-20 pb-24">
+          <Reveal>
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
-                {/* Eyebrow */}
-                <div className="flex items-center gap-3 mb-7">
-                  <div className="h-px w-8 bg-[#2563EB]" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Commercial Credit Desk</span>
-                </div>
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-black tracking-tight text-brandNavy leading-[1.07] mb-7">
-                  Your company's bureau record is affecting deals you don't even know you're losing.
+                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-brandNavy leading-[1.08] mb-6">
+                  Your company's credit profile deserves more than a checklist.
                 </h1>
-                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed max-w-lg mb-10">
-                  PAN mismatches, duplicate credit lines, and wrong account classifications silently erode your borrowing capacity and vendor trust. We find them, document them, and fix them.
+                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed mb-10 max-w-xl">
+                  Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <a href="#audit-form" className="inline-flex items-center gap-2 px-7 py-4 bg-brandNavy text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-brandNavy/90 transition-all shadow-md">
+                  <a
+                    href="#audit-form"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-brandNavy text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-brandNavy/90 transition-all shadow-md"
+                  >
                     Request Commercial Audit
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                   </a>
-                  <a href="#capabilities" className="inline-flex items-center gap-2 px-7 py-4 border border-slate-200 text-brandNavy text-xs font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">
-                    See Capabilities
+                  <a
+                    href="#capabilities"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-200 text-brandNavy text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 transition-all"
+                  >
+                    See How It Works
                   </a>
                 </div>
               </div>
-            </Reveal>
 
-            {/* Right — visual audit card */}
-            <Reveal delay={0.15}>
-              <div className="relative bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                {/* Card header */}
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-brandNavy/5 flex items-center justify-center overflow-hidden p-1">
-                      <img src="/primescore-logo-tab.png" alt="Primescore" className="w-full h-full object-contain" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-brandNavy">CCR Audit Summary</div>
-                      <div className="text-[9px] text-slate-400">Commercial Credit Report — FY 2024-25</div>
-                    </div>
+              {/* Stats panel */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { n: '₹420Cr+', l: 'Disputed Credit\nAudited', accent: '#2563EB' },
+                  { n: '180+', l: 'Corporate Entities\nSupported', accent: '#E85C0D' },
+                  { n: '100%', l: 'Bureau Compliant\nOperations', accent: '#10b981' },
+                  { n: '2 Hrs', l: 'Response SLA\nGuaranteed', accent: '#0B192C' },
+                ].map((s, i) => (
+                  <div
+                    key={s.l}
+                    className="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm relative overflow-hidden text-left"
+                  >
+                    <div
+                      className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-10 blur-xl"
+                      style={{ background: s.accent }}
+                    />
+                    <div className="text-3xl font-black text-brandNavy leading-none mb-2">{s.n}</div>
+                    <div className="text-[11px] text-slate-500 font-medium leading-snug whitespace-pre-line">{s.l}</div>
+                    <div className="mt-3 h-0.5 w-8 rounded-full" style={{ background: s.accent }} />
                   </div>
-                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
-                    ● Live
-                  </span>
-                </div>
-                {/* Issues list */}
-                <div className="p-5 space-y-3">
-                  {[
-                    { label: 'Duplicate Account Lines', count: '3 found', color: 'text-red-500 bg-red-50 border-red-100' },
-                    { label: 'PAN Mismatch Entries', count: '1 found', color: 'text-amber-600 bg-amber-50 border-amber-100' },
-                    { label: 'Incorrect Classification', count: '2 found', color: 'text-amber-600 bg-amber-50 border-amber-100' },
-                    { label: 'Director CRIF Variance', count: '1 found', color: 'text-red-500 bg-red-50 border-red-100' },
-                    { label: 'Bureau Registry Verified', count: '✓ Clean', color: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
-                  ].map((item) => (
-                    <div key={item.label} className="flex items-center justify-between text-xs">
-                      <span className="text-slate-600 font-medium">{item.label}</span>
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border ${item.color}`}>{item.count}</span>
-                    </div>
-                  ))}
-                </div>
-                {/* Card footer */}
-                <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/70">
-                  <div className="text-[10px] text-slate-400 font-medium">Dispute filings prepared for 7 entries · 2 hr response SLA</div>
-                </div>
+                ))}
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
