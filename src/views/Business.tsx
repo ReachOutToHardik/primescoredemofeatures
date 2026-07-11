@@ -5,7 +5,7 @@ import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 
 
 type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
@@ -224,28 +224,27 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
     <div className="w-full bg-white text-slate-900 overflow-hidden">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-slate-100">
-        {/* Background grid texture */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="biz-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#biz-grid)" />
-          </svg>
-          <div className="absolute top-0 right-0 w-[700px] h-[500px] bg-gradient-to-bl from-blue-50/70 to-transparent" />
+      <section className="relative overflow-hidden border-b border-slate-100 min-h-[640px] flex items-center bg-[#f8fafc]">
+        {/* Background whiteboard image wrapper */}
+        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+          {/* Subtle overlay grid path to align with B2B styles */}
+          <div className="absolute inset-0 bg-[#0B192C]/10 mix-blend-overlay z-[2]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-[1]" />
+          <img 
+            src="/images/hero-bg.jpg" 
+            alt="whiteboard backdrop" 
+            className="w-full h-full object-cover opacity-60 scale-110"
+          />
         </div>
 
-        <div className="relative mx-auto max-w-[1280px] px-6 sm:px-10 pt-20 pb-24">
-          <Reveal>
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-brandNavy leading-[1.08] mb-6">
+        <div className="relative z-10 mx-auto max-w-[1280px] w-full px-6 sm:px-10 pt-20 pb-28">
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+            <Reveal>
+              <div className="bg-white/85 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-slate-100 shadow-sm max-w-2xl">
+                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.3rem] font-black tracking-tight text-brandNavy leading-[1.08] mb-6">
                   Your company's credit profile deserves more than a checklist.
                 </h1>
-                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed mb-10 max-w-xl">
+                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed mb-10">
                   Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
                 </p>
                 <div className="flex flex-wrap gap-4">
@@ -258,37 +257,26 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                   </a>
                   <a
                     href="#capabilities"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-200 text-brandNavy text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 transition-all"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-200 bg-white text-brandNavy text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 transition-all"
                   >
                     See How It Works
                   </a>
                 </div>
               </div>
+            </Reveal>
 
-              {/* Stats panel */}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { n: '₹420Cr+', l: 'Disputed Credit\nAudited', accent: '#2563EB' },
-                  { n: '180+', l: 'Corporate Entities\nSupported', accent: '#E85C0D' },
-                  { n: '100%', l: 'Bureau Compliant\nOperations', accent: '#10b981' },
-                  { n: '2 Hrs', l: 'Response SLA\nGuaranteed', accent: '#0B192C' },
-                ].map((s, i) => (
-                  <div
-                    key={s.l}
-                    className="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm relative overflow-hidden text-left"
-                  >
-                    <div
-                      className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-10 blur-xl"
-                      style={{ background: s.accent }}
-                    />
-                    <div className="text-3xl font-black text-brandNavy leading-none mb-2">{s.n}</div>
-                    <div className="text-[11px] text-slate-500 font-medium leading-snug whitespace-pre-line">{s.l}</div>
-                    <div className="mt-3 h-0.5 w-8 rounded-full" style={{ background: s.accent }} />
-                  </div>
-                ))}
+            {/* Static cutout person container with fading mask to smooth out the bottom edge */}
+            <div className="relative h-[380px] lg:h-[500px] flex items-end justify-center overflow-visible select-none pointer-events-none">
+              <div className="w-full max-w-[400px] h-[90%] flex items-end relative z-10 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]">
+                <img 
+                  src="/images/hero-person.png" 
+                  alt="person foreground" 
+                  className="w-full h-auto max-h-full object-contain object-bottom"
+                />
               </div>
             </div>
-          </Reveal>
+
+          </div>
         </div>
       </section>
 
