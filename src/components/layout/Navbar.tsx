@@ -257,20 +257,42 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              href={l.to}
-              className={[
-                'px-4 py-2 text-[12px] font-bold uppercase tracking-widest transition-colors',
-                pathname === l.to 
-                  ? (theme === 'dark' ? 'text-white' : 'text-brandRed') 
-                  : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-brandNavy/40 hover:text-brandNavy'),
-              ].join(' ')}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const isHovered = false; // Using Tailwind group-hover and peer states for zero JS lag
+            const infoText = 
+              l.to === '/' ? 'Access score tracking and updates' :
+              l.to === '/services' ? 'Legal document-backed credit audit' :
+              l.to === '/business' ? 'Commercial credit bureau solutions' :
+              l.to === '/pricing' ? 'Fixed-fee plans with zero hidden costs' :
+              l.to === '/about' ? 'Explore our company history and vision' :
+              l.to === '/blog' ? 'Expert credit improvement guidelines' :
+              l.to === '/contact' ? 'Direct phone, email, and location info' : ''
+
+            return (
+              <div key={l.to} className="relative group/nav">
+                <Link
+                  href={l.to}
+                  className={[
+                    'px-4 py-2 text-[12px] font-bold uppercase tracking-widest transition-colors block',
+                    pathname === l.to 
+                      ? (theme === 'dark' ? 'text-white' : 'text-brandRed') 
+                      : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-brandNavy/40 hover:text-brandNavy'),
+                  ].join(' ')}
+                >
+                  {l.label}
+                </Link>
+                {/* Micro tooltip menu */}
+                <div className={[
+                  'absolute top-[105%] left-1/2 -translate-x-1/2 w-52 p-3 rounded-lg border text-center shadow-xl transition-all duration-300 pointer-events-none opacity-0 scale-95 translate-y-1 group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 z-50',
+                  theme === 'dark' 
+                    ? 'bg-black border-white/10 text-white/90 shadow-black' 
+                    : 'bg-white border-brandNavy/10 text-brandNavy shadow-slate-200'
+                ].join(' ')}>
+                  <p className="text-[11px] tracking-wide font-normal leading-normal normal-case">{infoText}</p>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         <div className="hidden items-center gap-4 md:flex">

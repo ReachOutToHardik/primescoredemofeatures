@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Check, ShieldCheck, FileText, Users, Mail, Phone, AlertCircle, CheckCircle2, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Reveal from '../components/ui/Reveal'
+import Button from '../components/ui/Button'
 
 type PlanConfig = {
   title: string
@@ -15,15 +16,16 @@ type PlanConfig = {
   freeRectificationsText: string
 }
 
-type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+type IssueType = 'CIBIL Rectification' | 'Loan Settlement' | 'Credit Card Dispute' | 'Monitoring' | 'EMI Restructuring' | 'Not sure'
 
 type FormState = {
-  companyName: string
-  contactName: string
+  name: string
   email: string
   phone: string
   issueType: IssueType
   message: string
+  preferredDate: string
+  preferredTime: string
 }
 
 const PLANS: PlanConfig[] = [
@@ -190,26 +192,52 @@ export default function BusinessPricing() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+  const [marketingOptIn, setMarketingOptIn] = useState(true)
 
   const [form, setForm] = useState<FormState>({
-    companyName: '',
-    contactName: '',
+    name: '',
     email: '',
     phone: '',
     issueType: 'Not sure',
-    message: ''
+    message: '',
+    preferredDate: '',
+    preferredTime: ''
   })
 
-  const issueTypes: IssueType[] = [
-    'Commercial CIBIL Audit',
-    'Vendor Risk Monitoring',
-    'Company dispute',
-    'Not sure'
-  ]
+  const todayStr = useMemo(() => {
+    const today = new Date()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const dd = String(today.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.email.trim() || !form.companyName.trim()) return
+    if (!form.email.trim() || !form.name.trim()) return
+
+    // Validate preferred date (cannot be in the past)
+    if (form.preferredDate) {
+      const selectedDate = new Date(form.preferredDate)
+      const today = new Date()
+      selectedDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
+      if (selectedDate < today) {
+        setStatus('error')
+        setErrorMessage('Consultation date cannot be in the past.')
+        return
+      }
+    }
+
+    // Validate preferred time (must be between 9 AM and 6 PM)
+    if (form.preferredTime) {
+      const [hours, minutes] = form.preferredTime.split(':').map(Number)
+      if (hours < 9 || hours > 18 || (hours === 18 && minutes > 0)) {
+        setStatus('error')
+        setErrorMessage('Preferred consultation time must be between 9:00 AM and 6:00 PM (Office hours).')
+        return
+      }
+    }
 
     setStatus('sending')
 
@@ -226,11 +254,14 @@ export default function BusinessPricing() {
     try {
       const emailjs = (await import('@emailjs/browser')).default
       const templateParams = {
-        from_name: `${form.contactName} (${form.companyName})`,
+        from_name: form.name,
         from_email: form.email,
         from_phone: form.phone,
         issue_type: `B2B: ${form.issueType}`,
+        preferred_date: form.preferredDate || 'Not selected',
+        preferred_time: form.preferredTime || 'Not selected',
         message: form.message,
+        marketing_opt_in: marketingOptIn ? 'YES' : 'NO',
         to_name: 'Primescore Support',
         to_email: form.email
       }
@@ -246,11 +277,14 @@ export default function BusinessPricing() {
           await fetch(sheetWebhookUrl, {
             method: 'POST',
             body: JSON.stringify({
-              name: `${form.contactName} (${form.companyName})`,
+              name: form.name,
               email: form.email,
               phone: form.phone,
               issueType: `B2B: ${form.issueType}`,
+              preferredDate: form.preferredDate,
+              preferredTime: form.preferredTime,
               message: form.message,
+              marketingOptIn: marketingOptIn ? 'YES' : 'NO',
               timestamp: new Date().toISOString()
             }),
             headers: { 'Content-Type': 'text/plain;charset=utf-8' }
@@ -268,12 +302,12 @@ export default function BusinessPricing() {
           const supabase = createClient(supabaseUrl, supabaseKey)
           await supabase.from('commercial_leads').insert([{
             source_page: 'pricing_page',
-            company_name: form.companyName,
-            contact_name: form.contactName,
+            company_name: 'B2B Request Callback',
+            contact_name: form.name,
             email: form.email,
             phone: form.phone,
             service_type: form.issueType,
-            message: form.message,
+            message: `[Date: ${form.preferredDate} Time: ${form.preferredTime}] ${form.message}`,
             status: 'New'
           }])
         }
@@ -283,7 +317,7 @@ export default function BusinessPricing() {
 
       setStatus('sent')
       setErrorMessage('')
-      setForm({ companyName: '', contactName: '', email: '', phone: '', issueType: 'Not sure', message: '' })
+      setForm({ name: '', email: '', phone: '', issueType: 'Not sure', message: '', preferredDate: '', preferredTime: '' })
       setTimeout(() => setStatus('idle'), 5000)
     } catch (err) {
       console.error('Submit Error:', err)
@@ -657,13 +691,13 @@ export default function BusinessPricing() {
                         Required Service
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {issueTypes.map((type) => {
+                        {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                           const isSelected = form.issueType === type
                           return (
                             <button
                               key={type}
                               type="button"
-                              onClick={() => setForm((p) => ({ ...p, issueType: type }))}
+                              onClick={() => setForm((p) => ({ ...p, issueType: type as any }))}
                               className={[
                                 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
                                 isSelected
@@ -693,13 +727,9 @@ export default function BusinessPricing() {
                     </div>
 
                     <div className="pt-2">
-                      <button
-                        type="submit"
-                        disabled={status === 'sending'}
-                        className="w-full py-4 bg-brandNavy text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-brandNavy/90 transition-all shadow-md disabled:opacity-50"
-                      >
-                        {status === 'sending' ? 'Sending Request...' : 'Submit Form'}
-                      </button>
+                      <Button type="submit" disabled={status === 'sending'} className="px-6 py-4 bg-brandNavy text-white hover:bg-brandNavy/95 text-sm font-bold uppercase tracking-wider transition-all rounded-xl w-full justify-center shadow-md">
+                        {status === 'sending' ? 'Submitting...' : 'Submit Request'}
+                      </Button>
                     </div>
                   </form>
                 )}

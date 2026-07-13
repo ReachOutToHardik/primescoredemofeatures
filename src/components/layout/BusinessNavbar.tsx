@@ -9,12 +9,11 @@ export default function BusinessNavbar() {
   const pathname = usePathname()
 
   const links = [
-    { to: '/business', label: 'Overview' },
-    { to: '/business/cibil-audit', label: 'CIBIL Audit' },
-    { to: '/business/vendor-tracking', label: 'Vendor Monitoring' },
-    { to: '/business/identity-security', label: 'Identity Security' },
+    { to: '/business', label: 'Home' },
+    { to: '/business/about', label: 'About' },
+    { to: '/business/services', label: 'Services' },
     { to: '/business/pricing', label: 'Pricing' },
-    { to: '/business/resources', label: 'Resources' },
+    { to: '/business/contact', label: 'Contact' },
   ]
 
   return (
@@ -37,28 +36,47 @@ export default function BusinessNavbar() {
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => {
             const isActive = pathname === l.to
+            const infoText = 
+              l.to === '/business' ? 'Company dashboard overview & alerts' :
+              l.to === '/business/about' ? 'Learn about our corporate partners' :
+              l.to === '/business/services' ? 'Commercial score auditing tools' :
+              l.to === '/business/pricing' ? 'B2B subscription plans & options' :
+              l.to === '/business/contact' ? 'Discuss requirements with an expert' : ''
+
             return (
-              <Link
-                key={l.to}
-                href={l.to}
-                className={[
-                  'text-xs font-bold uppercase tracking-wider transition-colors py-2 relative',
-                  isActive 
-                    ? 'text-brandNavy' 
-                    : 'text-textSecondary hover:text-brandNavy'
-                ].join(' ')}
-              >
-                {l.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-brandNavy rounded-full" />
-                )}
-              </Link>
+              <div key={l.to} className="relative group/b2bnav">
+                <Link
+                  href={l.to}
+                  className={[
+                    'text-xs font-bold uppercase tracking-wider transition-colors py-2 block relative',
+                    isActive 
+                      ? 'text-brandNavy' 
+                      : 'text-textSecondary hover:text-brandNavy'
+                  ].join(' ')}
+                >
+                  {l.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-brandNavy rounded-full" />
+                  )}
+                </Link>
+                {/* Micro details tooltip */}
+                <div className="absolute top-[105%] left-1/2 -translate-x-1/2 w-52 p-3 rounded-lg border border-slate-200 bg-white text-brandNavy text-center shadow-xl transition-all duration-300 pointer-events-none opacity-0 scale-95 translate-y-1 group-hover/b2bnav:opacity-100 group-hover/b2bnav:scale-100 group-hover/b2bnav:translate-y-0 z-50">
+                  <p className="text-[11px] tracking-wide font-normal leading-normal normal-case text-textSecondary">{infoText}</p>
+                </div>
+              </div>
             )
           })}
         </div>
 
         {/* Right CTA */}
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          <Link 
+            href="/" 
+            className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-textSecondary hover:text-brandNavy px-3 py-2 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 transition-colors"
+          >
+            Individual Score
+          </Link>
+          
           <Link 
             href="/business#audit-form" 
             className="inline-flex items-center justify-center px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-brandNavy hover:bg-brandNavy/95 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all"

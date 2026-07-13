@@ -782,13 +782,13 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                         Required Service
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {issueTypes.map((type) => {
+                        {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                           const isSelected = form.issueType === type
                           return (
                             <button
                               key={type}
                               type="button"
-                              onClick={() => setForm((p) => ({ ...p, issueType: type }))}
+                              onClick={() => setForm((p) => ({ ...p, issueType: type as any }))}
                               className={[
                                 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
                                 isSelected

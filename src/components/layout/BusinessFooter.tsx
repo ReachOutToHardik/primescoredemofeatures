@@ -34,9 +34,9 @@ export default function BusinessFooter() {
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-brandNavy">Solutions</div>
             <div className="mt-4 grid gap-2.5">
-              <Link className={footerLink} href="/business/cibil-audit">Commercial CIBIL Audit</Link>
-              <Link className={footerLink} href="/business/vendor-tracking">Vendor Risk Monitoring</Link>
-              <Link className={footerLink} href="/business/identity-security">Identity & Security</Link>
+              <Link className={footerLink} href="/business">Business Home</Link>
+              <Link className={footerLink} href="/business/about">About Us</Link>
+              <Link className={footerLink} href="/business/services">Services</Link>
               <Link className={footerLink} href="/business/pricing">Corporate Pricing</Link>
             </div>
           </div>
@@ -45,9 +45,9 @@ export default function BusinessFooter() {
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-brandNavy">Resources</div>
             <div className="mt-4 grid gap-2.5">
-              <Link className={footerLink} href="/business/resources">B2B Documentation</Link>
-              <Link className={footerLink} href="/about">About Primescore</Link>
-              <Link className={footerLink} href="/contact">Contact Support</Link>
+              <Link className={footerLink} href="/business/contact">Contact Support</Link>
+              <Link className={footerLink} href="/about">Consumer About</Link>
+              <Link className={footerLink} href="/contact">Consumer Contact</Link>
               <Link className={footerLink} href="/">Consumer Platform</Link>
             </div>
           </div>
