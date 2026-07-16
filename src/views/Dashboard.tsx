@@ -20,10 +20,10 @@ export default function Dashboard() {
   // For local testing: Set to target current time plus 5 seconds (uncomment below line)
   // const targetDate = useMemo(() => new Date(Date.now() + 5000).getTime(), [])
   
+  // 10-second test for instant reload preview
+  const targetDate = useMemo(() => new Date(Date.now() + 10000).getTime(), [])
   // Production date: July 19, 2026 at 1:00 PM IST (07:30 UTC) — uncomment for prod:
   // const targetDate = useMemo(() => new Date('2026-07-19T07:30:00Z').getTime(), [])
-  // 10-second test (comment out for prod):
-  const targetDate = useMemo(() => new Date(Date.now() + 10000).getTime(), [])
   useEffect(() => {
     let fired = false
 
@@ -56,6 +56,33 @@ export default function Dashboard() {
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000)
       })
+    }
+
+    // Preload assets asynchronously in non-blocking chunks
+    const preloadAssets = () => {
+      // Chunk 1: Preload Audio (with idle deferral)
+      setTimeout(() => {
+        const audio = new Audio()
+        audio.src = '/launch-sound.mp3'
+        audio.preload = 'auto'
+      }, 50)
+
+      // Chunk 2: Preload images
+      setTimeout(() => {
+        const bannerImg = new Image()
+        bannerImg.src = '/images/primescore-chess-banner.png'
+
+        const darkLogoImg = new Image()
+        darkLogoImg.src = '/Darkmode_Logo.png'
+      }, 200)
+    }
+
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => preloadAssets())
+      } else {
+        preloadAssets()
+      }
     }
 
     updateTime()
@@ -227,136 +254,251 @@ export default function Dashboard() {
             transition={{ duration: 0.4 }}
             style={{ position: 'fixed', inset: 0, zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            {/* Chess pattern with logo in alternating squares */}
+            {/* Background Chess Tiled Image */}
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                backgroundColor: '#0d0d0d',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3C!-- dark squares --%3E%3Crect width='48' height='48' fill='%230d0d0d'/%3E%3Crect x='48' y='48' width='48' height='48' fill='%230d0d0d'/%3E%3C!-- light squares with logo --%3E%3Crect x='48' width='48' height='48' fill='%23181818'/%3E%3Crect y='48' width='48' height='48' fill='%23181818'/%3E%3C!-- logo in top-right square --%3E%3Cg transform='translate(60,12)' opacity='0.13'%3E%3Crect width='24' height='24' rx='7' fill='url(%23g1)'/%3E%3Ctext x='12' y='17' text-anchor='middle' font-family='system-ui' font-size='9' font-weight='800' fill='%230B1220'%3EPS%3C/text%3E%3C/g%3E%3C!-- logo in bottom-left square --%3E%3Cg transform='translate(12,60)' opacity='0.13'%3E%3Crect width='24' height='24' rx='7' fill='url(%23g2)'/%3E%3Ctext x='12' y='17' text-anchor='middle' font-family='system-ui' font-size='9' font-weight='800' fill='%230B1220'%3EPS%3C/text%3E%3C/g%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='24' y2='24' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23F5C842'/%3E%3Cstop offset='1' stop-color='%234F8EF7'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='24' y2='24' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23F5C842'/%3E%3Cstop offset='1' stop-color='%234F8EF7'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E")`,
-                backgroundSize: '96px 96px'
+                backgroundImage: 'url("/images/primescore-chess-banner.png")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'brightness(0.18)'
               }}
             />
 
-            {/* Subtle dark overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.18)' }} />
+            {/* Blurred glass overlay */}
+            <div style={{ position: 'absolute', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(0,0,0,0.4)' }} />
+
+            {/* Audio object */}
+            <audio id="launch-audio" src="/launch-sound.mp3" preload="auto" />
 
             {/* Card */}
             <AnimatePresence>
               {!bannerOpen && (
                 <motion.div
                   key="card"
-                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                  initial={{ opacity: 0, scale: 0.95, y: 15 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.85, y: -24 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  exit={{ opacity: 0, scale: 0.85, y: -30 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     position: 'relative',
                     zIndex: 10,
-                    width: 360,
+                    width: 380,
                     padding: '48px 40px',
-                    background: 'rgba(255,255,255,0.035)',
-                    border: '1px solid rgba(255,255,255,0.09)',
-                    backdropFilter: 'blur(20px)',
+                    background: 'rgba(10, 15, 30, 0.75)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0px', // sharp corners
+                    backdropFilter: 'blur(16px)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
                   }}
                 >
                   {/* Dark mode logo */}
                   <img
                     src="/Darkmode_Logo.png"
                     alt="Primescore"
-                    style={{ height: 28, width: 'auto', marginBottom: 36, opacity: 0.9 }}
+                    style={{ height: 26, width: 'auto', marginBottom: 36, opacity: 0.95 }}
                   />
 
-                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: 14 }}>Dashboard</p>
+                  <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 9, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: 12 }}>System Status</p>
 
-                  <h2 style={{ color: '#fff', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10 }}>
-                    We&apos;re live.
+                  <h2 style={{ color: '#fff', fontSize: 24, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10 }}>
+                    Primescore is Live
                   </h2>
-                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, fontWeight: 300, lineHeight: 1.6, marginBottom: 36 }}>
-                    Your dashboard is ready and waiting.
+                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, fontWeight: 300, lineHeight: 1.6, marginBottom: 32 }}>
+                    The operational portal is now accessible. Prepare for dashboard initialization.
                   </p>
 
                   <button
-                    onClick={() => setBannerOpen(true)}
+                    onClick={() => {
+                      setBannerOpen(true)
+                      const audio = document.getElementById('launch-audio') as HTMLAudioElement
+                      if (audio) {
+                        audio.volume = 0.8
+                        audio.play().catch(err => console.log('Audio playback interaction block:', err))
+                      }
+                    }}
                     style={{
                       width: '100%',
                       background: '#fff',
                       color: '#000',
                       fontSize: 13,
                       fontWeight: 600,
-                      letterSpacing: '0.02em',
-                      padding: '12px 0',
+                      letterSpacing: '0.04em',
+                      padding: '13px 0',
                       border: 'none',
-                      cursor: 'pointer'
+                      borderRadius: '0px', // sharp corners
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(255,255,255,0.1)'
                     }}
                   >
-                    Open Dashboard
+                    LAUNCH DASHBOARD
                   </button>
 
-                  <p style={{ marginTop: 18, color: 'rgba(255,255,255,0.18)', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.15em' }}>
+                  <p style={{ marginTop: 18, color: 'rgba(255,255,255,0.15)', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.15em' }}>
                     dashboard.primescore.in
                   </p>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* White banner expand from center */}
-            <AnimatePresence>
-              {bannerOpen && (
-                <motion.div
-                  key="banner"
-                  initial={{ scaleX: 0, scaleY: 0.5, opacity: 0 }}
-                  animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    zIndex: 20,
-                    background: '#fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transformOrigin: '50% 50%'
-                  }}
-                  onAnimationComplete={() => {
-                    setTimeout(() => {
-                      window.location.href = 'https://dashboard.primescore.in'
-                    }, 900)
-                  }}
-                >
-                  <motion.img
-                    src="/lightmode_Logo.png"
-                    alt="Primescore"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    style={{ height: 32, width: 'auto', marginBottom: 28 }}
-                  />
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: 120 }}
-                    transition={{ delay: 0.4, duration: 0.5, ease: 'easeInOut' }}
-                    style={{ height: 1, background: 'rgba(0,0,0,0.1)', marginBottom: 24 }}
-                  />
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.55 }}
-                    style={{ color: 'rgba(0,0,0,0.28)', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.3em', textTransform: 'uppercase' }}
-                  >
-                    Redirecting
-                  </motion.p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {/* Clean 3-second Transition sequence with spinning logo, stinger, and fireworks */}
+                  <AnimatePresence>
+                    {bannerOpen && (
+                      <motion.div
+                        key="banner"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          zIndex: 20,
+                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden'
+                        }}
+                        onAnimationComplete={() => {
+                          // Trigger massive fireworks confetti shower
+                          import('canvas-confetti').then((confetti) => {
+                            const duration = 2.5 * 1000
+                            const end = Date.now() + duration
+
+                            const frame = () => {
+                              confetti.default({
+                                particleCount: 7,
+                                angle: 60,
+                                spread: 55,
+                                origin: { x: 0 }
+                              })
+                              confetti.default({
+                                particleCount: 7,
+                                angle: 120,
+                                spread: 55,
+                                origin: { x: 1 }
+                              })
+
+                              if (Date.now() < end) {
+                                requestAnimationFrame(frame)
+                              }
+                            }
+                            frame()
+                          })
+
+                          // Redirect after 3 seconds
+                          setTimeout(() => {
+                            window.location.href = 'https://dashboard.primescore.in'
+                          }, 3200)
+                        }}
+                      >
+                        {/* Stinger Door Reveal */}
+                        <StingerReveal />
+
+                         {/* Elegant non-AI spring-loaded upscale logo transition */}
+                         <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+                           <motion.img
+                             src="/Darkmode_Logo.png"
+                             alt="Primescore"
+                             initial={{ scale: 0.4, opacity: 0 }}
+                             animate={{ scale: [0.4, 1.15, 1], opacity: 1 }}
+                             transition={{ 
+                               duration: 1.1, 
+                               ease: [0.25, 1, 0.5, 1],
+                               delay: 0.1
+                             }}
+                             style={{ height: 72, width: 'auto', margin: '0 auto' }}
+                           />
+                         </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  )
+}
+
+// StingerReveal Component - creates a cool center split stinger door slide open animation
+function StingerReveal() {
+  const [stingerActive, setStingerActive] = useState(false)
+
+  useEffect(() => {
+    // Activates in the final 1.5 seconds of the transition (1.5 seconds in)
+    const trigger = setTimeout(() => {
+      setStingerActive(true)
+    }, 1500)
+
+    return () => clearTimeout(trigger)
+  }, [])
+
+  if (!stingerActive) return null
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 18, display: 'flex', flexDirection: 'column', pointerEvents: 'none' }}>
+      {/* Underlying matching white landing screen revealed as doors split */}
+      <div 
+        style={{ 
+          position: 'absolute', 
+          inset: 0, 
+          background: '#ffffff', 
+          zIndex: 1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}
+      >
+        {/* Cool modern blue spinner */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: '50%',
+            border: '3px solid rgba(37, 99, 235, 0.12)',
+            borderTopColor: '#2563EB'
+          }}
+        />
+        <p style={{ marginTop: 20, color: '#1e293b', fontSize: 11, fontWeight: 600, fontFamily: 'monospace', letterSpacing: '0.15em' }}>
+          LOADING DASHBOARD...
+        </p>
+      </div>
+
+      {/* Top half sliding upward */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: '-100%' }}
+        transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1], delay: 0.2 }}
+        style={{
+          flex: 1,
+          background: 'linear-gradient(180deg, #1e293b, #0f172a)',
+          borderBottom: '2px solid #2563EB',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          zIndex: 2
+        }}
+      />
+      {/* Bottom half sliding downward */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: '100%' }}
+        transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1], delay: 0.2 }}
+        style={{
+          flex: 1,
+          background: 'linear-gradient(0deg, #1e293b, #0f172a)',
+          borderTop: '2px solid #2563EB',
+          boxShadow: '0 -10px 30px rgba(0,0,0,0.5)',
+          zIndex: 2
+        }}
+      />
     </div>
   )
 }
