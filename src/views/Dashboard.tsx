@@ -358,31 +358,39 @@ export default function Dashboard() {
                           position: 'absolute',
                           inset: 0,
                           zIndex: 20,
-                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
                           justifyContent: 'center',
+                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
                           overflow: 'hidden'
                         }}
                         onAnimationComplete={() => {
                           // Trigger massive fireworks confetti shower
                           import('canvas-confetti').then((confetti) => {
+                            // First, fire a massive initial center burst
+                            confetti.default({
+                              particleCount: 150,
+                              spread: 80,
+                              origin: { y: 0.5 }
+                            });
+
+                            // Then, run the continuous side fireworks stream
                             const duration = 2.5 * 1000
                             const end = Date.now() + duration
 
                             const frame = () => {
                               confetti.default({
-                                particleCount: 7,
+                                particleCount: 8,
                                 angle: 60,
                                 spread: 55,
-                                origin: { x: 0 }
+                                origin: { x: 0, y: 0.8 }
                               })
                               confetti.default({
-                                particleCount: 7,
+                                particleCount: 8,
                                 angle: 120,
                                 spread: 55,
-                                origin: { x: 1 }
+                                origin: { x: 1, y: 0.8 }
                               })
 
                               if (Date.now() < end) {
