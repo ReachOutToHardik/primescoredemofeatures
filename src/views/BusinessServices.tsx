@@ -1,181 +1,442 @@
 'use client'
 
 import React, { useState } from 'react'
-import {
-  ShieldCheck,
-  Building,
-  UserCheck,
-  Search,
-  ChevronDown,
-  ArrowRight,
-  TrendingUp,
-  FileText,
-  Briefcase
+import { 
+  ShieldCheck, 
+  Activity, 
+  HelpCircle, 
+  ArrowRight, 
+  BarChart3, 
+  Users, 
+  CheckCircle2, 
+  Lock, 
+  FileText, 
+  ShieldAlert,
+  Mail,
+  Phone,
+  AlertCircle
 } from 'lucide-react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
-import Link from 'next/link'
-
-const B2B_SERVICES = [
-  {
-    id: 'audit',
-    title: 'Commercial CIBIL Audit',
-    tag: 'REGULATORY & ERRORS',
-    description: 'Line-by-line review of your Company Credit Report (CCR). We identify duplicate profiles, registry mismatch records, and disputed loan lines that hamper bank approval.',
-    icon: ShieldCheck,
-    deliverables: [
-      'Comprehensive registry error verification mapping',
-      'Evidence file formulation with supporting documents',
-      'Direct dispute communication drafts & filing assistance',
-      'Director-level and company credit reports dual audit'
-    ]
-  },
-  {
-    id: 'vendor',
-    title: 'Vendor Credit Monitoring',
-    tag: 'RISK MANAGEMENT',
-    description: 'Track the credit performance of critical suppliers, vendors, and clients. Protect your supply chain from sudden defaults or credit deterioration.',
-    icon: Search,
-    deliverables: [
-      'Automated credit score updates on key vendor profiles',
-      'Early warning signals on negative filings or classification changes',
-      'Custom risk threshold notifications',
-      'Quarterly portfolio health check reports'
-    ]
-  },
-  {
-    id: 'director',
-    title: 'Director Score Alignment',
-    tag: 'PERSONAL CREDIT FOR BUSINESS',
-    description: 'Lenders evaluate personal directors\' scores alongside the commercial report. We audit and rectifiy directors\' files simultaneously to support commercial underwriting.',
-    icon: UserCheck,
-    deliverables: [
-      'Clean linkage mapping between director files & company accounts',
-      'Days Past Due (DPD) error rectification on director reports',
-      'Reduction of invalid inquiry spikes',
-      'Consolidated reports score optimization'
-    ]
-  }
-]
 
 export default function BusinessServices() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
 
+  // Form State & Handler
+  type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+  type FormState = {
+    companyName: string
+    contactName: string
+    email: string
+    phone: string
+    issueType: IssueType
+    message: string
+  }
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [form, setForm] = useState<FormState>({
+    companyName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    issueType: 'Not sure',
+    message: ''
+  })
+  
+  const issueTypes: IssueType[] = [
+    'Commercial CIBIL Audit',
+    'Vendor Risk Monitoring',
+    'Company dispute',
+    'Not sure'
+  ]
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.email.trim() || !form.companyName.trim()) return
+
+    setStatus('sending')
+
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+    const templateId = 'template_37a3wfs'
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+    if (!serviceId || !publicKey) {
+      setStatus('error')
+      setErrorMessage('Form configuration is missing. Please contact us via WhatsApp.')
+      return
+    }
+
+    try {
+      const emailjs = (await import('@emailjs/browser')).default
+      const templateParams = {
+        from_name: `${form.contactName} (${form.companyName})`,
+        from_email: form.email,
+        from_phone: form.phone,
+        issue_type: `B2B: ${form.issueType}`,
+        message: form.message,
+        to_name: 'Primescore Support',
+        to_email: form.email
+      }
+
+      const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
+      const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
+
+      await Promise.all([adminPromise, userPromise])
+
+      const sheetWebhookUrl = 'https://script.google.com/macros/s/AKfycbw5YhcVQoyohMfXIMUu7LjuYNLskdNF6ttGScqDk7H3wwPkgfC5y-BMYTivdnn6tZj4Ag/exec'
+      if (sheetWebhookUrl) {
+        try {
+          await fetch(sheetWebhookUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: `${form.contactName} (${form.companyName})`,
+              email: form.email,
+              phone: form.phone,
+              issueType: `B2B: ${form.issueType}`,
+              message: form.message,
+              timestamp: new Date().toISOString()
+            }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+          })
+        } catch (sheetErr) {
+          console.error('Failed to send to Google Sheets:', sheetErr)
+        }
+      }
+
+      try {
+        const { createClient } = await import('@supabase/supabase-js')
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+        if (supabaseUrl && supabaseKey) {
+          const supabase = createClient(supabaseUrl, supabaseKey)
+          await supabase.from('commercial_leads').insert([{
+            source_page: 'business_services_page',
+            company_name: form.companyName,
+            contact_name: form.contactName,
+            email: form.email,
+            phone: form.phone,
+            service_type: form.issueType,
+            message: form.message,
+            status: 'New'
+          }])
+        }
+      } catch (dbErr) {
+        console.error('Failed to save commercial lead to DB:', dbErr)
+      }
+
+      setStatus('sent')
+      setErrorMessage('')
+      setForm({ companyName: '', contactName: '', email: '', phone: '', issueType: 'Not sure', message: '' })
+      setTimeout(() => setStatus('idle'), 5000)
+    } catch (err) {
+      console.error('B2B Form Submit Error:', err)
+      setStatus('error')
+      setErrorMessage('Failed to send message. Please try again or use WhatsApp.')
+    }
+  }
+
+  const steps = [
+    { title: 'Corporate Consultation', desc: 'Map corporate credit structures, associate partners, and fetch registry reports.', icon: Users },
+    { title: 'Deep Bureau Mapping', desc: 'Identify overlapped corporate PAN accounts and erroneous overdue tags.', icon: BarChart3 },
+    { title: 'Evidence Pack Compilation', desc: 'Align payment NOCs, corporate resolutions, and audit certifications.', icon: FileText },
+    { title: 'Structured Dispute Filing', desc: 'Liaison with lenders and bureaus under strict SLA guidelines.', icon: ShieldCheck },
+    { title: 'Continuous Risk Monitoring', desc: 'Track vendor scores and safeguard your commercial credit rank.', icon: Activity }
+  ]
+
   const faqs = [
     {
-      q: 'How does Commercial CIBIL Audit differ from consumer credit repair?',
-      a: 'Consumer credit repair deals with personal loan histories. A Commercial CIBIL Audit reviews the Company Credit Report (CCR) which involves commercial accounts, partner structures, banking consortia filings, and director guarantees.'
+      q: 'How does Commercial Credit Rectification differ from Personal?',
+      a: 'Commercial credit reports (like CIBIL Rank & CMR) track entity ratings using company PAN, GSTIN, and corporate banking data. Resolving business disputes requires official corporate resolutions, board authorization letters, and complex bank reconciliations compared to individual personal reports.'
     },
     {
-      q: 'How long does vendor risk monitoring take to set up?',
-      a: 'Setup takes less than 48 hours. Once you submit the list of vendor entities and authorization forms (where applicable), we initiate baseline monitoring and configure alerts.'
+      q: 'What is the average turnaround time for commercial disputes?',
+      a: 'Under RBI guidelines, credit bureaus have a 30-day window to update records once a dispute is received. Most simple corrections resolve in 30-45 days, while complex multi-bank issues may take 60-90 days.'
     },
     {
-      q: 'Will checking vendor profiles impact their credit score?',
-      a: 'No. The monitoring check is processed as a soft audit inquiry. It has zero negative impact on the vendor or supplier\'s credit score.'
+      q: 'Can inaccurate trade supplier default tags be removed?',
+      a: 'Yes. If a supplier or client has wrongly reported overdue trade credit due to commercial invoice disputes or technical payment settlement delays, we can compile proof of settlement to seek a clean update.'
     }
   ]
 
   return (
-    <div className="bg-white text-slate-900 min-h-screen">
-      {/* 1. HERO SECTION */}
-      <section className="bg-slate-50/50 border-b border-slate-100 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
-          <Reveal>
-            <div className="max-w-5xl text-left">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3 block">
-                B2B SERVICES
-              </span>
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-brandNavy leading-tight tracking-tight max-w-4xl">
-                Premium commercial credit <span className="text-[#2563EB]">rectification & monitoring.</span>
-              </h1>
-              <p className="mt-6 text-base sm:text-lg text-textSecondary font-light leading-relaxed max-w-2xl">
-                We work directly with company credit reports (CCR), resolving registry classification issues, duplicate loan listings, and coordinating score alignments to clear business borrowing pathways.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/business/pricing">
-                  <Button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-xs">
-                    View Corporate Pricing
-                  </Button>
-                </Link>
-                <Link href="/business/contact">
-                  <Button variant="ghost" className="border border-slate-200 bg-white hover:bg-slate-50 px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-xs">
-                    Talk to an Analyst
-                  </Button>
-                </Link>
+    <div className="bg-white min-h-screen font-sans antialiased text-slate-900 overflow-x-hidden">
+      {/* 1. Hero Section */}
+      <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
+        {/* Background Image (Big in background, right aligned) */}
+        <div className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50">
+          <img 
+            src="/images/servicepageheroimg.jpg" 
+            alt="PrimeScore Business Services Backdrop" 
+            className="w-full h-full object-cover"
+          />
+          {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
+        </div>
+        
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
+        
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
+          {/* Hero Content (without color card block) */}
+          <div className="lg:col-span-9 flex flex-col items-start relative z-10">
+            <Reveal>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider mb-6 border border-blue-500/20">
+                Enterprise Credit Solutions
               </div>
-            </div>
-          </Reveal>
+              <h1 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
+                Corporate Credit Audit & <span className="text-blue-500">Registry Integrity</span>
+              </h1>
+              <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                Identify commercial bureau inaccuracies, resolve registry overlaps, and protect supplier risk profiles with India's premium B2B credit rectification desk.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <Button href="/business/contact" className="!bg-blue-600 hover:!bg-blue-700 text-white font-semibold transition-all">
+                  Request Commercial Audit
+                </Button>
+                <a href="#storytelling" className="inline-flex items-center text-sm font-semibold text-slate-300 hover:text-white transition-colors gap-1.5 px-4 py-2.5">
+                  See How it Works <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* 2. CORE B2B SERVICES LIST */}
-      <section className="py-24 border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+      {/* 2. Capabilities Grid (Three simple cards outlining Commercial CIBIL Audit, Vendor Credit Monitoring, and Director Score Alignment) */}
+      <section className="py-28 bg-white border-b border-slate-100">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <Reveal>
-            <div className="max-w-2xl mb-16 text-left">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3 block">
-                CAPABILITIES
-              </span>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy">
-                Engineered for corporate credit profiles
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-3">Capabilities</span>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Engineered for Corporate Credit Profiles
               </h2>
+              <p className="mt-4 text-slate-600 text-sm">
+                Clean and structured auditing blocks mapping directly to institutional records.
+              </p>
             </div>
           </Reveal>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            {B2B_SERVICES.map((service, index) => {
-              const Icon = service.icon
-              // Set up custom gradients per card type for clean premium visual aesthetics
-              const gradientClass = service.id === 'audit' 
-                ? 'from-blue-50/70 via-indigo-50/30 to-white' 
-                : service.id === 'vendor' 
-                ? 'from-emerald-50/50 via-teal-50/20 to-white' 
-                : 'from-violet-50/60 via-purple-50/25 to-white'
+            {/* Card 1: Commercial CIBIL Audit */}
+            <Reveal>
+              <div className="bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white border border-slate-200/80 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group hover:border-[#2563EB]/40">
+                <div>
+                  <div className="h-12 w-12 rounded-2xl bg-blue-100/50 text-[#2563EB] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#2563EB]">
+                    REGULATORY & ERRORS
+                  </span>
+                  <h3 className="font-display text-xl font-extrabold text-slate-900 mt-2 mb-3">
+                    Commercial CIBIL Audit
+                  </h3>
+                  <p className="text-xs sm:text-sm text-textSecondary font-light leading-relaxed mb-6">
+                    Line-by-line review of your Company Credit Report (CCR). We identify duplicate profiles, registry mismatch records, and disputed loan lines that hamper bank approval.
+                  </p>
+                </div>
 
-              const hoverBorderClass = service.id === 'audit' 
-                ? 'hover:border-[#2563EB]/40' 
-                : service.id === 'vendor' 
-                ? 'hover:border-emerald-500/40' 
-                : 'hover:border-purple-500/40'
+                <div className="border-t border-slate-100 pt-6">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-900 mb-3">
+                    Key Deliverables
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {[
+                      'Comprehensive registry error verification mapping',
+                      'Evidence file formulation with supporting documents',
+                      'Direct dispute communication drafts & filing assistance',
+                      'Director-level and company credit reports dual audit'
+                    ].map((item, dIndex) => (
+                      <li key={dIndex} className="flex items-start gap-2.5 text-xs text-textSecondary">
+                        <span className="text-[#2563EB] font-bold">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
 
-              const iconBgClass = service.id === 'audit' 
-                ? 'bg-blue-100/50 text-[#2563EB]' 
-                : service.id === 'vendor' 
-                ? 'bg-emerald-100/50 text-emerald-600' 
-                : 'bg-purple-100/50 text-purple-600'
+            {/* Card 2: Vendor Credit Monitoring */}
+            <Reveal delay={0.1}>
+              <div className="bg-gradient-to-br from-emerald-50/50 via-teal-50/20 to-white border border-slate-200/80 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group hover:border-emerald-500/40">
+                <div>
+                  <div className="h-12 w-12 rounded-2xl bg-emerald-100/50 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200">
+                    <Activity className="h-6 w-6" />
+                  </div>
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-emerald-600">
+                    RISK MANAGEMENT
+                  </span>
+                  <h3 className="font-display text-xl font-extrabold text-slate-900 mt-2 mb-3">
+                    Vendor Credit Monitoring
+                  </h3>
+                  <p className="text-xs sm:text-sm text-textSecondary font-light leading-relaxed mb-6">
+                    Track the credit performance of critical suppliers, vendors, and clients. Protect your supply chain from sudden defaults or credit deterioration.
+                  </p>
+                </div>
 
+                <div className="border-t border-slate-100 pt-6">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-900 mb-3">
+                    Key Deliverables
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {[
+                      'Automated credit score updates on key vendor profiles',
+                      'Early warning signals on negative filings or classification changes',
+                      'Custom risk threshold notifications',
+                      'Quarterly portfolio health check reports'
+                    ].map((item, dIndex) => (
+                      <li key={dIndex} className="flex items-start gap-2.5 text-xs text-textSecondary">
+                        <span className="text-[#2563EB] font-bold">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Card 3: Director Score Alignment */}
+            <Reveal delay={0.2}>
+              <div className="bg-gradient-to-br from-violet-50/60 via-purple-50/25 to-white border border-slate-200/80 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group hover:border-purple-500/40">
+                <div>
+                  <div className="h-12 w-12 rounded-2xl bg-purple-100/50 text-purple-600 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-purple-600">
+                    PERSONAL CREDIT FOR BUSINESS
+                  </span>
+                  <h3 className="font-display text-xl font-extrabold text-slate-900 mt-2 mb-3">
+                    Director Score Alignment
+                  </h3>
+                  <p className="text-xs sm:text-sm text-textSecondary font-light leading-relaxed mb-6">
+                    Lenders evaluate personal directors\' scores alongside the commercial report. We audit and rectifiy directors\' files simultaneously to support commercial underwriting.
+                  </p>
+                </div>
+
+                <div className="border-t border-slate-100 pt-6">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-900 mb-3">
+                    Key Deliverables
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {[
+                      'Clean linkage mapping between director files & company accounts',
+                      'Days Past Due (DPD) error rectification on director reports',
+                      'Reduction of invalid inquiry spikes',
+                      'Consolidated reports score optimization'
+                    ].map((item, dIndex) => (
+                      <li key={dIndex} className="flex items-start gap-2.5 text-xs text-textSecondary">
+                        <span className="text-[#2563EB] font-bold">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Enterprise Storytelling Section */}
+      <section id="storytelling" className="py-28 bg-slate-50 border-b border-slate-100">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
+          <Reveal>
+            <div className="max-w-3xl mx-auto text-center mb-20">
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                The Journey of Enterprise Credit Cleanliness
+              </h2>
+              <p className="mt-4 text-slate-600 text-base leading-relaxed">
+                Why clean commercial data matters. When reporting errors occur, credit lines freeze and procurement slows. Here is how PrimeScore bridges the registry gap.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid lg:grid-cols-3 gap-12 relative">
+            {/* Step 1: Problem */}
+            <Reveal>
+              <div className="flex flex-col h-full bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow relative">
+                <div className="absolute top-0 right-0 p-4 font-mono text-3xl font-black text-slate-100 select-none">01</div>
+                <div className="h-10 w-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-6">
+                  <ShieldAlert className="h-5 w-5" />
+                </div>
+                <h3 className="font-display text-xl font-bold text-slate-950 mb-3">The Problem</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                  A business applies for a working capital expansion. Due to legacy data migrations, a bank marks an already closed loan facility as "Active & Overdue" on CIBIL.
+                </p>
+                <div className="text-xs font-semibold text-red-600 bg-red-50/50 px-3 py-1.5 rounded-lg inline-self-start">
+                  Outcome: Expansion rejected
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Step 2: Solution */}
+            <Reveal delay={0.1}>
+              <div className="flex flex-col h-full bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow relative">
+                <div className="absolute top-0 right-0 p-4 font-mono text-3xl font-black text-slate-100 select-none">02</div>
+                <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <h3 className="font-display text-xl font-bold text-slate-950 mb-3">PrimeScore Intervention</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                  Our corporate audit desk maps all public registries. We compile clear evidence files (NOCs, account statements) and draft legal disputes based on RBI guidelines.
+                </p>
+                <div className="text-xs font-semibold text-blue-600 bg-blue-50/50 px-3 py-1.5 rounded-lg inline-self-start">
+                  Outcome: Direct Bank Coordination
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Step 3: Outcome */}
+            <Reveal delay={0.2}>
+              <div className="flex flex-col h-full bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow relative">
+                <div className="absolute top-0 right-0 p-4 font-mono text-3xl font-black text-slate-100 select-none">03</div>
+                <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <h3 className="font-display text-xl font-bold text-slate-950 mb-3">The Outcome</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                  Bureaus verify and correct the records within 30-45 days. The company's CIBIL Rank rebounds to 2, and the expansion facility gets approved.
+                </p>
+                <div className="text-xs font-semibold text-emerald-600 bg-emerald-50/50 px-3 py-1.5 rounded-lg inline-self-start">
+                  Outcome: Working Capital Unlocked
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Business Workflow Timeline */}
+      <section className="py-28 bg-slate-50 border-b border-slate-100">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
+          <Reveal>
+            <div className="max-w-3xl mx-auto text-center mb-20">
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Our Connected Resolution Workflow
+              </h2>
+              <p className="mt-4 text-slate-600">
+                A seamless credit-desk liaison pipeline that aligns banks, bureaus, and businesses.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Connected horizontal visual flow */}
+          <div className="grid gap-8 md:grid-cols-5 relative">
+            {/* Connecting Line (desktop only) */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-[2px] bg-slate-200 z-0" />
+            
+            {steps.map((step, idx) => {
+              const IconComp = step.icon
               return (
-                <Reveal key={service.id} delay={index * 0.1}>
-                  <div className={`bg-gradient-to-br ${gradientClass} border border-slate-200/80 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group ${hoverBorderClass}`}>
-                    <div>
-                      <div className={`h-12 w-12 rounded-2xl ${iconBgClass} flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200`}>
-                        <Icon className="h-6 w-6" />
-                      </div>
-                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#2563EB]">
-                        {service.tag}
-                      </span>
-                      <h3 className="font-display text-xl font-extrabold text-brandNavy mt-2 mb-3">
-                        {service.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-textSecondary font-light leading-relaxed mb-6">
-                        {service.description}
-                      </p>
+                <Reveal key={idx} delay={idx * 0.1}>
+                  <div className="flex flex-col items-center text-center relative z-10">
+                    <div className="h-16 w-16 rounded-full bg-white border border-slate-200/80 text-blue-600 flex items-center justify-center mb-6 shadow-sm hover:border-blue-600 hover:shadow transition-all duration-300">
+                      <IconComp className="h-6 w-6" />
                     </div>
-
-                    <div className="border-t border-slate-100 pt-6">
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brandNavy mb-3">
-                        Key Deliverables
-                      </h4>
-                      <ul className="space-y-2.5">
-                        {service.deliverables.map((item, dIndex) => (
-                          <li key={dIndex} className="flex items-start gap-2.5 text-xs text-textSecondary">
-                            <span className="text-[#2563EB] font-bold">✓</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <div className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider mb-2">Step {idx + 1}</div>
+                    <h4 className="font-display font-bold text-slate-900 text-sm mb-2">{step.title}</h4>
+                    <p className="text-slate-600 text-xs leading-relaxed max-w-xs">{step.desc}</p>
                   </div>
                 </Reveal>
               )
@@ -184,75 +445,69 @@ export default function BusinessServices() {
         </div>
       </section>
 
-      {/* 3. VALUE PROPOSITION */}
-      <section className="bg-slate-50 py-24 border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <Reveal>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3 block">
-                  WHY PRIMESCORE
-                </span>
-                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
-                  Registry error mitigation handled by commercial experts
-                </h2>
-                <p className="mt-6 text-sm sm:text-base text-textSecondary font-light leading-relaxed">
-                  Unlike personal files, corporate reports have many points of entry and complexity. Banking consortia, partner credit lines, and corporate registrations must all be mapped accurately.
-                </p>
-                <div className="mt-8 grid sm:grid-cols-2 gap-6">
-                  <div className="flex items-start gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[#2563EB] shrink-0">
-                      <FileText className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-brandNavy mb-1">Evidentiary Auditing</h4>
-                      <p className="text-[11px] text-textSecondary">We draft documentation mapping directly to CIBIL & CRIF registries.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[#2563EB] shrink-0">
-                      <TrendingUp className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-brandNavy mb-1">Consortia Alignment</h4>
-                      <p className="text-[11px] text-textSecondary">Correct duplicate listings across multiple lender networks.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="bg-white border border-slate-200 rounded-[2rem] p-8 sm:p-10 shadow-sm relative overflow-hidden">
-                <h3 className="font-display text-2xl font-black text-brandNavy mb-4">
-                  Preliminary Report Review
-                </h3>
-                <p className="text-xs text-textSecondary leading-relaxed mb-6 font-light">
-                  Initiate a baseline review of your Company Credit Report with our corporate desk analysts. No obligations, zero hard inquiries.
-                </p>
-                <Link href="/business/contact">
-                  <Button className="w-full bg-[#2563EB] hover:bg-[#1d4ed8] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm flex items-center justify-center gap-2">
-                    Request Consultation
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Button>
-                </Link>
-              </div>
-            </Reveal>
+      {/* 5. Business Impact Metrics (KPI Band) */}
+      <section className="py-20 bg-slate-950 text-white relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(37,99,235,0.05),transparent_40%)]" />
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 text-center">
+          <div>
+            <div className="text-4xl font-extrabold text-blue-500 font-mono">₹420 Cr+</div>
+            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Disputed Credit Audited</div>
+          </div>
+          <div>
+            <div className="text-4xl font-extrabold text-blue-500 font-mono">100%</div>
+            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Bureau Compliant Operations</div>
+          </div>
+          <div>
+            <div className="text-4xl font-extrabold text-blue-500 font-mono">2 Hrs</div>
+            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Response SLA Guaranteed</div>
           </div>
         </div>
       </section>
 
-      {/* 4. FAQ ACCORDION */}
-      <section className="py-24">
-        <div className="mx-auto max-w-[800px] px-6 sm:px-10">
+
+
+      {/* 7. Industries Served */}
+      <section className="py-24 bg-slate-50 border-b border-slate-100">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <Reveal>
-            <div className="text-center mb-16">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB] mb-3 block">
-                FAQ
-              </span>
-              <h2 className="font-display text-3xl font-black text-brandNavy">
-                Frequently Asked Questions
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <h2 className="font-display text-3xl font-extrabold text-slate-900">
+                Industries Supported
               </h2>
+              <p className="mt-4 text-slate-600 text-sm">
+                We manage credit registries and data auditing for multiple key business sectors.
+              </p>
             </div>
+          </Reveal>
+
+          <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+            {[
+              'Manufacturing & Engineering',
+              'Supply Chain & Logistical Hubs',
+              'Real Estate Developers',
+              'NBFCs & Micro-Lenders',
+              'B2B Wholesale Traders',
+              'Export-Import Houses',
+              'IT Services & SaaS Entities',
+              'Automobile Component Vendors'
+            ].map((ind, idx) => (
+              <Reveal key={idx} delay={idx * 0.05}>
+                <span className="inline-flex items-center px-4 py-2 rounded-2xl bg-white border border-slate-200/80 text-xs font-semibold text-slate-700 shadow-sm">
+                  {ind}
+                </span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-24 bg-white border-b border-slate-100">
+        <div className="mx-auto max-w-4xl px-6">
+          <Reveal>
+            <h2 className="font-display text-3xl font-extrabold text-slate-900 text-center mb-12">
+              Commercial Credit FAQs
+            </h2>
           </Reveal>
 
           <div className="space-y-4">
@@ -260,17 +515,16 @@ export default function BusinessServices() {
               const isOpen = activeFaq === index
               return (
                 <Reveal key={index} delay={index * 0.05}>
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+                  <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm">
                     <button
-                      type="button"
                       onClick={() => setActiveFaq(isOpen ? null : index)}
-                      className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left font-bold text-sm text-brandNavy hover:bg-slate-50 transition-colors"
+                      className="w-full px-6 py-5 flex items-center justify-between text-left font-display text-sm font-bold text-slate-900 focus:outline-none"
                     >
                       <span>{faq.q}</span>
-                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                      <HelpCircle className={`h-4.5 w-4.5 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
                     </button>
                     {isOpen && (
-                      <div className="px-6 pb-5 pt-1 text-xs text-textSecondary leading-relaxed border-t border-slate-100">
+                      <div className="px-6 pb-5 text-xs leading-relaxed text-slate-500 border-t border-slate-100 pt-3">
                         {faq.a}
                       </div>
                     )}
@@ -278,6 +532,209 @@ export default function BusinessServices() {
                 </Reveal>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* TRUSTED BY LOGOS STRIP (COLORFUL & VIBRANT - ABOVE CONTACT FORM) */}
+      <section className="bg-slate-50/70 border-b border-slate-100 py-12">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <div className="flex flex-col items-center justify-center gap-6">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#2563EB]">
+              Trusted By & Supported Under
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-12 opacity-95 transition-all duration-300">
+              <img src="/trusted by/MSME.png" alt="MSME Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/RBIH.png" alt="RBIH Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/DPIIT startupindia.png" alt="DPIIT Startup India Logo" className="h-9 sm:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/IStart.png" alt="iStart Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+              <img src="/trusted by/I-hub.png" alt="i-Hub Logo" className="h-12 sm:h-15 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT FORM SECTION */}
+      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 items-start">
+            
+            <Reveal>
+              <div className="max-w-md">
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">CONTACT DESK</span>
+                <h2 className="mt-3 font-display text-3xl font-extrabold text-brandNavy sm:text-4xl">
+                  Initiate Commercial Audit Consultation
+                </h2>
+                <p className="mt-4 text-base text-textSecondary font-light leading-relaxed">
+                  Find out what's hiding in your Company Credit Report. Our commercial desk offers a free preliminary assessment of your CCR for qualified corporate entities. Discuss your reporting requirements here.
+                </p>
+
+                <div className="mt-12 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-[#2563EB]">Direct Email Link</h4>
+                      <a href="mailto:info@primescore.in" className="text-base text-brandNavy font-semibold hover:underline">info@primescore.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-[#2563EB]">Operational Hours</h4>
+                      <p className="text-sm text-textSecondary font-medium">Monday – Saturday, 10 AM to 6 PM IST</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Map location embed */}
+                <div className="mt-8 w-full h-[260px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
+                  <iframe 
+                    src="https://maps.google.com/maps?q=iStart%20Nest%20Incubation%20Center,%20Gov.%20Polytechnic%20College,%20Jodhpur&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    className="absolute top-0 left-0 w-full h-full border-0"
+                    allowFullScreen={false} 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.15}>
+              <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+                {status === 'sent' ? (
+                  <div className="flex flex-col py-8 animate-in fade-in zoom-in-95 duration-300 items-center text-center">
+                    <div className="h-16 w-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-5 text-emerald-500 shadow-sm">
+                      <CheckCircle2 className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-base font-bold text-brandNavy mb-1">Details Submitted</h3>
+                    <p className="text-textSecondary text-xs max-w-xs leading-relaxed">
+                      A corporate analyst will review your profile details and reach out.
+                    </p>
+                  </div>
+                ) : (
+                  <form className="space-y-5" onSubmit={handleSubmit}>
+                    {status === 'error' && (
+                      <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600 mb-2">
+                        <AlertCircle className="h-5 w-5 shrink-0" />
+                        <p className="text-xs font-semibold">{errorMessage}</p>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="companyName">
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        id="companyName"
+                        value={form.companyName}
+                        onChange={(e) => setForm((p) => ({ ...p, companyName: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                        placeholder="Company Name"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="contactName">
+                        Contact Person Name
+                      </label>
+                      <input
+                        type="text"
+                        id="contactName"
+                        value={form.contactName}
+                        onChange={(e) => setForm((p) => ({ ...p, contactName: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                        placeholder="Contact Person Name"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="email">
+                          Company Email
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          value={form.email}
+                          onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                          className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                          placeholder="Company Email"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="phone">
+                          Contact Number
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          value={form.phone}
+                          onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                          className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors"
+                          placeholder="Contact Number"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block">
+                        Required Service
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {issueTypes.map((type) => {
+                          const isSelected = form.issueType === type
+                          return (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => setForm((p) => ({ ...p, issueType: type }))}
+                              className={[
+                                'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
+                                isSelected
+                                  ? 'bg-brandNavy text-white border-brandNavy'
+                                  : 'bg-white text-textSecondary border-slate-200 hover:border-brandNavy/35 hover:text-brandNavy'
+                              ].join(' ')}
+                            >
+                              {type}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="message">
+                        Briefly state your requirements
+                      </label>
+                      <textarea
+                        id="message"
+                        value={form.message}
+                        onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                        className="w-full px-4 py-3 text-sm text-brandNavy bg-white border border-slate-200 rounded-xl focus:border-[#2563EB] focus:outline-none transition-colors min-h-[90px] resize-none"
+                        placeholder="Briefly state your requirements..."
+                        required
+                      />
+                    </div>
+
+                    <div className="pt-2">
+                      <Button type="submit" disabled={status === 'sending'} className="px-6 py-4 bg-[#ef4444] hover:bg-[#ef4444]/95 text-white text-sm font-bold uppercase tracking-wider transition-all rounded-xl w-full justify-center shadow-md border-0">
+                        {status === 'sending' ? 'Submitting...' : 'Submit Request'}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>

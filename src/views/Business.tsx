@@ -34,6 +34,8 @@ export default function Business() {
     message: ''
   })
 
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.email.trim() || !form.companyName.trim()) return
@@ -224,58 +226,40 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
     <div className="w-full bg-white text-slate-900 overflow-hidden">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-slate-100 min-h-[640px] flex items-center bg-[#f8fafc]">
-        {/* Background whiteboard image wrapper */}
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-          {/* Subtle overlay grid path to align with B2B styles */}
-          <div className="absolute inset-0 bg-[#0B192C]/10 mix-blend-overlay z-[2]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-[1]" />
+      <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
+        {/* Background Image - Single static layout */}
+        <div className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50">
           <img 
-            src="/images/hero-bg.jpg" 
-            alt="whiteboard backdrop" 
-            className="w-full h-full object-cover opacity-60 scale-110"
+            src="/images/meeting1.jpg" 
+            alt="PrimeScore Business Workspace Backdrop" 
+            className="w-full h-full object-cover"
           />
+          {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
         </div>
-
-        <div className="relative z-10 mx-auto max-w-[1280px] w-full px-6 sm:px-10 pt-20 pb-28">
-          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+        
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
+        
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
+          {/* Hero Content matching Service Hero Layout */}
+          <div className="lg:col-span-9 flex flex-col items-start relative z-10">
             <Reveal>
-              <div className="bg-white/85 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-slate-100 shadow-sm max-w-2xl">
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.3rem] font-black tracking-tight text-brandNavy leading-[1.08] mb-6">
-                  Your company's credit profile deserves more than a checklist.
-                </h1>
-                <p className="text-base sm:text-lg text-textSecondary font-light leading-relaxed mb-10">
-                  Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <a
-                    href="#audit-form"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-brandNavy text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-brandNavy/90 transition-all shadow-md"
-                  >
-                    Request Commercial Audit
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </a>
-                  <a
-                    href="#capabilities"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-200 bg-white text-brandNavy text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 transition-all"
-                  >
-                    See How It Works
-                  </a>
-                </div>
+              <h1 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
+                Your company's credit profile <span className="text-blue-500">deserves more</span> than a checklist.
+              </h1>
+              <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <Button href="#audit-form" className="!bg-blue-600 hover:!bg-blue-700 text-white font-semibold transition-all">
+                  Request Commercial Audit
+                </Button>
+                <a href="#capabilities" className="inline-flex items-center text-sm font-semibold text-slate-300 hover:text-white transition-colors gap-1.5 px-4 py-2.5">
+                  See How It Works <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
               </div>
             </Reveal>
-
-            {/* Static cutout person container with fading mask to smooth out the bottom edge */}
-            <div className="relative h-[380px] lg:h-[500px] flex items-end justify-center overflow-visible select-none pointer-events-none">
-              <div className="w-full max-w-[400px] h-[90%] flex items-end relative z-10 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]">
-                <img 
-                  src="/images/hero-person.png" 
-                  alt="person foreground" 
-                  className="w-full h-auto max-h-full object-contain object-bottom"
-                />
-              </div>
-            </div>
-
           </div>
         </div>
       </section>

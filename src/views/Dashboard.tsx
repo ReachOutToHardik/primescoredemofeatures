@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 
@@ -12,17 +12,43 @@ const ACCESS_KEY = '3b227acb-f76a-4120-8568-797ad9dd59b5'
 export default function Dashboard() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [bannerOpen, setBannerOpen] = useState(false)
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
-  // Countdown to July 19, 2026 at 1:00 PM IST (07:30 UTC)
+  // Countdown target. Change this during local testing.
+  // For local testing: Set to target current time plus 5 seconds (uncomment below line)
+  // const targetDate = useMemo(() => new Date(Date.now() + 5000).getTime(), [])
+  
+  // Production date: July 19, 2026 at 1:00 PM IST (07:30 UTC) — uncomment for prod:
+  // const targetDate = useMemo(() => new Date('2026-07-19T07:30:00Z').getTime(), [])
+  // 10-second test (comment out for prod):
+  const targetDate = useMemo(() => new Date(Date.now() + 10000).getTime(), [])
   useEffect(() => {
-    const targetDate = new Date('2026-07-19T07:30:00Z').getTime()
+    let fired = false
 
     const updateTime = () => {
       const now = new Date().getTime()
       const distance = targetDate - now
 
-      if (distance < 0) return
+      if (distance <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+        if (!fired) {
+          fired = true
+          setIsRedirecting(true)
+          
+          // Trigger dynamic imports of canvas-confetti
+          import('canvas-confetti').then((confetti) => {
+            confetti.default({
+              particleCount: 120,
+              spread: 70,
+              origin: { y: 0.55 }
+            })
+          })
+          // No auto-redirect — user must click "Open Dashboard"
+        }
+        return
+      }
 
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -32,11 +58,11 @@ export default function Dashboard() {
       })
     }
 
-    updateTime() // Call immediately so it doesn't wait 1 second to show up
+    updateTime()
     const interval = setInterval(updateTime, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [targetDate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -191,6 +217,146 @@ export default function Dashboard() {
           </form>
         )}
       </motion.div>
+
+      {/* Transition Screen */}
+      <AnimatePresence>
+        {isRedirecting && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            {/* Chess pattern with logo in alternating squares */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: '#0d0d0d',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3C!-- dark squares --%3E%3Crect width='48' height='48' fill='%230d0d0d'/%3E%3Crect x='48' y='48' width='48' height='48' fill='%230d0d0d'/%3E%3C!-- light squares with logo --%3E%3Crect x='48' width='48' height='48' fill='%23181818'/%3E%3Crect y='48' width='48' height='48' fill='%23181818'/%3E%3C!-- logo in top-right square --%3E%3Cg transform='translate(60,12)' opacity='0.13'%3E%3Crect width='24' height='24' rx='7' fill='url(%23g1)'/%3E%3Ctext x='12' y='17' text-anchor='middle' font-family='system-ui' font-size='9' font-weight='800' fill='%230B1220'%3EPS%3C/text%3E%3C/g%3E%3C!-- logo in bottom-left square --%3E%3Cg transform='translate(12,60)' opacity='0.13'%3E%3Crect width='24' height='24' rx='7' fill='url(%23g2)'/%3E%3Ctext x='12' y='17' text-anchor='middle' font-family='system-ui' font-size='9' font-weight='800' fill='%230B1220'%3EPS%3C/text%3E%3C/g%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='24' y2='24' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23F5C842'/%3E%3Cstop offset='1' stop-color='%234F8EF7'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='24' y2='24' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23F5C842'/%3E%3Cstop offset='1' stop-color='%234F8EF7'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E")`,
+                backgroundSize: '96px 96px'
+              }}
+            />
+
+            {/* Subtle dark overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.18)' }} />
+
+            {/* Card */}
+            <AnimatePresence>
+              {!bannerOpen && (
+                <motion.div
+                  key="card"
+                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.85, y: -24 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    position: 'relative',
+                    zIndex: 10,
+                    width: 360,
+                    padding: '48px 40px',
+                    background: 'rgba(255,255,255,0.035)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    backdropFilter: 'blur(20px)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center'
+                  }}
+                >
+                  {/* Dark mode logo */}
+                  <img
+                    src="/Darkmode_Logo.png"
+                    alt="Primescore"
+                    style={{ height: 28, width: 'auto', marginBottom: 36, opacity: 0.9 }}
+                  />
+
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: 14 }}>Dashboard</p>
+
+                  <h2 style={{ color: '#fff', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10 }}>
+                    We&apos;re live.
+                  </h2>
+                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, fontWeight: 300, lineHeight: 1.6, marginBottom: 36 }}>
+                    Your dashboard is ready and waiting.
+                  </p>
+
+                  <button
+                    onClick={() => setBannerOpen(true)}
+                    style={{
+                      width: '100%',
+                      background: '#fff',
+                      color: '#000',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      letterSpacing: '0.02em',
+                      padding: '12px 0',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Open Dashboard
+                  </button>
+
+                  <p style={{ marginTop: 18, color: 'rgba(255,255,255,0.18)', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.15em' }}>
+                    dashboard.primescore.in
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* White banner expand from center */}
+            <AnimatePresence>
+              {bannerOpen && (
+                <motion.div
+                  key="banner"
+                  initial={{ scaleX: 0, scaleY: 0.5, opacity: 0 }}
+                  animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 20,
+                    background: '#fff',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transformOrigin: '50% 50%'
+                  }}
+                  onAnimationComplete={() => {
+                    setTimeout(() => {
+                      window.location.href = 'https://dashboard.primescore.in'
+                    }, 900)
+                  }}
+                >
+                  <motion.img
+                    src="/lightmode_Logo.png"
+                    alt="Primescore"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    style={{ height: 32, width: 'auto', marginBottom: 28 }}
+                  />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: 120 }}
+                    transition={{ delay: 0.4, duration: 0.5, ease: 'easeInOut' }}
+                    style={{ height: 1, background: 'rgba(0,0,0,0.1)', marginBottom: 24 }}
+                  />
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.55 }}
+                    style={{ color: 'rgba(0,0,0,0.28)', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.3em', textTransform: 'uppercase' }}
+                  >
+                    Redirecting
+                  </motion.p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
