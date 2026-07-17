@@ -403,7 +403,7 @@ export default function Dashboard() {
                           position: 'absolute', 
                           top: '50%', 
                           left: '50%', 
-                          transform: 'translate(-50%, -50%)', 
+                          transform: 'translate3d(-50%, -50%, 0)', 
                           zIndex: 10, 
                           textAlign: 'center' 
                         }}>
@@ -464,14 +464,12 @@ function ElegantAnnouncer() {
         zIndex: 10, 
         padding: '0 24px', 
         position: 'absolute', 
-        top: '50%', 
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '100%', 
+        inset: 0,
         display: 'flex', 
         flexDirection: 'column', 
         gap: '24px', 
-        alignItems: 'center' 
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
       {announcements.map((item, idx) => (
@@ -483,7 +481,7 @@ function ElegantAnnouncer() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 style={{ 
-                  textAlign: 'left',
+                  textAlign: 'center',
                   background: 'linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderRadius: '0px', // sharp corners
