@@ -383,9 +383,11 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: 1.0 }}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         inset: 0,
-        zIndex: 20,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 9999,
         background: '#000000',
         display: 'flex',
         alignItems: 'center',
@@ -421,10 +423,10 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
         >
           {/* Logo animation on white background */}
           <motion.img
-            src="/images/primescore-chess-banner.png"
+            src="/logo.png"
             alt="PrimeScore logo"
-            initial={{ scale: 0.7, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1.0, opacity: 1 }}
             transition={{
               duration: 1.5,
               ease: [0.16, 1, 0.3, 1]
