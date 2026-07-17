@@ -343,370 +343,105 @@ export default function Dashboard() {
               )}
             </AnimatePresence>
 
-                  {/* Elegant 13-second Transition sequence with Text Announcements, Confetti, Clip Wipe & Iris Reveal */}
+                  {/* Video transition playing Change_last_frame_line_of_visi.mp4 */}
                   <AnimatePresence>
                     {bannerOpen && (
-                      <motion.div
-                        key="banner"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6 }}
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          zIndex: 20,
-                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          overflow: 'hidden'
+                      <VideoTransitionOverlay 
+                        onComplete={() => {
+                          window.location.href = 'https://dashboard.primescore.in'
                         }}
-                        onAnimationComplete={() => {
-                          // Play the futuristic synth ident intro track at 12.5s
-                          setTimeout(() => {
-                            const audio = document.getElementById('launch-audio') as HTMLAudioElement
-                            if (audio) {
-                              audio.volume = 0.8
-                              audio.play().catch(err => console.log('Deferred audio playback error:', err))
-                            }
-                          }, 12500);
-
-                          // Confetti fires at 14.5s
-                          setTimeout(() => {
-                            import('canvas-confetti').then((confetti) => {
-                              confetti.default({ particleCount: 180, spread: 90, origin: { y: 0.5 } });
-                              const duration = 3 * 1000;
-                              const end = Date.now() + duration;
-                              const frame = () => {
-                                  confetti.default({ particleCount: 8, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
-                                  confetti.default({ particleCount: 8, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
-                                  if (Date.now() < end) requestAnimationFrame(frame);
-                              };
-                              frame();
-                            });
-                          }, 14500);
-
-                          // Redirect at 21.0s
-                          setTimeout(() => {
-                            window.location.href = 'https://dashboard.primescore.in'
-                          }, 21000)
-                        }}
-                      >
-                        {/* 21st.dev Floating Particles Background */}
-                        <FloatingParticles 
-                          particleCount={2500} 
-                          particleColor1="#2563EB" 
-                          particleColor2="#3B82F6" 
-                          cameraDistance={900} 
-                          rotationSpeed={0.06} 
-                          particleSize={14}
-                        />
-
-                        {/* Clip-Wipe & Iris Reveal Animation Overlays */}
-                        <IrisStingerReveal />
-
-                        {/* Staggered stack of all announcement texts introduced sequentially, then faded out */}
-                        <ElegantAnnouncer />
-
-                        {/* Elegant non-AI spring-loaded upscale logo transition with elegant wobble - absolutely centered */}
-                        <div style={{ 
-                          position: 'absolute', 
-                          top: '50%', 
-                          left: '50%', 
-                          transform: 'translate3d(-50%, -50%, 0)', 
-                          zIndex: 10, 
-                          textAlign: 'center' 
-                        }}>
-                          <motion.img
-                            src="/Darkmode_Logo.png"
-                            alt="Primescore"
-                            initial={{ scale: 0.3, rotate: -8, opacity: 0 }}
-                            animate={{ scale: [0.3, 1.15, 0.96, 1.02, 1], rotate: [0, 8, -4, 2, 0], opacity: 1 }}
-                            transition={{ 
-                              duration: 1.4, 
-                              ease: [0.34, 1.56, 0.64, 1],
-                              delay: 13.0
-                            }}
-                            style={{ height: 85, width: 'auto', margin: '0 auto' }}
-                          />
-                        </div>
-                      </motion.div>
+                      />
                     )}
                   </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
+           </motion.div>
+         )}
+       </AnimatePresence>
+     </div>
+   )
+ }
+
+interface VideoTransitionOverlayProps {
+  onComplete: () => void
 }
 
-function ElegantAnnouncer() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [fadeOut, setFadeOut] = useState(false);
-
-  const lines = [
-    "Built from the ground up for speed and simplicity.",
-    "Four major credit bureaus. One unified health report.",
-    "Detecting invalid historical records damaging your score.",
-    "The professional credit rectification console.",
-    "Introducing..."
-  ];
+function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
+  const [videoEnded, setVideoEnded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // Show each line one by one in the exact middle, remaining on screen longer (2.8s gaps)
-    const line1 = setTimeout(() => setCurrentIndex(0), 100);
-    const line2 = setTimeout(() => setCurrentIndex(1), 2600);
-    const line3 = setTimeout(() => setCurrentIndex(2), 5200);
-    const line4 = setTimeout(() => setCurrentIndex(3), 7800);
-    const line5 = setTimeout(() => setCurrentIndex(4), 10400);
-    // Fade out the last line at 12.3s
-    const fadeOutAll = setTimeout(() => setFadeOut(true), 12300);
-
-    return () => {
-      clearTimeout(line1);
-      clearTimeout(line2);
-      clearTimeout(line3);
-      clearTimeout(line4);
-      clearTimeout(line5);
-      clearTimeout(fadeOutAll);
-    };
-  }, []);
-
-  return (
-    <div
-      style={{ 
-        zIndex: 10, 
-        position: 'absolute', 
-        inset: 0,
-        display: 'flex', 
-        alignItems: 'center',
-        justifyContent: 'center',
-        pointerEvents: 'none'
-      }}
-    >
-      <AnimatePresence mode="wait">
-        {!fadeOut && (
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, y: 35, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -25, filter: 'blur(6px)' }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            style={{ 
-              textAlign: 'center',
-              padding: '0 32px',
-              maxWidth: 900
-            }}
-          >
-            <p 
-              style={{ 
-                color: '#ffffff', 
-                fontSize: 34, 
-                fontWeight: 300, 
-                fontFamily: 'Outfit, Inter, system-ui, sans-serif', 
-                letterSpacing: '0.04em', 
-                lineHeight: 1.45,
-                textShadow: '0 2px 15px rgba(0,0,0,0.6)',
-                margin: 0
-              }}
-            >
-              {lines[currentIndex]}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// IrisStingerReveal Component - Performs a diagonal clip wipe cover followed by circular iris reveal
-function IrisStingerReveal() {
-  const [wipeActive, setWipeActive] = useState(false);
-  const [irisActive, setIrisActive] = useState(false);
-
-  useEffect(() => {
-    // 1. Cover screen in diagonal clip wipe at 14.5 seconds
-    const wipeTrigger = setTimeout(() => {
-      setWipeActive(true);
-    }, 14500);
-
-    // 2. Open up / Reveal in circular Iris at 16 seconds
-    const irisTrigger = setTimeout(() => {
-      setIrisActive(true);
-    }, 16000);
-
-    return () => {
-      clearTimeout(wipeTrigger);
-      clearTimeout(irisTrigger);
-    };
-  }, []);
-
-  return (
-    <div style={{ position: 'absolute', inset: 0, zIndex: 18, pointerEvents: 'none' }}>
-      {/* 1. Diagonal Clip Wipe Cover Screen */}
-      <AnimatePresence>
-        {wipeActive && !irisActive && (
-          <motion.div
-            initial={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0% 100%)' }}
-            animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.0, ease: [0.77, 0, 0.175, 1] }}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: '#0f172a',
-              zIndex: 2
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* 2. Iris Circle Reveal screen (Wipe opens up to white match dashboard start screen) */}
-      <AnimatePresence>
-        {irisActive && (
-          <motion.div
-            initial={{ clipPath: 'circle(0% at 50% 50%)' }}
-            animate={{ clipPath: 'circle(150% at 50% 50%)' }}
-            transition={{ duration: 1.3, ease: [0.25, 1, 0.5, 1] }}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: '#ffffff',
-              zIndex: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-             {/* Clean screen cover transition without loading elements */}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-interface FloatingParticlesProps {
-  className?: string
-}
-
-export function FloatingParticles({ className = "" }: FloatingParticlesProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let animationId: number
-    let width = canvas.width = window.innerWidth
-    let height = canvas.height = window.innerHeight
-
-    // Configurable particle parameters
-    const particleCount = 120
-    const particles: Array<{
-      x: number
-      y: number
-      r: number
-      dx: number
-      dy: number
-      opacity: number
-      fadeSpeed: number
-    }> = []
-
-    // Populate particles keeping the center clear
-    const createParticle = (initRandomY = false) => {
-      const angle = Math.random() * Math.PI * 2
-      // Force particles to spawn away from center (at least 220px radius offset)
-      const distance = 220 + Math.random() * 400
-      
-      const x = width / 2 + Math.cos(angle) * distance
-      const y = initRandomY 
-        ? Math.random() * height 
-        : height / 2 + Math.sin(angle) * distance
-
-      return {
-        x,
-        y,
-        r: Math.random() * 2 + 1.2,
-        dx: (Math.random() - 0.5) * 0.4,
-        dy: -Math.random() * 0.6 - 0.2, // drifting upwards
-        opacity: Math.random() * 0.5 + 0.1,
-        fadeSpeed: 0.002 + Math.random() * 0.003
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(createParticle(true))
-    }
-
-    const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
-    }
-    window.addEventListener('resize', handleResize)
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height)
-
-      // Gradient color configuration matching dashboard colors
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i]
-        
-        // Move particle
-        p.x += p.dx
-        p.y += p.dy
-
-        // Draw glowing particle
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(59, 130, 246, ${p.opacity})` // Blue theme matching console branding
-        ctx.shadowColor = '#3B82F6'
-        ctx.shadowBlur = 8
-        ctx.fill()
-        ctx.shadowBlur = 0 // reset shadow
-
-        // Keep center clean: if a particle drifts too close to center, push it away
-        const distToCenter = Math.hypot(p.x - width / 2, p.y - height / 2)
-        if (distToCenter < 190) {
-          const angle = Math.atan2(p.y - height / 2, p.x - width / 2)
-          p.x = width / 2 + Math.cos(angle) * 192
-          p.y = height / 2 + Math.sin(angle) * 192
-          p.dx = Math.cos(angle) * 0.5
-        }
-
-        // Recycle particles drifting off screen
-        if (p.y < -10 || p.x < -10 || p.x > width + 10) {
-          particles[i] = createParticle(false)
-        }
-      }
-
-      animationId = requestAnimationFrame(draw)
-    }
-
-    draw()
-
-    return () => {
-      cancelAnimationFrame(animationId)
-      window.removeEventListener('resize', handleResize)
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.log("Auto-play blocked or failed: ", err)
+      })
     }
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`absolute inset-0 pointer-events-none ${className}`}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.0 }}
       style={{
         position: 'absolute',
         inset: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 1,
-        pointerEvents: 'none'
+        zIndex: 20,
+        background: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
       }}
-    />
+    >
+      {!videoEnded ? (
+        <video
+          ref={videoRef}
+          src="/intro-video.mp4"
+          playsInline
+          muted
+          autoPlay
+          onEnded={() => setVideoEnded(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
+        />
+      ) : (
+        <motion.div
+          initial={{ background: '#ffffff' }}
+          animate={{ background: '#ffffff' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Logo animation on white background */}
+          <motion.img
+            src="/images/primescore-chess-banner.png"
+            alt="PrimeScore logo"
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              duration: 1.5,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            onAnimationComplete={() => {
+              // Wait 1.5 seconds on the final white logo screen before redirecting
+              setTimeout(() => {
+                onComplete()
+              }, 1500)
+            }}
+            style={{
+              maxHeight: '120px',
+              width: 'auto'
+            }}
+          />
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
