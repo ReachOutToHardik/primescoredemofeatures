@@ -363,16 +363,16 @@ export default function Dashboard() {
                           overflow: 'hidden'
                         }}
                         onAnimationComplete={() => {
-                          // Play the futuristic synth ident intro track at 7.5s (matching text fade out)
+                          // Play the futuristic synth ident intro track at 12.5s
                           setTimeout(() => {
                             const audio = document.getElementById('launch-audio') as HTMLAudioElement
                             if (audio) {
                               audio.volume = 0.8
                               audio.play().catch(err => console.log('Deferred audio playback error:', err))
                             }
-                          }, 7500);
+                          }, 12500);
 
-                          // Confetti fires at 9.5s (after logo wobble has completed)
+                          // Confetti fires at 14.5s
                           setTimeout(() => {
                             import('canvas-confetti').then((confetti) => {
                               confetti.default({ particleCount: 180, spread: 90, origin: { y: 0.5 } });
@@ -385,12 +385,12 @@ export default function Dashboard() {
                               };
                               frame();
                             });
-                          }, 9500);
+                          }, 14500);
 
-                          // Redirect 2 seconds after the last transition (clip wipe / iris) initiates at 13.5s
+                          // Redirect at 21.0s
                           setTimeout(() => {
                             window.location.href = 'https://dashboard.primescore.in'
-                          }, 13500)
+                          }, 21000)
                         }}
                       >
                         {/* 21st.dev Floating Particles Background */}
@@ -425,8 +425,8 @@ export default function Dashboard() {
                             animate={{ scale: [0.3, 1.15, 0.96, 1.02, 1], rotate: [0, 8, -4, 2, 0], opacity: 1 }}
                             transition={{ 
                               duration: 1.4, 
-                              ease: [0.34, 1.56, 0.64, 1], // premium overshoot bounce
-                              delay: 8.2 // triggers right after announcements fade out
+                              ease: [0.34, 1.56, 0.64, 1],
+                              delay: 13.0
                             }}
                             style={{ height: 85, width: 'auto', margin: '0 auto' }}
                           />
@@ -441,96 +441,82 @@ export default function Dashboard() {
   )
 }
 
-// ElegantAnnouncer - Introduces each key block sequentially one-by-one, keeping them on screen in a list, then fades them all away at 7.5s
 function ElegantAnnouncer() {
-  const [visibleCount, setVisibleCount] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
 
-  const announcements = [
-    { title: "PRIMESCORE CONSOLE", subtitle: "All four credit bureau reports in a single platform" },
-    { title: "SECURE SOCKETS", subtitle: "Configuring banking-grade secure registry registry vaults" },
-    { title: "ENCRYPTED CHANNELS", subtitle: "Establishing cryptographically signed gateway bridges" },
-    { title: "LEDGER AUDIT", subtitle: "Synchronizing dispute resolution general parameters" }
+  const lines = [
+    "Built from the ground up for speed and simplicity.",
+    "Four major credit bureaus. One unified health report.",
+    "Detecting invalid historical records damaging your score.",
+    "The professional credit rectification console.",
+    "Introducing..."
   ];
 
   useEffect(() => {
-    // Stagger introduction of each announcement block
-    const introTimeouts = [
-      setTimeout(() => setVisibleCount(1), 200),
-      setTimeout(() => setVisibleCount(2), 1800),
-      setTimeout(() => setVisibleCount(3), 3400),
-      setTimeout(() => setVisibleCount(4), 5000),
-      // Fade out the entire stack of announcements at 7.5s
-      setTimeout(() => setFadeOut(true), 7500)
-    ];
+    // Show each line one by one in the exact middle, remaining on screen longer (2.8s gaps)
+    const line1 = setTimeout(() => setCurrentIndex(0), 100);
+    const line2 = setTimeout(() => setCurrentIndex(1), 2600);
+    const line3 = setTimeout(() => setCurrentIndex(2), 5200);
+    const line4 = setTimeout(() => setCurrentIndex(3), 7800);
+    const line5 = setTimeout(() => setCurrentIndex(4), 10400);
+    // Fade out the last line at 12.3s
+    const fadeOutAll = setTimeout(() => setFadeOut(true), 12300);
 
-    return () => introTimeouts.forEach(clearTimeout);
+    return () => {
+      clearTimeout(line1);
+      clearTimeout(line2);
+      clearTimeout(line3);
+      clearTimeout(line4);
+      clearTimeout(line5);
+      clearTimeout(fadeOutAll);
+    };
   }, []);
 
   return (
-    <motion.div 
-      animate={fadeOut ? { opacity: 0, y: -40, filter: 'blur(16px)' } : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.3, 0, 0.1, 1] }}
+    <div
       style={{ 
         zIndex: 10, 
-        padding: '0 24px', 
         position: 'absolute', 
         inset: 0,
         display: 'flex', 
-        flexDirection: 'column', 
-        gap: '40px', 
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        pointerEvents: 'none'
       }}
     >
-      {announcements.map((item, idx) => (
-        <div key={idx} style={{ width: '100%', maxWidth: 800 }}>
-          <AnimatePresence>
-            {visibleCount > idx && (
-              <motion.div
-                initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                style={{ 
-                  textAlign: 'center',
-                  padding: '10px'
-                }}
-              >
-                <span 
-                  style={{ 
-                    color: '#3B82F6', 
-                    fontSize: 18, 
-                    fontWeight: 900, 
-                    fontFamily: 'Inter, system-ui, sans-serif', 
-                    letterSpacing: '0.4em', 
-                    display: 'block', 
-                    marginBottom: 12, 
-                    textTransform: 'uppercase',
-                    textShadow: '0 0 20px rgba(59, 130, 246, 0.6)'
-                  }}
-                >
-                  {item.title}
-                </span>
-                <span 
-                  style={{ 
-                    color: '#ffffff', 
-                    fontSize: 32, 
-                    fontWeight: 300, 
-                    fontFamily: 'Inter, system-ui, sans-serif', 
-                    letterSpacing: '0.05em', 
-                    lineHeight: 1.4,
-                    display: 'block',
-                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)'
-                  }}
-                >
-                  {item.subtitle}
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      ))}
-    </motion.div>
+      <AnimatePresence mode="wait">
+        {!fadeOut && (
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, y: 35, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -25, filter: 'blur(6px)' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            style={{ 
+              textAlign: 'center',
+              padding: '0 32px',
+              maxWidth: 900
+            }}
+          >
+            <p 
+              style={{ 
+                color: '#ffffff', 
+                fontSize: 34, 
+                fontWeight: 300, 
+                fontFamily: 'Outfit, Inter, system-ui, sans-serif', 
+                letterSpacing: '0.04em', 
+                lineHeight: 1.45,
+                textShadow: '0 2px 15px rgba(0,0,0,0.6)',
+                margin: 0
+              }}
+            >
+              {lines[currentIndex]}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -540,15 +526,15 @@ function IrisStingerReveal() {
   const [irisActive, setIrisActive] = useState(false);
 
   useEffect(() => {
-    // 1. Cover screen in diagonal clip wipe at 11.5 seconds
+    // 1. Cover screen in diagonal clip wipe at 14.5 seconds
     const wipeTrigger = setTimeout(() => {
       setWipeActive(true);
-    }, 11500);
+    }, 14500);
 
-    // 2. Open up / Reveal in circular Iris at 13 seconds
+    // 2. Open up / Reveal in circular Iris at 16 seconds
     const irisTrigger = setTimeout(() => {
       setIrisActive(true);
-    }, 13000);
+    }, 16000);
 
     return () => {
       clearTimeout(wipeTrigger);
@@ -594,21 +580,7 @@ function IrisStingerReveal() {
               justifyContent: 'center'
             }}
           >
-            {/* Spinning Loader */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: '50%',
-                border: '3px solid rgba(37, 99, 235, 0.15)',
-                borderTopColor: '#2563EB'
-              }}
-            />
-            <p style={{ marginTop: 24, color: '#1e293b', fontSize: 11, fontWeight: 600, fontFamily: 'monospace', letterSpacing: '0.2em' }}>
-              LAUNCHING SECURE CONSOLE
-            </p>
+             {/* Clean screen cover transition without loading elements */}
           </motion.div>
         )}
       </AnimatePresence>
@@ -617,330 +589,123 @@ function IrisStingerReveal() {
 }
 
 interface FloatingParticlesProps {
-  particleCount?: number
-  particleColor1?: string
-  particleColor2?: string 
-  cameraDistance?: number
-  rotationSpeed?: number
-  particleSize?: number
-  antigravityForce?: number
-  activationRate?: number
   className?: string
 }
 
-export function FloatingParticles({
-  particleCount = 1800,
-  particleColor1 = "#3b82f6",
-  particleColor2 = "#60a5fa", 
-  cameraDistance = 900,
-  rotationSpeed = 0.08,
-  particleSize = 12,
-  antigravityForce = 22,
-  activationRate = 15,
-  className = "",
-}: FloatingParticlesProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const sceneRef = useRef<{
-    renderer?: THREE.WebGLRenderer
-    scene?: THREE.Scene
-    camera?: THREE.PerspectiveCamera
-    animationId?: number
-    movers?: any[]
-    points?: THREE.Points
-    points2?: THREE.Points
-  }>({})
+export function FloatingParticles({ className = "" }: FloatingParticlesProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (!containerRef.current) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    const container = containerRef.current
-    const width = container.clientWidth
-    const height = container.clientHeight
+    let animationId: number
+    let width = canvas.width = window.innerWidth
+    let height = canvas.height = window.innerHeight
 
-    // Utility functions
-    const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min
-    const getRadian = (degrees: number) => (degrees * Math.PI) / 180
-    const getSpherical = (rad1: number, rad2: number, r: number) => {
-      const x = Math.cos(rad1) * Math.cos(rad2) * r
-      const z = Math.cos(rad1) * Math.sin(rad2) * r
-      const y = Math.sin(rad1) * r
-      return [x, y, z]
-    }
+    // Configurable particle parameters
+    const particleCount = 120
+    const particles: Array<{
+      x: number
+      y: number
+      r: number
+      dx: number
+      dy: number
+      opacity: number
+      fadeSpeed: number
+    }> = []
 
-    // Mover class for particle physics
-    class Mover {
-      position = new THREE.Vector3()
-      velocity = new THREE.Vector3()
-      acceleration = new THREE.Vector3()
-      anchor = new THREE.Vector3()
-      mass = 1
-      is_active = false
+    // Populate particles keeping the center clear
+    const createParticle = (initRandomY = false) => {
+      const angle = Math.random() * Math.PI * 2
+      // Force particles to spawn away from center (at least 220px radius offset)
+      const distance = 220 + Math.random() * 400
+      
+      const x = width / 2 + Math.cos(angle) * distance
+      const y = initRandomY 
+        ? Math.random() * height 
+        : height / 2 + Math.sin(angle) * distance
 
-      init(vector: THREE.Vector3) {
-        this.position = vector.clone()
-        this.velocity = vector.clone()
-        this.anchor = vector.clone()
-        this.acceleration.set(0, 0, 0)
-        this.is_active = false
-      }
-
-      updatePosition() {
-        this.position.copy(this.velocity)
-      }
-
-      updateVelocity() {
-        this.acceleration.divideScalar(this.mass)
-        this.velocity.add(this.acceleration)
-      }
-
-      applyForce(vector: THREE.Vector3) {
-        this.acceleration.add(vector)
-      }
-
-      activate() {
-        this.is_active = true
+      return {
+        x,
+        y,
+        r: Math.random() * 2 + 1.2,
+        dx: (Math.random() - 0.5) * 0.4,
+        dy: -Math.random() * 0.6 - 0.2, // drifting upwards
+        opacity: Math.random() * 0.5 + 0.1,
+        fadeSpeed: 0.002 + Math.random() * 0.003
       }
     }
-
-    // Initialize Three.js
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setSize(width, height)
-    renderer.setClearColor(0x000000, 0) // transparent background
-    container.appendChild(renderer.domElement)
-
-    const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x000000, 800, 1600)
-
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(35, width / height, 1, 10000)
-    camera.up.set(0, 1, 0)
-    const cameraRad1 = getRadian(90)
-    let cameraRad2 = getRadian(0)
-
-    const setCameraPosition = () => {
-      const points = getSpherical(cameraRad1, cameraRad2, cameraDistance)
-      camera.position.set(points[0], points[1], points[2])
-      camera.lookAt(0, 0, 0)
-    }
-    setCameraPosition()
-
-    // Lighting
-    const light = new THREE.HemisphereLight(0xffffff, 0x333333, 1)
-    const lightPoints = getSpherical(getRadian(60), getRadian(30), 1000)
-    light.position.set(lightPoints[0], lightPoints[1], lightPoints[2])
-    scene.add(light)
-
-    // Create particle texture (no dot in center)
-    const createParticleTexture = () => {
-      const canvas = document.createElement("canvas")
-      const ctx = canvas.getContext("2d")!
-      canvas.width = 200
-      canvas.height = 200
-
-      const gradient = ctx.createRadialGradient(100, 100, 0, 100, 100, 100)
-      gradient.addColorStop(0.0, "rgba(255, 255, 255, 1)")
-      gradient.addColorStop(0.3, "rgba(255, 255, 255, 0.4)")
-      gradient.addColorStop(1.0, "rgba(255, 255, 255, 0)")
-
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height) // no arc, just gradient
-
-      const texture = new THREE.Texture(canvas)
-      texture.minFilter = THREE.NearestFilter
-      texture.needsUpdate = true
-      return texture
-    }
-
-    const texture = createParticleTexture()
-
-    // Create particles
-    const movers: Mover[] = []
-    const pointsGeometry = new THREE.BufferGeometry()
-    const pointsGeometry2 = new THREE.BufferGeometry()
-
-    const pointsMaterial = new THREE.PointsMaterial({
-      color: particleColor1,
-      size: particleSize,
-      transparent: true,
-      opacity: 0.8,
-      map: texture,
-      depthTest: false,
-      blending: THREE.AdditiveBlending,
-    })
-
-    const pointsMaterial2 = new THREE.PointsMaterial({
-      color: particleColor2,
-      size: particleSize,
-      transparent: true,
-      opacity: 0.8,
-      map: texture,
-      depthTest: false,
-      blending: THREE.AdditiveBlending,
-    })
-
-    const positions = new Float32Array(particleCount * 3)
-    const positions2 = new Float32Array(particleCount * 3)
 
     for (let i = 0; i < particleCount; i++) {
-      const mover = new Mover()
-      // Use higher minimum radius to keep the center completely clear
-      const range = (Math.log(getRandomInt(2, 256)) / Math.log(256)) * 400 + 150
-      const rad = getRadian(getRandomInt(0, 360))
-      const x = Math.cos(rad) * range
-      const z = Math.sin(rad) * range
-
-      mover.init(new THREE.Vector3(x, 1000, z))
-      mover.mass = getRandomInt(200, 500) / 100
-      movers.push(mover)
-
-      if (i % 2 === 0) {
-        positions[i * 3] = x
-        positions[i * 3 + 1] = 1000
-        positions[i * 3 + 2] = z
-      } else {
-        positions2[i * 3] = x
-        positions2[i * 3 + 1] = 1000
-        positions2[i * 3 + 2] = z
-      }
+      particles.push(createParticle(true))
     }
 
-    pointsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-    pointsGeometry2.setAttribute("position", new THREE.BufferAttribute(positions2, 3))
-
-    const points = new THREE.Points(pointsGeometry, pointsMaterial)
-    const points2 = new THREE.Points(pointsGeometry2, pointsMaterial2)
-
-    scene.add(points)
-    scene.add(points2)
-
-    // Animation variables
-    let lastTimeActivate = Date.now()
-    const antigravity = new THREE.Vector3(0, antigravityForce, 0)
-
-    const activateMovers = () => {
-      let count = 0
-      for (const mover of movers) {
-        if (mover.is_active) continue
-        mover.activate()
-        mover.velocity.y = -300
-        count++
-        if (count >= activationRate) break
-      }
-    }
-
-    const updateParticles = () => {
-      const positionsArray = pointsGeometry.attributes.position.array as Float32Array
-      const positionsArray2 = pointsGeometry2.attributes.position.array as Float32Array
-
-      for (let i = 0; i < movers.length; i++) {
-        const mover = movers[i]
-
-        if (mover.is_active) {
-          mover.applyForce(antigravity)
-          mover.updateVelocity()
-          mover.updatePosition()
-
-          if (mover.position.y > 1000) {
-            const range = (Math.log(getRandomInt(2, 256)) / Math.log(256)) * 250 + 50
-            const rad = getRadian(getRandomInt(0, 360))
-            const x = Math.cos(rad) * range
-            const z = Math.sin(rad) * range
-            mover.init(new THREE.Vector3(x, -300, z))
-            mover.mass = getRandomInt(200, 500) / 100
-          }
-        }
-
-        if (i % 2 === 0) {
-          positionsArray[i * 3] = mover.position.x
-          positionsArray[i * 3 + 1] = mover.position.y
-          positionsArray[i * 3 + 2] = mover.position.z
-        } else {
-          positionsArray2[i * 3] = mover.position.x
-          positionsArray2[i * 3 + 1] = mover.position.y
-          positionsArray2[i * 3 + 2] = mover.position.z
-        }
-      }
-
-      pointsGeometry.attributes.position.needsUpdate = true
-      pointsGeometry2.attributes.position.needsUpdate = true
-    }
-
-    const rotateCamera = () => {
-      cameraRad2 += getRadian(rotationSpeed)
-      setCameraPosition()
-    }
-
-    const animate = () => {
-      const now = Date.now()
-
-      updateParticles()
-      rotateCamera()
-      renderer.render(scene, camera)
-
-      if (now - lastTimeActivate > 10) {
-        activateMovers()
-        lastTimeActivate = now
-      }
-
-      sceneRef.current.animationId = requestAnimationFrame(animate)
-    }
-
-    // Handle resize
     const handleResize = () => {
-      const newWidth = container.clientWidth
-      const newHeight = container.clientHeight
+      width = canvas.width = window.innerWidth
+      height = canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', handleResize)
 
-      camera.aspect = newWidth / newHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(newWidth, newHeight)
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height)
+
+      // Gradient color configuration matching dashboard colors
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]
+        
+        // Move particle
+        p.x += p.dx
+        p.y += p.dy
+
+        // Draw glowing particle
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(59, 130, 246, ${p.opacity})` // Blue theme matching console branding
+        ctx.shadowColor = '#3B82F6'
+        ctx.shadowBlur = 8
+        ctx.fill()
+        ctx.shadowBlur = 0 // reset shadow
+
+        // Keep center clean: if a particle drifts too close to center, push it away
+        const distToCenter = Math.hypot(p.x - width / 2, p.y - height / 2)
+        if (distToCenter < 190) {
+          const angle = Math.atan2(p.y - height / 2, p.x - width / 2)
+          p.x = width / 2 + Math.cos(angle) * 192
+          p.y = height / 2 + Math.sin(angle) * 192
+          p.dx = Math.cos(angle) * 0.5
+        }
+
+        // Recycle particles drifting off screen
+        if (p.y < -10 || p.x < -10 || p.x > width + 10) {
+          particles[i] = createParticle(false)
+        }
+      }
+
+      animationId = requestAnimationFrame(draw)
     }
 
-    window.addEventListener("resize", handleResize)
+    draw()
 
-    // Store references and start animation
-    sceneRef.current = { renderer, scene, camera, movers, points, points2 }
-    animate()
-
-    // Cleanup
     return () => {
-      window.removeEventListener("resize", handleResize)
-
-      if (sceneRef.current.animationId) {
-        cancelAnimationFrame(sceneRef.current.animationId)
-      }
-
-      if (sceneRef.current.renderer && container.contains(sceneRef.current.renderer.domElement)) {
-        container.removeChild(sceneRef.current.renderer.domElement)
-      }
-
-      sceneRef.current.renderer?.dispose()
-      pointsGeometry.dispose()
-      pointsGeometry2.dispose()
-      pointsMaterial.dispose()
-      pointsMaterial2.dispose()
-      texture.dispose()
+      cancelAnimationFrame(animationId)
+      window.removeEventListener('resize', handleResize)
     }
-  }, [
-    particleCount,
-    particleColor1,
-    particleColor2, 
-    cameraDistance,
-    rotationSpeed,
-    particleSize,
-    antigravityForce,
-    activationRate,
-  ])
+  }, [])
 
   return (
-    <div
-      ref={containerRef}
-      className={`w-full h-full ${className}`}
+    <canvas
+      ref={canvasRef}
+      className={`absolute inset-0 pointer-events-none ${className}`}
       style={{
-        position: "absolute",
+        position: 'absolute',
         inset: 0,
-        overflow: "hidden",
+        width: '100%',
+        height: '100%',
         zIndex: 1,
-        pointerEvents: "none"
+        pointerEvents: 'none'
       }}
     />
   )
