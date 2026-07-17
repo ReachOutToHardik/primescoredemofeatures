@@ -362,34 +362,34 @@ export default function Dashboard() {
                           overflow: 'hidden'
                         }}
                         onAnimationComplete={() => {
-                          // Play the futuristic synth ident intro track at 8.2s (matching logo entry)
+                          // Play the futuristic synth ident intro track at 7.5s (matching text fade out)
                           setTimeout(() => {
                             const audio = document.getElementById('launch-audio') as HTMLAudioElement
                             if (audio) {
                               audio.volume = 0.8
                               audio.play().catch(err => console.log('Deferred audio playback error:', err))
                             }
-                          }, 8200);
+                          }, 7500);
 
-                          // Confetti fires at 9.5s (after logo upscale has completed)
+                          // Confetti fires at 9.5s (after logo wobble has completed)
                           setTimeout(() => {
                             import('canvas-confetti').then((confetti) => {
                               confetti.default({ particleCount: 180, spread: 90, origin: { y: 0.5 } });
                               const duration = 3 * 1000;
                               const end = Date.now() + duration;
                               const frame = () => {
-                                confetti.default({ particleCount: 8, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
-                                confetti.default({ particleCount: 8, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
-                                if (Date.now() < end) requestAnimationFrame(frame);
+                                  confetti.default({ particleCount: 8, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
+                                  confetti.default({ particleCount: 8, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
+                                  if (Date.now() < end) requestAnimationFrame(frame);
                               };
                               frame();
                             });
                           }, 9500);
 
-                          // Final redirect at 15.0 seconds
+                          // Redirect 2 seconds after the last transition (clip wipe / iris) initiates at 13.5s
                           setTimeout(() => {
                             window.location.href = 'https://dashboard.primescore.in'
-                          }, 15000)
+                          }, 13500)
                         }}
                       >
                         {/* Clip-Wipe & Iris Reveal Animation Overlays */}
@@ -398,8 +398,15 @@ export default function Dashboard() {
                         {/* Staggered stack of all announcement texts introduced sequentially, then faded out */}
                         <ElegantAnnouncer />
 
-                        {/* Elegant non-AI spring-loaded upscale logo transition with elegant wobble */}
-                        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', marginTop: 100 }}>
+                        {/* Elegant non-AI spring-loaded upscale logo transition with elegant wobble - absolutely centered */}
+                        <div style={{ 
+                          position: 'absolute', 
+                          top: '50%', 
+                          left: '50%', 
+                          transform: 'translate(-50%, -50%)', 
+                          zIndex: 10, 
+                          textAlign: 'center' 
+                        }}>
                           <motion.img
                             src="/Darkmode_Logo.png"
                             alt="Primescore"
@@ -410,7 +417,7 @@ export default function Dashboard() {
                               ease: [0.34, 1.56, 0.64, 1], // premium overshoot bounce
                               delay: 8.2 // triggers right after announcements fade out
                             }}
-                            style={{ height: 80, width: 'auto', margin: '0 auto' }}
+                            style={{ height: 85, width: 'auto', margin: '0 auto' }}
                           />
                         </div>
                       </motion.div>
@@ -451,39 +458,49 @@ function ElegantAnnouncer() {
 
   return (
     <motion.div 
-      animate={fadeOut ? { opacity: 0, y: -30, filter: 'blur(10px)' } : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.75, ease: [0.3, 0, 0.1, 1] }}
+      animate={fadeOut ? { opacity: 0, y: -40, filter: 'blur(16px)' } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.3, 0, 0.1, 1] }}
       style={{ 
         zIndex: 10, 
         padding: '0 24px', 
         position: 'absolute', 
-        top: '12%', 
+        top: '50%', 
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
         width: '100%', 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '28px', 
+        gap: '24px', 
         alignItems: 'center' 
       }}
     >
       {announcements.map((item, idx) => (
-        <div key={idx} style={{ width: '100%', maxWidth: 600, minHeight: 64 }}>
+        <div key={idx} style={{ width: '100%', maxWidth: 660, minHeight: 96 }}>
           <AnimatePresence>
             {visibleCount > idx && (
               <motion.div
-                initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                style={{ textAlign: 'center' }}
+                initial={{ opacity: 0, y: 25, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                style={{ 
+                  textAlign: 'left',
+                  background: 'linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: '0px', // sharp corners
+                  padding: '20px 28px',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+                  backdropFilter: 'blur(8px)'
+                }}
               >
                 <span 
                   style={{ 
                     color: '#3B82F6', 
-                    fontSize: 13, 
-                    fontWeight: 700, 
+                    fontSize: 16, 
+                    fontWeight: 800, 
                     fontFamily: 'Inter, system-ui, sans-serif', 
-                    letterSpacing: '0.22em', 
+                    letterSpacing: '0.28em', 
                     display: 'block', 
-                    marginBottom: 6, 
+                    marginBottom: 8, 
                     textTransform: 'uppercase' 
                   }}
                 >
@@ -492,10 +509,10 @@ function ElegantAnnouncer() {
                 <span 
                   style={{ 
                     color: '#ffffff', 
-                    fontSize: 20, 
-                    fontWeight: 600, 
+                    fontSize: 26, 
+                    fontWeight: 700, 
                     fontFamily: 'Inter, system-ui, sans-serif', 
-                    letterSpacing: '-0.02em', 
+                    letterSpacing: '-0.03em', 
                     lineHeight: 1.45 
                   }}
                 >
