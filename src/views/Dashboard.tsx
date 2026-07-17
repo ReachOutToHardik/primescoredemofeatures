@@ -316,11 +316,7 @@ export default function Dashboard() {
                   <button
                     onClick={() => {
                       setBannerOpen(true)
-                      const audio = document.getElementById('launch-audio') as HTMLAudioElement
-                      if (audio) {
-                        audio.volume = 0.8
-                        audio.play().catch(err => console.log('Audio playback interaction block:', err))
-                      }
+                      // Audio play is now deferred to trigger exactly with the logo animation reveal at 8.2s
                     }}
                     style={{
                       width: '100%',
@@ -346,84 +342,77 @@ export default function Dashboard() {
               )}
             </AnimatePresence>
 
-                  {/* Clean 3-second Transition sequence with spinning logo, stinger, and fireworks */}
+                  {/* Elegant 13-second Transition sequence with Text Announcements, Confetti, Clip Wipe & Iris Reveal */}
                   <AnimatePresence>
                     {bannerOpen && (
                       <motion.div
                         key="banner"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.6 }}
                         style={{
                           position: 'absolute',
                           inset: 0,
                           zIndex: 20,
+                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          background: 'radial-gradient(circle at 50% 50%, #0c1236 0%, #030619 60%, #01020a 100%)',
                           overflow: 'hidden'
                         }}
                         onAnimationComplete={() => {
-                          // Trigger massive fireworks confetti shower
-                          import('canvas-confetti').then((confetti) => {
-                            // First, fire a massive initial center burst
-                            confetti.default({
-                              particleCount: 150,
-                              spread: 80,
-                              origin: { y: 0.5 }
-                            });
-
-                            // Then, run the continuous side fireworks stream
-                            const duration = 2.5 * 1000
-                            const end = Date.now() + duration
-
-                            const frame = () => {
-                              confetti.default({
-                                particleCount: 8,
-                                angle: 60,
-                                spread: 55,
-                                origin: { x: 0, y: 0.8 }
-                              })
-                              confetti.default({
-                                particleCount: 8,
-                                angle: 120,
-                                spread: 55,
-                                origin: { x: 1, y: 0.8 }
-                              })
-
-                              if (Date.now() < end) {
-                                requestAnimationFrame(frame)
-                              }
+                          // Play the futuristic synth ident intro track at 8.2s (matching logo entry)
+                          setTimeout(() => {
+                            const audio = document.getElementById('launch-audio') as HTMLAudioElement
+                            if (audio) {
+                              audio.volume = 0.8
+                              audio.play().catch(err => console.log('Deferred audio playback error:', err))
                             }
-                            frame()
-                          })
+                          }, 8200);
 
-                          // Redirect after 3 seconds
+                          // Confetti fires at 9.5s (after logo upscale has completed)
+                          setTimeout(() => {
+                            import('canvas-confetti').then((confetti) => {
+                              confetti.default({ particleCount: 180, spread: 90, origin: { y: 0.5 } });
+                              const duration = 3 * 1000;
+                              const end = Date.now() + duration;
+                              const frame = () => {
+                                confetti.default({ particleCount: 8, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
+                                confetti.default({ particleCount: 8, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
+                                if (Date.now() < end) requestAnimationFrame(frame);
+                              };
+                              frame();
+                            });
+                          }, 9500);
+
+                          // Final redirect at 15.0 seconds
                           setTimeout(() => {
                             window.location.href = 'https://dashboard.primescore.in'
-                          }, 3200)
+                          }, 15000)
                         }}
                       >
-                        {/* Stinger Door Reveal */}
-                        <StingerReveal />
+                        {/* Clip-Wipe & Iris Reveal Animation Overlays */}
+                        <IrisStingerReveal />
 
-                         {/* Elegant non-AI spring-loaded upscale logo transition */}
-                         <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
-                           <motion.img
-                             src="/Darkmode_Logo.png"
-                             alt="Primescore"
-                             initial={{ scale: 0.4, opacity: 0 }}
-                             animate={{ scale: [0.4, 1.15, 1], opacity: 1 }}
-                             transition={{ 
-                               duration: 1.1, 
-                               ease: [0.25, 1, 0.5, 1],
-                               delay: 0.1
-                             }}
-                             style={{ height: 72, width: 'auto', margin: '0 auto' }}
-                           />
-                         </div>
+                        {/* Staggered stack of all announcement texts introduced sequentially, then faded out */}
+                        <ElegantAnnouncer />
+
+                        {/* Elegant non-AI spring-loaded upscale logo transition with elegant wobble */}
+                        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', marginTop: 100 }}>
+                          <motion.img
+                            src="/Darkmode_Logo.png"
+                            alt="Primescore"
+                            initial={{ scale: 0.3, rotate: -8, opacity: 0 }}
+                            animate={{ scale: [0.3, 1.15, 0.96, 1.02, 1], rotate: [0, 8, -4, 2, 0], opacity: 1 }}
+                            transition={{ 
+                              duration: 1.4, 
+                              ease: [0.34, 1.56, 0.64, 1], // premium overshoot bounce
+                              delay: 8.2 // triggers right after announcements fade out
+                            }}
+                            style={{ height: 80, width: 'auto', margin: '0 auto' }}
+                          />
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -434,79 +423,171 @@ export default function Dashboard() {
   )
 }
 
-// StingerReveal Component - creates a cool center split stinger door slide open animation
-function StingerReveal() {
-  const [stingerActive, setStingerActive] = useState(false)
+// ElegantAnnouncer - Introduces each key block sequentially one-by-one, keeping them on screen in a list, then fades them all away at 7.5s
+function ElegantAnnouncer() {
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  const announcements = [
+    { title: "PRIMESCORE CONSOLE", subtitle: "All four credit bureau reports in a single platform" },
+    { title: "SECURE SOCKETS", subtitle: "Configuring banking-grade secure registry registry vaults" },
+    { title: "ENCRYPTED CHANNELS", subtitle: "Establishing cryptographically signed gateway bridges" },
+    { title: "LEDGER AUDIT", subtitle: "Synchronizing dispute resolution general parameters" }
+  ];
 
   useEffect(() => {
-    // Activates in the final 1.5 seconds of the transition (1.5 seconds in)
-    const trigger = setTimeout(() => {
-      setStingerActive(true)
-    }, 1500)
+    // Stagger introduction of each announcement block
+    const introTimeouts = [
+      setTimeout(() => setVisibleCount(1), 200),
+      setTimeout(() => setVisibleCount(2), 1800),
+      setTimeout(() => setVisibleCount(3), 3400),
+      setTimeout(() => setVisibleCount(4), 5000),
+      // Fade out the entire stack of announcements at 7.5s
+      setTimeout(() => setFadeOut(true), 7500)
+    ];
 
-    return () => clearTimeout(trigger)
-  }, [])
-
-  if (!stingerActive) return null
+    return () => introTimeouts.forEach(clearTimeout);
+  }, []);
 
   return (
-    <div style={{ position: 'absolute', inset: 0, zIndex: 18, display: 'flex', flexDirection: 'column', pointerEvents: 'none' }}>
-      {/* Underlying matching white landing screen revealed as doors split */}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          background: '#ffffff', 
-          zIndex: 1, 
-          display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'center', 
-          justifyContent: 'center' 
-        }}
-      >
-        {/* Cool modern blue spinner */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: '50%',
-            border: '3px solid rgba(37, 99, 235, 0.12)',
-            borderTopColor: '#2563EB'
-          }}
-        />
-        <p style={{ marginTop: 20, color: '#1e293b', fontSize: 11, fontWeight: 600, fontFamily: 'monospace', letterSpacing: '0.15em' }}>
-          LOADING DASHBOARD...
-        </p>
-      </div>
+    <motion.div 
+      animate={fadeOut ? { opacity: 0, y: -30, filter: 'blur(10px)' } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.75, ease: [0.3, 0, 0.1, 1] }}
+      style={{ 
+        zIndex: 10, 
+        padding: '0 24px', 
+        position: 'absolute', 
+        top: '12%', 
+        width: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '28px', 
+        alignItems: 'center' 
+      }}
+    >
+      {announcements.map((item, idx) => (
+        <div key={idx} style={{ width: '100%', maxWidth: 600, minHeight: 64 }}>
+          <AnimatePresence>
+            {visibleCount > idx && (
+              <motion.div
+                initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                style={{ textAlign: 'center' }}
+              >
+                <span 
+                  style={{ 
+                    color: '#3B82F6', 
+                    fontSize: 13, 
+                    fontWeight: 700, 
+                    fontFamily: 'Inter, system-ui, sans-serif', 
+                    letterSpacing: '0.22em', 
+                    display: 'block', 
+                    marginBottom: 6, 
+                    textTransform: 'uppercase' 
+                  }}
+                >
+                  {item.title}
+                </span>
+                <span 
+                  style={{ 
+                    color: '#ffffff', 
+                    fontSize: 20, 
+                    fontWeight: 600, 
+                    fontFamily: 'Inter, system-ui, sans-serif', 
+                    letterSpacing: '-0.02em', 
+                    lineHeight: 1.45 
+                  }}
+                >
+                  {item.subtitle}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      ))}
+    </motion.div>
+  );
+}
 
-      {/* Top half sliding upward */}
-      <motion.div
-        initial={{ y: 0 }}
-        animate={{ y: '-100%' }}
-        transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1], delay: 0.2 }}
-        style={{
-          flex: 1,
-          background: 'linear-gradient(180deg, #1e293b, #0f172a)',
-          borderBottom: '2px solid #2563EB',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-          zIndex: 2
-        }}
-      />
-      {/* Bottom half sliding downward */}
-      <motion.div
-        initial={{ y: 0 }}
-        animate={{ y: '100%' }}
-        transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1], delay: 0.2 }}
-        style={{
-          flex: 1,
-          background: 'linear-gradient(0deg, #1e293b, #0f172a)',
-          borderTop: '2px solid #2563EB',
-          boxShadow: '0 -10px 30px rgba(0,0,0,0.5)',
-          zIndex: 2
-        }}
-      />
+// IrisStingerReveal Component - Performs a diagonal clip wipe cover followed by circular iris reveal
+function IrisStingerReveal() {
+  const [wipeActive, setWipeActive] = useState(false);
+  const [irisActive, setIrisActive] = useState(false);
+
+  useEffect(() => {
+    // 1. Cover screen in diagonal clip wipe at 11.5 seconds
+    const wipeTrigger = setTimeout(() => {
+      setWipeActive(true);
+    }, 11500);
+
+    // 2. Open up / Reveal in circular Iris at 13 seconds
+    const irisTrigger = setTimeout(() => {
+      setIrisActive(true);
+    }, 13000);
+
+    return () => {
+      clearTimeout(wipeTrigger);
+      clearTimeout(irisTrigger);
+    };
+  }, []);
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 18, pointerEvents: 'none' }}>
+      {/* 1. Diagonal Clip Wipe Cover Screen */}
+      <AnimatePresence>
+        {wipeActive && !irisActive && (
+          <motion.div
+            initial={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0% 100%)' }}
+            animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.0, ease: [0.77, 0, 0.175, 1] }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: '#0f172a',
+              zIndex: 2
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2. Iris Circle Reveal screen (Wipe opens up to white match dashboard start screen) */}
+      <AnimatePresence>
+        {irisActive && (
+          <motion.div
+            initial={{ clipPath: 'circle(0% at 50% 50%)' }}
+            animate={{ clipPath: 'circle(150% at 50% 50%)' }}
+            transition={{ duration: 1.3, ease: [0.25, 1, 0.5, 1] }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: '#ffffff',
+              zIndex: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {/* Spinning Loader */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: '50%',
+                border: '3px solid rgba(37, 99, 235, 0.15)',
+                borderTopColor: '#2563EB'
+              }}
+            />
+            <p style={{ marginTop: 24, color: '#1e293b', fontSize: 11, fontWeight: 600, fontFamily: 'monospace', letterSpacing: '0.2em' }}>
+              LAUNCHING SECURE CONSOLE
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  )
+  );
 }
