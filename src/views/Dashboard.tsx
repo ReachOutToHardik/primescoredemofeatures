@@ -97,8 +97,6 @@ export default function Dashboard() {
     let intervalId: any = null
     if (isRedirecting && !bannerOpen) {
       import('canvas-confetti').then((confetti) => {
-        const end = Date.now() + (365 * 24 * 60 * 60 * 1000) // Infinite loop
-        
         const frame = () => {
           if (!isRedirecting || bannerOpen) return
           
@@ -106,13 +104,15 @@ export default function Dashboard() {
             particleCount: 2,
             angle: 60,
             spread: 55,
-            origin: { x: 0, y: 0.8 }
+            origin: { x: 0, y: 0.8 },
+            zIndex: 99999
           })
           confetti.default({
             particleCount: 2,
             angle: 120,
             spread: 55,
-            origin: { x: 1, y: 0.8 }
+            origin: { x: 1, y: 0.8 },
+            zIndex: 99999
           })
           
           requestAnimationFrame(frame)
