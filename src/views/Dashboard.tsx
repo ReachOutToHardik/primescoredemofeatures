@@ -92,6 +92,40 @@ export default function Dashboard() {
     return () => clearInterval(interval)
   }, [targetDate])
 
+  // Continuous confetti loop on the Launch Dashboard screen
+  useEffect(() => {
+    let intervalId: any = null
+    if (isRedirecting && !bannerOpen) {
+      import('canvas-confetti').then((confetti) => {
+        const end = Date.now() + (365 * 24 * 60 * 60 * 1000) // Infinite loop
+        
+        const frame = () => {
+          if (!isRedirecting || bannerOpen) return
+          
+          confetti.default({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.8 }
+          })
+          confetti.default({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.8 }
+          })
+          
+          requestAnimationFrame(frame)
+        }
+        
+        frame()
+      })
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [isRedirecting, bannerOpen])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email.trim()) return
@@ -366,6 +400,7 @@ interface VideoTransitionOverlayProps {
 
 function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
   const [videoEnded, setVideoEnded] = useState(false)
+  const [startWipe, setStartWipe] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -396,33 +431,18 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
       }}
     >
       {!videoEnded ? (
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-          <video
-            ref={videoRef}
-            src="/intro-video.mp4"
-            playsInline
-            autoPlay
-            onEnded={() => setVideoEnded(true)}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
-          />
-          {/* Solid white block at the bottom right/center to hide the Gemini logo watermark */}
-          <div 
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: '60px',
-              background: '#ffffff',
-              zIndex: 30,
-              pointerEvents: 'none'
-            }}
-          />
-        </div>
+        <video
+          ref={videoRef}
+          src="/intro-video.mp4"
+          playsInline
+          autoPlay
+          onEnded={() => setVideoEnded(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
+        />
       ) : (
         <motion.div
           initial={{ background: '#ffffff' }}
@@ -446,10 +466,10 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
               ease: [0.16, 1, 0.3, 1]
             }}
             onAnimationComplete={() => {
-              // Wait 1.5 seconds on the final white logo screen before redirecting
+              // Show logo for 1 second, then trigger clip path stinger wipe
               setTimeout(() => {
-                onComplete()
-              }, 1500)
+                setStartWipe(true)
+              }, 1000)
             }}
             style={{
               maxHeight: '120px',
@@ -458,6 +478,28 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
               zIndex: 35
             }}
           />
+
+          {/* Stinger transition overlay clip wipe */}
+          <AnimatePresence>
+            {startWipe && (
+              <motion.div
+                initial={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)' }}
+                animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+                transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+                onAnimationComplete={() => {
+                  setTimeout(() => {
+                    onComplete()
+                  }, 200)
+                }}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: '#0a0f1e',
+                  zIndex: 50
+                }}
+              />
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </motion.div>
