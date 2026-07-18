@@ -396,19 +396,33 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
       }}
     >
       {!videoEnded ? (
-        <video
-          ref={videoRef}
-          src="/intro-video.mp4"
-          playsInline
-          muted
-          autoPlay
-          onEnded={() => setVideoEnded(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <video
+            ref={videoRef}
+            src="/intro-video.mp4"
+            playsInline
+            autoPlay
+            onEnded={() => setVideoEnded(true)}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
+          />
+          {/* Solid white block at the bottom right/center to hide the Gemini logo watermark */}
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '60px',
+              background: '#ffffff',
+              zIndex: 30,
+              pointerEvents: 'none'
+            }}
+          />
+        </div>
       ) : (
         <motion.div
           initial={{ background: '#ffffff' }}
@@ -439,7 +453,9 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
             }}
             style={{
               maxHeight: '120px',
-              width: 'auto'
+              width: 'auto',
+              position: 'relative',
+              zIndex: 35
             }}
           />
         </motion.div>
