@@ -96,29 +96,59 @@ export default function Dashboard() {
   useEffect(() => {
     let intervalId: any = null
     if (isRedirecting && !bannerOpen) {
-      import('canvas-confetti').then((confetti) => {
-        const frame = () => {
-          if (!isRedirecting || bannerOpen) return
-          
-          confetti.default({
-            particleCount: 2,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0, y: 0.8 },
-            zIndex: 99999
-          })
-          confetti.default({
-            particleCount: 2,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1, y: 0.8 },
-            zIndex: 99999
-          })
-          
-          requestAnimationFrame(frame)
-        }
+      import('canvas-confetti').then((confettiModule) => {
+        const canvasEl = document.getElementById('confetti-canvas') as HTMLCanvasElement
+        if (!canvasEl) return
         
-        frame()
+        const myConfetti = confettiModule.create(canvasEl, {
+          resize: true,
+          useWorker: true
+        })
+
+        // Fire confetti every 100ms instead of every animation frame to prevent lag
+        intervalId = setInterval(() => {
+          if (!isRedirecting || bannerOpen) {
+            clearInterval(intervalId)
+            return
+          }
+          
+          // Left side cannon (increased particleCount to 4)
+          myConfetti({
+            particleCount: 4,
+            angle: 60,
+            spread: 60,
+            origin: { x: 0, y: 0.85 },
+            colors: ['#0A2540', '#00D4B6', '#FF3B30', '#007AFF', '#FFCC00'],
+            zIndex: 100000
+          })
+
+          // Right side cannon (increased particleCount to 4)
+          myConfetti({
+            particleCount: 4,
+            angle: 120,
+            spread: 60,
+            origin: { x: 1, y: 0.85 },
+            colors: ['#0A2540', '#00D4B6', '#FF3B30', '#007AFF', '#FFCC00'],
+            zIndex: 100000
+          })
+
+          // Drop subtle red, blue, and green confetti from the top with custom large sizes
+          const topColors = ['#FF3B30', '#007AFF', '#00D4B6'] // Red, Blue, Green
+          const chosenColor = topColors[Math.floor(Math.random() * topColors.length)]
+          
+          // Randomly trigger standard size or double size big confetti
+          const sizeScalar = Math.random() > 0.4 ? 1.8 : 1.0; 
+          
+          myConfetti({
+            particleCount: 2, // increased top drops count
+            startVelocity: 8,
+            spread: 360,
+            origin: { x: Math.random(), y: -0.1 },
+            colors: [chosenColor],
+            scalar: sizeScalar, // Apply random larger scale
+            zIndex: 100000
+          })
+        }, 100)
       })
     }
     return () => {
@@ -287,8 +317,21 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
+            {/* Custom Confetti Canvas specifically for this overlay */}
+            <canvas 
+              id="confetti-canvas" 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'none',
+                zIndex: 99998
+              }}
+            />
+
             {/* Background Chess Tiled Image */}
             <div
               style={{
@@ -394,114 +437,100 @@ export default function Dashboard() {
    )
  }
 
-interface VideoTransitionOverlayProps {
-  onComplete: () => void
-}
-
-function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
+function VideoTransitionOverlay({ onComplete }: { onComplete: () => void }) {
+  const [wipeDone, setWipeDone] = useState(false)
   const [videoEnded, setVideoEnded] = useState(false)
-  const [startWipe, setStartWipe] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    if (videoRef.current) {
+    // Only play video once the stinger wipe has fully finished covering the screen
+    if (wipeDone && videoRef.current) {
+      // Play transition sound effect
+      const aud = document.getElementById('launch-audio') as HTMLAudioElement
+      if (aud) {
+        aud.currentTime = 0
+        aud.play().catch(() => {})
+      }
+
       videoRef.current.play().catch(err => {
         console.log("Auto-play blocked or failed: ", err)
       })
     }
-  }, [])
+  }, [wipeDone])
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.0 }}
+    <div
       style={{
         position: 'fixed',
         inset: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: 9999,
-        background: '#000000',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden'
+        zIndex: 99999,
+        background: 'transparent',
+        overflow: 'hidden',
+        pointerEvents: 'auto'
       }}
     >
-      {!videoEnded ? (
-        <video
-          ref={videoRef}
-          src="/intro-video.mp4"
-          playsInline
-          autoPlay
-          onEnded={() => setVideoEnded(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
-      ) : (
-        <motion.div
-          initial={{ background: '#ffffff' }}
-          animate={{ background: '#ffffff' }}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          {/* Logo animation on white background */}
-          <motion.img
-            src="/lightmode_Logo.png"
-            alt="PrimeScore logo"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1.0, opacity: 1 }}
-            transition={{
-              duration: 1.5,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            onAnimationComplete={() => {
-              // Show logo for 1 second, then trigger clip path stinger wipe
-              setTimeout(() => {
-                setStartWipe(true)
-              }, 1000)
-            }}
-            style={{
-              maxHeight: '120px',
-              width: 'auto',
-              position: 'relative',
-              zIndex: 35
-            }}
-          />
-
-          {/* Stinger transition overlay clip wipe */}
-          <AnimatePresence>
-            {startWipe && (
-              <motion.div
-                initial={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)' }}
-                animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
-                transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-                onAnimationComplete={() => {
-                  setTimeout(() => {
-                    onComplete()
-                  }, 200)
+      {/* 1. Stinger transition overlay clip wipe (always covering) */}
+      <motion.div
+        initial={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)' }}
+        animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+        transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
+        onAnimationComplete={() => {
+          setWipeDone(true)
+        }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: '#000000',
+          zIndex: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        {wipeDone && (
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            {!videoEnded ? (
+              <video
+                ref={videoRef}
+                src="https://github.com/user-attachments/assets/d71eb038-d212-45da-8248-f5779a535680"
+                playsInline
+                autoPlay
+                onEnded={() => {
+                  setVideoEnded(true)
+                  onComplete()
                 }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  position: 'absolute',
+                  inset: 0
+                }}
+              />
+            ) : (
+              /* Plain black loading screen during redirection transition */
+              <div 
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: '#0a0f1e',
-                  zIndex: 50
+                  background: '#000000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'rgba(255, 255, 255, 0.25)',
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  letterSpacing: '0.2em'
                 }}
-              />
+              >
+                INITIALIZING PORTAL...
+              </div>
             )}
-          </AnimatePresence>
-        </motion.div>
-      )}
-    </motion.div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   )
 }
