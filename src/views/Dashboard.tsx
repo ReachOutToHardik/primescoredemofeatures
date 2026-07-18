@@ -423,7 +423,7 @@ function VideoTransitionOverlay({ onComplete }: VideoTransitionOverlayProps) {
         >
           {/* Logo animation on white background */}
           <motion.img
-            src="/logo.png"
+            src="/lightmode_Logo.png"
             alt="PrimeScore logo"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1.0, opacity: 1 }}
