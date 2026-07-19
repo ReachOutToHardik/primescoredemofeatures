@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import emailjs from '@emailjs/browser'
+import * as THREE from 'three'
 
 // Web3Forms Configuration
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
@@ -12,31 +13,6 @@ const ACCESS_KEY = '3b227acb-f76a-4120-8568-797ad9dd59b5'
 export default function Dashboard() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
-  // Countdown to July 19, 2026 at 1:00 PM IST (07:30 UTC)
-  useEffect(() => {
-    const targetDate = new Date('2026-07-19T07:30:00Z').getTime()
-
-    const updateTime = () => {
-      const now = new Date().getTime()
-      const distance = targetDate - now
-
-      if (distance < 0) return
-
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000)
-      })
-    }
-
-    updateTime() // Call immediately so it doesn't wait 1 second to show up
-    const interval = setInterval(updateTime, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -129,23 +105,23 @@ export default function Dashboard() {
           Join the exclusive waitlist today to secure a <strong className="text-brandNavy font-semibold">40% discount on your first payment</strong>.
         </p>
 
-        {/* Premium Countdown */}
-        <div className="flex justify-center gap-6 sm:gap-12 mb-16">
-          {[
-            { label: 'Days', value: timeLeft.days },
-            { label: 'Hours', value: timeLeft.hours },
-            { label: 'Minutes', value: timeLeft.minutes },
-            { label: 'Seconds', value: timeLeft.seconds },
-          ].map((item) => (
-            <div key={item.label} className="flex flex-col items-center">
-              <div className="text-4xl sm:text-6xl font-light text-brandNavy tracking-tighter tabular-nums mb-2">
-                {String(item.value).padStart(2, '0')}
-              </div>
-              <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-textSecondary font-semibold">
-                {item.label}
-              </div>
-            </div>
-          ))}
+        {/* Premium "Launching soon..." typing animation */}
+        <div className="flex justify-center items-baseline mb-16 text-3xl sm:text-5xl font-light text-brandNavy tracking-tight select-none">
+          <span>Launching soon</span>
+          <span className="inline-flex w-12 text-left ml-1">
+            <motion.span
+              animate={{ opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, times: [0, 0.2, 0.8, 1] }}
+            >.</motion.span>
+            <motion.span
+              animate={{ opacity: [0, 0, 1, 1, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, times: [0, 0.2, 0.4, 0.8, 1] }}
+            >.</motion.span>
+            <motion.span
+              animate={{ opacity: [0, 0, 0, 1, 1, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
+            >.</motion.span>
+          </span>
         </div>
 
         {/* Premium Form */}
