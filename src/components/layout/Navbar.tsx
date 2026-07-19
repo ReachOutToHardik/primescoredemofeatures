@@ -360,16 +360,15 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link
-            href="/dashboard"
-            suppressHydrationWarning
+          <a
+            href="https://dashboard.primescore.in"
             className={[
               'rounded-full px-5 py-2 text-[11px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg',
               theme === 'dark' ? 'bg-white text-brandNavy' : 'bg-brandNavy text-white'
             ].join(' ')}
           >
             Dashboard
-          </Link>
+          </a>
         </div>
 
         <button
@@ -458,13 +457,13 @@ export default function Navbar() {
                 })}
               </div>
 
-              <Link
-                href="/dashboard"
+              <a
+                href="https://dashboard.primescore.in"
                 onClick={() => setMobileOpen(false)}
                 className="mt-4 rounded-full bg-brandRed py-4 text-center text-sm font-black uppercase tracking-widest text-white shadow-lg active:scale-95 transition-transform"
               >
                 Open Dashboard
-              </Link>
+              </a>
             </div>
           </motion.div>
         )}
