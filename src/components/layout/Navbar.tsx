@@ -42,7 +42,6 @@ export default function Navbar() {
     () => [
       { to: '/', label: 'Home' },
       { to: '/services', label: 'Services' },
-      { to: '/business', label: 'For Business' },
       { to: '/pricing', label: 'Pricing' },
       { to: '/about', label: 'About' },
       { to: '/blog', label: 'Blog' },
