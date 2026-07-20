@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   ShieldCheck,
   Activity,
-  HelpCircle,
+  ChevronDown,
   ArrowRight,
   BarChart3,
   Users,
@@ -211,18 +211,12 @@ export default function BusinessServices() {
   ]
 
   const faqs = [
-    {
-      q: 'How does Commercial Credit Rectification differ from Personal?',
-      a: 'Commercial credit reports (like Credit Rank & CMR) track entity ratings using company PAN, GSTIN, and corporate banking data. Resolving business disputes requires official corporate resolutions, board authorization letters, and complex bank reconciliations compared to individual personal reports.'
-    },
-    {
-      q: 'What is the average turnaround time for commercial disputes?',
-      a: 'Under RBI guidelines, credit bureaus have a 30-day window to update records once a dispute is received. Most simple corrections resolve in 30-45 days, while complex multi-bank issues may take 60-90 days.'
-    },
-    {
-      q: 'Can inaccurate trade supplier default tags be removed?',
-      a: 'Yes. If a supplier or client has wrongly reported overdue trade credit due to commercial invoice disputes or technical payment settlement delays, we can compile proof of settlement to seek a clean update.'
-    }
+    { q: 'What is a business credit score?', a: 'A business credit score reflects your company\'s financial credibility and repayment history. Banks and lenders use it to evaluate loan applications, working capital limits, and business financing.' },
+    { q: 'Can PrimeScore improve my company\'s credit profile?', a: 'Yes. We help identify reporting errors, incorrect loan information, duplicate accounts, and other issues affecting your business credit profile.' },
+    { q: 'Why is business credit important?', a: 'A strong business credit profile improves your chances of obtaining loans, credit lines, vendor financing, and better interest rates.' },
+    { q: 'Can incorrect loan reporting affect business funding?', a: 'Yes. Incorrect defaults, overdue payments, or duplicate loan entries may reduce your eligibility for business finance.' },
+    { q: 'Do you work with multiple credit bureaus?', a: 'Yes. We assist businesses in resolving issues across relevant credit bureaus and financial institutions.' },
+    { q: 'Can new businesses build a healthy credit profile?', a: 'Yes. Maintaining timely repayments, proper financial records, and responsible credit usage helps establish a strong business credit history.' }
   ]
 
   return (
@@ -598,7 +592,7 @@ export default function BusinessServices() {
                       className="w-full px-6 py-5 flex items-center justify-between text-left font-display text-sm font-bold text-slate-900 focus:outline-none"
                     >
                       <span>{faq.q}</span>
-                      <HelpCircle className={`h-4.5 w-4.5 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
+                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
                     </button>
                     {isOpen && (
                       <div className="px-6 pb-5 text-xs leading-relaxed text-slate-500 border-t border-slate-100 pt-3">

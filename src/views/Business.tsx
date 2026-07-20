@@ -892,11 +892,12 @@ function InteractiveCreditReport() {
           </Reveal>
           <div className="space-y-4">
             {[
-              { q: 'What is a Commercial Credit Audit?', a: 'A Commercial Credit Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
-              { q: 'How long does it take to identify duplicate profiles?', a: 'Our analysts typically complete preliminary file auditing and duplicate account reconciliation mapping within 48 to 72 hours of document submission.' },
-              { q: 'Does auditing damage my company\'s credit score?', a: 'No. Checking or auditing your commercial bureau reports through our analyst desk does not count as a hard inquiry and has zero negative impact on your company\'s credit health.' },
-              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from Credit bureaus, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
-              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the Credit and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
+              { q: 'What is a business credit score?', a: 'A business credit score reflects your company\'s financial credibility and repayment history. Banks and lenders use it to evaluate loan applications, working capital limits, and business financing.' },
+              { q: 'Can PrimeScore improve my company\'s credit profile?', a: 'Yes. We help identify reporting errors, incorrect loan information, duplicate accounts, and other issues affecting your business credit profile.' },
+              { q: 'Why is business credit important?', a: 'A strong business credit profile improves your chances of obtaining loans, credit lines, vendor financing, and better interest rates.' },
+              { q: 'Can incorrect loan reporting affect business funding?', a: 'Yes. Incorrect defaults, overdue payments, or duplicate loan entries may reduce your eligibility for business finance.' },
+              { q: 'Do you work with multiple credit bureaus?', a: 'Yes. We assist businesses in resolving issues across relevant credit bureaus and financial institutions.' },
+              { q: 'Can new businesses build a healthy credit profile?', a: 'Yes. Maintaining timely repayments, proper financial records, and responsible credit usage helps establish a strong business credit history.' }
             ].map((faq, index) => (
               <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
             ))}
