@@ -16,7 +16,7 @@ type PlanConfig = {
   freeRectificationsText: string
 }
 
-type IssueType = 'CIBIL Rectification' | 'Loan Settlement' | 'Credit Card Dispute' | 'Monitoring' | 'EMI Restructuring' | 'Not sure'
+type IssueType = 'Credit Rectification' | 'Loan Settlement' | 'Credit Card Dispute' | 'Monitoring' | 'EMI Restructuring' | 'Not sure'
 
 type FormState = {
   name: string
@@ -62,7 +62,7 @@ const PLANS: PlanConfig[] = [
 const WHY_US = [
   {
     title: 'Bureau-Level Expertise',
-    body: 'Our analysts are trained specifically on CIBIL CCR, CRIF, Experian, and Equifax commercial report structures — not generalist consultants.',
+    body: 'Our analysts are trained specifically on Credit CCR, CRIF, Experian, and Equifax commercial report structures — not generalist consultants.',
     svg: (
       <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
         <rect x="6" y="8" width="36" height="32" rx="4" stroke="#0B192C" strokeWidth="2" fill="#EFF6FF"/>
@@ -74,7 +74,7 @@ const WHY_US = [
   },
   {
     title: 'End-to-End Dispute Filing',
-    body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with CIBIL, CRIF, and the relevant banks.',
+    body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with Credit bureaus, CRIF, and the relevant banks.',
     svg: (
       <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
         <path d="M10 38L20 18l8 12 6-8 8 16" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
@@ -90,7 +90,7 @@ const WHY_US = [
   },
   {
     title: 'Director-Level Monitoring',
-    body: 'Your directors\' personal CIBIL and CRIF scores are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.',
+    body: 'Your directors\' personal Credit and CRIF scores are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.',
     svg: (
       <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10">
         <circle cx="24" cy="16" r="8" stroke="#0B192C" strokeWidth="2" fill="#EFF6FF"/>
@@ -139,7 +139,7 @@ const WHY_US = [
 
 const PROCESS_STEPS = [
   { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial audit request form. Our team reviews your company profile within 2 hours.' },
-  { n: '02', title: 'CCR & Report Pull', body: 'We obtain your Company Credit Report from CIBIL and CRIF, plus director-level bureau pulls.' },
+  { n: '02', title: 'CCR & Report Pull', body: 'We obtain your Company Credit Report from Credit bureaus and CRIF, plus director-level bureau pulls.' },
   { n: '03', title: 'Error Identification', body: 'Our analysts map duplicate lines, PAN mismatches, incorrect account classifications, and registry errors.' },
   { n: '04', title: 'Dispute Filing', body: 'Formal dispute documentation is compiled and submitted to the relevant bureaus and banks on your behalf.' },
   { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly reports are delivered for the duration of your plan. We flag new issues proactively.' },
@@ -497,7 +497,7 @@ export default function BusinessPricing() {
           <div className="grid sm:grid-cols-3 gap-px bg-slate-200 rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
             {[
               { icon: ShieldCheck, title: '100% Bureau Compliant', body: 'All filings processed under the Credit Information Companies (Regulation) Act, 2005 and RBI directives.' },
-              { icon: FileText, title: 'Dispute Documentation Drafted', body: 'We compile evidence, write formal communications, and submit dispute filings to CIBIL, CRIF, and relevant banks.' },
+              { icon: FileText, title: 'Dispute Documentation Drafted', body: 'We compile evidence, write formal communications, and submit dispute filings to Credit bureaus, CRIF, and relevant banks.' },
               { icon: Users, title: 'Dedicated Analyst Desk', body: 'A human commercial analyst — not a chatbot — responds to every query within 2 hours, Monday to Saturday.' },
             ].map(({ icon: Icon, title, body }) => (
               <div key={title} className="bg-white px-8 py-8">
@@ -524,11 +524,11 @@ export default function BusinessPricing() {
           </Reveal>
           <div className="space-y-4">
             {[
-              { q: 'What is a Commercial CIBIL Audit?', a: 'A Commercial CIBIL Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
+              { q: 'What is a Commercial Credit Audit?', a: 'A Commercial Credit Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
               { q: 'How long does it take to identify duplicate profiles?', a: 'Our analysts typically complete preliminary file auditing and duplicate account reconciliation mapping within 48 to 72 hours of document submission.' },
               { q: 'Does auditing damage my company\'s credit score?', a: 'No. Checking or auditing your commercial bureau reports through our analyst desk does not count as a hard inquiry and has zero negative impact on your company\'s credit health.' },
-              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from CIBIL, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
-              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the CIBIL and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
+              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from Credit bureaus, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
+              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the Credit and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
             ].map((faq, index) => (
               <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
             ))}
@@ -691,7 +691,7 @@ export default function BusinessPricing() {
                         Required Service
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
+                        {['Commercial Credit Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                           const isSelected = form.issueType === type
                           return (
                             <button
