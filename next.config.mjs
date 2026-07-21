@@ -13,6 +13,16 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'primescore.in' }],
+        destination: 'https://www.primescore.in/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig
