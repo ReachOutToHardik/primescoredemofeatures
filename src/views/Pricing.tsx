@@ -7,12 +7,12 @@ import Link from 'next/link'
 
 export default function Pricing() {
   const plan = {
-    name: 'Report Fetch & Lifetime Dashboard Access',
+    name: 'Report Fetch & Dashboard Access',
     price: 199,
     description: 'Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.',
     features: [
       'Official 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
-      'Lifetime Interactive Dashboard Storage',
+      'Secure Interactive Dashboard Storage',
       'Detailed Inconsistency & Error Flagging summary',
       'Direct Portal Chat with Credit Experts to review your report',
       'Zero Monthly Subscription Fees or automatic renewals',
@@ -65,10 +65,10 @@ export default function Pricing() {
             </span>
             <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-brandNavy sm:text-5xl lg:text-6xl leading-[1.1]">
               One-time fetch. <br className="hidden sm:inline" />
-              Lifetime dashboard access.
+              Secure dashboard access.
             </h1>
             <p className="mt-5 text-sm sm:text-base leading-relaxed text-textSecondary max-w-2xl">
-              Pay ₹199 once to pull your official 4-bureau credit reports and keep them saved securely in your PrimeScore account forever. Zero monthly subscriptions. Zero ad spam.
+              Pay ₹199 once to pull your official 4-bureau credit reports and keep them saved securely in your PrimeScore account. Zero monthly subscriptions. Zero ad spam.
             </p>
           </div>
         </Reveal>
