@@ -32,9 +32,8 @@ export default function CityService({ city }: { city?: string }) {
   const [formState, setFormState] = useState({ name: '', phone: '', issue: 'cibil-rectification' })
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle')
 
-  const handleQuickForm = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formState.name.trim() || !formState.phone.trim()) return
+  const submitLeadData = async (nameVal: string, phoneVal: string, issueVal: string) => {
+    if (!nameVal.trim() || !phoneVal.trim()) return
     setFormStatus('submitting')
 
     try {
@@ -45,13 +44,13 @@ export default function CityService({ city }: { city?: string }) {
 
       const { error: sbErr } = await supabase.from('leads').insert([{
         source_page: `city_page_${cityName || 'general'}`,
-        name: formState.name.trim(),
-        phone: formState.phone.trim(),
-        email: `${formState.phone.trim().replace(/\D/g, '')}@citylead.primescore.in`,
-        issue_type: `City Lead (${cityName || 'General'}): ${formState.issue}`,
+        name: nameVal.trim(),
+        phone: phoneVal.trim(),
+        email: `${phoneVal.trim().replace(/\D/g, '')}@citylead.primescore.in`,
+        issue_type: `City Lead (${cityName || 'General'}): ${issueVal}`,
         preferred_date: new Date().toISOString().split('T')[0],
         preferred_time: '10:00',
-        message: `City Landing Page Lead for ${cityName || 'General'}. Selected Issue: ${formState.issue}`,
+        message: `City Landing Page Lead for ${cityName || 'General'}. Selected Issue: ${issueVal}`,
         status: 'new'
       }])
 
@@ -71,14 +70,14 @@ export default function CityService({ city }: { city?: string }) {
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formState.name.trim(),
-          phone: formState.phone.trim(),
+          name: nameVal.trim(),
+          phone: phoneVal.trim(),
           email: 'not-provided',
           city: cityName || 'General',
-          issueType: `City Lead (${cityName || 'General'}): ${formState.issue}`,
+          issueType: `City Lead (${cityName || 'General'}): ${issueVal}`,
           preferredDate: new Date().toISOString().split('T')[0],
           preferredTime: '10:00',
-          message: `City Landing Page Lead from ${cityName || 'General'}. Selected Issue: ${formState.issue}`,
+          message: `City Landing Page Lead from ${cityName || 'General'}. Selected Issue: ${issueVal}`,
           timestamp: new Date().toISOString()
         })
       })
@@ -87,6 +86,11 @@ export default function CityService({ city }: { city?: string }) {
     }
 
     setFormStatus('submitted')
+  }
+
+  const handleQuickForm = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await submitLeadData(formState.name, formState.phone, formState.issue)
   }
 
   return (
@@ -202,7 +206,13 @@ export default function CityService({ city }: { city?: string }) {
                       <label className="block text-xs font-bold text-slate-700 mb-1">Primary Issue</label>
                       <select
                         value={formState.issue}
-                        onChange={(e) => setFormState({ ...formState, issue: e.target.value })}
+                        onChange={(e) => {
+                          const newIssue = e.target.value
+                          setFormState({ ...formState, issue: newIssue })
+                          if (formState.name.trim() && formState.phone.trim()) {
+                            submitLeadData(formState.name, formState.phone, newIssue)
+                          }
+                        }}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 bg-white"
                       >
                         <option value="cibil-rectification">CIBIL Score Rectification / Low Score</option>
