@@ -33,16 +33,16 @@ export default function TimedPopup() {
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          className="relative w-28 h-28"
+          className="relative w-20 h-20 sm:w-28 sm:h-28"
         >
           {/* Main Round Circular Badge (SaaS look) */}
           <a
             href="tel:+916350671636"
-            className="w-full h-full rounded-full bg-white border border-slate-100 shadow-2xl flex flex-col items-center justify-between p-2 relative overflow-hidden group select-none hover:shadow-emerald-500/10 hover:border-emerald-200 transition-all duration-300"
+            className="w-full h-full rounded-full bg-white border border-slate-100 shadow-2xl flex flex-col items-center justify-between p-1.5 sm:p-2 relative overflow-hidden group select-none hover:shadow-emerald-500/10 hover:border-emerald-200 transition-all duration-300"
           >
             {/* Top half: Credit score gauge graphic */}
-            <div className="w-full h-12 flex flex-col items-center justify-end relative pt-2">
-              <svg className="w-16 h-10 overflow-visible" viewBox="0 0 100 50">
+            <div className="w-full h-8 sm:h-12 flex flex-col items-center justify-end relative pt-1 sm:pt-2">
+              <svg className="w-12 h-7 sm:w-16 sm:h-10 overflow-visible" viewBox="0 0 100 50">
                 {/* Arc tracks */}
                 <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f43f5e" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="0" />
                 <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f97316" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="-31.4" />
@@ -55,11 +55,11 @@ export default function TimedPopup() {
               </svg>
             </div>
 
-            {/* Circular text simulation: HAVE A QUERY? CLICK TO CALL (Smaller radius, color changed to brandNavy, bold text) */}
+            {/* Circular text simulation: HAVE A QUERY? CLICK TO CALL */}
             <div className="absolute inset-0 pointer-events-none animate-[spin_24s_linear_infinite] z-10">
               <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100">
                 <path id="circlePath" d="M 50 14 A 36 36 0 1 1 49.9 14" fill="none" />
-                <text className="fill-brandNavy font-sans font-black uppercase text-[10.2px] tracking-[1.9px] antialiased">
+                <text className="fill-brandNavy font-sans font-black uppercase text-[7.5px] sm:text-[10.2px] tracking-[1.4px] sm:tracking-[1.9px] antialiased">
                   <textPath href="#circlePath">
                     Have a Query? Call Us 
                   </textPath>
@@ -68,9 +68,9 @@ export default function TimedPopup() {
             </div>
 
             {/* Bottom half: Solid Brand Blue background with missed call icon (higher z-index to overlay rotating text) */}
-            <div className="absolute bottom-0 left-0 right-0 h-[48%] bg-brandBlue flex flex-col items-center justify-center p-1 group-hover:bg-[#1d4ed8] transition-colors duration-300 z-20">
+            <div className="absolute bottom-0 left-0 right-0 h-[48%] bg-brandBlue flex flex-col items-center justify-center p-0.5 sm:p-1 group-hover:bg-[#1d4ed8] transition-colors duration-300 z-20">
               {/* Missed Call SVG (Phone receiver with arrow pointing up-right) */}
-              <svg className="w-6 h-6 text-white overflow-visible" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+              <svg className="w-4 h-4 sm:w-6 sm:h-6 text-white overflow-visible" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                 {/* Outgoing missed call receiver */}
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 3.5l4 4m0-4l-4 4" strokeWidth="2.5" />
@@ -81,10 +81,10 @@ export default function TimedPopup() {
           {/* Cross Close Icon positioning exactly on top-right */}
           <button
             onClick={() => setShowCallWidget(false)}
-            className="absolute -top-1 -right-1 z-[70] grid h-6.5 w-6.5 place-items-center rounded-full bg-slate-900 border border-slate-700 text-white shadow-xl hover:bg-black transition-all p-1"
+            className="absolute -top-1 -right-1 z-[70] grid h-5 w-5 sm:h-6.5 sm:w-6.5 place-items-center rounded-full bg-slate-900 border border-slate-700 text-white shadow-xl hover:bg-black transition-all p-0.5 sm:p-1"
             aria-label="Close call widget"
           >
-            <X className="h-3 w-3" />
+            <X className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
           </button>
         </motion.div>
       </div>

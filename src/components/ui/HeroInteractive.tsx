@@ -29,7 +29,7 @@ export default function HeroInteractive() {
 
   return (
     <section
-      className="relative flex min-h-[100svh] items-center pb-12 pt-20 lg:pt-24 sm:pb-16 overflow-hidden bg-white"
+      className="relative flex min-h-[100svh] items-center pb-12 pt-32 sm:pt-40 lg:pt-24 sm:pb-16 overflow-hidden bg-white"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
