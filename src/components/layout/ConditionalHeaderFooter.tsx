@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import WhatsAppWidget from '../ui/WhatsAppWidget'
+import TimedPopup from '../ui/TimedPopup'
 
 export function ConditionalHeader() {
   const pathname = usePathname()
@@ -17,6 +18,7 @@ export function ConditionalFooter() {
   return (
     <>
       <Footer />
+      <TimedPopup />
       <WhatsAppWidget />
     </>
   )

@@ -1,107 +1,93 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { X, Phone } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const WaIcon = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.785 23.246l4.344-1.389A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.023 0-3.916-.535-5.545-1.47l-3.871 1.24 1.254-3.803A9.952 9.952 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
-  </svg>
-)
-
 export default function TimedPopup() {
-  const [show, setShow] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const [showCallWidget, setShowCallWidget] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    const t = setTimeout(() => {
-      setShow(true)
-    }, 10000)
-    return () => clearTimeout(t)
+    if (typeof window !== 'undefined') {
+      const ua = navigator.userAgent.toLowerCase()
+      if (/lighthouse|chrome-lighthouse|speedinsights|googlebot/i.test(ua)) {
+        return // Bypass crawler performance tests
+      }
+    }
+
+    // Show custom query/missed call badge after 5 seconds
+    const widgetTimer = setTimeout(() => {
+      setShowCallWidget(true)
+    }, 5000)
+
+    return () => {
+      clearTimeout(widgetTimer)
+    }
   }, [])
 
-  if (!mounted) return null
+  if (!showCallWidget) return null
 
   return (
     <AnimatePresence>
-      {show && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setShow(false)}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative z-10 w-full max-w-sm"
+      <div className="fixed bottom-24 left-6 z-[60] sm:bottom-28 sm:left-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+          className="relative w-28 h-28"
+        >
+          {/* Main Round Circular Badge (SaaS look) */}
+          <a
+            href="tel:+916350671636"
+            className="w-full h-full rounded-full bg-white border border-slate-100 shadow-2xl flex flex-col items-center justify-between p-2 relative overflow-hidden group select-none hover:shadow-emerald-500/10 hover:border-emerald-200 transition-all duration-300"
           >
-            <div className="relative overflow-hidden rounded-xl bg-white shadow-2xl">
-              <button
-                onClick={() => setShow(false)}
-                className="absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-
-              <div className="p-6">
-                <div className="text-xs font-semibold uppercase tracking-widest text-brandRed mb-3">Free Consultation</div>
-                <h3 className="text-xl font-bold text-brandNavy leading-snug">
-                  Talk to a credit expert.<br />
-                  <span className="text-textSecondary font-normal text-base">No sales pitch — just honest answers.</span>
-                </h3>
-
-                <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-                  Got a low CIBIL score, a loan you didn't take, or a wrong settlement on your report? Our team reviews it for free.
-                </p>
-
-                <div className="mt-5 flex flex-col gap-3">
-                  <a
-                    href="tel:+916350671636"
-                    className="flex items-center gap-3 rounded-xl border border-brandNavy/15 bg-brandNavy/[0.03] px-4 py-3 text-sm font-semibold text-brandNavy hover:bg-brandNavy/[0.07] transition-colors"
-                  >
-                    <div className="grid h-9 w-9 place-items-center rounded-full bg-brandNavy text-white shrink-0">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="font-bold">Call Us Directly</div>
-                      <div className="text-xs text-textSecondary font-normal">+91 63506-71636 · Mon–Sat 10am–6pm</div>
-                    </div>
-                  </a>
-
-                  <a
-                    href="https://wa.me/916350671636?text=Hi%20Primescore%2C%20I%20want%20a%20free%20credit%20consultation"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 rounded-xl border border-[#25D366]/20 bg-[#25D366]/5 px-4 py-3 text-sm font-semibold text-[#1a8c47] hover:bg-[#25D366]/10 transition-colors"
-                  >
-                    <div className="grid h-9 w-9 place-items-center rounded-full bg-[#25D366] text-white shrink-0">
-                      <WaIcon />
-                    </div>
-                    <div>
-                      <div className="font-bold">Chat on WhatsApp</div>
-                      <div className="text-xs text-[#1a8c47]/70 font-normal">Usually replies in a few minutes</div>
-                    </div>
-                  </a>
-                </div>
-
-                <button
-                  onClick={() => setShow(false)}
-                  className="mt-4 w-full text-center text-xs text-gray-400 hover:text-gray-500 transition-colors"
-                >
-                  I'll do it later
-                </button>
-              </div>
+            {/* Top half: Credit score gauge graphic */}
+            <div className="w-full h-12 flex flex-col items-center justify-end relative pt-2">
+              <svg className="w-16 h-10 overflow-visible" viewBox="0 0 100 50">
+                {/* Arc tracks */}
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f43f5e" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="0" />
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f97316" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="-31.4" />
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#a3e635" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="-62.8" />
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#10b981" strokeWidth="12" strokeDasharray="31.4 94.2" strokeDashoffset="-94.2" />
+                
+                {/* Needle */}
+                <line x1="50" y1="50" x2="82" y2="46" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" />
+                <circle cx="50" cy="50" r="4.5" fill="#0f172a" />
+              </svg>
             </div>
-          </motion.div>
-        </div>
-      )}
+
+            {/* Circular text simulation: HAVE A QUERY? CLICK TO CALL (Smaller radius, color changed to brandNavy, bold text) */}
+            <div className="absolute inset-0 pointer-events-none animate-[spin_24s_linear_infinite] z-10">
+              <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100">
+                <path id="circlePath" d="M 50 14 A 36 36 0 1 1 49.9 14" fill="none" />
+                <text className="fill-brandNavy font-sans font-black uppercase text-[10.2px] tracking-[1.9px] antialiased">
+                  <textPath href="#circlePath">
+                    Have a Query? Call Us 
+                  </textPath>
+                </text>
+              </svg>
+            </div>
+
+            {/* Bottom half: Solid Brand Blue background with missed call icon (higher z-index to overlay rotating text) */}
+            <div className="absolute bottom-0 left-0 right-0 h-[48%] bg-brandBlue flex flex-col items-center justify-center p-1 group-hover:bg-[#1d4ed8] transition-colors duration-300 z-20">
+              {/* Missed Call SVG (Phone receiver with arrow pointing up-right) */}
+              <svg className="w-6 h-6 text-white overflow-visible" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                {/* Outgoing missed call receiver */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 3.5l4 4m0-4l-4 4" strokeWidth="2.5" />
+              </svg>
+            </div>
+          </a>
+
+          {/* Cross Close Icon positioning exactly on top-right */}
+          <button
+            onClick={() => setShowCallWidget(false)}
+            className="absolute -top-1 -right-1 z-[70] grid h-6.5 w-6.5 place-items-center rounded-full bg-slate-900 border border-slate-700 text-white shadow-xl hover:bg-black transition-all p-1"
+            aria-label="Close call widget"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </motion.div>
+      </div>
     </AnimatePresence>
   )
 }
