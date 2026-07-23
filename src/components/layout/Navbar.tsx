@@ -43,6 +43,7 @@ export default function Navbar() {
       { to: '/', label: 'Home' },
       { to: '/services', label: 'Services' },
       { to: '/pricing', label: 'Pricing' },
+      { to: '/business', label: 'B2B Business' },
       { to: '/about', label: 'About' },
       { to: '/blog', label: 'Blog' },
       { to: '/contact', label: 'Contact' },
