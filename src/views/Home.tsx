@@ -135,10 +135,25 @@ function ImageToggleSection() {
   }, [])
 
   return (
-    <section className="bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#1e1b4b] text-white pt-16 sm:pt-24 pb-0 relative overflow-hidden border-t border-slate-800" data-theme="dark">
+    <section className="bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#1e1b4b] text-white pt-0 pb-0 relative overflow-hidden border-t border-slate-800" data-theme="dark">
       
+      {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR AT THE TOP */}
+      <div className="w-full bg-emerald-500 text-slate-950 py-3.5 border-b border-emerald-400 overflow-hidden shadow-lg mb-16 relative z-10">
+        <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
+          {[1, 2, 3, 4].map((i) => (
+            <React.Fragment key={i}>
+              <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ ISTART GOVT. OF RAJASTHAN RECOGNIZED</span>
+              <span className="inline-flex items-center gap-2">✦ 60–90 DAYS DISPUTE RESOLUTION</span>
+              <span className="inline-flex items-center gap-2">✦ ERRASE ILLEGITIMATE DEFAULTS</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
       {/* Background Subtle Geometry Grid (Strictly scoped inside body) */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25 pointer-events-none mt-16" />
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -667,21 +682,6 @@ export default function Home() {
 
       {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
       <div data-theme="dark">
-        {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR ABOVE FEATURE SCROLL SHOWCASE */}
-        <div className="w-full bg-emerald-500 text-slate-950 py-3.5 border-b border-emerald-400 overflow-hidden shadow-lg">
-          <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
-            {[1, 2, 3, 4].map((i) => (
-              <React.Fragment key={i}>
-                <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
-                <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
-                <span className="inline-flex items-center gap-2">✦ ISTART GOVT. OF RAJASTHAN RECOGNIZED</span>
-                <span className="inline-flex items-center gap-2">✦ 60–90 DAYS DISPUTE RESOLUTION</span>
-                <span className="inline-flex items-center gap-2">✦ ERRASE ILLEGITIMATE DEFAULTS</span>
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-
         <FeatureScrollShowcase />
       </div>
 
