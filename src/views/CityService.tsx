@@ -118,7 +118,7 @@ export default function CityService({ city }: { city?: string }) {
 
               {/* Subheadline */}
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-                Has a bank rejection or incorrect default tag blocked your home loan, personal loan, or credit card? We audit CIBIL, Experian, Equifax &amp; CRIF reports to dispute wrong entries legally in 60 to 90 days.
+                Has a bank rejection or incorrect default tag blocked your home loan, personal loan, or credit card? We audit CIBIL, Experian, Equifax &amp; CRIF reports to dispute wrong entries legally in 60 to 90 days. We also offer commercial B2B credit audits, corporate CIBIL checks, and MSME loan correction services for enterprises in {cityName}.
               </p>
 
               {/* Key Trust Chips */}
@@ -126,7 +126,8 @@ export default function CityService({ city }: { city?: string }) {
                 {[
                   { icon: <Shield className="w-4 h-4 text-emerald-600" />, text: '100% Legal & CICRA Compliant' },
                   { icon: <Award className="w-4 h-4 text-emerald-600" />, text: 'Govt. iStart Recognized' },
-                  { icon: <Clock className="w-4 h-4 text-emerald-600" />, text: '60–90 Day Dispute Resolution' },
+                  { icon: <Building className="w-4 h-4 text-emerald-600" />, text: 'B2B & MSME Audits Enabled' },
+                  { icon: <Clock className="w-4 h-4 text-emerald-600" />, text: '60–90 Day Resolution' },
                 ].map((item, idx) => (
                   <div key={idx} className="bg-white border border-slate-200 shadow-sm px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 flex items-center gap-2">
                     {item.icon}
@@ -142,8 +143,8 @@ export default function CityService({ city }: { city?: string }) {
                   <span className="text-xs text-slate-500 font-medium mt-1 block">Scores Fixed</span>
                 </div>
                 <div>
-                  <span className="text-2xl sm:text-3xl font-black text-emerald-600 block leading-none">92%</span>
-                  <span className="text-xs text-slate-500 font-medium mt-1 block">Success Rate</span>
+                  <span className="text-2xl sm:text-3xl font-black text-emerald-600 block leading-none">350+</span>
+                  <span className="text-xs text-slate-500 font-medium mt-1 block">B2B Partners</span>
                 </div>
                 <div>
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 block leading-none">4 Bureaus</span>
@@ -395,6 +396,10 @@ export default function CityService({ city }: { city?: string }) {
               {
                 q: `Do I need to visit an office in ${cityName}?`,
                 a: `No physical visit is required. Our entire process is online, secure, and digital. You can track your dispute progress and updated bureau reports directly from your dashboard.`
+              },
+              {
+                q: `Does PrimeScore handle commercial B2B credit repair and corporate CIBIL audits in ${cityName}?`,
+                a: `Yes. We provide complete commercial credit health restoration, business score monitoring, and corporate dispute filing for MSMEs and private limited companies in ${cityName}. We audit both partner personal profiles and company commercial credit records.`
               },
             ].map((faq, i) => (
               <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
