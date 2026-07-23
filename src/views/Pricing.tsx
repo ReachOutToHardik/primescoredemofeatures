@@ -75,32 +75,38 @@ export default function Pricing() {
         </Reveal>
       </section>
 
-      {/* Main Pricing Grid */}
-      <section className="mt-16 grid gap-8 lg:grid-cols-12 lg:items-start">
+      {/* Main Pricing Grid — Premium Minimal Two-Column SaaS Layout */}
+      <section className="mt-16 grid gap-8 lg:grid-cols-12 lg:items-stretch">
         
         {/* Left Column: Plan Summary and Call to Action */}
-        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-between">
           <Reveal>
-            <div>
-              <div className="text-xs font-bold text-brandBlue uppercase tracking-wider mb-2">Pricing Plan</div>
-              <h3 className="font-display text-2xl font-bold text-brandNavy leading-tight">{plan.name}</h3>
-              <p className="mt-3 text-xs leading-relaxed text-textSecondary">
-                {plan.description}
-              </p>
-
-              <div className="mt-8 pt-8 border-t border-slate-100">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-display text-5xl font-extrabold text-brandNavy tracking-tight">₹199</span>
-                  <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
-                  <span className="text-[10px] font-semibold text-textSecondary/70">+GST</span>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
+                  Popular Plan
                 </div>
-                <p className="mt-2 text-[10px] font-semibold text-textSecondary uppercase tracking-wider">
-                  No recurring charges · No automatic renewals
+                <h3 className="font-display text-2xl font-extrabold text-brandNavy leading-tight">{plan.name}</h3>
+                <p className="text-xs leading-relaxed text-textSecondary">
+                  {plan.description}
                 </p>
+              </div>
+
+              <div className="pt-6 border-t border-slate-100 space-y-4">
+                <div className="space-y-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-display text-5xl font-black text-brandNavy tracking-tight">₹199</span>
+                    <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
+                    <span className="text-[10px] font-semibold text-textSecondary/70">+GST</span>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    No recurring charges · No automatic renewals
+                  </p>
+                </div>
                 
-                <div className="mt-6">
+                <div className="pt-2">
                   <Link href="/contact">
-                    <Button as="div" className="w-full py-4 text-center text-sm font-bold shadow-sm">
+                    <Button as="div" className="w-full py-4 text-center text-xs font-black tracking-wider uppercase bg-brandNavy hover:bg-slate-900 text-white rounded-xl shadow-sm">
                       Fetch My Credit Reports
                     </Button>
                   </Link>
@@ -111,19 +117,19 @@ export default function Pricing() {
         </div>
 
         {/* Right Column: Detailed feature inclusions */}
-        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm h-full flex flex-col justify-center">
+        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-center">
           <Reveal delay={0.05}>
-            <div>
-              <h4 className="font-display text-xs font-bold uppercase tracking-wider text-brandNavy mb-5">
+            <div className="space-y-6">
+              <h4 className="font-display text-xs font-bold uppercase tracking-widest text-slate-400">
                 What is included in your access:
               </h4>
               <ul className="grid gap-4 text-xs sm:text-sm">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-3.5">
-                    <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#10b981]/10 text-[#10b981]">
-                      <Check className="h-3.5 w-3.5 stroke-[2.5px]" />
+                    <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-800">
+                      <Check className="h-3 w-3 stroke-[3px]" />
                     </div>
-                    <span className="text-brandNavy font-medium leading-normal">{f}</span>
+                    <span className="text-brandNavy font-semibold leading-relaxed">{f}</span>
                   </li>
                 ))}
               </ul>
