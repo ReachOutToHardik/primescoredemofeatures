@@ -28,10 +28,10 @@ export default function DashboardDemoView() {
   const [activeTab, setActiveTab] = useState<'overview' | 'accounts' | 'enquiries' | 'comparison'>('overview')
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans selection:bg-brandBlue/10">
+    <div className="h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans selection:bg-brandBlue/10 overflow-hidden">
       
       {/* Top Demo Bar with High-Visibility Seamless Marquee */}
-      <div className="bg-gradient-to-r from-slate-950 via-brandNavy to-slate-900 text-white px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center justify-between shadow-md overflow-hidden gap-4 border-b border-white/10">
+      <div className="bg-gradient-to-r from-slate-950 via-brandNavy to-slate-900 text-white px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center justify-between shadow-md overflow-hidden gap-4 border-b border-white/10 shrink-0">
         {/* Marquee track */}
         <div className="flex-1 overflow-hidden relative flex items-center">
           <div className="whitespace-nowrap animate-marquee flex items-center gap-12 font-medium">
@@ -63,10 +63,10 @@ export default function DashboardDemoView() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         
-        {/* Left Sidebar */}
-        <aside className="w-full lg:w-64 bg-white border-r border-slate-200/80 p-4 lg:p-6 flex flex-col justify-between shrink-0">
+        {/* Left Sidebar (Fixed layout, no empty space on scroll) */}
+        <aside className="w-full lg:w-64 bg-white border-r border-slate-200/80 p-4 lg:p-6 flex flex-col justify-between shrink-0 h-auto lg:h-full overflow-y-auto">
           <div>
             {/* Logo */}
             <div className="flex items-center gap-3 mb-8 px-2">
@@ -99,12 +99,12 @@ export default function DashboardDemoView() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${item.active ? 'text-brandBlue' : 'text-slate-400'}`} />
+                      <Icon className="w-5 h-5" />
                       <span>{item.name}</span>
                     </div>
                     {item.badge && (
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                        item.active ? 'bg-brandBlue text-white' : 'bg-slate-100 text-slate-600'
+                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                        item.name === 'Disputes' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-brandBlue/10 text-brandBlue'
                       }`}>
                         {item.badge}
                       </span>
@@ -131,10 +131,10 @@ export default function DashboardDemoView() {
               href="https://dashboard.primescore.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-brandNavy hover:bg-slate-800 text-white font-bold text-xs py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              className="w-full border-2 border-emerald-500 bg-white hover:bg-emerald-500 text-emerald-600 hover:text-slate-950 font-black text-xs py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Refresh Now
+              <ExternalLink className="w-3.5 h-3.5" />
+              Sign Up Now
             </a>
 
             <div className="space-y-1 text-xs text-slate-500 pt-2">
@@ -152,7 +152,7 @@ export default function DashboardDemoView() {
         </aside>
 
         {/* Main Dashboard Workspace */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 h-full">
           
           {/* Top Bar Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -166,9 +166,9 @@ export default function DashboardDemoView() {
                 href="https://dashboard.primescore.in"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-brandNavy text-white hover:bg-slate-800 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center gap-2"
+                className="border-2 border-emerald-500 bg-white hover:bg-emerald-500 text-emerald-600 hover:text-slate-950 px-4 py-2 rounded-xl font-black text-xs sm:text-sm transition-all shadow-sm flex items-center gap-2"
               >
-                <RefreshCw className="w-4 h-4" /> Refresh Now
+                <ExternalLink className="w-4 h-4" /> Sign Up Now
               </a>
               <a
                 href="https://dashboard.primescore.in"
