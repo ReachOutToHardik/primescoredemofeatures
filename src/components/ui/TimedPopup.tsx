@@ -28,7 +28,7 @@ export default function TimedPopup() {
 
   return (
     <AnimatePresence>
-      <div className="fixed bottom-24 left-6 z-[60] sm:bottom-28 sm:left-8">
+      <div className="fixed bottom-6 left-6 z-[60] sm:bottom-8 sm:left-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
