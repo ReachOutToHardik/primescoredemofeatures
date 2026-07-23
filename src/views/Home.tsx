@@ -137,7 +137,7 @@ function ImageToggleSection() {
   return (
     <section className="bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#1e1b4b] text-white pt-16 sm:pt-24 pb-0 relative overflow-hidden border-t border-slate-800" data-theme="dark">
       
-      {/* Background Subtle Geometry Grid */}
+      {/* Background Subtle Geometry Grid (Strictly scoped inside body) */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25 pointer-events-none" />
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 relative z-10">
@@ -234,7 +234,7 @@ function ImageToggleSection() {
       </div>
 
       {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR AT THE BOTTOM */}
-      <div className="mt-12 w-full bg-emerald-500 text-slate-950 py-3.5 border-t border-emerald-400 overflow-hidden shadow-lg">
+      <div className="mt-12 w-full bg-emerald-500 text-slate-950 py-3.5 border-t border-emerald-400 overflow-hidden shadow-lg relative z-10">
         <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
           {[1, 2, 3, 4].map((i) => (
             <React.Fragment key={i}>
@@ -662,16 +662,31 @@ export default function Home() {
 
 
 
+      {/* ═══ IMAGE TOGGLE SHOWCASE SECTION (DARK NAVY WITH GREEN MARQUEE) ═══ */}
+      <ImageToggleSection />
+
       {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
       <div data-theme="dark">
+        {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR ABOVE FEATURE SCROLL SHOWCASE */}
+        <div className="w-full bg-emerald-500 text-slate-950 py-3.5 border-b border-emerald-400 overflow-hidden shadow-lg">
+          <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
+            {[1, 2, 3, 4].map((i) => (
+              <React.Fragment key={i}>
+                <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
+                <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
+                <span className="inline-flex items-center gap-2">✦ ISTART GOVT. OF RAJASTHAN RECOGNIZED</span>
+                <span className="inline-flex items-center gap-2">✦ 60–90 DAYS DISPUTE RESOLUTION</span>
+                <span className="inline-flex items-center gap-2">✦ ERRASE ILLEGITIMATE DEFAULTS</span>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
         <FeatureScrollShowcase />
       </div>
 
       {/* ═══ DASHBOARD PROMO (PEEKING UI SHOWCASE WITH SMOOTH 3D SCROLL-TIED TILT) ═══ */}
       <DashboardPeekingSection />
-
-      {/* ═══ IMAGE TOGGLE SHOWCASE SECTION (DARK NAVY WITH GREEN MARQUEE) ═══ */}
-      <ImageToggleSection />
 
       {/* ═══ SERVICES ═══ */}
       <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services" data-theme="light">
