@@ -105,12 +105,12 @@ export default function HeroInteractive() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
             >
-              <Link href="/dashboard" className="w-full sm:w-auto">
+              <a href="https://dashboard.primescore.in" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                 <div className="flex h-14 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brandNavy hover:bg-slate-900 px-8 text-xs font-black uppercase tracking-wider text-white shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
                   <span>Open Dashboard</span>
                   <ArrowRight className="h-4 w-4 shrink-0 text-emerald-400" />
                 </div>
-              </Link>
+              </a>
               <Link href="/contact" className="w-full sm:w-auto">
                 <div className="flex h-14 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-brandNavy/20 hover:border-brandNavy/30 bg-white hover:bg-slate-50 text-brandNavy px-8 text-xs font-black uppercase tracking-wider transition-all active:scale-[0.98]">
                   <span>Talk to expert</span>
