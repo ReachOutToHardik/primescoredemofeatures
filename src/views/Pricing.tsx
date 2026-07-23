@@ -11,12 +11,13 @@ export default function Pricing() {
     price: 199,
     description: 'Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.',
     features: [
-      'Official 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
-      'Secure Interactive Dashboard Storage',
-      'Detailed Inconsistency & Error Flagging summary',
-      'Direct Portal Chat with Credit Experts to review your report',
-      'Zero Monthly Subscription Fees or automatic renewals',
-      'Minimal-Access Encrypted Document Vault security'
+      'Unified Proprietary Credit Report (Aggregated 4-Bureau Data in One Consolidated View)',
+      'Official Live 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
+      'Permanent Dashboard Storage (Track updates without re-fetching)',
+      'Smart Inconsistency & Dispute-Ready Error Flagging Summary',
+      'Direct Support Chat with Certified Credit Experts for Report Review',
+      'Zero Subscription Traps — Pay Once (₹199), Keep Access',
+      'Encrypted Document Vault & Minimal-Access Security'
     ]
   }
 
