@@ -99,13 +99,9 @@ export default function Launch() {
           inset: 0,
           backgroundImage: 'url("/images/primescore-chess-banner.png")',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'brightness(0.18)'
+          backgroundPosition: 'center'
         }}
       />
-
-      {/* Blurred glass overlay */}
-      <div style={{ position: 'absolute', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(0,0,0,0.4)' }} />
 
       {/* Audio object */}
       <audio id="launch-audio" src="/launch-sound.mp3" preload="auto" />

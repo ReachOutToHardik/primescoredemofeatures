@@ -1,20 +1,29 @@
 'use client'
 
-import React, { useState } from 'react'
-import { 
-  ShieldCheck, 
-  Activity, 
-  HelpCircle, 
-  ArrowRight, 
-  BarChart3, 
-  Users, 
-  CheckCircle2, 
-  Lock, 
-  FileText, 
+import React, { useState, useRef, useMemo } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import {
+  ShieldCheck,
+  Activity,
+  ChevronDown,
+  ArrowRight,
+  BarChart3,
+  Users,
+  CheckCircle2,
+  Lock,
+  FileText,
   ShieldAlert,
   Mail,
   Phone,
-  AlertCircle
+  AlertCircle,
+  Factory,
+  Truck,
+  Building2,
+  Coins,
+  Globe,
+  Cpu,
+  Wrench,
+  Briefcase
 } from 'lucide-react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
@@ -23,7 +32,7 @@ export default function BusinessServices() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
 
   // Form State & Handler
-  type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+  type IssueType = 'Commercial Credit Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
   type FormState = {
     companyName: string
     contactName: string
@@ -42,9 +51,67 @@ export default function BusinessServices() {
     issueType: 'Not sure',
     message: ''
   })
-  
+
+  // Timeline scroll-linked animations for BusinessServices
+  const processRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress: processScroll } = useScroll({
+    target: processRef,
+    offset: ["start start", "end end"]
+  })
+  const processLineWidth = useTransform(processScroll, [0.22, 0.80], ["0%", "100%"])
+
+  // Snappier 10% scroll triggers for crisp updates
+  const act1 = useTransform(processScroll, [0.22, 0.32], [0, 1])
+  const act2 = useTransform(processScroll, [0.34, 0.44], [0, 1])
+  const act3 = useTransform(processScroll, [0.46, 0.56], [0, 1])
+  const act4 = useTransform(processScroll, [0.58, 0.68], [0, 1])
+  const act5 = useTransform(processScroll, [0.70, 0.80], [0, 1])
+
+  // Step 1: Brand Blue Outline
+  const borderCol1 = useTransform(act1, [0, 1], ["rgba(226,232,240,0.8)", "#2563EB"])
+  const textCol1 = useTransform(act1, [0, 1], ["#94a3b8", "#2563EB"])
+  const scale1 = useTransform(act1, [0, 1], [1, 1.12])
+  const shadow1 = useTransform(act1, [0, 1], ["none", "0 0 15px rgba(37,99,235,0.15)"])
+  const bodyOpacity1 = useTransform(act1, [0, 1], [0.5, 1])
+
+  // Step 2: Brand Blue Outline
+  const borderCol2 = useTransform(act2, [0, 1], ["rgba(226,232,240,0.8)", "#2563EB"])
+  const textCol2 = useTransform(act2, [0, 1], ["#94a3b8", "#2563EB"])
+  const scale2 = useTransform(act2, [0, 1], [1, 1.12])
+  const shadow2 = useTransform(act2, [0, 1], ["none", "0 0 15px rgba(37,99,235,0.15)"])
+  const bodyOpacity2 = useTransform(act2, [0, 1], [0.5, 1])
+
+  // Step 3: Brand Blue Outline
+  const borderCol3 = useTransform(act3, [0, 1], ["rgba(226,232,240,0.8)", "#2563EB"])
+  const textCol3 = useTransform(act3, [0, 1], ["#94a3b8", "#2563EB"])
+  const scale3 = useTransform(act3, [0, 1], [1, 1.12])
+  const shadow3 = useTransform(act3, [0, 1], ["none", "0 0 15px rgba(37,99,235,0.15)"])
+  const bodyOpacity3 = useTransform(act3, [0, 1], [0.5, 1])
+
+  // Step 4: Brand Blue Outline
+  const borderCol4 = useTransform(act4, [0, 1], ["rgba(226,232,240,0.8)", "#2563EB"])
+  const textCol4 = useTransform(act4, [0, 1], ["#94a3b8", "#2563EB"])
+  const scale4 = useTransform(act4, [0, 1], [1, 1.12])
+  const shadow4 = useTransform(act4, [0, 1], ["none", "0 0 15px rgba(37,99,235,0.15)"])
+  const bodyOpacity4 = useTransform(act4, [0, 1], [0.5, 1])
+
+  // Step 5: Brand Blue Outline
+  const borderCol5 = useTransform(act5, [0, 1], ["rgba(226,232,240,0.8)", "#2563EB"])
+  const textCol5 = useTransform(act5, [0, 1], ["#94a3b8", "#2563EB"])
+  const scale5 = useTransform(act5, [0, 1], [1, 1.12])
+  const shadow5 = useTransform(act5, [0, 1], ["none", "0 0 15px rgba(37,99,235,0.15)"])
+  const bodyOpacity5 = useTransform(act5, [0, 1], [0.5, 1])
+
+  const nodeStyles = useMemo(() => [
+    { border: borderCol1, text: textCol1, scale: scale1, shadow: shadow1, opacity: bodyOpacity1 },
+    { border: borderCol2, text: textCol2, scale: scale2, shadow: shadow2, opacity: bodyOpacity2 },
+    { border: borderCol3, text: textCol3, scale: scale3, shadow: shadow3, opacity: bodyOpacity3 },
+    { border: borderCol4, text: textCol4, scale: scale4, shadow: shadow4, opacity: bodyOpacity4 },
+    { border: borderCol5, text: textCol5, scale: scale5, shadow: shadow5, opacity: bodyOpacity5 },
+  ], [borderCol1, borderCol2, borderCol3, borderCol4, borderCol5, textCol1, textCol2, textCol3, textCol4, textCol5, scale1, scale2, scale3, scale4, scale5, shadow1, shadow2, shadow3, shadow4, shadow5, bodyOpacity1, bodyOpacity2, bodyOpacity3, bodyOpacity4, bodyOpacity5])
+
   const issueTypes: IssueType[] = [
-    'Commercial CIBIL Audit',
+    'Commercial Credit Audit',
     'Vendor Risk Monitoring',
     'Company dispute',
     'Not sure'
@@ -144,37 +211,31 @@ export default function BusinessServices() {
   ]
 
   const faqs = [
-    {
-      q: 'How does Commercial Credit Rectification differ from Personal?',
-      a: 'Commercial credit reports (like CIBIL Rank & CMR) track entity ratings using company PAN, GSTIN, and corporate banking data. Resolving business disputes requires official corporate resolutions, board authorization letters, and complex bank reconciliations compared to individual personal reports.'
-    },
-    {
-      q: 'What is the average turnaround time for commercial disputes?',
-      a: 'Under RBI guidelines, credit bureaus have a 30-day window to update records once a dispute is received. Most simple corrections resolve in 30-45 days, while complex multi-bank issues may take 60-90 days.'
-    },
-    {
-      q: 'Can inaccurate trade supplier default tags be removed?',
-      a: 'Yes. If a supplier or client has wrongly reported overdue trade credit due to commercial invoice disputes or technical payment settlement delays, we can compile proof of settlement to seek a clean update.'
-    }
+    { q: 'What is a business credit score?', a: 'A business credit score reflects your company\'s financial credibility and repayment history. Banks and lenders use it to evaluate loan applications, working capital limits, and business financing.' },
+    { q: 'Can PrimeScore improve my company\'s credit profile?', a: 'Yes. We help identify reporting errors, incorrect loan information, duplicate accounts, and other issues affecting your business credit profile.' },
+    { q: 'Why is business credit important?', a: 'A strong business credit profile improves your chances of obtaining loans, credit lines, vendor financing, and better interest rates.' },
+    { q: 'Can incorrect loan reporting affect business funding?', a: 'Yes. Incorrect defaults, overdue payments, or duplicate loan entries may reduce your eligibility for business finance.' },
+    { q: 'Do you work with multiple credit bureaus?', a: 'Yes. We assist businesses in resolving issues across relevant credit bureaus and financial institutions.' },
+    { q: 'Can new businesses build a healthy credit profile?', a: 'Yes. Maintaining timely repayments, proper financial records, and responsible credit usage helps establish a strong business credit history.' }
   ]
 
   return (
-    <div className="bg-white min-h-screen font-sans antialiased text-slate-900 overflow-x-hidden">
+    <div className="bg-white min-h-screen font-sans antialiased text-slate-900">
       {/* 1. Hero Section */}
       <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
         {/* Background Image (Big in background, right aligned) */}
         <div className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50">
-          <img 
-            src="/images/servicepageheroimg.jpg" 
-            alt="PrimeScore Business Services Backdrop" 
+          <img
+            src="/images/servicepageheroimg.jpg"
+            alt="PrimeScore Business Services Backdrop"
             className="w-full h-full object-cover"
           />
           {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950 /60 to-transparent" />
         </div>
-        
+
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
-        
+
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
           {/* Hero Content (without color card block) */}
           <div className="lg:col-span-9 flex flex-col items-start relative z-10">
@@ -188,7 +249,7 @@ export default function BusinessServices() {
               <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
                 Identify commercial bureau inaccuracies, resolve registry overlaps, and protect supplier risk profiles with India's premium B2B credit rectification desk.
               </p>
-              
+
               <div className="flex flex-wrap gap-4">
                 <Button href="/business/contact" className="!bg-blue-600 hover:!bg-blue-700 text-white font-semibold transition-all">
                   Request Commercial Audit
@@ -202,7 +263,7 @@ export default function BusinessServices() {
         </div>
       </section>
 
-      {/* 2. Capabilities Grid (Three simple cards outlining Commercial CIBIL Audit, Vendor Credit Monitoring, and Director Score Alignment) */}
+      {/* 2. Capabilities Grid (Three simple cards outlining Commercial Credit Audit, Vendor Credit Monitoring, and Director Score Alignment) */}
       <section className="py-28 bg-white border-b border-slate-100">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <Reveal>
@@ -218,7 +279,7 @@ export default function BusinessServices() {
           </Reveal>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            {/* Card 1: Commercial CIBIL Audit */}
+            {/* Card 1: Commercial Credit Audit */}
             <Reveal>
               <div className="bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white border border-slate-200/80 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group hover:border-[#2563EB]/40">
                 <div>
@@ -229,7 +290,7 @@ export default function BusinessServices() {
                     REGULATORY & ERRORS
                   </span>
                   <h3 className="font-display text-xl font-extrabold text-slate-900 mt-2 mb-3">
-                    Commercial CIBIL Audit
+                    Commercial Credit Audit
                   </h3>
                   <p className="text-xs sm:text-sm text-textSecondary font-light leading-relaxed mb-6">
                     Line-by-line review of your Company Credit Report (CCR). We identify duplicate profiles, registry mismatch records, and disputed loan lines that hamper bank approval.
@@ -362,7 +423,7 @@ export default function BusinessServices() {
                 </div>
                 <h3 className="font-display text-xl font-bold text-slate-950 mb-3">The Problem</h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
-                  A business applies for a working capital expansion. Due to legacy data migrations, a bank marks an already closed loan facility as "Active & Overdue" on CIBIL.
+                  A business applies for a working capital expansion. Due to legacy data migrations, a bank marks an already closed loan facility as "Active & Overdue" on credit bureaus.
                 </p>
                 <div className="text-xs font-semibold text-red-600 bg-red-50/50 px-3 py-1.5 rounded-lg inline-self-start">
                   Outcome: Expansion rejected
@@ -396,7 +457,7 @@ export default function BusinessServices() {
                 </div>
                 <h3 className="font-display text-xl font-bold text-slate-950 mb-3">The Outcome</h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
-                  Bureaus verify and correct the records within 30-45 days. The company's CIBIL Rank rebounds to 2, and the expansion facility gets approved.
+                  Bureaus verify and correct the records within 30-45 days. The company's Credit Rank rebounds to 2, and the expansion facility gets approved.
                 </p>
                 <div className="text-xs font-semibold text-emerald-600 bg-emerald-50/50 px-3 py-1.5 rounded-lg inline-self-start">
                   Outcome: Working Capital Unlocked
@@ -408,95 +469,105 @@ export default function BusinessServices() {
       </section>
 
       {/* 4. Business Workflow Timeline */}
-      <section className="py-28 bg-slate-50 border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
-          <Reveal>
-            <div className="max-w-3xl mx-auto text-center mb-20">
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                Our Connected Resolution Workflow
-              </h2>
-              <p className="mt-4 text-slate-600">
-                A seamless credit-desk liaison pipeline that aligns banks, bureaus, and businesses.
-              </p>
-            </div>
-          </Reveal>
+      <section ref={processRef} className="relative h-[250vh] border-b border-slate-100 overflow-visible bg-slate-50">
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+          <div className="mx-auto max-w-[1280px] w-full px-6 sm:px-8 py-6">
+            <Reveal>
+              <div className="max-w-3xl mx-auto text-center mb-8">
+                <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  Our Connected Resolution Workflow
+                </h2>
+                <p className="mt-4 text-slate-600">
+                  A seamless credit-desk liaison pipeline that aligns banks, bureaus, and businesses.
+                </p>
+              </div>
+            </Reveal>
 
-          {/* Connected horizontal visual flow */}
-          <div className="grid gap-8 md:grid-cols-5 relative">
-            {/* Connecting Line (desktop only) */}
-            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-[2px] bg-slate-200 z-0" />
-            
-            {steps.map((step, idx) => {
-              const IconComp = step.icon
-              return (
-                <Reveal key={idx} delay={idx * 0.1}>
-                  <div className="flex flex-col items-center text-center relative z-10">
-                    <div className="h-16 w-16 rounded-full bg-white border border-slate-200/80 text-blue-600 flex items-center justify-center mb-6 shadow-sm hover:border-blue-600 hover:shadow transition-all duration-300">
+            {/* Connected horizontal visual flow */}
+            <div className="grid gap-6 md:grid-cols-5 relative overflow-visible">
+              {/* Connecting Line (desktop only) */}
+              <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-[3px] bg-slate-200 z-0">
+                <motion.div
+                  style={{ width: processLineWidth }}
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(37,99,235,0.6)] origin-left"
+                />
+              </div>
+
+              {steps.map((step, idx) => {
+                const IconComp = step.icon
+                const style = nodeStyles[idx]
+                return (
+                  <div key={idx} className="flex flex-col items-center text-center relative z-10">
+                    <motion.div
+                      style={{
+                        borderColor: style.border,
+                        color: style.text,
+                        scale: style.scale,
+                        boxShadow: style.shadow
+                      }}
+                      className="h-16 w-16 rounded-full bg-white border flex items-center justify-center mb-4 relative z-10 transition-all duration-300 backdrop-blur-xs"
+                    >
                       <IconComp className="h-6 w-6" />
-                    </div>
-                    <div className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider mb-2">Step {idx + 1}</div>
-                    <h4 className="font-display font-bold text-slate-900 text-sm mb-2">{step.title}</h4>
-                    <p className="text-slate-600 text-xs leading-relaxed max-w-xs">{step.desc}</p>
+                    </motion.div>
+                    <motion.div style={{ opacity: style.opacity }} className="transition-all duration-300">
+                      <div className="text-[10px] font-bold text-slate-400 font-mono uppercase tracking-wider mb-1">Step {idx + 1}</div>
+                      <h4 className="font-display font-bold text-slate-900 text-sm mb-1.5">{step.title}</h4>
+                      <p className="text-slate-600 text-xs leading-relaxed max-w-xs">{step.desc}</p>
+                    </motion.div>
                   </div>
-                </Reveal>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 5. Business Impact Metrics (KPI Band) */}
-      <section className="py-20 bg-slate-950 text-white relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(37,99,235,0.05),transparent_40%)]" />
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 text-center">
-          <div>
-            <div className="text-4xl font-extrabold text-blue-500 font-mono">₹420 Cr+</div>
-            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Disputed Credit Audited</div>
-          </div>
-          <div>
-            <div className="text-4xl font-extrabold text-blue-500 font-mono">100%</div>
-            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Bureau Compliant Operations</div>
-          </div>
-          <div>
-            <div className="text-4xl font-extrabold text-blue-500 font-mono">2 Hrs</div>
-            <div className="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">Response SLA Guaranteed</div>
-          </div>
-        </div>
-      </section>
+      {/* 5. Business Impact Metrics & Industries Supported */}
+      <section className="py-24 bg-slate-950 text-white relative overflow-hidden">
+        {/* Glowing backdrop spotlights */}
+        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-blue-500/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
 
-
-
-      {/* 7. Industries Served */}
-      <section className="py-24 bg-slate-50 border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
-          <Reveal>
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10">
+          {/* Industry Focus Section */}
+          <div>
             <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="font-display text-3xl font-extrabold text-slate-900">
-                Industries Supported
+              <span className="text-xs font-bold text-blue-500 uppercase tracking-widest block mb-3">Sectors Supported</span>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Industries We Serve
               </h2>
-              <p className="mt-4 text-slate-600 text-sm">
-                We manage credit registries and data auditing for multiple key business sectors.
+              <p className="mt-4 text-slate-400 text-sm max-w-xl mx-auto leading-relaxed font-light">
+                Our credit auditing and bureau dispute filing procedures are tailored to meet the specific compliance frameworks of major Indian sectors.
               </p>
             </div>
-          </Reveal>
 
-          <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-            {[
-              'Manufacturing & Engineering',
-              'Supply Chain & Logistical Hubs',
-              'Real Estate Developers',
-              'NBFCs & Micro-Lenders',
-              'B2B Wholesale Traders',
-              'Export-Import Houses',
-              'IT Services & SaaS Entities',
-              'Automobile Component Vendors'
-            ].map((ind, idx) => (
-              <Reveal key={idx} delay={idx * 0.05}>
-                <span className="inline-flex items-center px-4 py-2 rounded-2xl bg-white border border-slate-200/80 text-xs font-semibold text-slate-700 shadow-sm">
-                  {ind}
-                </span>
-              </Reveal>
-            ))}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: 'Manufacturing & Engineering', icon: Factory, desc: 'Reconciling heavy capital machinery leases and working capital limits.' },
+                { title: 'Supply Chain & Logistical Hubs', icon: Truck, desc: 'Tracking trade creditor delays and multi-location transport lines.' },
+                { title: 'Real Estate Developers', icon: Building2, desc: 'Auditing complex construction finance loans and escrow accounts.' },
+                { title: 'NBFCs & Micro-Lenders', icon: Coins, desc: 'Resolving institutional pool buyout reports and refinancing mismatches.' },
+                { title: 'B2B Wholesale Traders', icon: Briefcase, desc: 'Disputing buyer credit defaults and invoice-backed trade credit entries.' },
+                { title: 'Export-Import Houses', icon: Globe, desc: 'Managing foreign currency loan classifications and buyer LCs.' },
+                { title: 'IT Services & SaaS Entities', icon: Cpu, desc: 'Monitoring vendor subscriptions, software assets, and term loan lines.' },
+                { title: 'Automobile Component Vendors', icon: Wrench, desc: 'Scrubbing registry records for auxiliary component supply facilities.' }
+              ].map((ind, idx) => {
+                const Icon = ind.icon
+                return (
+                  <Reveal key={idx} delay={idx * 0.05}>
+                    <div className="bg-white/[0.01] border border-white/5 hover:border-blue-500/40 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 flex flex-col justify-between h-full group hover:bg-white/[0.03]">
+                      <div>
+                        <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-200">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <h4 className="text-sm font-bold text-white mb-2">{ind.title}</h4>
+                        <p className="text-slate-400 text-[11px] leading-relaxed font-light">{ind.desc}</p>
+                      </div>
+                    </div>
+                  </Reveal>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -521,7 +592,7 @@ export default function BusinessServices() {
                       className="w-full px-6 py-5 flex items-center justify-between text-left font-display text-sm font-bold text-slate-900 focus:outline-none"
                     >
                       <span>{faq.q}</span>
-                      <HelpCircle className={`h-4.5 w-4.5 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
+                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
                     </button>
                     {isOpen && (
                       <div className="px-6 pb-5 text-xs leading-relaxed text-slate-500 border-t border-slate-100 pt-3">
@@ -558,7 +629,7 @@ export default function BusinessServices() {
       <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-2 items-start">
-            
+
             <Reveal>
               <div className="max-w-md">
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">CONTACT DESK</span>
@@ -593,11 +664,11 @@ export default function BusinessServices() {
 
                 {/* Google Map location embed */}
                 <div className="mt-8 w-full h-[260px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
-                  <iframe 
+                  <iframe
                     src="https://maps.google.com/maps?q=iStart%20Nest%20Incubation%20Center,%20Gov.%20Polytechnic%20College,%20Jodhpur&t=&z=14&ie=UTF8&iwloc=&output=embed"
                     className="absolute top-0 left-0 w-full h-full border-0"
-                    allowFullScreen={false} 
-                    loading="lazy" 
+                    allowFullScreen={false}
+                    loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>

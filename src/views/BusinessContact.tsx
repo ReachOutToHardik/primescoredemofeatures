@@ -5,7 +5,7 @@ import { useMemo, useState, useRef } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 
-type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+type IssueType = 'Commercial Credit Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
 
 type FormState = {
   companyName: string
@@ -198,7 +198,7 @@ export default function BusinessContact() {
                     </div>
                     <h3 className="font-display text-lg font-bold text-brandNavy">Direct Phone Line</h3>
                     <p className="text-xs text-textSecondary mt-1.5 leading-relaxed">
-                      Call our representative directly to discuss your CIBIL profile errors.
+                      Call our representative directly to discuss your Credit profile errors.
                     </p>
                   </div>
                   <div className="mt-4 text-xs font-bold text-[#2563EB] flex items-center gap-1 group-hover:gap-2 transition-all">
@@ -315,7 +315,7 @@ export default function BusinessContact() {
                       Required Service
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
+                      {['Commercial Credit Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                         const isSelected = form.issueType === type
                         return (
                           <button
