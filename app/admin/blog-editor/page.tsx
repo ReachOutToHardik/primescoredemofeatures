@@ -177,14 +177,66 @@ export default function BlogEditorPage() {
       
       // 1. Upload Image (if in upload mode and file selected)
       if (imageMode === 'upload' && imageFile) {
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+        // Compress Image to WebP on Client-Side
+        const compressToWebP = (file: File): Promise<Blob> => {
+          return new Promise((resolve, reject) => {
+            const img = new Image()
+            img.src = URL.createObjectURL(file)
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              const ctx = canvas.getContext('2d')
+              if (!ctx) return reject(new Error('Canvas context not available'))
+
+              // Max out width at 1000px to maintain crisp layout while reducing file size drastically
+              const maxDim = 1000
+              let width = img.width
+              let height = img.height
+
+              if (width > maxDim || height > maxDim) {
+                if (width > height) {
+                  height = Math.round((height * maxDim) / width)
+                  width = maxDim
+                } else {
+                  width = Math.round((width * maxDim) / height)
+                  height = maxDim
+                }
+              }
+
+              canvas.width = width
+              canvas.height = height
+              ctx.drawImage(img, 0, 0, width, height)
+
+              canvas.toBlob(
+                (blob) => {
+                  if (blob) {
+                    resolve(blob)
+                  } else {
+                    reject(new Error('Canvas toBlob conversion failed'))
+                  }
+                },
+                'image/webp',
+                0.8 // 80% compression quality
+              )
+            }
+            img.onerror = (err) => reject(err)
+          })
+        }
+
+        let uploadBlob: Blob = imageFile
+        try {
+          uploadBlob = await compressToWebP(imageFile)
+        } catch (compErr) {
+          console.warn('Client-side compression fallback to raw file upload:', compErr)
+        }
+
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.webp`
         const filePath = `blog-covers/${fileName}`
         
         const { error: uploadError } = await supabase.storage
           .from('blog-images')
-          .upload(filePath, imageFile, {
-            cacheControl: '3600',
+          .upload(filePath, uploadBlob, {
+            contentType: 'image/webp',
+            cacheControl: '31536000', // Cache forever (1 year) to save egress
             upsert: false
           })
 

@@ -4,11 +4,11 @@ import React from 'react'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
-import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle } from 'lucide-react'
+import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion'
 
 
-type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+type IssueType = 'Commercial Credit Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
 
 type FormState = {
   companyName: string
@@ -24,6 +24,107 @@ export default function Business() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+
+  // Scroll tracking and progress indicator
+  const { scrollYProgress, scrollY } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  // Hero section parallax values
+  const heroImageY = useTransform(scrollY, [0, 800], [0, 150])
+  const heroImageScale = useTransform(scrollY, [0, 800], [1, 1.15])
+  const heroTextOpacity = useTransform(scrollY, [0, 450], [1, 0])
+  const heroTextY = useTransform(scrollY, [0, 450], [0, 60])
+
+  // Staggered grid animation variants
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 90,
+        damping: 18
+      }
+    }
+  }
+
+  // Timeline scroll-linked animations
+  const processRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress: processScroll } = useScroll({
+    target: processRef,
+    offset: ["start start", "end end"]
+  })
+  const processLineWidth = useTransform(processScroll, [0.10, 0.85], ["0%", "100%"])
+
+  // Pinned triggers for smooth step lighting as screen remains locked
+  const act1 = useTransform(processScroll, [0.10, 0.20], [0, 1])
+  const act2 = useTransform(processScroll, [0.25, 0.35], [0, 1])
+  const act3 = useTransform(processScroll, [0.40, 0.50], [0, 1])
+  const act4 = useTransform(processScroll, [0.55, 0.65], [0, 1])
+  const act5 = useTransform(processScroll, [0.70, 0.80], [0, 1])
+
+  // Step 1: Red Theme (Submit Inquiry)
+  const bg1 = useTransform(act1, [0, 1], ["rgba(255,255,255,0.8)", "#EF4444"])
+  const textCol1 = useTransform(act1, [0, 1], ["#EF4444", "#ffffff"])
+  const scale1 = useTransform(act1, [0, 1], [1, 1.15])
+  const borderCol1 = useTransform(act1, [0, 1], ["#e2e8f0", "#EF4444"])
+  const shadow1 = useTransform(act1, [0, 1], ["none", "0 0 20px rgba(239,68,68,0.3)"])
+  const bodyOpacity1 = useTransform(act1, [0, 1], [0.5, 1])
+
+  // Step 2: Yellow/Amber Theme (CCR & CRIF Pull)
+  const bg2 = useTransform(act2, [0, 1], ["rgba(255,255,255,0.8)", "#F59E0B"])
+  const textCol2 = useTransform(act2, [0, 1], ["#F59E0B", "#ffffff"])
+  const scale2 = useTransform(act2, [0, 1], [1, 1.15])
+  const borderCol2 = useTransform(act2, [0, 1], ["#e2e8f0", "#F59E0B"])
+  const shadow2 = useTransform(act2, [0, 1], ["none", "0 0 20px rgba(245,158,11,0.3)"])
+  const bodyOpacity2 = useTransform(act2, [0, 1], [0.5, 1])
+
+  // Step 3: Green/Emerald Theme (Error Identification)
+  const bg3 = useTransform(act3, [0, 1], ["rgba(255,255,255,0.8)", "#10B981"])
+  const textCol3 = useTransform(act3, [0, 1], ["#10B981", "#ffffff"])
+  const scale3 = useTransform(act3, [0, 1], [1, 1.15])
+  const borderCol3 = useTransform(act3, [0, 1], ["#e2e8f0", "#10B981"])
+  const shadow3 = useTransform(act3, [0, 1], ["none", "0 0 20px rgba(16,185,129,0.3)"])
+  const bodyOpacity3 = useTransform(act3, [0, 1], [0.5, 1])
+
+  // Step 4: Blue Theme (Dispute Filing)
+  const bg4 = useTransform(act4, [0, 1], ["rgba(255,255,255,0.8)", "#2563EB"])
+  const textCol4 = useTransform(act4, [0, 1], ["#2563EB", "#ffffff"])
+  const scale4 = useTransform(act4, [0, 1], [1, 1.15])
+  const borderCol4 = useTransform(act4, [0, 1], ["#e2e8f0", "#2563EB"])
+  const shadow4 = useTransform(act4, [0, 1], ["none", "0 0 20px rgba(37,99,235,0.3)"])
+  const bodyOpacity4 = useTransform(act4, [0, 1], [0.5, 1])
+
+  // Step 5: Indigo Theme (Ongoing Monitoring)
+  const bg5 = useTransform(act5, [0, 1], ["rgba(255,255,255,0.8)", "#4F46E5"])
+  const textCol5 = useTransform(act5, [0, 1], ["#4F46E5", "#ffffff"])
+  const scale5 = useTransform(act5, [0, 1], [1, 1.15])
+  const borderCol5 = useTransform(act5, [0, 1], ["#e2e8f0", "#4F46E5"])
+  const shadow5 = useTransform(act5, [0, 1], ["none", "0 0 20px rgba(79,70,229,0.3)"])
+  const bodyOpacity5 = useTransform(act5, [0, 1], [0.5, 1])
+
+  const nodeStyles = useMemo(() => [
+    { bg: bg1, text: textCol1, scale: scale1, border: borderCol1, shadow: shadow1, opacity: bodyOpacity1 },
+    { bg: bg2, text: textCol2, scale: scale2, border: borderCol2, shadow: shadow2, opacity: bodyOpacity2 },
+    { bg: bg3, text: textCol3, scale: scale3, border: borderCol3, shadow: shadow3, opacity: bodyOpacity3 },
+    { bg: bg4, text: textCol4, scale: scale4, border: borderCol4, shadow: shadow4, opacity: bodyOpacity4 },
+    { bg: bg5, text: textCol5, scale: scale5, border: borderCol5, shadow: shadow5, opacity: bodyOpacity5 },
+  ], [bg1, bg2, bg3, bg4, bg5, textCol1, textCol2, textCol3, textCol4, textCol5, scale1, scale2, scale3, scale4, scale5, borderCol1, borderCol2, borderCol3, borderCol4, borderCol5, shadow1, shadow2, shadow3, shadow4, shadow5, bodyOpacity1, bodyOpacity2, bodyOpacity3, bodyOpacity4, bodyOpacity5])
 
   const [form, setForm] = useState<FormState>({
     companyName: '',
@@ -203,8 +304,209 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
   );
 }
 
+// Interactive Credit Report Simulator Component
+function InteractiveCreditReport() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 })
+
+  const [isCorrected, setIsCorrected] = useState(false)
+  const [isScanning, setIsScanning] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (isInView && !isCorrected && !isScanning) {
+      const delayTimer = setTimeout(() => {
+        setIsScanning(true)
+        setProgress(0)
+      }, 700) // Delay starting for natural entry
+      return () => clearTimeout(delayTimer)
+    }
+  }, [isInView])
+
+  useEffect(() => {
+    if (isScanning) {
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            setIsScanning(false)
+            setIsCorrected(true)
+            return 100
+          }
+          return prev + 10 // Faster simulation steps
+        })
+      }, 85)
+      return () => clearInterval(interval)
+    }
+  }, [isScanning])
+
+  const score = isScanning
+    ? Math.floor(640 + (progress / 100) * 100)
+    : isCorrected
+    ? 740
+    : 640
+
+  return (
+    <div ref={containerRef} className="w-full max-w-[340px] mx-auto bg-white border border-slate-200/80 rounded-2xl shadow-lg overflow-hidden text-slate-700">
+      {/* Mock Header/Browser bar */}
+      <div className="bg-slate-50 px-4 py-2 border-b border-slate-200/60 flex items-center justify-between">
+        <div className="flex gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-rose-500 block opacity-80" />
+          <span className="w-2 h-2 rounded-full bg-amber-500 block opacity-80" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 block opacity-80" />
+        </div>
+        <div className="text-[8px] font-mono tracking-[0.15em] text-slate-500 uppercase select-none font-bold">
+          Credit CCR — Profile Analyzer
+        </div>
+        <div className="w-6" />
+      </div>
+
+      <div className="p-3.5 space-y-3.5">
+        {/* Profile Card Header matching average score display */}
+        <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600 font-black text-xs">
+              H
+            </div>
+            <div className="text-left">
+              <div className="font-extrabold text-[10px] text-slate-900 tracking-tight leading-none">Hardik Industries</div>
+              <div className="text-[7.5px] font-mono text-slate-500 mt-0.5 leading-none">PAN: KMMP****R</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-right">
+            <div>
+              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Score</div>
+              <div className={`text-base font-black transition-colors duration-500 leading-none mt-0.5 ${isCorrected ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {score}
+              </div>
+            </div>
+            <div className="h-6 w-px bg-slate-200" />
+            <div>
+              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Status</div>
+              <div className={`text-[8.5px] font-bold mt-0.5 uppercase leading-none ${isCorrected ? 'text-emerald-600' : 'text-rose-600 animate-pulse'}`}>
+                {isScanning ? 'Syncing...' : isCorrected ? 'Clean' : '3 Flags'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Loan Account Lines */}
+        <div className="space-y-1.5">
+          {[
+            { id: 1, label: 'HDFC TERM LOAN — ₹45L', status: 'ACTIVE', type: 'normal' },
+            { id: 2, label: 'HDFC TERM LOAN — ₹45L (DUPLICATE)', status: 'ERROR', type: 'error', desc: 'Duplicate liability reports double outstanding debt' },
+            { id: 3, label: 'ICICI CC LIMIT — ₹12L', status: 'ACTIVE', type: 'normal' },
+            { id: 4, label: 'PAN MISMATCH — SBI OD', status: 'FLAGGED', type: 'warning', desc: 'Registry mismatch halts credit approvals' },
+            { id: 5, label: 'KOTAK BIZ LOAN — ₹80L', status: 'ACTIVE', type: 'normal' },
+            { id: 6, label: 'WRONG CLASSIFICATION — AXIS', status: 'ERROR', type: 'error', desc: 'Outdated classification reports wrong write-offs' },
+          ].map((row) => {
+            const isRowResolved = isCorrected && row.type !== 'normal';
+            return (
+              <div
+                key={row.id}
+                className={`p-2.5 rounded-lg border transition-all duration-500 ${
+                  isScanning && row.type !== 'normal'
+                    ? 'border-blue-200 bg-blue-50/40 opacity-85'
+                    : isRowResolved
+                    ? 'border-emerald-100 bg-emerald-50/30 opacity-90'
+                    : row.type === 'error'
+                    ? 'border-rose-100 bg-rose-50/40'
+                    : row.type === 'warning'
+                    ? 'border-amber-100 bg-amber-50/40'
+                    : 'border-slate-100 bg-slate-50/50'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-1 h-1 rounded-full ${
+                      isRowResolved
+                        ? 'bg-emerald-500'
+                        : row.type === 'error'
+                        ? 'bg-rose-500'
+                        : row.type === 'warning'
+                        ? 'bg-amber-500'
+                        : 'bg-emerald-500'
+                    }`} />
+                    <span className={`text-[9.5px] font-bold tracking-tight transition-all duration-500 ${isRowResolved ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}`}>
+                      {row.label}
+                    </span>
+                  </div>
+
+                  <span className={`px-1 py-0.5 rounded text-[7px] font-black tracking-wider uppercase border leading-none ${
+                    isRowResolved
+                      ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                      : row.type === 'error'
+                      ? 'bg-rose-50 text-rose-700 border-rose-100'
+                      : row.type === 'warning'
+                      ? 'bg-amber-50 text-amber-700 border-amber-100'
+                      : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                  }`}>
+                    {isRowResolved ? 'RESOLVED' : row.status}
+                  </span>
+                </div>
+
+                {/* Subtext description when there is error/warning */}
+                {row.desc && !isRowResolved && (
+                  <p className="mt-1 ml-2.5 text-[8px] text-slate-400 leading-normal">
+                    {row.desc}
+                  </p>
+                )}
+                {row.desc && isRowResolved && (
+                  <p className="mt-1 ml-2.5 text-[8px] text-emerald-600 leading-normal flex items-center gap-1 font-semibold">
+                    ✓ Cleaned & merged by Primescore Audit Desk
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Action Button & State Bar */}
+        <div className="pt-2.5 border-t border-slate-100 flex flex-col items-center gap-2.5">
+          {isScanning && (
+            <div className="w-full">
+              <div className="flex justify-between text-[8px] text-slate-400 mb-1 font-bold tracking-wide">
+                <span>Disputing & reconciling records...</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                <div
+                  className="bg-blue-500 h-full transition-all duration-100 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {!isScanning && (
+            <div className="w-full flex items-center justify-between gap-2.5">
+              <p className="text-[9px] text-slate-400 leading-tight">
+                {isCorrected
+                  ? "✓ Bureau reconciliation complete. Score boosted."
+                  : "⌛ Reconciling profile records..."}
+              </p>
+              {isCorrected && (
+                <button
+                  onClick={() => {
+                    setIsCorrected(false)
+                    setProgress(0)
+                  }}
+                  className="px-2 py-1 rounded bg-slate-50 hover:bg-slate-100 text-[8px] font-bold text-slate-600 border border-slate-200/60 transition-colors"
+                >
+                  Replay
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
   const issueTypes: IssueType[] = [
-    'Commercial CIBIL Audit',
+    'Commercial Credit Audit',
     'Vendor Risk Monitoring',
     'Company dispute',
     'Not sure'
@@ -223,12 +525,20 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
   ], [])
 
   return (
-    <div className="w-full bg-white text-slate-900 overflow-hidden">
+    <div className="w-full bg-white text-slate-900">
+      {/* Scroll Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 z-[9999] origin-left"
+        style={{ scaleX }}
+      />
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
-        {/* Background Image - Single static layout */}
-        <div className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50">
+        {/* Background Image - Parallax layout */}
+        <motion.div 
+          style={{ y: heroImageY, scale: heroImageScale }}
+          className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50 origin-top-right"
+        >
           <img 
             src="/images/meeting1.jpg" 
             alt="PrimeScore Business Workspace Backdrop" 
@@ -236,13 +546,16 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
           />
           {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
-        </div>
+        </motion.div>
         
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
         
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
-          {/* Hero Content matching Service Hero Layout */}
-          <div className="lg:col-span-9 flex flex-col items-start relative z-10">
+          {/* Hero Content with fade/shift on scroll */}
+          <motion.div 
+            style={{ opacity: heroTextOpacity, y: heroTextY }}
+            className="lg:col-span-9 flex flex-col items-start relative z-10"
+          >
             <Reveal>
               <h1 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
                 Your company's credit profile <span className="text-blue-500">deserves more</span> than a checklist.
@@ -260,7 +573,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                 </a>
               </div>
             </Reveal>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -293,7 +606,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                   <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-brandRed">The Problem</span>
                 </div>
                 <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight mb-6">
-                  Banks see your CIBIL profile before they see your pitch deck.
+                  Banks see your Credit profile before they see your pitch deck.
                 </h2>
                 <p className="text-sm text-textSecondary font-light leading-relaxed mb-6">
                   A single duplicate account line can make your company appear to carry twice the debt it actually holds. Registry mismatches between your PAN and a lender's records can stall a working capital approval for months.
@@ -304,37 +617,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
               </div>
               {/* SVG illustration: error discovery timeline */}
               <div className="relative">
-                <svg viewBox="0 0 480 340" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-lg mx-auto">
-                  {/* Background card shape */}
-                  <rect x="20" y="20" width="440" height="300" rx="16" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1.5"/>
-                  {/* Header bar */}
-                  <rect x="20" y="20" width="440" height="44" rx="16" fill="#0B192C"/>
-                  <rect x="20" y="48" width="440" height="16" fill="#0B192C"/>
-                  <circle cx="48" cy="42" r="6" fill="#ef4444" opacity=".7"/>
-                  <circle cx="68" cy="42" r="6" fill="#f59e0b" opacity=".7"/>
-                  <circle cx="88" cy="42" r="6" fill="#22c55e" opacity=".7"/>
-                  <text x="220" y="47" textAnchor="middle" fontSize="10" fontWeight="700" fill="white" fontFamily="monospace" opacity=".8">CIBIL CCR — COMPANY CREDIT REPORT</text>
-                  {/* Row items */}
-                  {[
-                    { y: 96, label: 'HDFC TERM LOAN — ₹45L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 128, label: 'HDFC TERM LOAN — ₹45L (DUPLICATE)', status: 'ERROR', color: '#ef4444', dot: '#ef4444' },
-                    { y: 160, label: 'ICICI CC LIMIT — ₹12L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 192, label: 'PAN MISMATCH — SBI OD', status: 'FLAGGED', color: '#f59e0b', dot: '#f59e0b' },
-                    { y: 224, label: 'KOTAK BIZ LOAN — ₹80L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 256, label: 'WRONG CLASSIFICATION — AXIS', status: 'ERROR', color: '#ef4444', dot: '#ef4444' },
-                  ].map((row) => (
-                    <g key={row.y}>
-                      <rect x="36" y={row.y - 14} width="408" height="26" rx="6" fill="white" stroke="#e2e8f0" strokeWidth="1"/>
-                      <circle cx="54" cy={row.y} r="4" fill={row.dot}/>
-                      <text x="68" y={row.y + 4} fontSize="9" fontWeight="600" fill="#0B192C" fontFamily="monospace">{row.label}</text>
-                      <rect x="350" y={row.y - 10} width="80" height="18" rx="4" fill={row.dot} fillOpacity=".12"/>
-                      <text x="390" y={row.y + 4} textAnchor="middle" fontSize="8" fontWeight="800" fill={row.color} fontFamily="monospace">{row.status}</text>
-                    </g>
-                  ))}
-                  {/* Arrow pointing at errors */}
-                  <line x1="445" y1="128" x2="445" y2="258" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 2"/>
-                  <text x="462" y="193" fontSize="9" fill="#ef4444" fontWeight="700" transform="rotate(90, 462, 193)" textAnchor="middle">3 ERRORS FLAGGED</text>
-                </svg>
+                <InteractiveCreditReport />
               </div>
             </div>
           </Reveal>
@@ -359,13 +642,19 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            className="grid md:grid-cols-3 gap-6"
+          >
             {[
               {
                 num: '01',
                 label: 'AUDITS',
-                title: 'Commercial CIBIL Audit',
-                body: 'We pull your Company Credit Report (CCR), map every account line, and identify duplicate profiles, PAN mismatches, incorrect account status codes, and registry anomalies. We then file formal disputes with CIBIL, CRIF, and the relevant bank.',
+                title: 'Commercial Credit Audit',
+                body: 'We pull your Company Credit Report (CCR), map every account line, and identify duplicate profiles, PAN mismatches, incorrect account status codes, and registry anomalies. We then file formal disputes with Credit bureaus, CRIF, and the relevant bank.',
                 svg: (
                   <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
                     <rect x="6" y="4" width="40" height="44" rx="5" fill="#EFF6FF" stroke="#0B192C" strokeWidth="1.5"/>
@@ -406,22 +695,24 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                 accent: 'border-brandRed/20 hover:border-brandRed/50',
               },
             ].map((svc) => (
-              <Reveal key={svc.num} delay={0.07 * parseInt(svc.num)}>
-                <div className={`bg-white rounded-2xl border p-8 transition-all duration-300 hover:shadow-md ${svc.accent} h-full flex flex-col`}>
-                  <div className="flex items-start justify-between mb-6">
-                    {svc.svg}
-                    <span className="text-[10px] font-black text-slate-300 tracking-widest">{svc.num} / {svc.label}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-brandNavy mb-3">{svc.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed flex-1">{svc.body}</p>
-                  <a href="#audit-form" className="mt-6 text-[11px] font-bold text-[#2563EB] uppercase tracking-wider inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
-                    Request this service
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </a>
+              <motion.div 
+                key={svc.num} 
+                variants={cardVariants}
+                className={`bg-white rounded-2xl border p-8 transition-all duration-300 hover:shadow-md ${svc.accent} h-full flex flex-col`}
+              >
+                <div className="flex items-start justify-between mb-6">
+                  {svc.svg}
+                  <span className="text-[10px] font-black text-slate-300 tracking-widest">{svc.num} / {svc.label}</span>
                 </div>
-              </Reveal>
+                <h3 className="text-base font-bold text-brandNavy mb-3">{svc.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed flex-1">{svc.body}</p>
+                <a href="#audit-form" className="mt-6 text-[11px] font-bold text-[#2563EB] uppercase tracking-wider inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
+                  Request this service
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -530,57 +821,59 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
-          <Reveal>
-            <div className="mb-14">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="h-px w-8 bg-[#2563EB]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Our Process</span>
-              </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
-                Inquiry to clean bureau record in 5 steps.
-              </h2>
-            </div>
-          </Reveal>
-          <div className="relative grid lg:grid-cols-5 gap-8">
-            <div className="hidden lg:block absolute top-7 left-16 right-16 h-px bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200" />
-            {[
-              { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial request form. Routed to a live analyst within 2 hours.' },
-              { n: '02', title: 'CCR & CRIF Pull', body: 'We obtain bureau reports for both your company and directors simultaneously.' },
-              { n: '03', title: 'Error Identification', body: 'We map duplicate lines, mismatches, and misclassified accounts against bank records.' },
-              { n: '04', title: 'Dispute Filing', body: 'Formal documentation compiled and filed with CIBIL, CRIF, and relevant banks.' },
-              { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly bureau reports delivered. New issues flagged proactively.' },
-            ].map((step, i) => (
-              <Reveal key={step.n} delay={i * 0.07}>
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center mb-5 relative z-10">
-                    <span className="text-[10px] font-black text-[#2563EB] tracking-wider">{step.n}</span>
-                  </div>
-                  <h3 className="text-sm font-bold text-brandNavy mb-2">{step.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">{step.body}</p>
+      <section ref={processRef} className="relative h-[250vh] border-b border-slate-100 overflow-visible bg-white">
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+          <div className="mx-auto max-w-[1280px] w-full px-6 sm:px-10 py-6">
+            <Reveal>
+              <div className="mb-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-px w-8 bg-[#2563EB]" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Our Process</span>
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST STRIP ──────────────────────────────────── */}
-      <section className="border-b border-slate-200">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-10">
-          <div className="grid sm:grid-cols-3 gap-px bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-            {[
-              { icon: <ShieldCheck className="h-5 w-5 text-[#2563EB]" />, title: '100% Bureau Compliant', body: 'All operations aligned with the Credit Information Companies (Regulation) Act, 2005 and RBI directives.' },
-              { icon: <FileCheck className="h-5 w-5 text-[#2563EB]" />, title: 'Dispute Docs Drafted', body: 'We compile evidence, write the formal dispute communication, and file it — you don\'t touch the paperwork.' },
-              { icon: <Activity className="h-5 w-5 text-[#2563EB]" />, title: '2-Hour Response SLA', body: 'A dedicated human analyst — not a bot — responds to every commercial query within 2 hours, Mon–Sat.' },
-            ].map(({ icon, title, body }) => (
-              <div key={title} className="bg-white px-8 py-7">
-                <div className="mb-4">{icon}</div>
-                <div className="text-sm font-bold text-brandNavy mb-1.5">{title}</div>
-                <p className="text-xs text-slate-500 leading-relaxed">{body}</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
+                  Inquiry to clean bureau record in 5 steps.
+                </h2>
               </div>
-            ))}
+            </Reveal>
+            <div className="relative grid lg:grid-cols-5 gap-6 overflow-visible">
+              {/* Background line tracker with glowing scroll overlay */}
+              <div className="hidden lg:block absolute top-7 left-16 right-16 h-[3px] bg-slate-200 z-0">
+                <motion.div 
+                  style={{ width: processLineWidth }}
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(37,99,235,0.6)] origin-left"
+                />
+              </div>
+              
+              {[
+                { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial request form. Routed to a live analyst within 2 hours.' },
+                { n: '02', title: 'CCR & CRIF Pull', body: 'We obtain bureau reports for both your company and directors simultaneously.' },
+                { n: '03', title: 'Error Identification', body: 'We map duplicate lines, mismatches, and misclassified accounts against bank records.' },
+                { n: '04', title: 'Dispute Filing', body: 'Formal documentation compiled and filed with Credit bureaus, CRIF, and relevant banks.' },
+                { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly bureau reports delivered. New issues flagged proactively.' },
+              ].map((step, i) => {
+                const style = nodeStyles[i]
+                return (
+                  <div key={step.n} className="relative flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <motion.div 
+                      style={{ 
+                        backgroundColor: style.bg,
+                        color: style.text,
+                        scale: style.scale,
+                        borderColor: style.border,
+                        boxShadow: style.shadow
+                      }}
+                      className="w-14 h-14 rounded-2xl border flex items-center justify-center mb-3 relative z-10 transition-all duration-300 backdrop-blur-xs"
+                    >
+                      <span className="text-[10px] font-black tracking-wider">{step.n}</span>
+                    </motion.div>
+                    <motion.div style={{ opacity: style.opacity }} className="transition-all duration-300">
+                      <h3 className="text-sm font-bold text-brandNavy mb-2">{step.title}</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">{step.body}</p>
+                    </motion.div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -599,11 +892,12 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
           </Reveal>
           <div className="space-y-4">
             {[
-              { q: 'What is a Commercial CIBIL Audit?', a: 'A Commercial CIBIL Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
-              { q: 'How long does it take to identify duplicate profiles?', a: 'Our analysts typically complete preliminary file auditing and duplicate account reconciliation mapping within 48 to 72 hours of document submission.' },
-              { q: 'Does auditing damage my company\'s credit score?', a: 'No. Checking or auditing your commercial bureau reports through our analyst desk does not count as a hard inquiry and has zero negative impact on your company\'s credit health.' },
-              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from CIBIL, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
-              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the CIBIL and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
+              { q: 'What is a business credit score?', a: 'A business credit score reflects your company\'s financial credibility and repayment history. Banks and lenders use it to evaluate loan applications, working capital limits, and business financing.' },
+              { q: 'Can PrimeScore improve my company\'s credit profile?', a: 'Yes. We help identify reporting errors, incorrect loan information, duplicate accounts, and other issues affecting your business credit profile.' },
+              { q: 'Why is business credit important?', a: 'A strong business credit profile improves your chances of obtaining loans, credit lines, vendor financing, and better interest rates.' },
+              { q: 'Can incorrect loan reporting affect business funding?', a: 'Yes. Incorrect defaults, overdue payments, or duplicate loan entries may reduce your eligibility for business finance.' },
+              { q: 'Do you work with multiple credit bureaus?', a: 'Yes. We assist businesses in resolving issues across relevant credit bureaus and financial institutions.' },
+              { q: 'Can new businesses build a healthy credit profile?', a: 'Yes. Maintaining timely repayments, proper financial records, and responsible credit usage helps establish a strong business credit history.' }
             ].map((faq, index) => (
               <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
             ))}
@@ -766,7 +1060,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                         Required Service
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
+                        {['Commercial Credit Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                           const isSelected = form.issueType === type
                           return (
                             <button
@@ -817,4 +1111,3 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
     </div>
   )
 }
-
