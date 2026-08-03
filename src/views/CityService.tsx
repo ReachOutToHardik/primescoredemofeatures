@@ -579,9 +579,8 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
             <React.Fragment key={i}>
               <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
               <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
-              <span className="inline-flex items-center gap-2">✦ ISTART GOVT. OF RAJASTHAN RECOGNIZED</span>
-              <span className="inline-flex items-center gap-2">✦ 60–90 DAYS DISPUTE RESOLUTION</span>
-              <span className="inline-flex items-center gap-2">✦ ERRASE ILLEGITIMATE DEFAULTS</span>
+              <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
+              <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
             </React.Fragment>
           ))}
         </div>

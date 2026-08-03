@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Calendar, Clock, Share2, Eye } from 'lucide-react'
+import Image from 'next/image'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -68,9 +69,12 @@ export default function BlogPost({ initialPost, dict, locale = 'en' }: { initial
 
         {/* Hero Image */}
         <div className="relative h-[40vh] min-h-[300px] lg:h-[50vh] w-full rounded-[2rem] overflow-hidden mb-10 shadow-sm border border-gray-100">
-          <img 
+          <Image 
             src={post.image} 
             alt={post.title} 
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 896px"
             className="w-full h-full object-cover"
           />
         </div>

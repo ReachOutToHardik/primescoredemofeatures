@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import DashboardIntroLoader from '../components/ui/DashboardIntroLoader'
 import {
   LayoutDashboard,
   FileText,
@@ -28,6 +29,8 @@ export default function DashboardDemoView() {
 
   return (
     <div className="h-screen max-h-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex flex-col font-sans selection:bg-[#253B7E]/10">
+      {/* Premium Dashboard Logo Intro Animation */}
+      <DashboardIntroLoader />
       {/* Top Banner Marquee */}
       <div className="w-full bg-[#0B132B] text-white py-2 px-4 flex items-center justify-between overflow-hidden border-b border-slate-800/80 shrink-0 shadow-md z-50">
         {/* Marquee Ticker Container */}

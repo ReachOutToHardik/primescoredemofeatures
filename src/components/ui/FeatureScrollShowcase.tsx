@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
+import Link from 'next/link'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { 
   ShieldCheck, 
@@ -25,7 +26,8 @@ const features = [
     description: "The only dashboard in India that pulls live data from CIBIL, Experian, Equifax, and CRIF. See every score, every discrepancy, all in one premium interface.",
     icon: Layout,
     color: "#2563EB", // brandBlue
-    screen: "overview"
+    screen: "overview",
+    href: "/dashboard"
   },
   {
     badge: "02 // Resolution Engine",
@@ -33,7 +35,8 @@ const features = [
     description: "No more black holes. Track every dispute filing with official reference IDs, current status, and direct links to bureau evidence packs.",
     icon: FileSearch,
     color: "#EF4444", // brandRed
-    screen: "disputes"
+    screen: "disputes",
+    href: "/dashboard/disputes"
   },
   {
     badge: "03 // Smart Diagnostics",
@@ -41,7 +44,8 @@ const features = [
     description: "Instantly detect score variance, credit utilization spikes, and critical late payment records across all bureaus in one automated audit report.",
     icon: TrendingUp,
     color: "#10B981", // brandGreen
-    screen: "audit"
+    screen: "audit",
+    href: "/dashboard"
   },
   {
     badge: "04 // Dedicated Consultation",
@@ -49,9 +53,83 @@ const features = [
     description: "Skip the call center. Chat directly with your credit rectification specialist. Get strategy updates and advice delivered straight to your dashboard.",
     icon: MessageSquare,
     color: "#F59E0B", // brandYellow
-    screen: "chat"
+    screen: "chat",
+    href: "/contact"
   }
 ]
+
+function ProgressItem({ i, color, smoothProgress }: { i: number; color: string; smoothProgress: any }) {
+  const start = i * 0.25
+  const end = (i + 1) * 0.25
+  const lineOpacity = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [0.1, 1, 1, 0.1])
+  const scaleY = useTransform(smoothProgress, [start, end], [0, 1])
+  const borderColor = useTransform(smoothProgress, [start, start + 0.05], ["rgba(255,255,255,0.1)", color])
+  const scale = useTransform(smoothProgress, [start, start + 0.05], [1, 1.2])
+
+  return (
+    <div className="relative flex items-center justify-center">
+      <motion.div 
+        style={{ opacity: lineOpacity }}
+        className="w-1 h-12 bg-white/10 rounded-full overflow-hidden"
+      >
+        <motion.div 
+          style={{ 
+            height: "100%", 
+            scaleY,
+            originY: 0,
+            backgroundColor: color 
+          }} 
+          className="w-full"
+        />
+      </motion.div>
+      <motion.div 
+         style={{ 
+           borderColor,
+           scale
+         }}
+         className="absolute -top-4 w-3 h-3 rounded-full border-2 bg-black" 
+      />
+    </div>
+  )
+}
+
+function FeatureItem({ feature, i, smoothProgress }: { feature: typeof features[0]; i: number; smoothProgress: any }) {
+  const start = i * 0.25
+  const end = (i + 1) * 0.25
+
+  const opacity = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [0, 1, 1, 0])
+  const y = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [30, 0, 0, -30])
+  const blur = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"])
+  const pointerEvents = useTransform(smoothProgress, [start, start + 0.02, end - 0.02, end], ["none", "auto", "auto", "none"])
+
+  return (
+    <motion.div
+      style={{ opacity, y, filter: blur, pointerEvents }}
+      className="absolute inset-0 flex flex-col justify-center"
+    >
+      <div className="inline-flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 lg:mb-8">
+        <div className="h-px w-6 lg:w-8 bg-white/20" />
+        <span className="text-[10px] lg:text-[12px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.5em] text-white/60">{feature.badge}</span>
+      </div>
+      <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-2 sm:mb-4 lg:mb-8">
+        {feature.title.split(" ").map((w, idx) => (
+          <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
+        ))}
+      </h2>
+      <p className="text-[13px] sm:text-base lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium">
+        {feature.description}
+      </p>
+      <div className="mt-3 sm:mt-6 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+         <Link href={feature.href || '/contact'}>
+           <button className="h-10 sm:h-14 px-6 sm:px-8 rounded-full bg-white text-brandNavy font-bold text-[10px] sm:text-sm uppercase tracking-widest hover:bg-white/90 hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 cursor-pointer">
+             <span>Open Feature</span>
+             <ArrowRight className="w-4 h-4" />
+           </button>
+         </Link>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function FeatureScrollShowcase() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -84,37 +162,9 @@ export default function FeatureScrollShowcase() {
         
         {/* Progress Indicator (Left Side) */}
         <div className="absolute left-10 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-10 z-50">
-          {features.map((_, i) => {
-            const start = i * 0.25
-            const end = (i + 1) * 0.25
-            const lineOpacity = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [0.1, 1, 1, 0.1])
-            
-            return (
-              <div key={i} className="relative flex items-center justify-center">
-                <motion.div 
-                  style={{ opacity: lineOpacity }}
-                  className="w-1 h-12 bg-white/10 rounded-full overflow-hidden"
-                >
-                  <motion.div 
-                    style={{ 
-                      height: "100%", 
-                      scaleY: useTransform(smoothProgress, [start, end], [0, 1]),
-                      originY: 0,
-                      backgroundColor: features[i].color 
-                    }} 
-                    className="w-full"
-                  />
-                </motion.div>
-                <motion.div 
-                   style={{ 
-                     borderColor: useTransform(smoothProgress, [start, start + 0.05], ["rgba(255,255,255,0.1)", features[i].color]),
-                     scale: useTransform(smoothProgress, [start, start + 0.05], [1, 1.2])
-                   }}
-                   className="absolute -top-4 w-3 h-3 rounded-full border-2 bg-black" 
-                />
-              </div>
-            )
-          })}
+          {features.map((feature, i) => (
+            <ProgressItem key={i} i={i} color={feature.color} smoothProgress={smoothProgress} />
+          ))}
         </div>
 
         {/* Background Elements */}
@@ -133,45 +183,9 @@ export default function FeatureScrollShowcase() {
           
           {/* Left Side: Content */}
           <div className="relative h-[220px] sm:h-[250px] lg:h-[400px] flex flex-col justify-center gpu-accelerated z-20">
-            {features.map((feature, i) => {
-              const start = i * 0.25
-              const end = (i + 1) * 0.25
-              
-              // Only visible when in range
-              const opacity = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [0, 1, 1, 0])
-              const y = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], [30, 0, 0, -30])
-              const blur = useTransform(smoothProgress, [start, start + 0.05, end - 0.05, end], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"])
-
-              return (
-                <motion.div
-                  key={feature.title}
-                  style={{ opacity, y, filter: blur }}
-                  className="absolute inset-0 flex flex-col justify-center"
-                >
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 lg:mb-8"
-                  >
-                    <div className="h-px w-6 lg:w-8 bg-white/20" />
-                    <span className="text-[10px] lg:text-[12px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.5em] text-white/60">{feature.badge}</span>
-                  </motion.div>
-                  <h2 className="text-2xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] lg:leading-[0.9] mb-2 sm:mb-4 lg:mb-8">
-                    {feature.title.split(" ").map((w, idx) => (
-                      <span key={idx} className={idx === feature.title.split(" ").length - 1 ? "text-white/40" : ""}>{w} </span>
-                    ))}
-                  </h2>
-                  <p className="text-[13px] sm:text-base lg:text-xl text-white/50 leading-relaxed max-w-lg font-medium">
-                    {feature.description}
-                  </p>
-                  <div className="mt-3 sm:mt-6 lg:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                     <button className="h-10 sm:h-14 px-6 sm:px-8 rounded-full bg-white text-brandNavy font-bold text-[10px] sm:text-sm uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
-                        Open Feature
-                     </button>
-                  </div>
-                </motion.div>
-              )
-            })}
+            {features.map((feature, i) => (
+              <FeatureItem key={feature.title} feature={feature} i={i} smoothProgress={smoothProgress} />
+            ))}
           </div>
 
           {/* Right Side: Phone Showcase */}
@@ -225,7 +239,7 @@ export default function FeatureScrollShowcase() {
                                     <motion.div 
                                       key={i}
                                       initial={{ height: 0 }}
-                                      whileInView={{ height: `${h}%` }}
+                                      animate={{ height: `${h}%` }}
                                       transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
                                       className="w-1.5 sm:w-2 rounded-t-[2px]" 
                                       style={{ backgroundColor: i === 3 ? b.color : b.color + '40' }} 

@@ -2,8 +2,12 @@
 const nextConfig = {
   trailingSlash: true,
   images: {
-    unoptimized: true,
+    minimumCacheTTL: 31536000,
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
