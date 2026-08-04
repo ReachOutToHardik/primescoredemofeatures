@@ -142,8 +142,8 @@ function ImageToggleSection() {
         <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
           {[1, 2, 3, 4].map((i) => (
             <React.Fragment key={i}>
-              <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
-              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ ALL 4 BUREAUS CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; COMPLIANT</span>
               <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
               <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
             </React.Fragment>
@@ -198,7 +198,7 @@ function ImageToggleSection() {
 
               <div className="text-xs text-slate-400 flex items-center gap-2 px-2">
                 <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>100% Confidential &amp; iStart Govt. Recognized</span>
+                <span>100% Confidential</span>
               </div>
             </div>
 
@@ -249,8 +249,8 @@ function ImageToggleSection() {
         <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
           {[1, 2, 3, 4].map((i) => (
             <React.Fragment key={i}>
-              <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
-              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ ALL 4 BUREAUS CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; COMPLIANT</span>
               <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
               <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
             </React.Fragment>

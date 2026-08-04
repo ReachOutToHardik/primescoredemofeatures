@@ -274,7 +274,7 @@ export default function Services() {
 
                 {/* Sub Copy */}
                 <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-                  Not a checklist. Not a generic template. Each service is engineered around Indian bureau realities: reference tracking, CICRA compliance, official evidence packs, and legal bank escalations.
+                  We help you correct errors across CIBIL, Experian, Equifax, and CRIF High Mark. From resolving incorrect overdue flags to updating settled accounts and managing bank disputes, we handle the entire process with proof.
                 </p>
 
                 {/* Light Stat Chips */}
@@ -363,9 +363,6 @@ export default function Services() {
             <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-brandNavy sm:text-4xl">
               Primescore core rectifications
             </h2>
-            <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-              Select an offering to explore detailed information, and click <span className="text-[#2563EB] font-bold">"View timeline"</span> to see exactly how our expert advisors map milestones for bureau resolution.
-            </p>
           </div>
         </Reveal>
 

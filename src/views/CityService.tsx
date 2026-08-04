@@ -125,7 +125,7 @@ export default function CityService({ city }: { city?: string }) {
               <div className="flex flex-wrap gap-2.5 pt-1">
                 {[
                   { icon: <Shield className="w-4 h-4 text-emerald-600" />, text: '100% Legal & CICRA Compliant' },
-                  { icon: <Award className="w-4 h-4 text-emerald-600" />, text: 'Govt. iStart Recognized' },
+                  { icon: <Award className="w-4 h-4 text-emerald-600" />, text: 'Govt. Recognized Startup' },
                   { icon: <Building className="w-4 h-4 text-emerald-600" />, text: 'B2B & MSME Audits Enabled' },
                   { icon: <Clock className="w-4 h-4 text-emerald-600" />, text: '60–90 Day Resolution' },
                 ].map((item, idx) => (
@@ -523,7 +523,7 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
 
               <div className="text-xs text-slate-400 flex items-center gap-2 px-2">
                 <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>100% Confidential &amp; iStart Govt. Recognized</span>
+                <span>100% Confidential</span>
               </div>
             </div>
 
@@ -577,8 +577,8 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
         <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
           {[1, 2, 3, 4].map((i) => (
             <React.Fragment key={i}>
-              <span className="inline-flex items-center gap-2">✦ 4-BUREAU CREDIT AUDIT</span>
-              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; CICRA COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ ALL 4 BUREAUS CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; COMPLIANT</span>
               <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
               <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
             </React.Fragment>
