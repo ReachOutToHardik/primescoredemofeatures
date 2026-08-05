@@ -4,7 +4,7 @@ import React from 'react'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
-import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle, ArrowRight, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion'
 
 
@@ -512,16 +512,18 @@ function InteractiveCreditReport() {
     'Not sure'
   ]
   const stats = useMemo(() => [
-    { value: '₹420Cr+', label: 'Disputed Credit Audited' },
-    { value: '180+', label: 'Corporate Entities Supported' },
+    { value: '₹300Cr+', label: 'Disputed Credit Audited' },
+    { value: '37+', label: 'Corporate Entities Supported' },
     { value: '100%', label: 'Bureau Compliant Operations' },
-    { value: '2 Hrs', label: 'Response SLA Guaranteed' }
+    { value: '2 Hrs', label: 'Guaranteed Quick Response' }
   ], [])
 
   const corporateTestimonials = useMemo(() => [
     { name: 'Anand Singhal', role: 'CFO, Singhal Logistics Pvt Ltd', text: 'Primescore identified four duplicate loan accounts on our bureau profile that were showing active balance lines. Our credit records were successfully corrected.' },
     { name: 'Meera Nair', role: 'Operations Director, Nair Autotech', text: 'Monitoring our supplier credit risk profiles helped us manage potential default risks before they affected our operations.' },
     { name: 'Rajesh Patel', role: 'Managing Director, Patel Agro Exports', text: 'Resolved an identity match error where another company\'s write-offs were reporting on our corporate record. The documentation team was prompt.' },
+    { name: 'Vikram Sharma', role: 'VP Finance, Apex Infrastructure', text: 'Cleaned up legacy PAN mapping mismatches across 3 lender records in 60 days. Our working capital limit expansion was approved immediately.' },
+    { name: 'Priya Sundaram', role: 'Head of Treasury, Zenith Capital', text: 'The 2-hour SLA desk responded with formal dispute documentation within hours. Their director-level monitoring caught hidden score anomalies.' }
   ], [])
 
   return (
@@ -540,8 +542,8 @@ function InteractiveCreditReport() {
           className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50 origin-top-right"
         >
           <img 
-            src="/images/meeting1.jpg" 
-            alt="PrimeScore Business Workspace Backdrop" 
+            src="/images/business-hero.jpg" 
+            alt="PrimeScore Business Operations Backdrop" 
             className="w-full h-full object-cover"
           />
           {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
@@ -595,124 +597,71 @@ function InteractiveCreditReport() {
 
 
 
-      {/* ── THE PROBLEM ──────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
+      {/* ── SERVICES ─────────────────────────── */}
+      <section id="services" className="bg-[#f8fafc] border-b border-slate-200 py-24 scroll-mt-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
           <Reveal>
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-px w-8 bg-brandRed" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-brandRed">The Problem</span>
-                </div>
-                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight mb-6">
-                  Banks see your Credit profile before they see your pitch deck.
-                </h2>
-                <p className="text-sm text-textSecondary font-light leading-relaxed mb-6">
-                  A single duplicate account line can make your company appear to carry twice the debt it actually holds. Registry mismatches between your PAN and a lender's records can stall a working capital approval for months.
-                </p>
-                <p className="text-sm text-textSecondary font-light leading-relaxed">
-                  Most companies discover these errors only after a bank rejection. By then, the timeline for dispute resolution — typically 30 to 90 days — has already disrupted operations. We catch them first.
-                </p>
-              </div>
-              {/* SVG illustration: error discovery timeline */}
-              <div className="relative">
-                <InteractiveCreditReport />
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── CAPABILITIES ─────────────────────────────────── */}
-      <section id="capabilities" className="bg-[#f8fafc] border-b border-slate-200">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
-          <Reveal>
-            <div className="mb-14">
-              <div className="flex items-center gap-3 mb-5">
+            <div className="max-w-3xl mb-16">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="h-px w-8 bg-[#2563EB]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Services</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">SERVICES</span>
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-2xl leading-tight">
-                Three services. One desk. Full coverage.
+              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight">
+                Most companies discover their credit errors only when the bank says no.
               </h2>
-              <p className="mt-4 text-sm text-textSecondary font-light max-w-xl leading-relaxed">
-                We handle the three areas where commercial credit errors cause the most damage — before your bank or vendor discovers them.
+              <p className="mt-4 text-sm text-textSecondary leading-relaxed">
+                We work upstream — identifying duplicate loan lines, PAN mismatches, and classification errors before they affect your borrowing capacity, vendor negotiations, or regulatory standing.
               </p>
             </div>
           </Reveal>
 
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="grid md:grid-cols-3 gap-6"
-          >
+          {/* 6 Feature Pillars */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                num: '01',
-                label: 'AUDITS',
-                title: 'Commercial Credit Audit',
-                body: 'We pull your Company Credit Report (CCR), map every account line, and identify duplicate profiles, PAN mismatches, incorrect account status codes, and registry anomalies. We then file formal disputes with Credit bureaus, CRIF, and the relevant bank.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <rect x="6" y="4" width="40" height="44" rx="5" fill="#EFF6FF" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M14 16h24M14 22h24M14 28h16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round"/>
-                    <circle cx="38" cy="34" r="8" fill="#0B192C"/>
-                    <path d="M35 34l2 2 4-4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ),
-                accent: 'border-[#2563EB]/20 hover:border-[#2563EB]/50',
+                n: '01',
+                title: 'Bureau-Level Expertise',
+                body: 'Our analysts are trained specifically on CIBIL CCR, CRIF, Experian, and Equifax commercial report structures — not generalist consultants.'
               },
               {
-                num: '02',
-                label: 'MONITORING',
-                title: 'Vendor Risk Monitoring',
-                body: 'Your supply chain is only as stable as your vendors\' credit health. We monitor the bureau profiles of your key suppliers and flag deteriorating credit indicators before they disrupt procurement or trigger payment defaults.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <circle cx="26" cy="26" r="18" fill="#EFF6FF" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M10 34 Q18 16 26 22 Q34 28 42 18" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    <circle cx="26" cy="22" r="3" fill="#E85C0D"/>
-                    <circle cx="42" cy="18" r="3" fill="#2563EB"/>
-                    <circle cx="10" cy="34" r="3" fill="#0B192C"/>
-                  </svg>
-                ),
-                accent: 'border-emerald-200 hover:border-emerald-400',
+                n: '02',
+                title: 'End-to-End Dispute Filing',
+                body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with CIBIL, CRIF, and the relevant banks.'
               },
               {
-                num: '03',
-                label: 'DISPUTES',
-                title: 'Bank & Bureau Disputes',
-                body: 'When your company is incorrectly flagged by a lender — wrong write-off classification, identity match errors, or outdated NPA tags — we compile the evidence, draft the formal dispute communications, and manage the filing process end to end.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <path d="M26 6 L10 14 v12 c0 10 6.5 19.5 16 22 9.5-2.5 16-12 16-22V14Z" fill="#FFF7ED" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M18 26l6 6 10-10" stroke="#E85C0D" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ),
-                accent: 'border-brandRed/20 hover:border-brandRed/50',
+                n: '03',
+                title: 'Director-Level Monitoring',
+                body: 'Your directors\' personal CIBIL and CRIF scores are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.'
               },
-            ].map((svc) => (
-              <motion.div 
-                key={svc.num} 
-                variants={cardVariants}
-                className={`bg-white rounded-2xl border p-8 transition-all duration-300 hover:shadow-md ${svc.accent} h-full flex flex-col`}
-              >
-                <div className="flex items-start justify-between mb-6">
-                  {svc.svg}
-                  <span className="text-[10px] font-black text-slate-300 tracking-widest">{svc.num} / {svc.label}</span>
+              {
+                n: '04',
+                title: 'Zero Surprise Retainers',
+                body: 'Fixed-term engagement contracts with no monthly auto-renewals, hidden escalation clauses, or post-audit "maintenance" fees. What you see is what you pay.'
+              },
+              {
+                n: '05',
+                title: '2-Hour Commercial SLA',
+                body: 'Every commercial inquiry is routed to a dedicated desk. Our analysts respond within 2 hours on all business days — not a bot, a human analyst.'
+              },
+              {
+                n: '06',
+                title: '100% Bureau Compliant',
+                body: 'All filings and reports are processed within the legal framework set by the Credit Information Companies (Regulation) Act, 2005 and RBI directives.'
+              }
+            ].map((pillar, pIdx) => (
+              <Reveal key={pIdx} delay={pIdx * 0.05}>
+                <div className="h-full bg-white rounded-2xl border border-slate-200/80 p-7 shadow-xs hover:shadow-md hover:border-[#2563EB]/40 transition-all duration-300 flex flex-col justify-between">
+                  <div>
+                    <div className="h-10 w-10 rounded-xl bg-[#2563EB]/10 text-[#2563EB] flex items-center justify-center font-bold text-sm mb-5">
+                      {pillar.n}
+                    </div>
+                    <h3 className="font-display text-base font-bold text-brandNavy mb-2.5">{pillar.title}</h3>
+                    <p className="text-xs text-textSecondary leading-relaxed font-normal">{pillar.body}</p>
+                  </div>
                 </div>
-                <h3 className="text-base font-bold text-brandNavy mb-3">{svc.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed flex-1">{svc.body}</p>
-                <a href="#audit-form" className="mt-6 text-[11px] font-bold text-[#2563EB] uppercase tracking-wider inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
-                  Request this service
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </a>
-              </motion.div>
+              </Reveal>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -799,14 +748,14 @@ function InteractiveCreditReport() {
           </Reveal>
         </div>
         {/* Added fixed height container with relative positioning so it takes up proper document flow space */}
-        <div className="overflow-hidden relative w-full h-[220px] [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="overflow-hidden relative w-full h-[220px] [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
           <motion.div
             animate={{ x: ['0%', '-50%'] }}
-            transition={{ ease: 'linear', duration: 28, repeat: Infinity }}
-            className="flex gap-5 absolute whitespace-nowrap"
+            transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
+            className="flex gap-5 absolute whitespace-nowrap left-0"
           >
-            {[...corporateTestimonials, ...corporateTestimonials].map((t, idx) => (
-              <div key={idx} className="inline-block w-[380px] border border-slate-200 bg-white p-7 rounded-2xl shadow-sm whitespace-normal flex-col justify-between h-[190px] flex">
+            {[...corporateTestimonials, ...corporateTestimonials, ...corporateTestimonials, ...corporateTestimonials].map((t, idx) => (
+              <div key={idx} className="shrink-0 w-[380px] border border-slate-200 bg-white p-7 rounded-2xl shadow-sm whitespace-normal flex flex-col justify-between h-[190px]">
                 <p className="text-xs text-textSecondary leading-relaxed">
                   "{t.text}"
                 </p>
@@ -820,8 +769,8 @@ function InteractiveCreditReport() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section ref={processRef} className="relative h-[250vh] border-b border-slate-100 overflow-visible bg-white">
+      {/* ── HOW IT WORKS / OUR PROCESS ───────────────────── */}
+      <section id="process" ref={processRef} className="relative h-[250vh] border-b border-slate-100 overflow-visible bg-white scroll-mt-20">
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           <div className="mx-auto max-w-[1280px] w-full px-6 sm:px-10 py-6">
             <Reveal>
@@ -831,7 +780,7 @@ function InteractiveCreditReport() {
                   <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Our Process</span>
                 </div>
                 <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
-                  Inquiry to clean bureau record in 5 steps.
+                  From inquiry to clean bureau record.
                 </h2>
               </div>
             </Reveal>
@@ -845,11 +794,11 @@ function InteractiveCreditReport() {
               </div>
               
               {[
-                { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial request form. Routed to a live analyst within 2 hours.' },
-                { n: '02', title: 'CCR & CRIF Pull', body: 'We obtain bureau reports for both your company and directors simultaneously.' },
-                { n: '03', title: 'Error Identification', body: 'We map duplicate lines, mismatches, and misclassified accounts against bank records.' },
-                { n: '04', title: 'Dispute Filing', body: 'Formal documentation compiled and filed with Credit bureaus, CRIF, and relevant banks.' },
-                { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly bureau reports delivered. New issues flagged proactively.' },
+                { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial audit request form. Our team reviews your company profile within 2 hours.' },
+                { n: '02', title: 'CCR & Report Pull', body: 'We obtain your Company Credit Report from CIBIL and CRIF, plus director-level bureau pulls.' },
+                { n: '03', title: 'Error Identification', body: 'Our analysts map duplicate lines, PAN mismatches, incorrect account classifications, and registry errors.' },
+                { n: '04', title: 'Dispute Filing', body: 'Formal dispute documentation is compiled and submitted to the relevant bureaus and banks on your behalf.' },
+                { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly reports are delivered for the duration of your plan. We flag new issues proactively.' },
               ].map((step, i) => {
                 const style = nodeStyles[i]
                 return (
@@ -874,6 +823,207 @@ function InteractiveCreditReport() {
                 )
               })}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ENGAGEMENT COSTS (PRICING SECTION) ───────────── */}
+      <section id="pricing" className="border-b border-slate-100 bg-slate-50/60 py-24 scroll-mt-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <Reveal>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="h-px w-8 bg-[#2563EB]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">ENGAGEMENT COSTS</span>
+                <div className="h-px w-8 bg-[#2563EB]" />
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight">
+                Simple plans, tailored execution.
+              </h2>
+              <p className="mt-4 text-sm text-textSecondary leading-relaxed max-w-2xl mx-auto">
+                Choose the duration of monitoring and audit support your enterprise requires. Options for standard or unlimited rectification packages are listed clearly below.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Pricing Cards Grid */}
+          <div className="grid gap-8 lg:grid-cols-2 max-w-5xl mx-auto items-stretch">
+            
+            {/* Card 1: 6 Months Half Yearly Plan */}
+            <Reveal>
+              <div className="h-full bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#2563EB]/10 text-[#2563EB] px-4 py-1.5 rounded-bl-2xl text-[10px] font-extrabold uppercase tracking-wider">
+                  6 Months coverage
+                </div>
+
+                <div>
+                  <div className="mb-6">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Half Yearly Plan</span>
+                    <h3 className="font-display text-xl sm:text-2xl font-black text-brandNavy mt-1">Standard audit &amp; bureau monitoring</h3>
+                  </div>
+
+                  {/* Standard vs Unlimited Tiers */}
+                  <div className="space-y-4 mb-8 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    {/* Standard Tier */}
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
+                      <div>
+                        <span className="text-xs font-bold text-slate-700 block">Essential Tier</span>
+                        <span className="text-[11px] text-emerald-600 font-semibold">One Free Rectification (Per User)</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-brandNavy font-display">₹35,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+
+                    {/* Unlimited Tier */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-xs font-bold text-[#2563EB] block">Unlimited Rectification</span>
+                        <span className="text-[11px] text-slate-500">All rectifications included</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-[#2563EB] font-display">₹40,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Features List */}
+                  <ul className="space-y-3.5 mb-8">
+                    {[
+                      'Monthly company credit report for 6 months',
+                      'Monthly Director\'s credit report for 6 months',
+                      'Quarterly company CRIF credit report for 6 months (2 reports)',
+                      'Monthly Director\'s CRIF Report for 6 months',
+                    ].map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-3 text-xs text-textSecondary font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a
+                  href="#audit-form"
+                  className="w-full py-4 px-6 rounded-xl bg-brandNavy hover:bg-brandNavy/90 text-white font-bold text-xs uppercase tracking-wider text-center transition-colors block shadow-sm"
+                >
+                  Get Started
+                </a>
+              </div>
+            </Reveal>
+
+            {/* Card 2: 12 Months Yearly Plan */}
+            <Reveal delay={0.1}>
+              <div className="h-full bg-white rounded-3xl border-2 border-[#2563EB] p-8 sm:p-10 shadow-md hover:shadow-lg transition-all flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#2563EB] text-white px-4 py-1.5 rounded-bl-2xl text-[10px] font-extrabold uppercase tracking-wider">
+                  12 Months coverage
+                </div>
+
+                <div>
+                  <div className="mb-6">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">Yearly Plan</span>
+                    <h3 className="font-display text-xl sm:text-2xl font-black text-brandNavy mt-1">Comprehensive annual monitoring</h3>
+                  </div>
+
+                  {/* Standard vs Unlimited Tiers */}
+                  <div className="space-y-4 mb-8 bg-[#2563EB]/5 p-5 rounded-2xl border border-[#2563EB]/15">
+                    {/* Standard Tier */}
+                    <div className="flex items-center justify-between pb-3 border-b border-[#2563EB]/10">
+                      <div>
+                        <span className="text-xs font-bold text-slate-700 block">Essential Tier</span>
+                        <span className="text-[11px] text-emerald-600 font-semibold">Two Free Rectifications (Per User)</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-brandNavy font-display">₹60,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+
+                    {/* Unlimited Tier */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-xs font-bold text-[#2563EB] block">Unlimited Rectification</span>
+                        <span className="text-[11px] text-slate-500">All rectifications included</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-2xl font-black text-[#2563EB] font-display">₹80,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Features List */}
+                  <ul className="space-y-3.5 mb-8">
+                    {[
+                      'Monthly company credit report for 12 months',
+                      'Monthly Director\'s credit report for 12 months',
+                      'Quarterly company CRIF credit report for 12 months (4 reports)',
+                      'Monthly Director\'s CRIF Report for 12 months',
+                    ].map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-3 text-xs text-textSecondary font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a
+                  href="#audit-form"
+                  className="w-full py-4 px-6 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider text-center transition-colors block shadow-sm"
+                >
+                  Get Started
+                </a>
+              </div>
+            </Reveal>
+
+          </div>
+
+          {/* Footer Note */}
+          <div className="mt-12 text-center text-xs text-slate-400 max-w-2xl mx-auto font-medium">
+            GST applicable at 18% · Fixed-term contracts with zero surprises · Custom multi-entity billing available upon request.
+          </div>
+        </div>
+      </section>
+
+
+      {/* ── INCLUDED IN ALL PLANS ───────────────────────────── */}
+      <section className="border-b border-slate-100 bg-brandNavy text-white py-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <Reveal>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-400">STANDARD ASSURANCES</span>
+              <h2 className="font-display text-3xl font-black text-white mt-2">
+                Included In All Plans
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                title: '100% Bureau Compliant',
+                desc: 'All filings processed under the Credit Information Companies (Regulation) Act, 2005 and RBI directives.'
+              },
+              {
+                title: 'Dispute Documentation Drafted',
+                desc: 'We compile evidence, write formal communications, and submit dispute filings to CIBIL, CRIF, and relevant banks.'
+              },
+              {
+                title: 'Dedicated Analyst Desk',
+                desc: 'A human commercial analyst — not a chatbot — responds to every query within 2 hours, Monday to Saturday.'
+              }
+            ].map((item, idx) => (
+              <Reveal key={idx} delay={idx * 0.1}>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xs hover:bg-white/10 transition-colors">
+                  <ShieldCheck className="h-6 w-6 text-emerald-400 mb-4" />
+                  <h3 className="font-display text-base font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -924,44 +1074,87 @@ function InteractiveCreditReport() {
       </section>
 
       {/* CONTACT FORM SECTION */}
-      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24">
+      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24 scroll-mt-20">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 items-start">
+          
+          {/* Centered Top Header */}
+          <Reveal>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">GET IN TOUCH</span>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl font-black text-brandNavy leading-tight">
+                Initiate B2B Consultation
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-textSecondary font-light leading-relaxed max-w-2xl mx-auto">
+                We resolve corporate report inaccuracies with speed and absolute privacy. Choose a direct pathway below or request a callback.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Two Main Columns */}
+          <div className="grid gap-10 lg:grid-cols-2 items-stretch">
             
-            <Reveal>
-              <div className="max-w-md">
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">CONTACT DESK</span>
-                <h2 className="mt-3 font-display text-3xl font-extrabold text-brandNavy sm:text-4xl">
-                  Initiate Commercial Audit Consultation
-                </h2>
-                <p className="mt-4 text-base text-textSecondary font-light leading-relaxed">
-                  Find out what's hiding in your Company Credit Report. Our commercial desk offers a free preliminary assessment of your CCR for qualified corporate entities. Discuss your reporting requirements here.
-                </p>
-
-                <div className="mt-12 space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
-                      <Mail className="h-5 w-5" />
-                    </div>
+            {/* Left Column: Direct Pathway Cards + Map */}
+            <Reveal className="h-full">
+              <div className="flex flex-col justify-between h-full gap-6">
+                
+                {/* 2 Side-by-Side Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
+                  
+                  {/* Card 1: Instant WhatsApp Chat */}
+                  <div className="bg-[#f0fdf4]/50 border border-emerald-200/80 rounded-3xl p-6 shadow-xs hover:border-emerald-400 transition-all flex flex-col justify-between h-full">
                     <div>
-                      <h4 className="text-sm font-bold text-[#2563EB]">Direct Email Link</h4>
-                      <a href="mailto:info@primescore.in" className="text-base text-brandNavy font-semibold hover:underline">info@primescore.in</a>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-10 w-10 rounded-full bg-emerald-100/70 text-emerald-600 flex items-center justify-center">
+                          <MessageCircle className="h-5 w-5" />
+                        </div>
+                        <span className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-emerald-100/90 text-emerald-700 rounded-full flex items-center gap-1">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          ACTIVE NOW
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-brandNavy mb-1.5">Instant WhatsApp Chat</h3>
+                      <p className="text-xs text-textSecondary leading-relaxed mb-6 font-normal">
+                        Connect with our response desk instantly. Send files or reports directly.
+                      </p>
                     </div>
+                    <a 
+                      href="https://wa.me/919460888899" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-xs font-bold text-emerald-600 uppercase tracking-wider hover:gap-2 gap-1 transition-all"
+                    >
+                      Start Chatting <ArrowRight className="h-3.5 w-3.5 ml-0.5" />
+                    </a>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
-                      <Phone className="h-5 w-5" />
-                    </div>
+                  {/* Card 2: Direct Phone Line */}
+                  <div className="bg-[#eff6ff]/40 border border-blue-100 rounded-3xl p-6 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between h-full">
                     <div>
-                      <h4 className="text-sm font-bold text-[#2563EB]">Operational Hours</h4>
-                      <p className="text-sm text-textSecondary font-medium">Monday – Saturday, 10 AM to 6 PM IST</p>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-10 w-10 rounded-full bg-blue-100/70 text-[#2563EB] flex items-center justify-center">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                        <span className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 rounded-full">
+                          MON - SAT
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-brandNavy mb-1.5">Direct Phone Line</h3>
+                      <p className="text-xs text-textSecondary leading-relaxed mb-6 font-normal">
+                        Call our representative directly to discuss your CIBIL profile errors.
+                      </p>
                     </div>
+                    <a 
+                      href="tel:+919460888899" 
+                      className="inline-flex items-center text-xs font-bold text-[#2563EB] uppercase tracking-wider hover:gap-2 gap-1 transition-all"
+                    >
+                      Call Operational Desk <ArrowRight className="h-3.5 w-3.5 ml-0.5" />
+                    </a>
                   </div>
+
                 </div>
 
-                {/* Google Map location embed */}
-                <div className="mt-8 w-full h-[260px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
+                {/* Google Map location embed below cards (stretches to fill total column height) */}
+                <div className="w-full flex-1 min-h-[350px] rounded-3xl overflow-hidden border border-slate-200 shadow-xs relative">
                   <iframe 
                     src="https://maps.google.com/maps?q=iStart%20Nest%20Incubation%20Center,%20Gov.%20Polytechnic%20College,%20Jodhpur&t=&z=14&ie=UTF8&iwloc=&output=embed"
                     className="absolute top-0 left-0 w-full h-full border-0"
@@ -970,11 +1163,20 @@ function InteractiveCreditReport() {
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
+
               </div>
             </Reveal>
 
+            {/* Right Column: Initiate Consultation Form Card */}
             <Reveal delay={0.15}>
-              <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+              <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-10 shadow-xs">
+                <div className="mb-6">
+                  <h3 className="font-display text-2xl font-black text-brandNavy">Initiate Consultation</h3>
+                  <p className="mt-1.5 text-xs text-textSecondary leading-relaxed font-normal">
+                    Provide your company details below to discuss your commercial bureau reporting requirements.
+                  </p>
+                </div>
+
                 {status === 'sent' ? (
                   <div className="flex flex-col py-8 animate-in fade-in zoom-in-95 duration-300 items-center text-center">
                     <div className="h-16 w-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-5 text-emerald-500 shadow-sm">
@@ -993,9 +1195,10 @@ function InteractiveCreditReport() {
                         <p className="text-xs font-semibold">{errorMessage}</p>
                       </div>
                     )}
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="companyName">
-                        Company Name
+                    
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="companyName">
+                        COMPANY NAME
                       </label>
                       <input
                         type="text"
@@ -1008,9 +1211,9 @@ function InteractiveCreditReport() {
                       />
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="contactName">
-                        Contact Person Name
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="contactName">
+                        CONTACT PERSON NAME
                       </label>
                       <input
                         type="text"
@@ -1024,9 +1227,9 @@ function InteractiveCreditReport() {
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="email">
-                          Company Email
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="email">
+                          COMPANY EMAIL
                         </label>
                         <input
                           type="email"
@@ -1039,9 +1242,9 @@ function InteractiveCreditReport() {
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="phone">
-                          Contact Number
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="phone">
+                          CONTACT NUMBER
                         </label>
                         <input
                           type="tel"
@@ -1056,11 +1259,11 @@ function InteractiveCreditReport() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block">
-                        Required Service
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block">
+                        REQUIRED SERVICE
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {['Commercial Credit Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
+                        {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
                           const isSelected = form.issueType === type
                           return (
                             <button
@@ -1068,10 +1271,10 @@ function InteractiveCreditReport() {
                               type="button"
                               onClick={() => setForm((p) => ({ ...p, issueType: type as any }))}
                               className={[
-                                'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
+                                'px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 border outline-none',
                                 isSelected
-                                  ? 'bg-brandNavy text-white border-brandNavy'
-                                  : 'bg-white text-textSecondary border-slate-200 hover:border-brandNavy/35 hover:text-brandNavy'
+                                  ? 'bg-[#1e293b] text-white border-[#1e293b]'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
                               ].join(' ')}
                             >
                               {type}
@@ -1081,9 +1284,9 @@ function InteractiveCreditReport() {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="message">
-                        Briefly state your requirements
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="message">
+                        BRIEFLY STATE YOUR REQUIREMENTS
                       </label>
                       <textarea
                         id="message"
@@ -1096,14 +1299,19 @@ function InteractiveCreditReport() {
                     </div>
 
                     <div className="pt-2">
-                      <Button type="submit" disabled={status === 'sending'} className="px-6 py-4 bg-brandNavy text-white hover:bg-brandNavy/95 text-sm font-bold uppercase tracking-wider transition-all rounded-xl w-full justify-center shadow-md">
-                        {status === 'sending' ? 'Submitting...' : 'Submit Request'}
-                      </Button>
+                      <button 
+                        type="submit" 
+                        disabled={status === 'sending'} 
+                        className="px-6 py-4 bg-[#E82529] hover:bg-[#d01e22] text-white text-xs font-bold uppercase tracking-widest transition-all rounded-xl w-full justify-center shadow-md active:scale-[0.99] cursor-pointer"
+                      >
+                        {status === 'sending' ? 'SUBMITTING...' : 'SUBMIT REQUEST'}
+                      </button>
                     </div>
                   </form>
                 )}
               </div>
             </Reveal>
+
           </div>
         </div>
 

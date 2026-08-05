@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import DashboardIntroLoader from '../components/ui/DashboardIntroLoader'
+import DashboardTourOverlay from '../components/ui/DashboardTourOverlay'
 import {
   LayoutDashboard,
   FileText,
@@ -26,11 +27,12 @@ import {
 export default function DashboardDemoView() {
   const [activeTab, setActiveTab] = useState<'overview' | 'accounts' | 'enquiries' | 'comparison'>('overview')
   const [isCreditReportsOpen, setIsCreditReportsOpen] = useState(true)
+  const [isIntroComplete, setIsIntroComplete] = useState(false)
 
   return (
     <div className="h-screen max-h-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex flex-col font-sans selection:bg-[#253B7E]/10">
       {/* Premium Dashboard Logo Intro Animation */}
-      <DashboardIntroLoader />
+      <DashboardIntroLoader onComplete={() => setIsIntroComplete(true)} />
       {/* Top Banner Marquee */}
       <div className="w-full bg-[#0B132B] text-white py-2 px-4 flex items-center justify-between overflow-hidden border-b border-slate-800/80 shrink-0 shadow-md z-50">
         {/* Marquee Ticker Container */}
@@ -52,6 +54,7 @@ export default function DashboardDemoView() {
 
         {/* Sign Up for Full Access Button */}
         <a
+          id="tour-signup-btn"
           href="https://dashboard.primescore.in/"
           target="_blank"
           rel="noopener noreferrer"
@@ -65,7 +68,7 @@ export default function DashboardDemoView() {
       <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden relative">
 
         {/* Left Sidebar */}
-        <aside className="w-full lg:w-[240px] bg-white border-r border-slate-200/80 p-4 lg:py-6 lg:px-4 flex flex-col justify-between shrink-0 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-20">
+        <aside id="tour-sidebar-nav" className="w-full lg:w-[240px] bg-white border-r border-slate-200/80 p-4 lg:py-6 lg:px-4 flex flex-col justify-between shrink-0 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-20">
           <div>
             {/* Logo */}
             <div className="flex items-center gap-2 mb-8 px-2">
@@ -211,7 +214,7 @@ export default function DashboardDemoView() {
         <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-5">
 
           {/* User Profile Card */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
+          <div id="tour-profile-card" className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
 
             {/* Top row: Score + Info + Action Bar */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -351,7 +354,7 @@ export default function DashboardDemoView() {
             <div className="space-y-5">
 
               {/* 4 Bureau Score Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div id="tour-bureau-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   { bureau: 'EQUIFAX INDIA', score: 547, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 16, active: 1, closed: 15 },
                   { bureau: 'EXPERIAN INDIA', score: 488, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 27, active: 5, closed: 22 },
@@ -426,7 +429,7 @@ export default function DashboardDemoView() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
                 {/* Discrepancy Alerts Box (7 cols) */}
-                <div className="lg:col-span-7 bg-[#FFFDF5] rounded-2xl p-5 border border-amber-200/80 shadow-sm space-y-3.5">
+                <div id="tour-discrepancy-alerts" className="lg:col-span-7 bg-[#FFFDF5] rounded-2xl p-5 border border-amber-200/80 shadow-sm space-y-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                       <AlertTriangle className="w-4 h-4 text-amber-600" />
@@ -651,6 +654,9 @@ export default function DashboardDemoView() {
 
         </main>
       </div>
+
+      {/* Guided Product Walkthrough Tour Overlay (starts after loading intro ends) */}
+      {isIntroComplete && <DashboardTourOverlay />}
     </div>
   )
 }

@@ -79,39 +79,47 @@ export default function Pricing() {
       <section className="mt-16 grid gap-8 lg:grid-cols-12 lg:items-stretch">
         
         {/* Left Column: Plan Summary and Call to Action */}
-        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 p-8 sm:p-9 shadow-xs flex flex-col justify-between">
           <Reveal>
             <div className="space-y-6">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
-                  Popular Plan
-                </div>
-                <h3 className="font-display text-2xl font-extrabold text-brandNavy leading-tight">{plan.name}</h3>
-                <p className="text-xs leading-relaxed text-textSecondary">
-                  {plan.description}
+              
+              {/* Popular Plan Badge */}
+              <div>
+                <span className="inline-flex items-center px-3 py-1 rounded-full border border-emerald-300/80 bg-emerald-50/60 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                  POPULAR PLAN
+                </span>
+                <h3 className="font-display text-3xl font-black text-brandNavy leading-tight mt-3">
+                  Report Fetch & Dashboard Access
+                </h3>
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-textSecondary font-normal">
+                  Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-slate-100 space-y-4">
-                <div className="space-y-1">
+              <div className="pt-6 border-t border-slate-100 space-y-5">
+                <div className="space-y-1.5">
                   <div className="flex items-baseline gap-2">
                     <span className="font-display text-5xl font-black text-brandNavy tracking-tight">₹199</span>
-                    <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
-                    <span className="text-[10px] font-semibold text-textSecondary/70">+GST</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ONE-TIME PAYMENT</span>
+                    <span className="text-[10px] font-bold text-slate-400">+GST</span>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                    No recurring charges · No automatic renewals
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    NO RECURRING CHARGES · NO AUTOMATIC RENEWALS
                   </p>
                 </div>
                 
                 <div className="pt-2">
-                  <Link href="/contact">
-                    <Button as="div" className="w-full py-4 text-center text-xs font-black tracking-wider uppercase bg-brandNavy hover:bg-slate-900 text-white rounded-xl shadow-sm">
-                      Fetch My Credit Reports
-                    </Button>
-                  </Link>
+                  <a 
+                    href="https://dashboard.primescore.in/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full py-4 bg-[#E82529] hover:bg-[#d01e22] text-white text-xs font-bold uppercase tracking-widest transition-all rounded-xl block text-center shadow-md active:scale-[0.99] cursor-pointer"
+                  >
+                    FETCH MY CREDIT REPORTS
+                  </a>
                 </div>
               </div>
+
             </div>
           </Reveal>
         </div>
