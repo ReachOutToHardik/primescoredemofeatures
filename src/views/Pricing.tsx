@@ -11,12 +11,13 @@ export default function Pricing() {
     price: 199,
     description: 'Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.',
     features: [
-      'Official 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
-      'Secure Interactive Dashboard Storage',
-      'Detailed Inconsistency & Error Flagging summary',
-      'Direct Portal Chat with Credit Experts to review your report',
-      'Zero Monthly Subscription Fees or automatic renewals',
-      'Minimal-Access Encrypted Document Vault security'
+      'Unified Proprietary Credit Report (Aggregated 4-Bureau Data in One Consolidated View)',
+      'Official Live 4-Bureau Report Pull (CIBIL, Experian, Equifax, CRIF)',
+      'Permanent Dashboard Storage (Track updates without re-fetching)',
+      'Smart Inconsistency & Dispute-Ready Error Flagging Summary',
+      'Direct Support Chat with Certified Credit Experts for Report Review',
+      'Zero Subscription Traps — Pay Once (₹199), Keep Access',
+      'Encrypted Document Vault & Minimal-Access Security'
     ]
   }
 
@@ -74,55 +75,69 @@ export default function Pricing() {
         </Reveal>
       </section>
 
-      {/* Main Pricing Grid */}
-      <section className="mt-16 grid gap-8 lg:grid-cols-12 lg:items-start">
+      {/* Main Pricing Grid — Premium Minimal Two-Column SaaS Layout */}
+      <section className="mt-16 grid gap-8 lg:grid-cols-12 lg:items-stretch">
         
         {/* Left Column: Plan Summary and Call to Action */}
-        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 p-8 sm:p-9 shadow-xs flex flex-col justify-between">
           <Reveal>
-            <div>
-              <div className="text-xs font-bold text-brandBlue uppercase tracking-wider mb-2">Pricing Plan</div>
-              <h3 className="font-display text-2xl font-bold text-brandNavy leading-tight">{plan.name}</h3>
-              <p className="mt-3 text-xs leading-relaxed text-textSecondary">
-                {plan.description}
-              </p>
-
-              <div className="mt-8 pt-8 border-t border-slate-100">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-display text-5xl font-extrabold text-brandNavy tracking-tight">₹199</span>
-                  <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">one-time payment</span>
-                  <span className="text-[10px] font-semibold text-textSecondary/70">+GST</span>
-                </div>
-                <p className="mt-2 text-[10px] font-semibold text-textSecondary uppercase tracking-wider">
-                  No recurring charges · No automatic renewals
+            <div className="space-y-6">
+              
+              {/* Popular Plan Badge */}
+              <div>
+                <span className="inline-flex items-center px-3 py-1 rounded-full border border-emerald-300/80 bg-emerald-50/60 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                  POPULAR PLAN
+                </span>
+                <h3 className="font-display text-3xl font-black text-brandNavy leading-tight mt-3">
+                  Report Fetch & Dashboard Access
+                </h3>
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-textSecondary font-normal">
+                  Pull your official credit reports from all four bureaus and store them securely on your interactive dashboard.
                 </p>
+              </div>
+
+              <div className="pt-6 border-t border-slate-100 space-y-5">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-display text-5xl font-black text-brandNavy tracking-tight">₹199</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ONE-TIME PAYMENT</span>
+                    <span className="text-[10px] font-bold text-slate-400">+GST</span>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    NO RECURRING CHARGES · NO AUTOMATIC RENEWALS
+                  </p>
+                </div>
                 
-                <div className="mt-6">
-                  <Link href="/contact">
-                    <Button as="div" className="w-full py-4 text-center text-sm font-bold shadow-sm">
-                      Fetch My Credit Reports
-                    </Button>
-                  </Link>
+                <div className="pt-2">
+                  <a 
+                    href="https://dashboard.primescore.in/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full py-4 bg-[#E82529] hover:bg-[#d01e22] text-white text-xs font-bold uppercase tracking-widest transition-all rounded-xl block text-center shadow-md active:scale-[0.99] cursor-pointer"
+                  >
+                    FETCH MY CREDIT REPORTS
+                  </a>
                 </div>
               </div>
+
             </div>
           </Reveal>
         </div>
 
         {/* Right Column: Detailed feature inclusions */}
-        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm h-full flex flex-col justify-center">
+        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col justify-center">
           <Reveal delay={0.05}>
-            <div>
-              <h4 className="font-display text-xs font-bold uppercase tracking-wider text-brandNavy mb-5">
+            <div className="space-y-6">
+              <h4 className="font-display text-xs font-bold uppercase tracking-widest text-slate-400">
                 What is included in your access:
               </h4>
               <ul className="grid gap-4 text-xs sm:text-sm">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-3.5">
-                    <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#10b981]/10 text-[#10b981]">
-                      <Check className="h-3.5 w-3.5 stroke-[2.5px]" />
+                    <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-800">
+                      <Check className="h-3 w-3 stroke-[3px]" />
                     </div>
-                    <span className="text-brandNavy font-medium leading-normal">{f}</span>
+                    <span className="text-brandNavy font-semibold leading-relaxed">{f}</span>
                   </li>
                 ))}
               </ul>

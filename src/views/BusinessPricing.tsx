@@ -363,7 +363,7 @@ export default function BusinessPricing() {
                       {/* Pricing block 1: Standard Option */}
                       <div className="mb-6 pb-6 border-b border-slate-100 flex items-center justify-between">
                         <div>
-                          <div className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Standard Tiers</div>
+                          <div className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Essential Tier</div>
                           <div className="flex items-baseline gap-1 mt-1">
                             <span className="text-3xl font-black text-brandNavy tracking-tight">₹{plan.basePrice}</span>
                             <span className="text-[10px] text-slate-400 font-semibold">+ GST</span>

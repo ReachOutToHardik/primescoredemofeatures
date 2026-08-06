@@ -12,10 +12,11 @@ import {
   Scale,
   ShieldCheck,
   TrendingUp,
-  Mail
+  Mail,
+  Shield
 } from 'lucide-react'
 import Link from 'next/link'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { faqs, services, testimonials } from '../data/primescore'
 import Button from '../components/ui/Button'
 import FAQAccordion from '../components/ui/FAQAccordion'
@@ -29,6 +30,239 @@ const Carousel3D = dynamic(() => import('../components/ui/Carousel3D'), { ssr: f
 const CreditImpactCalculator = dynamic(() => import('../components/ui/CreditImpactCalculator'), { ssr: false })
 const FeatureScrollShowcase = dynamic(() => import('../components/ui/FeatureScrollShowcase'), { ssr: false })
 
+/* ─── Smooth 3D Scroll-Bound Peeking Dashboard Showcase ─── */
+function DashboardPeekingSection({ cityName }: { cityName?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center center"]
+  })
+
+  // Smooth physics spring for 60fps responsiveness
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  // Interpolate 3D transforms directly with scroll
+  const rotateX = useTransform(smoothProgress, [0, 1], [30, 0])
+  const translateY = useTransform(smoothProgress, [0, 1], [100, 0])
+  const scale = useTransform(smoothProgress, [0, 1], [0.88, 1])
+  const opacity = useTransform(smoothProgress, [0, 0.4], [0.3, 1])
+
+  return (
+    <section ref={containerRef} className="bg-white pt-12 sm:pt-24 pb-8 sm:pb-24 px-4 sm:px-6 border-t border-brandNavy/5 mb-8 sm:mb-24 [perspective:1200px]" data-theme="light">
+      <div className="max-w-[760px] mx-auto text-center">
+        {/* Top tag */}
+        <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 bg-brandBlue/10 rounded-full px-3 py-1">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-brandBlue">
+            {cityName ? `Free for everyone in ${cityName}` : 'Free Credit Dashboard'}
+          </p>
+        </div>
+
+        {/* Headline */}
+        <h2 className="font-display text-3xl sm:text-5xl font-black tracking-tight text-brandNavy leading-[1.1] mb-3 sm:mb-5">
+          See your real credit score<br />
+          <span className="text-brandBlue">across all 4 bureaus.</span>
+        </h2>
+
+        {/* Sub */}
+        <p className="text-xs sm:text-lg text-brandNavy/60 leading-relaxed max-w-[500px] mx-auto mb-8 sm:mb-16 px-2">
+          Banks check Experian, Equifax, CRIF &amp; CIBIL — not just one.
+          Our dashboard shows all 4, flags every discrepancy, and tells you exactly what to fix.
+        </p>
+      </div>
+
+      {/* Dashboard screenshot peeking up with scroll-bound 3D tilt */}
+      <div className="max-w-[1100px] mx-auto relative px-1 sm:px-0">
+        <motion.div
+          style={{
+            rotateX,
+            translateY,
+            scale,
+            opacity,
+            transformOrigin: 'top center'
+          }}
+          className="rounded-t-xl sm:rounded-t-2xl overflow-hidden border border-brandNavy/10 border-b-0 shadow-[0_-15px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_-25px_60px_rgba(15,23,42,0.14)]"
+        >
+          {/* Browser chrome bar */}
+          <div className="bg-slate-50 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2 border-b border-brandNavy/10">
+            <div className="flex gap-1.5">
+              <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-red-400" />
+              <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-amber-400" />
+              <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400" />
+            </div>
+            <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-brandNavy/40 border border-brandNavy/10 text-center max-w-[240px] sm:max-w-[280px] mx-auto font-mono truncate">
+              dashboard.primescore.in
+            </div>
+          </div>
+          {/* Actual screenshot */}
+          <img
+            src="/images/dashboard-screenshot.png"
+            alt="PrimeScore Dashboard — Multi Bureau Credit Report"
+            className="w-full h-auto block max-h-[300px] sm:max-h-[520px] object-cover object-top"
+          />
+        </motion.div>
+
+        {/* Pure White Fade out at bottom + clean human button styling */}
+        <div className="absolute bottom-0 left-0 right-0 h-44 sm:h-80 bg-gradient-to-b from-transparent via-white/70 via-60% via-white/95 to-white z-10 flex items-end justify-center pb-2 sm:pb-8">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl border border-slate-700/50 shadow-lg hover:shadow-xl transition-all pointer-events-auto max-w-[90%] text-center"
+          >
+            <span className="truncate">View the Dashboard for free</span>
+            <ArrowRight className="h-3.5 sm:h-4 w-3.5 sm:w-4 text-slate-400 shrink-0" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+
+/* ─── Person Showcase Section (Rich, Professional & Full Layout) ─── */
+function ImageToggleSection() {
+  const [isHappy, setIsHappy] = useState(false)
+
+  // Switch image every 2.5 seconds cleanly
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsHappy((prev) => !prev)
+    }, 2500)
+    return () => clearInterval(timer)
+  }, [])
+
+  return (
+    <section className="bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#1e1b4b] text-white pt-0 pb-0 relative overflow-hidden border-t border-slate-800" data-theme="dark">
+
+      {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR AT THE TOP */}
+      <div className="w-full bg-emerald-500 text-slate-950 py-3.5 border-b border-emerald-400 overflow-hidden shadow-lg mb-16 relative z-10">
+        <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
+          {[1, 2, 3, 4].map((i) => (
+            <React.Fragment key={i}>
+              <span className="inline-flex items-center gap-2">✦ ALL 4 BUREAUS CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
+              <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Background Subtle Geometry Grid (Strictly scoped inside body) */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25 pointer-events-none mt-16" />
+
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+          {/* LEFT COLUMN — TEXT, BADGES, STAT CARDS & CONTACT BUTTON */}
+          <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+
+            {/* Headline */}
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+              Stuck with a low CIBIL score or <span className="text-emerald-400">wrong bank entries?</span>
+            </h2>
+
+            {/* Sub copy */}
+            <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+              We audit your credit reports across all 4 bureaus (CIBIL, Experian, Equifax &amp; CRIF) to correct clerical errors, dispute invalid defaults, and update settled status legally in 60–90 days.
+            </p>
+
+            {/* Quick Proof Stat Chips */}
+            <div className="grid grid-cols-3 gap-3 pt-2 max-w-lg">
+              <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
+                <span className="text-emerald-400 text-lg sm:text-xl font-black block">50,000+</span>
+                <span className="text-slate-400 text-[11px] font-medium">Clients Helped</span>
+              </div>
+              <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
+                <span className="text-emerald-400 text-lg sm:text-xl font-black block">60-90 Days</span>
+                <span className="text-slate-400 text-[11px] font-medium">Avg Resolution</span>
+              </div>
+              <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
+                <span className="text-emerald-400 text-lg sm:text-xl font-black block">4 Bureaus</span>
+                <span className="text-slate-400 text-[11px] font-medium">Complete Audit</span>
+              </div>
+            </div>
+
+            {/* Contact CTA Button */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <Link
+                href="/contact"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm px-9 py-4 rounded-xl shadow-lg shadow-emerald-500/20 transition-all inline-flex items-center justify-center gap-2 shrink-0 group"
+              >
+                <span>TALK TO OUR EXPERT</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <div className="text-xs text-slate-400 flex items-center gap-2 px-2">
+                <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>100% Confidential</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* RIGHT COLUMN — TOGGLING PERSON WITH DYNAMIC CARD */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end relative pt-6 lg:pt-0">
+            <div className="relative w-full max-w-[420px] h-[380px] sm:h-[480px] flex items-end justify-center">
+
+              {/* Floating Dynamic Status Card */}
+              <div className={`absolute top-2 left-2 z-20 bg-slate-900/95 border px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md transition-all duration-300 ${isHappy ? 'border-emerald-500/60 shadow-emerald-500/10' : 'border-amber-500/60 shadow-amber-500/10'
+                }`}>
+                <div className="flex items-center gap-2.5">
+                  <span className={`w-3 h-3 rounded-full ${isHappy ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">Status</span>
+                    <span className="text-xs font-bold text-white">
+                      {isHappy ? '✅ Score Improved +120 Pts!' : '⚠️ Bureau Discrepancy Found'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cutout Image 1: Thinking */}
+              <img
+                src="/images/thinking.png"
+                alt="Thinking about credit score issues"
+                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${!isHappy ? 'block' : 'hidden'
+                  }`}
+              />
+
+              {/* Cutout Image 2: Happy */}
+              <img
+                src="/images/happy.png"
+                alt="Happy after credit score fix"
+                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${isHappy ? 'block' : 'hidden'
+                  }`}
+              />
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* FULL-WIDTH GREEN FEATURE MARQUEE BAR AT THE BOTTOM */}
+      <div className="mt-12 w-full bg-emerald-500 text-slate-950 py-3.5 border-t border-emerald-400 overflow-hidden shadow-lg relative z-10">
+        <div className="whitespace-nowrap animate-marquee flex items-center gap-10 font-extrabold text-xs tracking-wider uppercase">
+          {[1, 2, 3, 4].map((i) => (
+            <React.Fragment key={i}>
+              <span className="inline-flex items-center gap-2">✦ ALL 4 BUREAUS CREDIT AUDIT</span>
+              <span className="inline-flex items-center gap-2">✦ 100% LEGAL &amp; COMPLIANT</span>
+              <span className="inline-flex items-center gap-2">✦ FAST DISPUTE RESOLUTION</span>
+              <span className="inline-flex items-center gap-2">✦ ERASE ILLEGITIMATE DEFAULTS</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+    </section>
+  )
+}
+
+
 /* ─── AI Chipset Background Pattern ─── */
 function AiChipsetBackground() {
   return (
@@ -38,27 +272,27 @@ function AiChipsetBackground() {
           <pattern id="chipset-pattern" width="200" height="200" patternUnits="userSpaceOnUse">
             {/* Base Grid */}
             <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#6366f1" strokeWidth="0.5" strokeOpacity="0.3" />
-            
+
             {/* CPU / Logic Block */}
             <rect x="40" y="40" width="40" height="40" rx="4" fill="none" stroke="#818cf8" strokeWidth="1.5" />
             <rect x="45" y="45" width="30" height="30" rx="2" fill="none" stroke="#6366f1" strokeWidth="1" strokeOpacity="0.7" />
             <circle cx="60" cy="60" r="8" fill="#818cf8" fillOpacity="0.2" />
-            
+
             {/* Data Buses */}
             <path d="M 80 50 L 120 50 L 140 70 L 200 70" fill="none" stroke="#a78bfa" strokeWidth="1" />
             <path d="M 80 60 L 110 60 L 130 80 L 180 80 L 200 60" fill="none" stroke="#818cf8" strokeWidth="0.5" />
             <path d="M 80 70 L 100 70 L 120 90 L 120 200" fill="none" stroke="#6366f1" strokeWidth="1" />
-            
+
             {/* Micro-nodes */}
             <circle cx="120" cy="50" r="2" fill="#a78bfa" />
             <circle cx="140" cy="70" r="1.5" fill="#a78bfa" />
             <circle cx="100" cy="70" r="2" fill="#6366f1" />
             <circle cx="120" cy="90" r="1.5" fill="#6366f1" />
-            
+
             {/* Secondary Logic Block */}
             <rect x="140" y="120" width="24" height="24" rx="2" fill="none" stroke="#818cf8" strokeWidth="1" />
             <circle cx="152" cy="132" r="4" fill="#a78bfa" fillOpacity="0.3" />
-            
+
             {/* Complex Traces */}
             <path d="M 40 50 L 0 50" fill="none" stroke="#818cf8" strokeWidth="1" />
             <path d="M 60 40 L 60 0" fill="none" stroke="#6366f1" strokeWidth="1" />
@@ -67,7 +301,7 @@ function AiChipsetBackground() {
             <path d="M 164 132 L 184 132 L 200 148" fill="none" stroke="#818cf8" strokeWidth="1" />
             <path d="M 152 144 L 152 200" fill="none" stroke="#a78bfa" strokeWidth="1" />
             <path d="M 152 120 L 152 90 L 172 70 L 200 70" fill="none" stroke="#6366f1" strokeWidth="0.5" />
-            
+
             {/* Memory Modules */}
             <rect x="10" y="140" width="8" height="20" rx="1" fill="none" stroke="#a78bfa" strokeWidth="1" />
             <rect x="25" y="140" width="8" height="20" rx="1" fill="none" stroke="#a78bfa" strokeWidth="1" />
@@ -242,11 +476,11 @@ function TestimonialCard({ t }: { t: any }) {
     <div className="rounded-[2rem] border border-brandNavy/10 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brandNavy/20 hover:shadow-elevated">
       <div className="flex items-center gap-4">
         {t.avatar ? (
-          <img 
-            src={t.avatar} 
-            alt={t.name} 
+          <img
+            src={t.avatar}
+            alt={t.name}
             referrerPolicy="no-referrer"
-            className="h-12 w-12 rounded-full object-cover border border-brandNavy/5" 
+            className="h-12 w-12 rounded-full object-cover border border-brandNavy/5"
           />
         ) : (
           <div className="grid h-12 w-12 place-items-center rounded-full bg-brandNavy text-white font-display text-lg font-bold">
@@ -287,10 +521,10 @@ function TestimonialCarousel({ items }: { items: any[] }) {
       </div>
       <div className="mt-8 flex gap-4">
         <button onClick={prev} className="grid h-12 w-12 place-items-center rounded-full bg-brandNavy/5 text-brandNavy transition-colors hover:bg-brandNavy/10">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
         </button>
         <button onClick={next} className="grid h-12 w-12 place-items-center rounded-full bg-brandNavy/5 text-brandNavy transition-colors hover:bg-brandNavy/10">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
         </button>
       </div>
     </div>
@@ -309,11 +543,11 @@ const serviceIcons: Record<string, typeof ShieldCheck> = {
 function ParallaxShape({ delay = 0, className = "" }: { delay?: number, className?: string }) {
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 1000], [0, -150 + delay * 50])
-  
+
   return (
-    <motion.div 
-      style={{ y }} 
-      className={`absolute rounded-full pointer-events-none blur-3xl opacity-20 ${className}`} 
+    <motion.div
+      style={{ y }}
+      className={`absolute rounded-full pointer-events-none blur-3xl opacity-20 ${className}`}
     />
   )
 }
@@ -335,7 +569,7 @@ export default function Home() {
   const handleCtaSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!ctaForm.email.trim() || !ctaForm.name.trim()) return
-    
+
     // Validate preferred date (cannot be in the past)
     if (ctaForm.preferredDate) {
       const selectedDate = new Date(ctaForm.preferredDate)
@@ -388,7 +622,7 @@ export default function Home() {
 
       // Send to Admin (original)
       const adminPromise = emailjs.send(serviceId, templateId, templateParams, publicKey)
-      
+
       // Send to User (new auto-reply template)
       const userPromise = emailjs.send(serviceId, 'template_uom4pnf', templateParams, publicKey)
 
@@ -438,16 +672,22 @@ export default function Home() {
 
 
 
+      {/* ═══ IMAGE TOGGLE SHOWCASE SECTION (DARK NAVY WITH GREEN MARQUEE) ═══ */}
+      <ImageToggleSection />
+
       {/* ═══ FEATURE SCROLL SHOWCASE (MOTION GRAPHIC) ═══ */}
       <div data-theme="dark">
         <FeatureScrollShowcase />
       </div>
 
+      {/* ═══ DASHBOARD PROMO (PEEKING UI SHOWCASE WITH SMOOTH 3D SCROLL-TIED TILT) ═══ */}
+      <DashboardPeekingSection />
+
       {/* ═══ SERVICES ═══ */}
       <section className="py-24 sm:py-32 bg-[#F1F7FF] relative overflow-hidden" id="services" data-theme="light">
         <ParallaxShape delay={2} className="top-1/4 -right-20 h-96 w-96 bg-brandBlue/10 blur-[120px]" />
         <ParallaxShape delay={4} className="bottom-1/4 -left-20 h-96 w-96 bg-brandRed/5 blur-[120px]" />
-        
+
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 relative z-10">
           <Reveal>
             <div className="flex items-end justify-between gap-8 border-b border-brandNavy/10 pb-12">
@@ -473,11 +713,10 @@ export default function Home() {
               const isFeatured = idx === 0
               return (
                 <Reveal key={s.id} delay={idx * 0.05}>
-                  <div className={`group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated ${
-                    isFeatured 
-                      ? 'border-brandRed/20 bg-white lg:row-span-2' 
+                  <div className={`group flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated ${isFeatured
+                      ? 'border-brandRed/20 bg-white lg:row-span-2'
                       : 'border-brandNavy/8 bg-white hover:border-brandRed/20'
-                  }`}>
+                    }`}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="grid h-11 w-11 place-items-center rounded-xl bg-brandNavy/5 group-hover:bg-brandRed/10 transition-colors">
                         <Icon className="h-5 w-5 text-brandNavy group-hover:text-brandRed transition-colors" />
@@ -576,11 +815,11 @@ export default function Home() {
 
           <Reveal delay={0.2}>
             <div className="mt-16 flex flex-wrap items-center justify-center gap-10 lg:gap-20 opacity-80 hover:opacity-100 transition-all duration-700">
-               <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/MSME.png" alt="MSME" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/RBIH.png" alt="RBIH" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
-               <img src="/trusted%20by/I-hub.png" alt="I-hub" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+              <img src="/trusted%20by/DPIIT%20startupindia.png" alt="DPIIT & Startup India" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+              <img src="/trusted%20by/IStart.png" alt="iStart Rajasthan" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+              <img src="/trusted%20by/MSME.png" alt="MSME" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+              <img src="/trusted%20by/RBIH.png" alt="RBIH" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
+              <img src="/trusted%20by/I-hub.png" alt="I-hub" loading="lazy" className="h-10 lg:h-16 w-auto object-contain transition-all duration-500" />
             </div>
           </Reveal>
         </div>
@@ -590,7 +829,7 @@ export default function Home() {
       <section className="py-24 sm:py-32 bg-[#F8FAFC]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
           <div className="grid gap-16 lg:grid-cols-2">
-            
+
             {/* FAQ Side */}
             <Reveal>
               <div>
@@ -643,7 +882,7 @@ export default function Home() {
                     className="h-14 w-full rounded-2xl border border-brandNavy/10 bg-brandNavy/[0.02] px-5 text-base text-brandNavy placeholder:text-textSecondary outline-none transition-colors focus:border-brandNavy focus:bg-white"
                     required
                   />
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-brandNavy/40 ml-2">Preferred Date</label>
@@ -667,7 +906,7 @@ export default function Home() {
                       />
                     </div>
                   </div>
-                  
+
                   <textarea
                     value={ctaForm.message}
                     onChange={(e) => setCtaForm(p => ({ ...p, message: e.target.value }))}

@@ -4,11 +4,12 @@ import React from 'react'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
-import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import ProcessRocketTrack from '../components/ui/ProcessRocketTrack'
+import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle, ArrowRight, MessageCircle } from 'lucide-react'
+import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion'
 
 
-type IssueType = 'Commercial CIBIL Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
+type IssueType = 'Commercial Credit Audit' | 'Vendor Risk Monitoring' | 'Company dispute' | 'Not sure'
 
 type FormState = {
   companyName: string
@@ -24,6 +25,44 @@ export default function Business() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null)
+
+  // Scroll tracking and progress indicator
+  const { scrollYProgress, scrollY } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  // Hero section parallax values
+  const heroImageY = useTransform(scrollY, [0, 800], [0, 150])
+  const heroImageScale = useTransform(scrollY, [0, 800], [1, 1.15])
+  const heroTextOpacity = useTransform(scrollY, [0, 450], [1, 0])
+  const heroTextY = useTransform(scrollY, [0, 450], [0, 60])
+
+  // Staggered grid animation variants
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 90,
+        damping: 18
+      }
+    }
+  }
 
   const [form, setForm] = useState<FormState>({
     companyName: '',
@@ -203,46 +242,260 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
   );
 }
 
+// Interactive Credit Report Simulator Component
+function InteractiveCreditReport() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 })
+
+  const [isCorrected, setIsCorrected] = useState(false)
+  const [isScanning, setIsScanning] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (isInView && !isCorrected && !isScanning) {
+      const delayTimer = setTimeout(() => {
+        setIsScanning(true)
+        setProgress(0)
+      }, 700) // Delay starting for natural entry
+      return () => clearTimeout(delayTimer)
+    }
+  }, [isInView])
+
+  useEffect(() => {
+    if (isScanning) {
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            setIsScanning(false)
+            setIsCorrected(true)
+            return 100
+          }
+          return prev + 10 // Faster simulation steps
+        })
+      }, 85)
+      return () => clearInterval(interval)
+    }
+  }, [isScanning])
+
+  const score = isScanning
+    ? Math.floor(640 + (progress / 100) * 100)
+    : isCorrected
+    ? 740
+    : 640
+
+  return (
+    <div ref={containerRef} className="w-full max-w-[340px] mx-auto bg-white border border-slate-200/80 rounded-2xl shadow-lg overflow-hidden text-slate-700">
+      {/* Mock Header/Browser bar */}
+      <div className="bg-slate-50 px-4 py-2 border-b border-slate-200/60 flex items-center justify-between">
+        <div className="flex gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-rose-500 block opacity-80" />
+          <span className="w-2 h-2 rounded-full bg-amber-500 block opacity-80" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 block opacity-80" />
+        </div>
+        <div className="text-[8px] font-mono tracking-[0.15em] text-slate-500 uppercase select-none font-bold">
+          Credit CCR — Profile Analyzer
+        </div>
+        <div className="w-6" />
+      </div>
+
+      <div className="p-3.5 space-y-3.5">
+        {/* Profile Card Header matching average score display */}
+        <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600 font-black text-xs">
+              H
+            </div>
+            <div className="text-left">
+              <div className="font-extrabold text-[10px] text-slate-900 tracking-tight leading-none">Hardik Industries</div>
+              <div className="text-[7.5px] font-mono text-slate-500 mt-0.5 leading-none">PAN: KMMP****R</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-right">
+            <div>
+              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Score</div>
+              <div className={`text-base font-black transition-colors duration-500 leading-none mt-0.5 ${isCorrected ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {score}
+              </div>
+            </div>
+            <div className="h-6 w-px bg-slate-200" />
+            <div>
+              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Status</div>
+              <div className={`text-[8.5px] font-bold mt-0.5 uppercase leading-none ${isCorrected ? 'text-emerald-600' : 'text-rose-600 animate-pulse'}`}>
+                {isScanning ? 'Syncing...' : isCorrected ? 'Clean' : '3 Flags'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Loan Account Lines */}
+        <div className="space-y-1.5">
+          {[
+            { id: 1, label: 'HDFC TERM LOAN — ₹45L', status: 'ACTIVE', type: 'normal' },
+            { id: 2, label: 'HDFC TERM LOAN — ₹45L (DUPLICATE)', status: 'ERROR', type: 'error', desc: 'Duplicate liability reports double outstanding debt' },
+            { id: 3, label: 'ICICI CC LIMIT — ₹12L', status: 'ACTIVE', type: 'normal' },
+            { id: 4, label: 'PAN MISMATCH — SBI OD', status: 'FLAGGED', type: 'warning', desc: 'Registry mismatch halts credit approvals' },
+            { id: 5, label: 'KOTAK BIZ LOAN — ₹80L', status: 'ACTIVE', type: 'normal' },
+            { id: 6, label: 'WRONG CLASSIFICATION — AXIS', status: 'ERROR', type: 'error', desc: 'Outdated classification reports wrong write-offs' },
+          ].map((row) => {
+            const isRowResolved = isCorrected && row.type !== 'normal';
+            return (
+              <div
+                key={row.id}
+                className={`p-2.5 rounded-lg border transition-all duration-500 ${
+                  isScanning && row.type !== 'normal'
+                    ? 'border-blue-200 bg-blue-50/40 opacity-85'
+                    : isRowResolved
+                    ? 'border-emerald-100 bg-emerald-50/30 opacity-90'
+                    : row.type === 'error'
+                    ? 'border-rose-100 bg-rose-50/40'
+                    : row.type === 'warning'
+                    ? 'border-amber-100 bg-amber-50/40'
+                    : 'border-slate-100 bg-slate-50/50'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-1 h-1 rounded-full ${
+                      isRowResolved
+                        ? 'bg-emerald-500'
+                        : row.type === 'error'
+                        ? 'bg-rose-500'
+                        : row.type === 'warning'
+                        ? 'bg-amber-500'
+                        : 'bg-emerald-500'
+                    }`} />
+                    <span className={`text-[9.5px] font-bold tracking-tight transition-all duration-500 ${isRowResolved ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}`}>
+                      {row.label}
+                    </span>
+                  </div>
+
+                  <span className={`px-1 py-0.5 rounded text-[7px] font-black tracking-wider uppercase border leading-none ${
+                    isRowResolved
+                      ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                      : row.type === 'error'
+                      ? 'bg-rose-50 text-rose-700 border-rose-100'
+                      : row.type === 'warning'
+                      ? 'bg-amber-50 text-amber-700 border-amber-100'
+                      : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                  }`}>
+                    {isRowResolved ? 'RESOLVED' : row.status}
+                  </span>
+                </div>
+
+                {/* Subtext description when there is error/warning */}
+                {row.desc && !isRowResolved && (
+                  <p className="mt-1 ml-2.5 text-[8px] text-slate-400 leading-normal">
+                    {row.desc}
+                  </p>
+                )}
+                {row.desc && isRowResolved && (
+                  <p className="mt-1 ml-2.5 text-[8px] text-emerald-600 leading-normal flex items-center gap-1 font-semibold">
+                    ✓ Cleaned & merged by Primescore Audit Desk
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Action Button & State Bar */}
+        <div className="pt-2.5 border-t border-slate-100 flex flex-col items-center gap-2.5">
+          {isScanning && (
+            <div className="w-full">
+              <div className="flex justify-between text-[8px] text-slate-400 mb-1 font-bold tracking-wide">
+                <span>Disputing & reconciling records...</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                <div
+                  className="bg-blue-500 h-full transition-all duration-100 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {!isScanning && (
+            <div className="w-full flex items-center justify-between gap-2.5">
+              <p className="text-[9px] text-slate-400 leading-tight">
+                {isCorrected
+                  ? "✓ Bureau reconciliation complete. Score boosted."
+                  : "⌛ Reconciling profile records..."}
+              </p>
+              {isCorrected && (
+                <button
+                  onClick={() => {
+                    setIsCorrected(false)
+                    setProgress(0)
+                  }}
+                  className="px-2 py-1 rounded bg-slate-50 hover:bg-slate-100 text-[8px] font-bold text-slate-600 border border-slate-200/60 transition-colors"
+                >
+                  Replay
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
   const issueTypes: IssueType[] = [
-    'Commercial CIBIL Audit',
+    'Commercial Credit Audit',
     'Vendor Risk Monitoring',
     'Company dispute',
     'Not sure'
   ]
   const stats = useMemo(() => [
-    { value: '₹420Cr+', label: 'Disputed Credit Audited' },
-    { value: '180+', label: 'Corporate Entities Supported' },
+    { value: '₹300Cr+', label: 'Disputed Credit Audited' },
+    { value: '37+', label: 'Corporate Entities Supported' },
     { value: '100%', label: 'Bureau Compliant Operations' },
-    { value: '2 Hrs', label: 'Response SLA Guaranteed' }
+    { value: '2 Hrs', label: 'Guaranteed Quick Response' }
   ], [])
 
   const corporateTestimonials = useMemo(() => [
     { name: 'Anand Singhal', role: 'CFO, Singhal Logistics Pvt Ltd', text: 'Primescore identified four duplicate loan accounts on our bureau profile that were showing active balance lines. Our credit records were successfully corrected.' },
     { name: 'Meera Nair', role: 'Operations Director, Nair Autotech', text: 'Monitoring our supplier credit risk profiles helped us manage potential default risks before they affected our operations.' },
     { name: 'Rajesh Patel', role: 'Managing Director, Patel Agro Exports', text: 'Resolved an identity match error where another company\'s write-offs were reporting on our corporate record. The documentation team was prompt.' },
+    { name: 'Vikram Sharma', role: 'VP Finance, Apex Infrastructure', text: 'Cleaned up legacy PAN mapping mismatches across 3 lender records in 60 days. Our working capital limit expansion was approved immediately.' },
+    { name: 'Priya Sundaram', role: 'Head of Treasury, Zenith Capital', text: 'The 2-hour SLA desk responded with formal dispute documentation within hours. Their director-level monitoring caught hidden score anomalies.' }
   ], [])
 
   return (
-    <div className="w-full bg-white text-slate-900 overflow-hidden">
+    <div className="w-full bg-white text-slate-900">
+      {/* Scroll Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 z-[9999] origin-left"
+        style={{ scaleX }}
+      />
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
-        {/* Background Image - Single static layout */}
-        <div className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50">
+        {/* Background Image - Parallax layout */}
+        <motion.div 
+          style={{ y: heroImageY, scale: heroImageScale }}
+          className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50 origin-top-right"
+        >
           <img 
-            src="/images/meeting1.jpg" 
-            alt="PrimeScore Business Workspace Backdrop" 
+            src="/images/business-hero.jpg" 
+            alt="PrimeScore Business Operations Backdrop" 
             className="w-full h-full object-cover"
           />
           {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
-        </div>
+        </motion.div>
         
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
         
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
-          {/* Hero Content matching Service Hero Layout */}
-          <div className="lg:col-span-9 flex flex-col items-start relative z-10">
+          {/* Hero Content with fade/shift on scroll */}
+          <motion.div 
+            style={{ opacity: heroTextOpacity, y: heroTextY }}
+            className="lg:col-span-9 flex flex-col items-start relative z-10"
+          >
             <Reveal>
               <h1 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
                 Your company's credit profile <span className="text-blue-500">deserves more</span> than a checklist.
@@ -260,7 +513,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                 </a>
               </div>
             </Reveal>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -282,148 +535,76 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
 
 
 
-      {/* ── THE PROBLEM ──────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
+      {/* ── SERVICES ─────────────────────────── */}
+      <section id="services" className="bg-[#f8fafc] border-b border-slate-200 py-24 scroll-mt-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
           <Reveal>
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-px w-8 bg-brandRed" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-brandRed">The Problem</span>
-                </div>
-                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight mb-6">
-                  Banks see your CIBIL profile before they see your pitch deck.
-                </h2>
-                <p className="text-sm text-textSecondary font-light leading-relaxed mb-6">
-                  A single duplicate account line can make your company appear to carry twice the debt it actually holds. Registry mismatches between your PAN and a lender's records can stall a working capital approval for months.
-                </p>
-                <p className="text-sm text-textSecondary font-light leading-relaxed">
-                  Most companies discover these errors only after a bank rejection. By then, the timeline for dispute resolution — typically 30 to 90 days — has already disrupted operations. We catch them first.
-                </p>
-              </div>
-              {/* SVG illustration: error discovery timeline */}
-              <div className="relative">
-                <svg viewBox="0 0 480 340" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-lg mx-auto">
-                  {/* Background card shape */}
-                  <rect x="20" y="20" width="440" height="300" rx="16" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1.5"/>
-                  {/* Header bar */}
-                  <rect x="20" y="20" width="440" height="44" rx="16" fill="#0B192C"/>
-                  <rect x="20" y="48" width="440" height="16" fill="#0B192C"/>
-                  <circle cx="48" cy="42" r="6" fill="#ef4444" opacity=".7"/>
-                  <circle cx="68" cy="42" r="6" fill="#f59e0b" opacity=".7"/>
-                  <circle cx="88" cy="42" r="6" fill="#22c55e" opacity=".7"/>
-                  <text x="220" y="47" textAnchor="middle" fontSize="10" fontWeight="700" fill="white" fontFamily="monospace" opacity=".8">CIBIL CCR — COMPANY CREDIT REPORT</text>
-                  {/* Row items */}
-                  {[
-                    { y: 96, label: 'HDFC TERM LOAN — ₹45L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 128, label: 'HDFC TERM LOAN — ₹45L (DUPLICATE)', status: 'ERROR', color: '#ef4444', dot: '#ef4444' },
-                    { y: 160, label: 'ICICI CC LIMIT — ₹12L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 192, label: 'PAN MISMATCH — SBI OD', status: 'FLAGGED', color: '#f59e0b', dot: '#f59e0b' },
-                    { y: 224, label: 'KOTAK BIZ LOAN — ₹80L', status: 'ACTIVE', color: '#22c55e', dot: '#22c55e' },
-                    { y: 256, label: 'WRONG CLASSIFICATION — AXIS', status: 'ERROR', color: '#ef4444', dot: '#ef4444' },
-                  ].map((row) => (
-                    <g key={row.y}>
-                      <rect x="36" y={row.y - 14} width="408" height="26" rx="6" fill="white" stroke="#e2e8f0" strokeWidth="1"/>
-                      <circle cx="54" cy={row.y} r="4" fill={row.dot}/>
-                      <text x="68" y={row.y + 4} fontSize="9" fontWeight="600" fill="#0B192C" fontFamily="monospace">{row.label}</text>
-                      <rect x="350" y={row.y - 10} width="80" height="18" rx="4" fill={row.dot} fillOpacity=".12"/>
-                      <text x="390" y={row.y + 4} textAnchor="middle" fontSize="8" fontWeight="800" fill={row.color} fontFamily="monospace">{row.status}</text>
-                    </g>
-                  ))}
-                  {/* Arrow pointing at errors */}
-                  <line x1="445" y1="128" x2="445" y2="258" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 2"/>
-                  <text x="462" y="193" fontSize="9" fill="#ef4444" fontWeight="700" transform="rotate(90, 462, 193)" textAnchor="middle">3 ERRORS FLAGGED</text>
-                </svg>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── CAPABILITIES ─────────────────────────────────── */}
-      <section id="capabilities" className="bg-[#f8fafc] border-b border-slate-200">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
-          <Reveal>
-            <div className="mb-14">
-              <div className="flex items-center gap-3 mb-5">
+            <div className="max-w-3xl mb-16">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="h-px w-8 bg-[#2563EB]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Services</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">SERVICES</span>
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-2xl leading-tight">
-                Three services. One desk. Full coverage.
+              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight">
+                Most companies discover their credit errors only when the bank says no.
               </h2>
-              <p className="mt-4 text-sm text-textSecondary font-light max-w-xl leading-relaxed">
-                We handle the three areas where commercial credit errors cause the most damage — before your bank or vendor discovers them.
+              <p className="mt-4 text-sm text-textSecondary leading-relaxed">
+                We work upstream — identifying duplicate loan lines, PAN mismatches, and classification errors before they affect your borrowing capacity, vendor negotiations, or regulatory standing.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* 6 Feature Pillars */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                num: '01',
-                label: 'AUDITS',
-                title: 'Commercial CIBIL Audit',
-                body: 'We pull your Company Credit Report (CCR), map every account line, and identify duplicate profiles, PAN mismatches, incorrect account status codes, and registry anomalies. We then file formal disputes with CIBIL, CRIF, and the relevant bank.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <rect x="6" y="4" width="40" height="44" rx="5" fill="#EFF6FF" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M14 16h24M14 22h24M14 28h16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round"/>
-                    <circle cx="38" cy="34" r="8" fill="#0B192C"/>
-                    <path d="M35 34l2 2 4-4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ),
-                accent: 'border-[#2563EB]/20 hover:border-[#2563EB]/50',
+                n: '01',
+                title: 'Bureau-Level Expertise',
+                body: 'Our analysts are trained specifically on CIBIL CCR, CRIF, Experian, and Equifax commercial report structures — not generalist consultants.'
               },
               {
-                num: '02',
-                label: 'MONITORING',
-                title: 'Vendor Risk Monitoring',
-                body: 'Your supply chain is only as stable as your vendors\' credit health. We monitor the bureau profiles of your key suppliers and flag deteriorating credit indicators before they disrupt procurement or trigger payment defaults.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <circle cx="26" cy="26" r="18" fill="#EFF6FF" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M10 34 Q18 16 26 22 Q34 28 42 18" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    <circle cx="26" cy="22" r="3" fill="#E85C0D"/>
-                    <circle cx="42" cy="18" r="3" fill="#2563EB"/>
-                    <circle cx="10" cy="34" r="3" fill="#0B192C"/>
-                  </svg>
-                ),
-                accent: 'border-emerald-200 hover:border-emerald-400',
+                n: '02',
+                title: 'End-to-End Dispute Filing',
+                body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with CIBIL, CRIF, and the relevant banks.'
               },
               {
-                num: '03',
-                label: 'DISPUTES',
-                title: 'Bank & Bureau Disputes',
-                body: 'When your company is incorrectly flagged by a lender — wrong write-off classification, identity match errors, or outdated NPA tags — we compile the evidence, draft the formal dispute communications, and manage the filing process end to end.',
-                svg: (
-                  <svg viewBox="0 0 52 52" fill="none" className="w-12 h-12">
-                    <path d="M26 6 L10 14 v12 c0 10 6.5 19.5 16 22 9.5-2.5 16-12 16-22V14Z" fill="#FFF7ED" stroke="#0B192C" strokeWidth="1.5"/>
-                    <path d="M18 26l6 6 10-10" stroke="#E85C0D" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ),
-                accent: 'border-brandRed/20 hover:border-brandRed/50',
+                n: '03',
+                title: 'Director-Level Monitoring',
+                body: 'Your directors\' personal CIBIL and CRIF scores are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.'
               },
-            ].map((svc) => (
-              <Reveal key={svc.num} delay={0.07 * parseInt(svc.num)}>
-                <div className={`bg-white rounded-2xl border p-8 transition-all duration-300 hover:shadow-md ${svc.accent} h-full flex flex-col`}>
-                  <div className="flex items-start justify-between mb-6">
-                    {svc.svg}
-                    <span className="text-[10px] font-black text-slate-300 tracking-widest">{svc.num} / {svc.label}</span>
+              {
+                n: '04',
+                title: 'Zero Surprise Retainers',
+                body: 'Fixed-term engagement contracts with no monthly auto-renewals, hidden escalation clauses, or post-audit "maintenance" fees. What you see is what you pay.'
+              },
+              {
+                n: '05',
+                title: '2-Hour Commercial SLA',
+                body: 'Every commercial inquiry is routed to a dedicated desk. Our analysts respond within 2 hours on all business days — not a bot, a human analyst.'
+              },
+              {
+                n: '06',
+                title: '100% Bureau Compliant',
+                body: 'All filings and reports are processed within the legal framework set by the Credit Information Companies (Regulation) Act, 2005 and RBI directives.'
+              }
+            ].map((pillar, pIdx) => (
+              <Reveal key={pIdx} delay={pIdx * 0.05}>
+                <div className="h-full bg-white rounded-2xl border border-slate-200/80 p-7 shadow-xs hover:shadow-md hover:border-[#2563EB]/40 transition-all duration-300 flex flex-col justify-between">
+                  <div>
+                    <div className="h-10 w-10 rounded-xl bg-[#2563EB]/10 text-[#2563EB] flex items-center justify-center font-bold text-sm mb-5">
+                      {pillar.n}
+                    </div>
+                    <h3 className="font-display text-base font-bold text-brandNavy mb-2.5">{pillar.title}</h3>
+                    <p className="text-xs text-textSecondary leading-relaxed font-normal">{pillar.body}</p>
                   </div>
-                  <h3 className="text-base font-bold text-brandNavy mb-3">{svc.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed flex-1">{svc.body}</p>
-                  <a href="#audit-form" className="mt-6 text-[11px] font-bold text-[#2563EB] uppercase tracking-wider inline-flex items-center gap-1.5 hover:gap-2.5 transition-all">
-                    Request this service
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </a>
                 </div>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ── OUR PROCESS (ROCKET TRACK) ────────────────────── */}
+      <ProcessRocketTrack />
 
       {/* ── WHY CHOOSE US ────────────────────────────────── */}
       <section className="border-b border-slate-100">
@@ -508,14 +689,14 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
           </Reveal>
         </div>
         {/* Added fixed height container with relative positioning so it takes up proper document flow space */}
-        <div className="overflow-hidden relative w-full h-[220px] [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="overflow-hidden relative w-full h-[220px] [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
           <motion.div
             animate={{ x: ['0%', '-50%'] }}
-            transition={{ ease: 'linear', duration: 28, repeat: Infinity }}
-            className="flex gap-5 absolute whitespace-nowrap"
+            transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
+            className="flex gap-5 absolute whitespace-nowrap left-0"
           >
-            {[...corporateTestimonials, ...corporateTestimonials].map((t, idx) => (
-              <div key={idx} className="inline-block w-[380px] border border-slate-200 bg-white p-7 rounded-2xl shadow-sm whitespace-normal flex-col justify-between h-[190px] flex">
+            {[...corporateTestimonials, ...corporateTestimonials, ...corporateTestimonials, ...corporateTestimonials].map((t, idx) => (
+              <div key={idx} className="shrink-0 w-[380px] border border-slate-200 bg-white p-7 rounded-2xl shadow-sm whitespace-normal flex flex-col justify-between h-[190px]">
                 <p className="text-xs text-textSecondary leading-relaxed">
                   "{t.text}"
                 </p>
@@ -529,57 +710,204 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
+
+
+      {/* ── ENGAGEMENT COSTS (PRICING SECTION) ───────────── */}
+      <section id="pricing" className="border-b border-slate-100 bg-slate-50/60 py-24 scroll-mt-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
           <Reveal>
-            <div className="mb-14">
-              <div className="flex items-center gap-3 mb-5">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="h-px w-8 bg-[#2563EB]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Our Process</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">ENGAGEMENT COSTS</span>
+                <div className="h-px w-8 bg-[#2563EB]" />
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
-                Inquiry to clean bureau record in 5 steps.
+              <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy leading-tight">
+                Simple plans, tailored execution.
               </h2>
+              <p className="mt-4 text-sm text-textSecondary leading-relaxed max-w-2xl mx-auto">
+                Choose the duration of monitoring and audit support your enterprise requires. Options for standard or unlimited rectification packages are listed clearly below.
+              </p>
             </div>
           </Reveal>
-          <div className="relative grid lg:grid-cols-5 gap-8">
-            <div className="hidden lg:block absolute top-7 left-16 right-16 h-px bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200" />
-            {[
-              { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial request form. Routed to a live analyst within 2 hours.' },
-              { n: '02', title: 'CCR & CRIF Pull', body: 'We obtain bureau reports for both your company and directors simultaneously.' },
-              { n: '03', title: 'Error Identification', body: 'We map duplicate lines, mismatches, and misclassified accounts against bank records.' },
-              { n: '04', title: 'Dispute Filing', body: 'Formal documentation compiled and filed with CIBIL, CRIF, and relevant banks.' },
-              { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly bureau reports delivered. New issues flagged proactively.' },
-            ].map((step, i) => (
-              <Reveal key={step.n} delay={i * 0.07}>
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center mb-5 relative z-10">
-                    <span className="text-[10px] font-black text-[#2563EB] tracking-wider">{step.n}</span>
-                  </div>
-                  <h3 className="text-sm font-bold text-brandNavy mb-2">{step.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">{step.body}</p>
+
+          {/* Pricing Cards Grid */}
+          <div className="grid gap-8 lg:grid-cols-2 max-w-5xl mx-auto items-stretch">
+            
+            {/* Card 1: 6 Months Half Yearly Plan */}
+            <Reveal>
+              <div className="h-full bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#2563EB]/10 text-[#2563EB] px-4 py-1.5 rounded-bl-2xl text-[10px] font-extrabold uppercase tracking-wider">
+                  6 Months coverage
                 </div>
-              </Reveal>
-            ))}
+
+                <div>
+                  <div className="mb-6">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Half Yearly Plan</span>
+                    <h3 className="font-display text-xl sm:text-2xl font-black text-brandNavy mt-1">Standard audit &amp; bureau monitoring</h3>
+                  </div>
+
+                  {/* Standard vs Unlimited Tiers */}
+                  <div className="space-y-4 mb-8 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    {/* Standard Tier */}
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
+                      <div>
+                        <span className="text-xs font-bold text-slate-700 block">Essential Tier</span>
+                        <span className="text-[11px] text-emerald-600 font-semibold">One Free Rectification (Per User)</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-brandNavy font-display">₹35,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+
+                    {/* Unlimited Tier */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-xs font-bold text-[#2563EB] block">Unlimited Rectification</span>
+                        <span className="text-[11px] text-slate-500">All rectifications included</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-[#2563EB] font-display">₹40,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Features List */}
+                  <ul className="space-y-3.5 mb-8">
+                    {[
+                      'Monthly company credit report for 6 months',
+                      'Monthly Director\'s credit report for 6 months',
+                      'Quarterly company CRIF credit report for 6 months (2 reports)',
+                      'Monthly Director\'s CRIF Report for 6 months',
+                    ].map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-3 text-xs text-textSecondary font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a
+                  href="#audit-form"
+                  className="w-full py-4 px-6 rounded-xl bg-brandNavy hover:bg-brandNavy/90 text-white font-bold text-xs uppercase tracking-wider text-center transition-colors block shadow-sm"
+                >
+                  Get Started
+                </a>
+              </div>
+            </Reveal>
+
+            {/* Card 2: 12 Months Yearly Plan */}
+            <Reveal delay={0.1}>
+              <div className="h-full bg-white rounded-3xl border-2 border-[#2563EB] p-8 sm:p-10 shadow-md hover:shadow-lg transition-all flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#2563EB] text-white px-4 py-1.5 rounded-bl-2xl text-[10px] font-extrabold uppercase tracking-wider">
+                  12 Months coverage
+                </div>
+
+                <div>
+                  <div className="mb-6">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">Yearly Plan</span>
+                    <h3 className="font-display text-xl sm:text-2xl font-black text-brandNavy mt-1">Comprehensive annual monitoring</h3>
+                  </div>
+
+                  {/* Standard vs Unlimited Tiers */}
+                  <div className="space-y-4 mb-8 bg-[#2563EB]/5 p-5 rounded-2xl border border-[#2563EB]/15">
+                    {/* Standard Tier */}
+                    <div className="flex items-center justify-between pb-3 border-b border-[#2563EB]/10">
+                      <div>
+                        <span className="text-xs font-bold text-slate-700 block">Essential Tier</span>
+                        <span className="text-[11px] text-emerald-600 font-semibold">Two Free Rectifications (Per User)</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-brandNavy font-display">₹60,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+
+                    {/* Unlimited Tier */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-xs font-bold text-[#2563EB] block">Unlimited Rectification</span>
+                        <span className="text-[11px] text-slate-500">All rectifications included</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-2xl font-black text-[#2563EB] font-display">₹80,000</span>
+                        <span className="text-[10px] font-bold text-slate-400 ml-1">+ GST</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Features List */}
+                  <ul className="space-y-3.5 mb-8">
+                    {[
+                      'Monthly company credit report for 12 months',
+                      'Monthly Director\'s credit report for 12 months',
+                      'Quarterly company CRIF credit report for 12 months (4 reports)',
+                      'Monthly Director\'s CRIF Report for 12 months',
+                    ].map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-3 text-xs text-textSecondary font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a
+                  href="#audit-form"
+                  className="w-full py-4 px-6 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider text-center transition-colors block shadow-sm"
+                >
+                  Get Started
+                </a>
+              </div>
+            </Reveal>
+
+          </div>
+
+          {/* Footer Note */}
+          <div className="mt-12 text-center text-xs text-slate-400 max-w-2xl mx-auto font-medium">
+            GST applicable at 18% · Fixed-term contracts with zero surprises · Custom multi-entity billing available upon request.
           </div>
         </div>
       </section>
 
-      {/* ── TRUST STRIP ──────────────────────────────────── */}
-      <section className="border-b border-slate-200">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-10">
-          <div className="grid sm:grid-cols-3 gap-px bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+
+      {/* ── INCLUDED IN ALL PLANS ───────────────────────────── */}
+      <section className="border-b border-slate-100 bg-brandNavy text-white py-20">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-10">
+          <Reveal>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-400">STANDARD ASSURANCES</span>
+              <h2 className="font-display text-3xl font-black text-white mt-2">
+                Included In All Plans
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-6 md:grid-cols-3">
             {[
-              { icon: <ShieldCheck className="h-5 w-5 text-[#2563EB]" />, title: '100% Bureau Compliant', body: 'All operations aligned with the Credit Information Companies (Regulation) Act, 2005 and RBI directives.' },
-              { icon: <FileCheck className="h-5 w-5 text-[#2563EB]" />, title: 'Dispute Docs Drafted', body: 'We compile evidence, write the formal dispute communication, and file it — you don\'t touch the paperwork.' },
-              { icon: <Activity className="h-5 w-5 text-[#2563EB]" />, title: '2-Hour Response SLA', body: 'A dedicated human analyst — not a bot — responds to every commercial query within 2 hours, Mon–Sat.' },
-            ].map(({ icon, title, body }) => (
-              <div key={title} className="bg-white px-8 py-7">
-                <div className="mb-4">{icon}</div>
-                <div className="text-sm font-bold text-brandNavy mb-1.5">{title}</div>
-                <p className="text-xs text-slate-500 leading-relaxed">{body}</p>
-              </div>
+              {
+                title: '100% Bureau Compliant',
+                desc: 'All filings processed under the Credit Information Companies (Regulation) Act, 2005 and RBI directives.'
+              },
+              {
+                title: 'Dispute Documentation Drafted',
+                desc: 'We compile evidence, write formal communications, and submit dispute filings to CIBIL, CRIF, and relevant banks.'
+              },
+              {
+                title: 'Dedicated Analyst Desk',
+                desc: 'A human commercial analyst — not a chatbot — responds to every query within 2 hours, Monday to Saturday.'
+              }
+            ].map((item, idx) => (
+              <Reveal key={idx} delay={idx * 0.1}>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xs hover:bg-white/10 transition-colors">
+                  <ShieldCheck className="h-6 w-6 text-emerald-400 mb-4" />
+                  <h3 className="font-display text-base font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -599,11 +927,12 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
           </Reveal>
           <div className="space-y-4">
             {[
-              { q: 'What is a Commercial CIBIL Audit?', a: 'A Commercial CIBIL Audit reviews your Company Credit Report (CCR) to detect inaccurate classifications, duplicate account profiles, or registry mismatches (e.g. wrong PAN linkage) which could negatively impact your credit profile.' },
-              { q: 'How long does it take to identify duplicate profiles?', a: 'Our analysts typically complete preliminary file auditing and duplicate account reconciliation mapping within 48 to 72 hours of document submission.' },
-              { q: 'Does auditing damage my company\'s credit score?', a: 'No. Checking or auditing your commercial bureau reports through our analyst desk does not count as a hard inquiry and has zero negative impact on your company\'s credit health.' },
-              { q: 'What documents are required to initiate an audit?', a: 'We generally require a recent copy of your Company Credit Report (CCR) from CIBIL, along with company PAN details and basic loan account ledger logs for disputed line entries.' },
-              { q: 'Can you monitor our vendors\' credit health too?', a: 'Yes. Our Vendor Risk Monitoring service tracks the CIBIL and CRIF profiles of your key suppliers and flags early warning signs of credit deterioration before they affect your supply chain.' },
+              { q: 'What is a business credit score?', a: 'A business credit score reflects your company\'s financial credibility and repayment history. Banks and lenders use it to evaluate loan applications, working capital limits, and business financing.' },
+              { q: 'Can PrimeScore improve my company\'s credit profile?', a: 'Yes. We help identify reporting errors, incorrect loan information, duplicate accounts, and other issues affecting your business credit profile.' },
+              { q: 'Why is business credit important?', a: 'A strong business credit profile improves your chances of obtaining loans, credit lines, vendor financing, and better interest rates.' },
+              { q: 'Can incorrect loan reporting affect business funding?', a: 'Yes. Incorrect defaults, overdue payments, or duplicate loan entries may reduce your eligibility for business finance.' },
+              { q: 'Do you work with multiple credit bureaus?', a: 'Yes. We assist businesses in resolving issues across relevant credit bureaus and financial institutions.' },
+              { q: 'Can new businesses build a healthy credit profile?', a: 'Yes. Maintaining timely repayments, proper financial records, and responsible credit usage helps establish a strong business credit history.' }
             ].map((faq, index) => (
               <FAQItem key={index} faq={faq} index={index} isOpen={activeFaqIndex === index} onToggle={() => setActiveFaqIndex(activeFaqIndex === index ? null : index)} />
             ))}
@@ -630,44 +959,87 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
       </section>
 
       {/* CONTACT FORM SECTION */}
-      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24">
+      <section id="audit-form" className="w-full bg-[#f8fafc] border-t border-slate-200/80 py-24 scroll-mt-20">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 items-start">
+          
+          {/* Centered Top Header */}
+          <Reveal>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">GET IN TOUCH</span>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl font-black text-brandNavy leading-tight">
+                Initiate B2B Consultation
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-textSecondary font-light leading-relaxed max-w-2xl mx-auto">
+                We resolve corporate report inaccuracies with speed and absolute privacy. Choose a direct pathway below or request a callback.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Two Main Columns */}
+          <div className="grid gap-10 lg:grid-cols-2 items-stretch">
             
-            <Reveal>
-              <div className="max-w-md">
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2563EB]">CONTACT DESK</span>
-                <h2 className="mt-3 font-display text-3xl font-extrabold text-brandNavy sm:text-4xl">
-                  Initiate Commercial Audit Consultation
-                </h2>
-                <p className="mt-4 text-base text-textSecondary font-light leading-relaxed">
-                  Find out what's hiding in your Company Credit Report. Our commercial desk offers a free preliminary assessment of your CCR for qualified corporate entities. Discuss your reporting requirements here.
-                </p>
-
-                <div className="mt-12 space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
-                      <Mail className="h-5 w-5" />
-                    </div>
+            {/* Left Column: Direct Pathway Cards + Map */}
+            <Reveal className="h-full">
+              <div className="flex flex-col justify-between h-full gap-6">
+                
+                {/* 2 Side-by-Side Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
+                  
+                  {/* Card 1: Instant WhatsApp Chat */}
+                  <div className="bg-[#f0fdf4]/50 border border-emerald-200/80 rounded-3xl p-6 shadow-xs hover:border-emerald-400 transition-all flex flex-col justify-between h-full">
                     <div>
-                      <h4 className="text-sm font-bold text-[#2563EB]">Direct Email Link</h4>
-                      <a href="mailto:info@primescore.in" className="text-base text-brandNavy font-semibold hover:underline">info@primescore.in</a>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-10 w-10 rounded-full bg-emerald-100/70 text-emerald-600 flex items-center justify-center">
+                          <MessageCircle className="h-5 w-5" />
+                        </div>
+                        <span className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-emerald-100/90 text-emerald-700 rounded-full flex items-center gap-1">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          ACTIVE NOW
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-brandNavy mb-1.5">Instant WhatsApp Chat</h3>
+                      <p className="text-xs text-textSecondary leading-relaxed mb-6 font-normal">
+                        Connect with our response desk instantly. Send files or reports directly.
+                      </p>
                     </div>
+                    <a 
+                      href="https://wa.me/919460888899" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-xs font-bold text-emerald-600 uppercase tracking-wider hover:gap-2 gap-1 transition-all"
+                    >
+                      Start Chatting <ArrowRight className="h-3.5 w-3.5 ml-0.5" />
+                    </a>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brandNavy shadow-sm shrink-0">
-                      <Phone className="h-5 w-5" />
-                    </div>
+                  {/* Card 2: Direct Phone Line */}
+                  <div className="bg-[#eff6ff]/40 border border-blue-100 rounded-3xl p-6 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between h-full">
                     <div>
-                      <h4 className="text-sm font-bold text-[#2563EB]">Operational Hours</h4>
-                      <p className="text-sm text-textSecondary font-medium">Monday – Saturday, 10 AM to 6 PM IST</p>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-10 w-10 rounded-full bg-blue-100/70 text-[#2563EB] flex items-center justify-center">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                        <span className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 rounded-full">
+                          MON - SAT
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-brandNavy mb-1.5">Direct Phone Line</h3>
+                      <p className="text-xs text-textSecondary leading-relaxed mb-6 font-normal">
+                        Call our representative directly to discuss your CIBIL profile errors.
+                      </p>
                     </div>
+                    <a 
+                      href="tel:+919460888899" 
+                      className="inline-flex items-center text-xs font-bold text-[#2563EB] uppercase tracking-wider hover:gap-2 gap-1 transition-all"
+                    >
+                      Call Operational Desk <ArrowRight className="h-3.5 w-3.5 ml-0.5" />
+                    </a>
                   </div>
+
                 </div>
 
-                {/* Google Map location embed */}
-                <div className="mt-8 w-full h-[260px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative">
+                {/* Google Map location embed below cards (stretches to fill total column height) */}
+                <div className="w-full flex-1 min-h-[350px] rounded-3xl overflow-hidden border border-slate-200 shadow-xs relative">
                   <iframe 
                     src="https://maps.google.com/maps?q=iStart%20Nest%20Incubation%20Center,%20Gov.%20Polytechnic%20College,%20Jodhpur&t=&z=14&ie=UTF8&iwloc=&output=embed"
                     className="absolute top-0 left-0 w-full h-full border-0"
@@ -676,11 +1048,20 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
+
               </div>
             </Reveal>
 
+            {/* Right Column: Initiate Consultation Form Card */}
             <Reveal delay={0.15}>
-              <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+              <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-10 shadow-xs">
+                <div className="mb-6">
+                  <h3 className="font-display text-2xl font-black text-brandNavy">Initiate Consultation</h3>
+                  <p className="mt-1.5 text-xs text-textSecondary leading-relaxed font-normal">
+                    Provide your company details below to discuss your commercial bureau reporting requirements.
+                  </p>
+                </div>
+
                 {status === 'sent' ? (
                   <div className="flex flex-col py-8 animate-in fade-in zoom-in-95 duration-300 items-center text-center">
                     <div className="h-16 w-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-5 text-emerald-500 shadow-sm">
@@ -699,9 +1080,10 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                         <p className="text-xs font-semibold">{errorMessage}</p>
                       </div>
                     )}
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="companyName">
-                        Company Name
+                    
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="companyName">
+                        COMPANY NAME
                       </label>
                       <input
                         type="text"
@@ -714,9 +1096,9 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                       />
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="contactName">
-                        Contact Person Name
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="contactName">
+                        CONTACT PERSON NAME
                       </label>
                       <input
                         type="text"
@@ -730,9 +1112,9 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="email">
-                          Company Email
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="email">
+                          COMPANY EMAIL
                         </label>
                         <input
                           type="email"
@@ -745,9 +1127,9 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="phone">
-                          Contact Number
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="phone">
+                          CONTACT NUMBER
                         </label>
                         <input
                           type="tel"
@@ -762,8 +1144,8 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block">
-                        Required Service
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block">
+                        REQUIRED SERVICE
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {['Commercial CIBIL Audit', 'Vendor Risk Monitoring', 'Company dispute', 'Not sure'].map((type) => {
@@ -774,10 +1156,10 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                               type="button"
                               onClick={() => setForm((p) => ({ ...p, issueType: type as any }))}
                               className={[
-                                'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border outline-none',
+                                'px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 border outline-none',
                                 isSelected
-                                  ? 'bg-brandNavy text-white border-brandNavy'
-                                  : 'bg-white text-textSecondary border-slate-200 hover:border-brandNavy/35 hover:text-brandNavy'
+                                  ? 'bg-[#1e293b] text-white border-[#1e293b]'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
                               ].join(' ')}
                             >
                               {type}
@@ -787,9 +1169,9 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-brandNavy block" htmlFor="message">
-                        Briefly state your requirements
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block" htmlFor="message">
+                        BRIEFLY STATE YOUR REQUIREMENTS
                       </label>
                       <textarea
                         id="message"
@@ -802,14 +1184,19 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
                     </div>
 
                     <div className="pt-2">
-                      <Button type="submit" disabled={status === 'sending'} className="px-6 py-4 bg-brandNavy text-white hover:bg-brandNavy/95 text-sm font-bold uppercase tracking-wider transition-all rounded-xl w-full justify-center shadow-md">
-                        {status === 'sending' ? 'Submitting...' : 'Submit Request'}
-                      </Button>
+                      <button 
+                        type="submit" 
+                        disabled={status === 'sending'} 
+                        className="px-6 py-4 bg-[#E82529] hover:bg-[#d01e22] text-white text-xs font-bold uppercase tracking-widest transition-all rounded-xl w-full justify-center shadow-md active:scale-[0.99] cursor-pointer"
+                      >
+                        {status === 'sending' ? 'SUBMITTING...' : 'SUBMIT REQUEST'}
+                      </button>
                     </div>
                   </form>
                 )}
               </div>
             </Reveal>
+
           </div>
         </div>
 
@@ -817,4 +1204,3 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
     </div>
   )
 }
-

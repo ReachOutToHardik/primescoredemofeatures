@@ -16,28 +16,48 @@ export default function About() {
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-brandRed/5 blur-[100px] rounded-full pointer-events-none" />
       
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24 relative z-10">
-        <section className="pt-28 sm:pt-36">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <section className="pt-24 sm:pt-32 lg:pt-36 pb-12 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left: Text Content */}
-            <Reveal>
-              <div className="max-w-2xl flex-1 -mt-8 lg:-mt-16">
-                <div className="inline-flex items-center gap-2 mb-6">
-                  <div className="h-1 w-10 bg-brandRed rounded-full" />
-                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-brandRed">Our Mission</p>
+            <div className="lg:col-span-6">
+              <Reveal>
+                <div>
+                  <div className="inline-flex items-center gap-2 mb-4">
+                    <div className="h-1 w-8 bg-brandRed rounded-full" />
+                    <p className="text-xs font-bold uppercase tracking-[0.25em] text-brandRed">Our Mission</p>
+                  </div>
+                  <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-brandNavy leading-[1.1]">
+                    Fair credit for <span className="text-brandBlue">every Indian.</span>
+                  </h1>
+                  <p className="mt-6 text-base sm:text-lg leading-relaxed text-textSecondary font-medium">
+                    A single inaccurate tag can block home loans, business credit, even rentals. Primescore exists to
+                    correct what's wrong — with documentation, discipline, and absolute transparency.
+                  </p>
+
+                  {/* Quick Stat Highlights */}
+                  <div className="grid grid-cols-3 gap-3 pt-8">
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                      <span className="text-brandBlue text-lg sm:text-2xl font-black block font-display">50,000+</span>
+                      <span className="text-slate-500 text-[11px] font-semibold">Indians Helped</span>
+                    </div>
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                      <span className="text-brandBlue text-lg sm:text-2xl font-black block font-display">4 Bureaus</span>
+                      <span className="text-slate-500 text-[11px] font-semibold">CIBIL, Exp, Eq, CRIF</span>
+                    </div>
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                      <span className="text-brandBlue text-lg sm:text-2xl font-black block font-display">100%</span>
+                      <span className="text-slate-500 text-[11px] font-semibold">Legal &amp; Transparent</span>
+                    </div>
+                  </div>
                 </div>
-                <h1 className="font-display text-5xl font-black tracking-tight text-brandNavy sm:text-7xl lg:text-8xl leading-[0.95]">
-                  Fair credit for <br /><span className="text-brandBlue">every Indian.</span>
-                </h1>
-                <p className="mt-8 max-w-2xl text-lg leading-relaxed text-textSecondary font-medium">
-                  A single inaccurate tag can block home loans, business credit, even rentals. Primescore exists to
-                  correct what's wrong — with documentation, discipline, and absolute transparency.
-                </p>
-              </div>
-            </Reveal>
+              </Reveal>
+            </div>
 
             {/* Right: India Map */}
-            <div className="relative flex-shrink-0 w-full max-w-[440px] lg:max-w-[540px]">
-              <IndiaMap />
+            <div className="lg:col-span-6 flex justify-center">
+              <div className="w-full max-w-[440px]">
+                <IndiaMap />
+              </div>
             </div>
           </div>
         </section>

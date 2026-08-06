@@ -254,67 +254,100 @@ export default function Services() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12 pb-24 text-brandNavy bg-night">
-      {/* 1. HERO SECTION */}
-      <section className="pt-24 sm:pt-36">
-        <Reveal>
-          <div className="text-center max-w-4xl mx-auto flex flex-col items-center">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2563EB]">OUR SERVICES</p>
-            
-            <h1 className="mt-4 font-display text-4xl font-black tracking-tight text-brandNavy sm:text-6xl max-w-3xl leading-[1.1]">
-              Services built to repair credit — <span className="text-[#2563EB] underline decoration-2 underline-offset-4">properly.</span>
-            </h1>
-            
-            <p className="mt-6 max-w-3xl text-sm sm:text-base leading-relaxed text-textSecondary">
-              Not a checklist. Not a template. Each service is engineered around Indian bureau realities: reference IDs,
-              response timelines, clean evidence packs, and the follow-ups most people don't do.
-            </p>
+      {/* 1. HERO SECTION — CLEAN LIGHT THEME & PNG IMAGE SHOWCASE */}
+      <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-6 sm:pb-8">
+        {/* Subtle Background Accents */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-            {/* CTAs */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center">
-              <Link href="/pricing" className="w-full sm:w-auto">
-                <button className="inline-flex items-center justify-center gap-2 rounded-xl px-8 h-12 text-sm font-semibold transition-all duration-200 active:scale-[0.97] bg-[#2563EB] text-white shadow-md shadow-blue-500/10 hover:bg-[#1d4ed8] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 w-full">
-                  See Pricing
-                </button>
-              </Link>
-              <Link href="/contact" className="w-full sm:w-auto">
-                <Button variant="ghost" className="w-full sm:px-8 h-12 bg-white hover:bg-slate-50">
-                  Talk to an expert
-                </Button>
-              </Link>
-            </div>
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 relative z-10">
+          <Reveal>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+              
+              {/* LEFT COLUMN: Clean High-Conversion Copy & CTAs */}
+              <div className="lg:col-span-7 space-y-6 sm:space-y-7">
+                
+                {/* Main Headline */}
+                <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.1]">
+                  Services Built to Repair Credit — <span className="text-[#2563EB] underline decoration-blue-500/30 underline-offset-8">Properly.</span>
+                </h1>
 
-            {/* Hero Trust Badge checkmarks list */}
-            <div className="mt-8 flex flex-col sm:flex-row items-center gap-x-6 gap-y-2.5 text-xs sm:text-sm font-semibold text-slate-500">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#63A831] font-bold text-sm">✓</span>
-                <span>iStart Govt. Recognized Startup</span>
+                {/* Sub Copy */}
+                <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                  We help you correct errors across CIBIL, Experian, Equifax, and CRIF High Mark. From resolving incorrect overdue flags to updating settled accounts and managing bank disputes, we handle the entire process with proof.
+                </p>
+
+                {/* Light Stat Chips */}
+                <div className="grid grid-cols-3 gap-3 pt-1 max-w-lg">
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                    <span className="text-[#2563EB] text-lg sm:text-2xl font-black block font-display">50,000+</span>
+                    <span className="text-slate-500 text-[11px] font-semibold">Reports Audited</span>
+                  </div>
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                    <span className="text-[#2563EB] text-lg sm:text-2xl font-black block font-display">4 Bureaus</span>
+                    <span className="text-slate-500 text-[11px] font-semibold">CIBIL, Exp, Eq, CRIF</span>
+                  </div>
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 text-center shadow-sm">
+                    <span className="text-[#2563EB] text-lg sm:text-2xl font-black block font-display">100%</span>
+                    <span className="text-slate-500 text-[11px] font-semibold">Legal &amp; Compliant</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                  <Link href="/pricing">
+                    <button className="bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm px-9 py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto group">
+                      <span>SEE PRICING &amp; PACKAGES</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </Link>
+                  <Link href="/contact">
+                    <button className="bg-white hover:bg-slate-100 text-slate-800 font-bold text-sm px-8 py-4 rounded-xl border border-slate-300 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm">
+                      <span>TALK TO AN EXPERT</span>
+                    </button>
+                  </Link>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#63A831] font-bold text-sm">✓</span>
-                <span>90-Day Average Resolution Time</span>
+
+              {/* RIGHT COLUMN: Dedicated PNG Image Showcase Container */}
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="w-full max-w-[480px] relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-xl p-3 group">
+                  {/* PNG Image (Replace src with your PNG path, e.g. /service/services-hero.png) */}
+                  <img
+                    src="/service/1779181760377-905109645-CIBIL-Score-Rectification.jpeg"
+                    alt="Credit Rectification & Bureau Resolution"
+                    className="w-full h-[320px] sm:h-[380px] object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
+                  />
+
+                  {/* Overlay Gradient for text readability */}
+                  <div className="absolute inset-x-3 bottom-3 p-5 rounded-b-2xl bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent text-white flex justify-between items-end">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">4-Bureau Legal Defense</span>
+                      <h4 className="text-sm font-bold">Official Bureau Dispute Filing</h4>
+                    </div>
+                    <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0" />
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#63A831] font-bold text-sm">✓</span>
-                <span>100% Legal, Document-Backed Process</span>
-              </div>
+
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* 2. DYNAMIC NOTIFICATION BANNER */}
-      <section className="mt-10 max-w-4xl mx-auto">
+      <section className="mt-3 sm:mt-5 max-w-5xl mx-auto">
         <Reveal>
-          <div className="rounded-full border border-brandNavy/10 bg-[#F0F5FF]/40 px-5 py-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-sm">
-            <div className="flex items-center gap-3">
+          <div className="rounded-full border border-brandNavy/10 bg-[#F0F5FF]/40 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-sm">
+            <div className="flex items-center gap-3 overflow-hidden">
               <Shield className="h-5 w-5 text-[#2563EB] shrink-0 hidden sm:block" />
-              <span className="text-xs sm:text-sm font-medium text-brandNavy leading-relaxed">
+              <span className="text-xs sm:text-sm font-medium text-brandNavy whitespace-nowrap">
                 Not sure what you need? We'll map your exact report issues to the right service in one quick call.
               </span>
             </div>
             <button
               onClick={handleScrollToForm}
-              className="bg-[#0B0F19] hover:bg-[#1a233a] text-white px-5 py-2.5 rounded-full text-xs font-semibold whitespace-nowrap outline-none transition-all"
+              className="bg-[#0B0F19] hover:bg-[#1a233a] text-white px-5 py-2.5 rounded-full text-xs font-semibold whitespace-nowrap outline-none transition-all shrink-0"
             >
               Book a free assessment
             </button>
@@ -330,9 +363,6 @@ export default function Services() {
             <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-brandNavy sm:text-4xl">
               Primescore core rectifications
             </h2>
-            <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-              Select an offering to explore detailed information, and click <span className="text-[#2563EB] font-bold">"View timeline"</span> to see exactly how our expert advisors map milestones for bureau resolution.
-            </p>
           </div>
         </Reveal>
 
@@ -345,7 +375,7 @@ export default function Services() {
               <Reveal key={s.id} delay={idx * 0.04}>
                 <button
                   type="button"
-                  onClick={() => handleScrollToTimeline(s.id)}
+                  onClick={handleScrollToForm}
                   className="group flex flex-col rounded-3xl border border-brandNavy/8 bg-white overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 h-full text-left cursor-pointer w-full"
                 >
                   {/* Card Image Banner */}
@@ -377,7 +407,7 @@ export default function Services() {
                   {/* Gray Bar Footer */}
                   <div className="bg-[#F8FAFC] border-t border-brandNavy/5 group-hover:bg-[#F1F5F9] transition-colors w-full">
                     <div className="flex w-full items-center justify-between px-6 py-5 text-sm font-bold text-[#2563EB]">
-                      <span>View milestone timeline</span>
+                      <span>Get started with this service</span>
                       <ArrowRight className="h-4 w-4 text-[#2563EB] transition-transform group-hover:translate-x-1.5" />
                     </div>
                   </div>
@@ -385,91 +415,6 @@ export default function Services() {
               </Reveal>
             )
           })}
-        </div>
-      </section>
-
-
-      {/* 5. TIMELINES TAB PANEL */}
-      <section className="mt-24" id="timelines-section">
-        <Reveal>
-          <div className="text-center">
-            <h2 className="font-display text-3xl font-black tracking-tight text-brandNavy sm:text-4xl">
-              A clear timeline for every service
-            </h2>
-            <p className="mt-4 text-sm text-textSecondary max-w-3xl mx-auto leading-relaxed">
-              We operate transparently. Click on any of our 6 service categories below to trace every single chronological step, reference point, and negotiation milestone we manage on your behalf.
-            </p>
-          </div>
-        </Reveal>
-
-        {/* Tabs Bar — horizontal scroll on mobile, centered wrap on desktop */}
-        <div className="mt-10">
-          <div className="flex overflow-x-auto no-scrollbar gap-2 p-1.5 rounded-2xl sm:rounded-full bg-brandNavy/[0.03] border border-brandNavy/5 sm:flex-wrap sm:justify-center">
-            {services.map((s) => {
-              const isActive = activeTimelineId === s.id
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setActiveTimelineId(s.id)}
-                  className={[
-                    'px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 outline-none shrink-0',
-                    isActive
-                      ? 'bg-[#0B0F19] text-white shadow-md'
-                      : 'text-textSecondary hover:text-brandNavy hover:bg-brandNavy/[0.04]'
-                  ].join(' ')}
-                >
-                  {s.title}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Timeline Bento Grid Panel */}
-        <div className="mt-8 rounded-3xl border border-brandNavy/8 bg-white p-6 sm:p-10 shadow-card">
-          <Reveal key={activeTimelineId}>
-            <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F5FF] px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brandBlue mb-4">
-                <Clock className="h-3.5 w-3.5" />
-                <span>FULL RESOLUTION TRACK</span>
-              </div>
-
-              <h3 className="font-display text-2xl font-black text-brandNavy">{activeService.title} Timeline</h3>
-              <p className="mt-3 text-sm leading-relaxed text-textSecondary max-w-3xl">{activeService.description}</p>
-
-              {/* Steps Horizontal Grid */}
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {activeService.timeline.map((step, sIdx) => (
-                  <div key={step.title} className="rounded-2xl border border-brandNavy/8 bg-[#F8FAFC] p-5 flex flex-col justify-between h-full hover:shadow-sm hover:border-[#2563EB]/35 transition-all duration-200">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-brandBlue bg-[#F0F5FF] px-2.5 py-1 rounded-full">
-                        {step.eta}
-                      </span>
-                      <span className="font-mono text-sm font-bold text-brandBlue">
-                        0{sIdx + 1}
-                      </span>
-                    </div>
-                    <div>
-                      <h5 className="font-display text-base font-bold text-brandNavy leading-snug">{step.title}</h5>
-                      <p className="mt-2 text-xs leading-relaxed text-textSecondary">{step.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer Notice Row */}
-              <div className="mt-8 pt-6 border-t border-brandNavy/5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
-                <span className="text-textSecondary text-center sm:text-left">
-                  * ETA timeline reflects standard bank and bureau processing SLAs. Updates reflect live on your dashboard.
-                </span>
-                <Link href="/pricing" className="text-brandBlue font-bold hover:underline flex items-center gap-1 whitespace-nowrap">
-                  <span>View pricing details</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 

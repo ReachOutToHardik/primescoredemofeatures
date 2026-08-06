@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Clock } from 'lucide-react'
 
 export default function Blog({ initialBlogs = [], dict, locale = 'en' }: { initialBlogs: any[]; dict?: any; locale?: string }) {
@@ -80,9 +81,12 @@ export default function Blog({ initialBlogs = [], dict, locale = 'en' }: { initi
           >
             <div className="lg:col-span-7 h-[300px] sm:h-[400px] lg:h-auto overflow-hidden relative">
               <div className="absolute inset-0 bg-black/5 z-10 transition-colors group-hover:bg-transparent" />
-              <img 
+              <Image 
                 src={featuredPost.image || '/placeholder.jpg'} 
                 alt={featuredPost.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             </div>
@@ -114,9 +118,11 @@ export default function Blog({ initialBlogs = [], dict, locale = 'en' }: { initi
               className="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="h-56 overflow-hidden relative">
-                <img 
+                <Image 
                   src={post.image || '/placeholder.jpg'} 
                   alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="w-full h-full object-cover transition-transform duration-750 ease-out group-hover:scale-110"
                 />
               </div>

@@ -9,11 +9,11 @@ export default function BusinessNavbar() {
   const pathname = usePathname()
 
   const links = [
-    { to: '/business', label: 'Home' },
-    { to: '/business/about', label: 'About' },
-    { to: '/business/services', label: 'Services' },
-    { to: '/business/pricing', label: 'Pricing' },
-    { to: '/business/contact', label: 'Contact' },
+    { to: '/business', sectionId: '', label: 'Home' },
+    { to: '/business/about', sectionId: 'process', label: 'About' },
+    { to: '/business/services', sectionId: 'services', label: 'Services' },
+    { to: '/business/pricing', sectionId: 'pricing', label: 'Pricing' },
+    { to: '/business/contact', sectionId: 'audit-form', label: 'Contact' },
   ]
 
   return (
@@ -35,18 +35,21 @@ export default function BusinessNavbar() {
         {/* Center menu links */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => {
+            const isBusinessRoute = pathname?.startsWith('/business')
+            const hrefTarget = isBusinessRoute && l.sectionId ? `/business#${l.sectionId}` : l.to
             const isActive = pathname === l.to
+
             const infoText = 
-              l.to === '/business' ? 'Company dashboard overview & alerts' :
-              l.to === '/business/about' ? 'Learn about our corporate partners' :
-              l.to === '/business/services' ? 'Commercial score auditing tools' :
-              l.to === '/business/pricing' ? 'B2B subscription plans & options' :
-              l.to === '/business/contact' ? 'Discuss requirements with an expert' : ''
+              l.label === 'Home' ? 'Company dashboard overview & alerts' :
+              l.label === 'About' ? 'Why Primescore commercial expertise' :
+              l.label === 'Services' ? 'Our step-by-step resolution process' :
+              l.label === 'Pricing' ? 'B2B subscription plans & options' :
+              l.label === 'Contact' ? 'Discuss requirements with an expert' : ''
 
             return (
-              <div key={l.to} className="relative group/b2bnav">
+              <div key={l.label} className="relative group/b2bnav">
                 <Link
-                  href={l.to}
+                  href={hrefTarget}
                   className={[
                     'text-xs font-bold uppercase tracking-wider transition-colors py-2 block relative',
                     isActive 

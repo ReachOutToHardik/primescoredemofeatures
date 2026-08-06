@@ -16,6 +16,7 @@ export default function WhatsAppWidget() {
   const [open, setOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [visible, setVisible] = useState(false)
+  const [unreadBadge, setUnreadBadge] = useState(false)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -26,10 +27,20 @@ export default function WhatsAppWidget() {
       }
     }
     
+    // Show widget FAB
     const timer = setTimeout(() => {
       setVisible(true)
     }, 3500)
-    return () => clearTimeout(timer)
+
+    // Trigger red unread message notification badge after 15 seconds
+    const badgeTimer = setTimeout(() => {
+      setUnreadBadge(true)
+    }, 15000)
+
+    return () => {
+      clearTimeout(timer)
+      clearTimeout(badgeTimer)
+    }
   }, [])
 
   const handleSend = () => {
@@ -37,6 +48,11 @@ export default function WhatsAppWidget() {
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank')
     setMsg('')
     setOpen(false)
+  }
+
+  const handleOpenWidget = () => {
+    setOpen(o => !o)
+    setUnreadBadge(false) // Clear notification badge count when opened
   }
 
   if (!visible) return null
@@ -98,7 +114,7 @@ export default function WhatsAppWidget() {
 
       {/* FAB Button */}
       <motion.button
-        onClick={() => setOpen(o => !o)}
+        onClick={handleOpenWidget}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-6 right-6 z-[60] grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg sm:bottom-8 sm:right-8"
@@ -109,6 +125,20 @@ export default function WhatsAppWidget() {
             ? <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><X className="h-6 w-6" /></motion.div>
             : <motion.div key="wa" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><WaIcon size={28} /></motion.div>
           }
+        </AnimatePresence>
+
+        {/* Absolute Red Unread message count badge bubble */}
+        <AnimatePresence>
+          {unreadBadge && !open && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-full bg-red-600 border border-white text-white text-[11px] font-black flex items-center justify-center shadow-md animate-pulse"
+            >
+              1
+            </motion.div>
+          )}
         </AnimatePresence>
       </motion.button>
     </>

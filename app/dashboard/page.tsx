@@ -1,13 +1,11 @@
 import type { Metadata } from 'next'
-import Dashboard from '../../src/views/Dashboard'
+import DashboardDemoView from '../../src/views/DashboardDemoView'
 
 export const metadata: Metadata = {
-  title: 'Dashboard — Track Your Credit Score Progress',
-  description: 'Monitor your credit score improvement journey with the Primescore dashboard.',
+  title: 'Multi-Bureau Credit Dashboard Demo — Primescore',
+  description: 'Interactive preview of the Primescore Multi-Bureau Credit Dashboard. Track CIBIL, Experian, Equifax, and CRIF High Mark credit scores in one place.',
 }
 
-import { redirect } from 'next/navigation'
-
 export default function DashboardPage() {
-  redirect('https://dashboard.primescore.in')
+  return <DashboardDemoView />
 }

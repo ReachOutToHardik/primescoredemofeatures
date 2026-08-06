@@ -15,8 +15,7 @@ export default function Footer() {
               <img src="/Logo-primescore.png" alt="Primescore" className="w-auto" style={{ height: '64px', width: 'auto' }} />
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-textSecondary">
-              Credit rectification and score support — dispute errors, recover your score, and unlock
-              better credit outcomes.
+              Most platforms stop at your score. We go further — finding every error, filing every dispute, fixing your credit health across all bureaus.
             </p>
 
             <div className="mt-6 flex items-center gap-4 text-textSecondary">
