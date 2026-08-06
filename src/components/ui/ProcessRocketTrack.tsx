@@ -56,7 +56,7 @@ export default function ProcessRocketTrack() {
   const pathRef = useRef<SVGPathElement>(null)
   const prevPRef = useRef(0)
   
-  const [rocketPos, setRocketPos] = useState({ x: 100, y: 240, rotate: 0 })
+  const [rocketPos, setRocketPos] = useState({ x: 240, y: 240, rotate: 0 })
   const [isBackward, setIsBackward] = useState(false)
   const [totalPathLength, setTotalPathLength] = useState(1800)
 
@@ -73,8 +73,8 @@ export default function ProcessRocketTrack() {
     restDelta: 0.0001
   })
 
-  // Hardware accelerated horizontal slide for track container (0% to -40%)
-  const trackX = useTransform(smoothProgress, [0, 1], ['0%', '-40%'])
+  // Hardware accelerated horizontal slide for track container (0% to -44%)
+  const trackX = useTransform(smoothProgress, [0, 1], ['0%', '-44%'])
 
   // Measure path length on mount
   useEffect(() => {
@@ -150,14 +150,14 @@ export default function ProcessRocketTrack() {
               x: trackX,
               willChange: 'transform'
             }}
-            className="absolute left-0 top-0 h-full w-[1900px] pointer-events-none"
+            className="absolute left-0 top-0 h-full w-[2200px] pointer-events-none"
           >
-            {/* Middle Wavy SVG Path Line (Positioned in z-20 channel between top and bottom cards so it is NEVER hidden) */}
-            <div className="absolute top-[200px] left-0 w-[1800px] h-[80px] z-20 pointer-events-none">
-              <svg className="w-full h-full overflow-visible" viewBox="0 0 1800 80" preserveAspectRatio="none">
+            {/* Middle Wavy SVG Path Line (Positioned in z-20 channel starting cleanly aligned with Card 01 at X=240) */}
+            <div className="absolute top-[200px] left-0 w-[2000px] h-[80px] z-20 pointer-events-none">
+              <svg className="w-full h-full overflow-visible" viewBox="0 0 2000 80" preserveAspectRatio="none">
                 {/* Dashed Background Wave */}
                 <path
-                  d="M 100 40 Q 290 0, 480 40 T 860 40 T 1240 40 T 1620 40"
+                  d="M 240 40 Q 430 0, 620 40 T 1000 40 T 1380 40 T 1760 40"
                   fill="none"
                   stroke="#CBD5E1"
                   strokeWidth="3.5"
@@ -166,7 +166,7 @@ export default function ProcessRocketTrack() {
                 {/* Active Blue Progress Wave Path */}
                 <motion.path
                   ref={pathRef}
-                  d="M 100 40 Q 290 0, 480 40 T 860 40 T 1240 40 T 1620 40"
+                  d="M 240 40 Q 430 0, 620 40 T 1000 40 T 1380 40 T 1760 40"
                   fill="none"
                   stroke="#2563EB"
                   strokeWidth="4.5"
@@ -195,14 +195,14 @@ export default function ProcessRocketTrack() {
               </div>
             </div>
 
-            {/* Alternating Step Cards (Top cards at top-0, Bottom cards at top-[285px] leaving full visibility for middle line) */}
+            {/* Alternating Step Cards (Positioned starting with clean margin at X=180) */}
             <div className="absolute inset-0 pointer-events-auto z-10">
               {PROCESS_STEPS.map((item, idx) => {
                 const stepThreshold = idx / 4
                 
                 // Alternating layout: EVEN indices (0, 2, 4) sit ABOVE the wave line at top-0; ODD indices (1, 3) sit BELOW at top-[285px]
                 const isTopCard = idx % 2 === 0
-                const cardLeft = 40 + idx * 360
+                const cardLeft = 180 + idx * 380
                 const cardTop = isTopCard ? 0 : 285
 
                 return (
