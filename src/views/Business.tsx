@@ -4,6 +4,7 @@ import React from 'react'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
+import ProcessRocketTrack from '../components/ui/ProcessRocketTrack'
 import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle, ArrowRight, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion'
 
@@ -62,69 +63,6 @@ export default function Business() {
       }
     }
   }
-
-  // Timeline scroll-linked animations
-  const processRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress: processScroll } = useScroll({
-    target: processRef,
-    offset: ["start start", "end end"]
-  })
-  const processLineWidth = useTransform(processScroll, [0.10, 0.85], ["0%", "100%"])
-
-  // Pinned triggers for smooth step lighting as screen remains locked
-  const act1 = useTransform(processScroll, [0.10, 0.20], [0, 1])
-  const act2 = useTransform(processScroll, [0.25, 0.35], [0, 1])
-  const act3 = useTransform(processScroll, [0.40, 0.50], [0, 1])
-  const act4 = useTransform(processScroll, [0.55, 0.65], [0, 1])
-  const act5 = useTransform(processScroll, [0.70, 0.80], [0, 1])
-
-  // Step 1: Red Theme (Submit Inquiry)
-  const bg1 = useTransform(act1, [0, 1], ["rgba(255,255,255,0.8)", "#EF4444"])
-  const textCol1 = useTransform(act1, [0, 1], ["#EF4444", "#ffffff"])
-  const scale1 = useTransform(act1, [0, 1], [1, 1.15])
-  const borderCol1 = useTransform(act1, [0, 1], ["#e2e8f0", "#EF4444"])
-  const shadow1 = useTransform(act1, [0, 1], ["none", "0 0 20px rgba(239,68,68,0.3)"])
-  const bodyOpacity1 = useTransform(act1, [0, 1], [0.5, 1])
-
-  // Step 2: Yellow/Amber Theme (CCR & CRIF Pull)
-  const bg2 = useTransform(act2, [0, 1], ["rgba(255,255,255,0.8)", "#F59E0B"])
-  const textCol2 = useTransform(act2, [0, 1], ["#F59E0B", "#ffffff"])
-  const scale2 = useTransform(act2, [0, 1], [1, 1.15])
-  const borderCol2 = useTransform(act2, [0, 1], ["#e2e8f0", "#F59E0B"])
-  const shadow2 = useTransform(act2, [0, 1], ["none", "0 0 20px rgba(245,158,11,0.3)"])
-  const bodyOpacity2 = useTransform(act2, [0, 1], [0.5, 1])
-
-  // Step 3: Green/Emerald Theme (Error Identification)
-  const bg3 = useTransform(act3, [0, 1], ["rgba(255,255,255,0.8)", "#10B981"])
-  const textCol3 = useTransform(act3, [0, 1], ["#10B981", "#ffffff"])
-  const scale3 = useTransform(act3, [0, 1], [1, 1.15])
-  const borderCol3 = useTransform(act3, [0, 1], ["#e2e8f0", "#10B981"])
-  const shadow3 = useTransform(act3, [0, 1], ["none", "0 0 20px rgba(16,185,129,0.3)"])
-  const bodyOpacity3 = useTransform(act3, [0, 1], [0.5, 1])
-
-  // Step 4: Blue Theme (Dispute Filing)
-  const bg4 = useTransform(act4, [0, 1], ["rgba(255,255,255,0.8)", "#2563EB"])
-  const textCol4 = useTransform(act4, [0, 1], ["#2563EB", "#ffffff"])
-  const scale4 = useTransform(act4, [0, 1], [1, 1.15])
-  const borderCol4 = useTransform(act4, [0, 1], ["#e2e8f0", "#2563EB"])
-  const shadow4 = useTransform(act4, [0, 1], ["none", "0 0 20px rgba(37,99,235,0.3)"])
-  const bodyOpacity4 = useTransform(act4, [0, 1], [0.5, 1])
-
-  // Step 5: Indigo Theme (Ongoing Monitoring)
-  const bg5 = useTransform(act5, [0, 1], ["rgba(255,255,255,0.8)", "#4F46E5"])
-  const textCol5 = useTransform(act5, [0, 1], ["#4F46E5", "#ffffff"])
-  const scale5 = useTransform(act5, [0, 1], [1, 1.15])
-  const borderCol5 = useTransform(act5, [0, 1], ["#e2e8f0", "#4F46E5"])
-  const shadow5 = useTransform(act5, [0, 1], ["none", "0 0 20px rgba(79,70,229,0.3)"])
-  const bodyOpacity5 = useTransform(act5, [0, 1], [0.5, 1])
-
-  const nodeStyles = useMemo(() => [
-    { bg: bg1, text: textCol1, scale: scale1, border: borderCol1, shadow: shadow1, opacity: bodyOpacity1 },
-    { bg: bg2, text: textCol2, scale: scale2, border: borderCol2, shadow: shadow2, opacity: bodyOpacity2 },
-    { bg: bg3, text: textCol3, scale: scale3, border: borderCol3, shadow: shadow3, opacity: bodyOpacity3 },
-    { bg: bg4, text: textCol4, scale: scale4, border: borderCol4, shadow: shadow4, opacity: bodyOpacity4 },
-    { bg: bg5, text: textCol5, scale: scale5, border: borderCol5, shadow: shadow5, opacity: bodyOpacity5 },
-  ], [bg1, bg2, bg3, bg4, bg5, textCol1, textCol2, textCol3, textCol4, textCol5, scale1, scale2, scale3, scale4, scale5, borderCol1, borderCol2, borderCol3, borderCol4, borderCol5, shadow1, shadow2, shadow3, shadow4, shadow5, bodyOpacity1, bodyOpacity2, bodyOpacity3, bodyOpacity4, bodyOpacity5])
 
   const [form, setForm] = useState<FormState>({
     companyName: '',
@@ -665,6 +603,9 @@ function InteractiveCreditReport() {
         </div>
       </section>
 
+      {/* ── OUR PROCESS (ROCKET TRACK) ────────────────────── */}
+      <ProcessRocketTrack />
+
       {/* ── WHY CHOOSE US ────────────────────────────────── */}
       <section className="border-b border-slate-100">
         <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-20">
@@ -769,63 +710,7 @@ function InteractiveCreditReport() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS / OUR PROCESS ───────────────────── */}
-      <section id="process" ref={processRef} className="relative h-[250vh] border-b border-slate-100 overflow-visible bg-white scroll-mt-20">
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-          <div className="mx-auto max-w-[1280px] w-full px-6 sm:px-10 py-6">
-            <Reveal>
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-px w-8 bg-[#2563EB]" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2563EB]">Our Process</span>
-                </div>
-                <h2 className="font-display text-3xl sm:text-4xl font-black text-brandNavy max-w-xl leading-tight">
-                  From inquiry to clean bureau record.
-                </h2>
-              </div>
-            </Reveal>
-            <div className="relative grid lg:grid-cols-5 gap-6 overflow-visible">
-              {/* Background line tracker with glowing scroll overlay */}
-              <div className="hidden lg:block absolute top-7 left-16 right-16 h-[3px] bg-slate-200 z-0">
-                <motion.div 
-                  style={{ width: processLineWidth }}
-                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(37,99,235,0.6)] origin-left"
-                />
-              </div>
-              
-              {[
-                { n: '01', title: 'Submit Inquiry', body: 'Fill our commercial audit request form. Our team reviews your company profile within 2 hours.' },
-                { n: '02', title: 'CCR & Report Pull', body: 'We obtain your Company Credit Report from CIBIL and CRIF, plus director-level bureau pulls.' },
-                { n: '03', title: 'Error Identification', body: 'Our analysts map duplicate lines, PAN mismatches, incorrect account classifications, and registry errors.' },
-                { n: '04', title: 'Dispute Filing', body: 'Formal dispute documentation is compiled and submitted to the relevant bureaus and banks on your behalf.' },
-                { n: '05', title: 'Ongoing Monitoring', body: 'Monthly and quarterly reports are delivered for the duration of your plan. We flag new issues proactively.' },
-              ].map((step, i) => {
-                const style = nodeStyles[i]
-                return (
-                  <div key={step.n} className="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <motion.div 
-                      style={{ 
-                        backgroundColor: style.bg,
-                        color: style.text,
-                        scale: style.scale,
-                        borderColor: style.border,
-                        boxShadow: style.shadow
-                      }}
-                      className="w-14 h-14 rounded-2xl border flex items-center justify-center mb-3 relative z-10 transition-all duration-300 backdrop-blur-xs"
-                    >
-                      <span className="text-[10px] font-black tracking-wider">{step.n}</span>
-                    </motion.div>
-                    <motion.div style={{ opacity: style.opacity }} className="transition-all duration-300">
-                      <h3 className="text-sm font-bold text-brandNavy mb-2">{step.title}</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">{step.body}</p>
-                    </motion.div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* ── ENGAGEMENT COSTS (PRICING SECTION) ───────────── */}
       <section id="pricing" className="border-b border-slate-100 bg-slate-50/60 py-24 scroll-mt-20">
