@@ -38,7 +38,7 @@ const PROCESS_STEPS = [
   {
     step: '04',
     title: 'Dispute Filing',
-    description: 'Formal dispute documentation is compiled and submitted to the relevant bureaus and banks on your behalf.',
+    description: 'Formal dispute documentation is compiled and submitted to All 4 Bureaus (CIBIL, Experian, Equifax, CRIF) and relevant banks on your behalf.',
     iconTag: 'Direct Legal',
     icon: ShieldCheck
   },

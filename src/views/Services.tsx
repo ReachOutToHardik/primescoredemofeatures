@@ -53,28 +53,24 @@ const comparisonRows = [
 
 const faqs = [
   {
-    q: 'What is credit score rectification?',
-    a: 'Credit score rectification (or credit repair) is the legal process of disputing inaccurate, outdated, or unverifiable entries on your credit report. We correct false late payments and errors to improve your overall CIBIL score.',
+    q: 'What is PrimeScore?',
+    a: 'PrimeScore is a credit consultancy that helps individuals and businesses identify errors in their credit reports, raise disputes with banks and credit bureaus, monitor their credit profile, and improve their overall creditworthiness through a legal and transparent process.',
   },
   {
-    q: 'How long does CIBIL dispute resolution take?',
-    a: 'Under RBI guidelines, bureaus and banks have 30 days to resolve a dispute. Most simple errors are fixed in 30-45 days, while complex cases like loan settlements may take 60-90 days.',
+    q: 'Which credit bureaus does PrimeScore support?',
+    a: 'We help clients with all four major credit bureaus in India: CIBIL, Experian, Equifax, and CRIF High Mark.',
   },
   {
-    q: 'Can incorrect late payments (DPD) be removed?',
-    a: 'Yes. If a late payment or Days Past Due (DPD) was marked incorrectly due to a bank error or technical glitch, we can file a legal dispute to have it completely removed from your credit history.',
+    q: 'Can PrimeScore increase my credit score?',
+    a: 'We cannot artificially increase your score. We help remove incorrect, outdated, duplicate, or unverifiable information through legal dispute processes, which may improve your credit score if genuine errors exist.',
   },
   {
-    q: 'Does loan settlement affect my CIBIL score?',
-    a: 'Yes, a "Settled" status damages your score for up to 7 years because the loan was closed for less than the total amount due. We help negotiate proper closures and dispute invalid settlement markers.',
+    q: 'How long does credit rectification take?',
+    a: 'Simple disputes are often resolved within 30 to 45 days, while complex cases involving banks, settlements, or written-off accounts may take 60 to 90 days.',
   },
   {
-    q: 'How much CIBIL score improvement is possible?',
-    a: 'Removing a single false late payment can boost your score by 20-50 points. For major errors like false defaults, clients often see improvements of over 100 points, rapidly crossing the 750+ mark.',
-  },
-  {
-    q: 'How does Primescore help fix my credit?',
-    a: 'Primescore is India’s trusted credit consultancy. We legally dispute errors directly with banks and bureaus, and provide a live dashboard so you can track your CIBIL score recovery in real-time.',
+    q: 'Primescore Fintech Private limited: Can I check all my credit reports in one place?',
+    a: 'Yes. PrimeScore provides a dashboard where you can monitor your credit profile and track dispute progress across multiple credit bureaus.',
   },
 ]
 
