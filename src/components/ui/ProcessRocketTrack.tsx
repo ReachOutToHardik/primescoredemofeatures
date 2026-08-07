@@ -24,7 +24,7 @@ const PROCESS_STEPS = [
   {
     step: '02',
     title: 'CCR & Report Pull',
-    description: 'We obtain your Company Credit Report from CIBIL and CRIF, plus director-level bureau pulls.',
+    description: 'We obtain your Company Credit Report from All 4 Bureaus (CIBIL, Experian, Equifax, CRIF), plus director-level pulls.',
     iconTag: '4 Bureaus',
     icon: Search
   },
@@ -56,9 +56,9 @@ export default function ProcessRocketTrack() {
   const pathRef = useRef<SVGPathElement>(null)
   const prevPRef = useRef(0)
   
-  const [rocketPos, setRocketPos] = useState({ x: 240, y: 262, rotate: 0 })
+  const [rocketPos, setRocketPos] = useState({ x: 240, y: 275, rotate: 0 })
   const [isBackward, setIsBackward] = useState(false)
-  const [totalPathLength, setTotalPathLength] = useState(1800)
+  const [totalPathLength, setTotalPathLength] = useState(2000)
 
   // Scroll tracking with Framer Motion
   const { scrollYProgress } = useScroll({
@@ -73,8 +73,8 @@ export default function ProcessRocketTrack() {
     restDelta: 0.0001
   })
 
-  // Hardware accelerated horizontal slide for track container (0% to -44%)
-  const trackX = useTransform(smoothProgress, [0, 1], ['0%', '-44%'])
+  // Hardware accelerated horizontal slide for track container (0% to -46%)
+  const trackX = useTransform(smoothProgress, [0, 1], ['0%', '-46%'])
 
   // Measure path length on mount
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function ProcessRocketTrack() {
 
       setRocketPos({
         x: pt.x,
-        y: 222 + pt.y, // 222px is the top offset of the middle SVG channel
+        y: 235 + pt.y, // 235px is the top offset of the middle SVG channel
         rotate: angle
       })
     })
@@ -193,8 +193,8 @@ export default function ProcessRocketTrack() {
             </p>
           </div>
 
-          {/* Horizontal Scrolling Canvas Stage (560px height with top & bottom breathing room so card scaling & ring glows never get clipped) */}
-          <div className="relative w-full h-[560px] overflow-hidden py-4">
+          {/* Horizontal Scrolling Canvas Stage (600px height so cards fit full descriptions without truncation or edge clipping) */}
+          <div className="relative w-full h-[600px] overflow-hidden py-4">
             
             {/* Hardware Accelerated Sliding Track Wrapper */}
             <motion.div
@@ -202,14 +202,14 @@ export default function ProcessRocketTrack() {
                 x: trackX,
                 willChange: 'transform'
               }}
-              className="absolute left-0 top-0 h-full w-[2200px] pointer-events-none"
+              className="absolute left-0 top-0 h-full w-[2300px] pointer-events-none"
             >
-              {/* Middle Wavy SVG Path Line (Positioned in z-20 channel at Y=222px) */}
-              <div className="absolute top-[222px] left-0 w-[2000px] h-[80px] z-20 pointer-events-none">
-                <svg className="w-full h-full overflow-visible" viewBox="0 0 2000 80" preserveAspectRatio="none">
+              {/* Middle Wavy SVG Path Line (Positioned in z-20 channel at Y=235px) */}
+              <div className="absolute top-[235px] left-0 w-[2100px] h-[80px] z-20 pointer-events-none">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 2100 80" preserveAspectRatio="none">
                   {/* Dashed Background Wave */}
                   <path
-                    d="M 240 40 Q 430 0, 620 40 T 1000 40 T 1380 40 T 1760 40"
+                    d="M 240 40 Q 440 0, 640 40 T 1040 40 T 1440 40 T 1840 40"
                     fill="none"
                     stroke="#CBD5E1"
                     strokeWidth="3.5"
@@ -218,7 +218,7 @@ export default function ProcessRocketTrack() {
                   {/* Active Blue Progress Wave Path */}
                   <motion.path
                     ref={pathRef}
-                    d="M 240 40 Q 430 0, 620 40 T 1000 40 T 1380 40 T 1760 40"
+                    d="M 240 40 Q 440 0, 640 40 T 1040 40 T 1440 40 T 1840 40"
                     fill="none"
                     stroke="#2563EB"
                     strokeWidth="4.5"
@@ -247,15 +247,15 @@ export default function ProcessRocketTrack() {
                 </div>
               </div>
 
-              {/* Alternating Step Cards (Top cards at top=18px, Bottom cards at top=310px ensuring 0% clipping) */}
+              {/* Alternating Step Cards (Sized w-[350px] h-[225px] for 100% full text visibility) */}
               <div className="absolute inset-0 pointer-events-auto z-10">
                 {PROCESS_STEPS.map((item, idx) => {
                   const stepThreshold = idx / 4
                   
-                  // Alternating layout: EVEN indices (0, 2, 4) sit ABOVE the wave line at top=18px; ODD indices (1, 3) sit BELOW at top=310px
+                  // Alternating layout: EVEN indices (0, 2, 4) sit ABOVE the wave line at top=10px; ODD indices (1, 3) sit BELOW at top=330px
                   const isTopCard = idx % 2 === 0
-                  const cardLeft = 180 + idx * 380
-                  const cardTop = isTopCard ? 18 : 310
+                  const cardLeft = 180 + idx * 400
+                  const cardTop = isTopCard ? 10 : 330
 
                   return (
                     <StepCardItem
@@ -321,7 +321,7 @@ function StepCardItem({
         scale: cardScale,
         willChange: 'transform, opacity'
       }}
-      className={`absolute w-[330px] h-[195px] bg-white border rounded-2xl p-5 shadow-xs transition-all duration-300 flex flex-col justify-between group ${
+      className={`absolute w-[350px] min-h-[225px] bg-white border rounded-2xl p-5 shadow-xs transition-all duration-300 flex flex-col justify-between group ${
         isReached
           ? 'border-[#2563EB] ring-4 ring-[#2563EB]/15 shadow-xl bg-gradient-to-b from-blue-50/30 to-white'
           : 'border-slate-200/90 hover:border-slate-300'
@@ -349,20 +349,21 @@ function StepCardItem({
         </div>
 
         {/* Step Title & Description */}
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-1.5">
           <IconComp className={`h-4 w-4 shrink-0 transition-colors ${isReached ? 'text-[#2563EB]' : 'text-slate-400'}`} />
           <h3 className={`font-display text-sm font-black transition-colors ${isReached ? 'text-[#2563EB]' : 'text-[#0A2342]'}`}>
             {item.title}
           </h3>
         </div>
         
-        <p className="text-xs text-slate-500 leading-relaxed font-normal line-clamp-2">
+        {/* Full Unclipped Description Text */}
+        <p className="text-xs text-slate-500 leading-relaxed font-normal">
           {item.description}
         </p>
       </div>
 
       {/* Step Footer Indicator */}
-      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400">
+      <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400">
         <span className={isReached ? 'text-[#2563EB] font-extrabold' : ''}>
           {isReached ? '✓ Step Verified' : `Step ${idx + 1} of 5`}
         </span>

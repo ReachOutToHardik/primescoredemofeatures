@@ -336,11 +336,13 @@ function CommercialCapabilitiesGrid() {
   ], [])
 
   const corporateTestimonials = useMemo(() => [
-    { name: 'Anand Singhal', role: 'CFO, Singhal Logistics Pvt Ltd', text: 'Primescore identified four duplicate loan accounts on our bureau profile that were showing active balance lines. Our credit records were successfully corrected.' },
-    { name: 'Meera Nair', role: 'Operations Director, Nair Autotech', text: 'Monitoring our supplier credit risk profiles helped us manage potential default risks before they affected our operations.' },
-    { name: 'Rajesh Patel', role: 'Managing Director, Patel Agro Exports', text: 'Resolved an identity match error where another company\'s write-offs were reporting on our corporate record. The documentation team was prompt.' },
-    { name: 'Vikram Sharma', role: 'VP Finance, Apex Infrastructure', text: 'Cleaned up legacy PAN mapping mismatches across 3 lender records in 60 days. Our working capital limit expansion was approved immediately.' },
-    { name: 'Priya Sundaram', role: 'Head of Treasury, Zenith Capital', text: 'The 2-hour SLA desk responded with formal dispute documentation within hours. Their director-level monitoring caught hidden score anomalies.' }
+    { name: 'Rishab Sharma', role: 'MTAT India', text: 'Primescore audited our commercial credit report and resolved duplicate liability entries across our accounts. Extremely professional execution.' },
+    { name: 'Mukul Yadav', role: 'Visam Solution', text: 'Our director-level CIBIL profile and company CCR were reconciled seamlessly. Saved us months of back-and-forth with banks.' },
+    { name: 'VNSB Enterprises', role: 'Commercial Audit Client', text: 'Identified and corrected registry PAN mismatches that were holding up our working capital limit expansions. Highly recommended.' },
+    { name: 'Raju Ram Ji', role: 'Bhati Stone Art', text: 'Clear communication and fast turnarounds on dispute documentation. Cleared legacy classification errors from our corporate records.' },
+    { name: 'Sandeep Jain', role: 'MS Food Industries', text: 'The 2-hour quick response desk guided us through complete bureau reconciliation. Transparent pricing with zero surprise charges.' },
+    { name: 'GK Garg', role: 'Ganpati Steel', text: 'Primescore\'s commercial audit team tracked our bureau dispute status continuously until full resolution. Outstanding support.' },
+    { name: 'Sarang Jain', role: 'LMJ', text: 'Comprehensive 4-bureau monitoring gave us complete visibility into our company credit standing and director score health.' }
   ], [])
 
   return (
@@ -384,11 +386,11 @@ function CommercialCapabilitiesGrid() {
               <div className="pt-6 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px] font-bold text-slate-200 [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]">
                 <div className="flex items-center justify-start gap-2">
                   <ShieldCheck className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
-                  <span>CIBIL & CRIF Audit Desk</span>
+                  <span>All 4 Bureaus Audit Desk</span>
                 </div>
                 <div className="flex items-center justify-start gap-2">
                   <Clock className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
-                  <span>2-Hour SLA Response</span>
+                  <span>2-Hour Quick Response Time</span>
                 </div>
                 <div className="flex items-center justify-start gap-2">
                   <Check className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
@@ -442,17 +444,17 @@ function CommercialCapabilitiesGrid() {
               {
                 n: '01',
                 title: 'Bureau-Level Expertise',
-                body: 'Our analysts are trained specifically on CIBIL CCR, CRIF, Experian, and Equifax commercial report structures — not generalist consultants.'
+                body: 'Our analysts are trained specifically on All 4 Bureaus (CIBIL, Experian, Equifax, CRIF) commercial report structures — not generalist consultants.'
               },
               {
                 n: '02',
                 title: 'End-to-End Dispute Filing',
-                body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with CIBIL, CRIF, and the relevant banks.'
+                body: 'We don\'t hand you a checklist. We compile evidence, write formal communications, and file disputes directly with All 4 Bureaus (CIBIL, Experian, Equifax, CRIF) and the relevant banks.'
               },
               {
                 n: '03',
                 title: 'Director-Level Monitoring',
-                body: 'Your directors\' personal CIBIL and CRIF scores are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.'
+                body: 'Your directors\' personal scores across All 4 Bureaus (CIBIL, Experian, Equifax, CRIF) are tied to your company\'s creditworthiness. We track both simultaneously — a gap most firms miss entirely.'
               },
               {
                 n: '04',
@@ -461,7 +463,7 @@ function CommercialCapabilitiesGrid() {
               },
               {
                 n: '05',
-                title: '2-Hour Commercial SLA',
+                title: '2-Hour Quick Response',
                 body: 'Every commercial inquiry is routed to a dedicated desk. Our analysts respond within 2 hours on all business days — not a bot, a human analyst.'
               },
               {
@@ -504,15 +506,15 @@ function CommercialCapabilitiesGrid() {
                   We don't hand you a report and wish you luck.
                 </h2>
                 <p className="text-sm text-textSecondary font-light leading-relaxed mb-8">
-                  Generalist credit advisors give you a PDF and leave the dispute legwork to you. Our commercial desk handles everything — from identifying the error to writing the formal correspondence and tracking the resolution with the bureau.
+                  Generalist credit advisors give you a PDF and leave the dispute legwork to you. Our commercial desk handles everything — from identifying the error to writing the formal correspondence and tracking the resolution across All 4 Bureaus.
                 </p>
                 <div className="space-y-4">
                   {[
                     'Bureau-trained analysts — not generalist consultants',
                     'Formal dispute documentation compiled and filed on your behalf',
-                    'Director-level AND company bureau monitoring simultaneously',
+                    'Director-level AND company monitoring across All 4 Bureaus simultaneously',
                     'Fixed-fee engagement — no hidden retainers or per-dispute charges',
-                    '2-hour response SLA on all commercial queries, Mon–Sat',
+                    '2-hour quick response time on all commercial queries, Mon–Sat',
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-3">
                       <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 mt-0.5">
