@@ -177,12 +177,13 @@ export default function CityService({ city }: { city?: string }) {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleQuickForm} className="space-y-4">
+                  <form onSubmit={handleQuickForm} suppressHydrationWarning className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">Your Full Name</label>
                       <input
                         type="text"
                         required
+                        suppressHydrationWarning
                         placeholder="e.g. Rahul Sharma"
                         value={formState.name}
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
@@ -195,6 +196,7 @@ export default function CityService({ city }: { city?: string }) {
                       <input
                         type="tel"
                         required
+                        suppressHydrationWarning
                         placeholder="+91 98765 43210"
                         value={formState.phone}
                         onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
@@ -206,6 +208,7 @@ export default function CityService({ city }: { city?: string }) {
                       <label className="block text-xs font-bold text-slate-700 mb-1">Primary Issue</label>
                       <select
                         value={formState.issue}
+                        suppressHydrationWarning
                         onChange={(e) => {
                           const newIssue = e.target.value
                           setFormState({ ...formState, issue: newIssue })
@@ -230,6 +233,7 @@ export default function CityService({ city }: { city?: string }) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
                       <button
                         type="submit"
+                        suppressHydrationWarning
                         disabled={formStatus === 'submitting'}
                         className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-4 rounded-xl shadow-lg shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 group"
                       >
@@ -403,6 +407,7 @@ export default function CityService({ city }: { city?: string }) {
             ].map((faq, i) => (
               <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
                 <button
+                  suppressHydrationWarning
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full p-5 text-left font-bold text-slate-900 flex items-center justify-between gap-4 text-sm sm:text-base hover:bg-slate-50 transition-colors"
                 >
@@ -501,8 +506,8 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
                 <span className="text-slate-400 text-[11px] font-medium">Clients Helped</span>
               </div>
               <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
-                <span className="text-emerald-400 text-lg sm:text-xl font-black block">60-90 Days</span>
-                <span className="text-slate-400 text-[11px] font-medium">Avg Resolution</span>
+                <span className="text-emerald-400 text-lg sm:text-xl font-black block">Fast Audit</span>
+                <span className="text-slate-400 text-[11px] font-medium">Fast Resolution</span>
               </div>
               <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
                 <span className="text-emerald-400 text-lg sm:text-xl font-black block">4 Bureaus</span>
