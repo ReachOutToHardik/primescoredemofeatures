@@ -21,13 +21,13 @@ export default function BusinessNavbar() {
       <div className="mx-auto max-w-[1280px] px-6 sm:px-8 h-20 flex items-center justify-between">
         
         {/* Left Logo block */}
-        <Link href="/business" className="flex items-center gap-3 shrink-0">
+        <Link href="/business" className="flex items-center gap-2.5 shrink-0">
           <img 
             src="/Logo-primescore.png" 
             alt="Primescore Business" 
-            className="h-10 w-auto object-contain"
+            className="h-8 sm:h-10 w-auto object-contain"
           />
-          <span className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-slate-900 text-white rounded-md">
+          <span className="hidden sm:inline-block px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest bg-slate-900 text-white rounded-md">
             Commercial
           </span>
         </Link>
@@ -72,10 +72,10 @@ export default function BusinessNavbar() {
         </div>
 
         {/* Right CTA */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Link 
             href="/" 
-            className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-textSecondary hover:text-brandNavy px-3 py-2 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 transition-colors"
+            className="hidden sm:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-textSecondary hover:text-brandNavy px-3 py-2 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 transition-colors"
           >
             Individual Score
           </Link>
