@@ -56,7 +56,7 @@ export default function ProcessRocketTrack() {
   const pathRef = useRef<SVGPathElement>(null)
   const prevPRef = useRef(0)
   
-  const [rocketPos, setRocketPos] = useState({ x: 240, y: 240, rotate: 0 })
+  const [rocketPos, setRocketPos] = useState({ x: 240, y: 262, rotate: 0 })
   const [isBackward, setIsBackward] = useState(false)
   const [totalPathLength, setTotalPathLength] = useState(1800)
 
@@ -110,7 +110,7 @@ export default function ProcessRocketTrack() {
 
       setRocketPos({
         x: pt.x,
-        y: 200 + pt.y, // 200px is the top offset of the middle SVG channel
+        y: 222 + pt.y, // 222px is the top offset of the middle SVG channel
         rotate: angle
       })
     })
@@ -141,8 +141,8 @@ export default function ProcessRocketTrack() {
           </p>
         </div>
 
-        {/* Horizontal Scrolling Canvas Stage */}
-        <div className="relative w-full h-[520px] overflow-hidden">
+        {/* Horizontal Scrolling Canvas Stage (560px height with top & bottom breathing room so card scaling & ring glows never get clipped) */}
+        <div className="relative w-full h-[560px] overflow-hidden py-4">
           
           {/* Hardware Accelerated Sliding Track Wrapper */}
           <motion.div
@@ -152,8 +152,8 @@ export default function ProcessRocketTrack() {
             }}
             className="absolute left-0 top-0 h-full w-[2200px] pointer-events-none"
           >
-            {/* Middle Wavy SVG Path Line (Positioned in z-20 channel starting cleanly aligned with Card 01 at X=240) */}
-            <div className="absolute top-[200px] left-0 w-[2000px] h-[80px] z-20 pointer-events-none">
+            {/* Middle Wavy SVG Path Line (Positioned in z-20 channel at Y=222px) */}
+            <div className="absolute top-[222px] left-0 w-[2000px] h-[80px] z-20 pointer-events-none">
               <svg className="w-full h-full overflow-visible" viewBox="0 0 2000 80" preserveAspectRatio="none">
                 {/* Dashed Background Wave */}
                 <path
@@ -176,7 +176,7 @@ export default function ProcessRocketTrack() {
               </svg>
             </div>
 
-            {/* Flying Rocket Icon (Locked 100% onto the blue SVG line in z-30 with proper boost trail orientation) */}
+            {/* Flying Rocket Icon (Locked 100% onto the blue SVG line in z-30) */}
             <div
               style={{
                 left: `${rocketPos.x}px`,
@@ -195,15 +195,15 @@ export default function ProcessRocketTrack() {
               </div>
             </div>
 
-            {/* Alternating Step Cards (Positioned starting with clean margin at X=180) */}
+            {/* Alternating Step Cards (Top cards at top=18px, Bottom cards at top=310px ensuring 0% clipping) */}
             <div className="absolute inset-0 pointer-events-auto z-10">
               {PROCESS_STEPS.map((item, idx) => {
                 const stepThreshold = idx / 4
                 
-                // Alternating layout: EVEN indices (0, 2, 4) sit ABOVE the wave line at top-0; ODD indices (1, 3) sit BELOW at top-[285px]
+                // Alternating layout: EVEN indices (0, 2, 4) sit ABOVE the wave line at top=18px; ODD indices (1, 3) sit BELOW at top=310px
                 const isTopCard = idx % 2 === 0
                 const cardLeft = 180 + idx * 380
-                const cardTop = isTopCard ? 0 : 285
+                const cardTop = isTopCard ? 18 : 310
 
                 return (
                   <StepCardItem
