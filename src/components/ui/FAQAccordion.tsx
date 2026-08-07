@@ -16,6 +16,7 @@ export default function FAQAccordion({ items, dark = false }: { items: FAQ[], da
           >
             <button
               type="button"
+              suppressHydrationWarning
               onClick={() => setOpenIndex(open ? null : idx)}
               className="flex w-full items-center justify-between py-5 text-left outline-none group"
             >

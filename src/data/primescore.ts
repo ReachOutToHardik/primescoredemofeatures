@@ -349,7 +349,7 @@ export const faqs: FAQ[] = [
     a: 'Simple disputes are often resolved within 30 to 45 days, while complex cases involving banks, settlements, or written-off accounts may take 60 to 90 days.',
   },
   {
-    q: 'Primescore Fintech Private limited: Can I check all my credit reports in one place?',
+    q: 'Can I check all my credit reports in one place?',
     a: 'Yes. PrimeScore provides a dashboard where you can monitor your credit profile and track dispute progress across multiple credit bureaus.',
   },
 ]

@@ -141,7 +141,7 @@ export default function PhoneShowcaseDesktop() {
 
             {/* Primary Action Button */}
             <div className="px-5 mb-6">
-              <button className="w-full bg-brandNavy text-white py-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform">
+              <button suppressHydrationWarning className="w-full bg-brandNavy text-white py-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform">
                 <Download className="w-4 h-4" />
                 Download Report
               </button>
