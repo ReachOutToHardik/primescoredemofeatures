@@ -5,7 +5,7 @@ import { useState, useRef, useMemo, useEffect } from 'react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import ProcessRocketTrack from '../components/ui/ProcessRocketTrack'
-import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle, ArrowRight, MessageCircle } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Building2, Activity, ShieldCheck, Mail, Phone, Clock, FileCheck, ChevronDown, Sparkles, RefreshCw, AlertTriangle, ArrowRight, MessageCircle, Check } from 'lucide-react'
 import { motion, AnimatePresence, useScroll, useTransform, useInView, useSpring } from 'framer-motion'
 
 
@@ -242,202 +242,81 @@ function FAQItem({ faq, index, isOpen, onToggle }: FAQItemProps) {
   );
 }
 
-// Interactive Credit Report Simulator Component
-function InteractiveCreditReport() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: true, amount: 0.5 })
-
-  const [isCorrected, setIsCorrected] = useState(false)
-  const [isScanning, setIsScanning] = useState(false)
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    if (isInView && !isCorrected && !isScanning) {
-      const delayTimer = setTimeout(() => {
-        setIsScanning(true)
-        setProgress(0)
-      }, 700) // Delay starting for natural entry
-      return () => clearTimeout(delayTimer)
-    }
-  }, [isInView])
-
-  useEffect(() => {
-    if (isScanning) {
-      const interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval)
-            setIsScanning(false)
-            setIsCorrected(true)
-            return 100
-          }
-          return prev + 10 // Faster simulation steps
-        })
-      }, 85)
-      return () => clearInterval(interval)
-    }
-  }, [isScanning])
-
-  const score = isScanning
-    ? Math.floor(640 + (progress / 100) * 100)
-    : isCorrected
-    ? 740
-    : 640
-
+// Commercial Capabilities Spotlight Component (High-End Corporate B2B Grid)
+function CommercialCapabilitiesGrid() {
   return (
-    <div ref={containerRef} className="w-full max-w-[340px] mx-auto bg-white border border-slate-200/80 rounded-2xl shadow-lg overflow-hidden text-slate-700">
-      {/* Mock Header/Browser bar */}
-      <div className="bg-slate-50 px-4 py-2 border-b border-slate-200/60 flex items-center justify-between">
-        <div className="flex gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-rose-500 block opacity-80" />
-          <span className="w-2 h-2 rounded-full bg-amber-500 block opacity-80" />
-          <span className="w-2 h-2 rounded-full bg-emerald-500 block opacity-80" />
+    <div className="w-full max-w-[440px] mx-auto bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-slate-700/60 rounded-3xl p-6 sm:p-7 shadow-2xl backdrop-blur-xl relative overflow-hidden text-white group hover:border-blue-500/50 transition-all duration-500">
+      {/* Background ambient glow */}
+      <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      
+      {/* Header Badge */}
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/80">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-blue-400 animate-ping" />
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-400">
+            Commercial Audit Desk
+          </span>
         </div>
-        <div className="text-[8px] font-mono tracking-[0.15em] text-slate-500 uppercase select-none font-bold">
-          Credit CCR — Profile Analyzer
-        </div>
-        <div className="w-6" />
+        <span className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">
+          4 Bureaus
+        </span>
       </div>
 
-      <div className="p-3.5 space-y-3.5">
-        {/* Profile Card Header matching average score display */}
-        <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600 font-black text-xs">
-              H
+      {/* Main Title */}
+      <h3 className="font-display text-lg sm:text-xl font-black text-white tracking-tight mb-2">
+        Commercial Credit Intelligence
+      </h3>
+      <p className="text-xs text-slate-400 leading-relaxed mb-6 font-normal">
+        Proprietary audit system reconciling CCR liabilities, director scores, and dispute documentation.
+      </p>
+
+      {/* 4 Feature Highlights */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+        {[
+          {
+            title: 'Company & Director',
+            desc: 'Dual CCR & personal score tracking',
+            icon: '🏢',
+            badge: 'Simultaneous'
+          },
+          {
+            title: 'Formal Dispute Desk',
+            desc: 'Direct legal filings with CIBIL & CRIF',
+            icon: '⚖️',
+            badge: 'Zero Retainers'
+          },
+          {
+            title: '4-Bureau Pull',
+            desc: 'CIBIL, CRIF, Experian & Equifax',
+            icon: '📊',
+            badge: 'Unified'
+          },
+          {
+            title: '2-Hour SLA',
+            desc: 'Dedicated commercial analyst desk',
+            icon: '⏱️',
+            badge: 'Guaranteed'
+          }
+        ].map((item, idx) => (
+          <div key={idx} className="p-3 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-blue-500/40 transition-colors">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-base">{item.icon}</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">{item.badge}</span>
             </div>
-            <div className="text-left">
-              <div className="font-extrabold text-[10px] text-slate-900 tracking-tight leading-none">Hardik Industries</div>
-              <div className="text-[7.5px] font-mono text-slate-500 mt-0.5 leading-none">PAN: KMMP****R</div>
-            </div>
+            <div className="font-bold text-xs text-slate-200 mb-0.5">{item.title}</div>
+            <div className="text-[10px] text-slate-400 leading-tight font-normal">{item.desc}</div>
           </div>
+        ))}
+      </div>
 
-          <div className="flex items-center gap-3 text-right">
-            <div>
-              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Score</div>
-              <div className={`text-base font-black transition-colors duration-500 leading-none mt-0.5 ${isCorrected ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {score}
-              </div>
-            </div>
-            <div className="h-6 w-px bg-slate-200" />
-            <div>
-              <div className="text-[7px] uppercase tracking-wider text-slate-400 font-bold leading-none">Status</div>
-              <div className={`text-[8.5px] font-bold mt-0.5 uppercase leading-none ${isCorrected ? 'text-emerald-600' : 'text-rose-600 animate-pulse'}`}>
-                {isScanning ? 'Syncing...' : isCorrected ? 'Clean' : '3 Flags'}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Loan Account Lines */}
-        <div className="space-y-1.5">
-          {[
-            { id: 1, label: 'HDFC TERM LOAN — ₹45L', status: 'ACTIVE', type: 'normal' },
-            { id: 2, label: 'HDFC TERM LOAN — ₹45L (DUPLICATE)', status: 'ERROR', type: 'error', desc: 'Duplicate liability reports double outstanding debt' },
-            { id: 3, label: 'ICICI CC LIMIT — ₹12L', status: 'ACTIVE', type: 'normal' },
-            { id: 4, label: 'PAN MISMATCH — SBI OD', status: 'FLAGGED', type: 'warning', desc: 'Registry mismatch halts credit approvals' },
-            { id: 5, label: 'KOTAK BIZ LOAN — ₹80L', status: 'ACTIVE', type: 'normal' },
-            { id: 6, label: 'WRONG CLASSIFICATION — AXIS', status: 'ERROR', type: 'error', desc: 'Outdated classification reports wrong write-offs' },
-          ].map((row) => {
-            const isRowResolved = isCorrected && row.type !== 'normal';
-            return (
-              <div
-                key={row.id}
-                className={`p-2.5 rounded-lg border transition-all duration-500 ${
-                  isScanning && row.type !== 'normal'
-                    ? 'border-blue-200 bg-blue-50/40 opacity-85'
-                    : isRowResolved
-                    ? 'border-emerald-100 bg-emerald-50/30 opacity-90'
-                    : row.type === 'error'
-                    ? 'border-rose-100 bg-rose-50/40'
-                    : row.type === 'warning'
-                    ? 'border-amber-100 bg-amber-50/40'
-                    : 'border-slate-100 bg-slate-50/50'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className={`w-1 h-1 rounded-full ${
-                      isRowResolved
-                        ? 'bg-emerald-500'
-                        : row.type === 'error'
-                        ? 'bg-rose-500'
-                        : row.type === 'warning'
-                        ? 'bg-amber-500'
-                        : 'bg-emerald-500'
-                    }`} />
-                    <span className={`text-[9.5px] font-bold tracking-tight transition-all duration-500 ${isRowResolved ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}`}>
-                      {row.label}
-                    </span>
-                  </div>
-
-                  <span className={`px-1 py-0.5 rounded text-[7px] font-black tracking-wider uppercase border leading-none ${
-                    isRowResolved
-                      ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-                      : row.type === 'error'
-                      ? 'bg-rose-50 text-rose-700 border-rose-100'
-                      : row.type === 'warning'
-                      ? 'bg-amber-50 text-amber-700 border-amber-100'
-                      : 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                  }`}>
-                    {isRowResolved ? 'RESOLVED' : row.status}
-                  </span>
-                </div>
-
-                {/* Subtext description when there is error/warning */}
-                {row.desc && !isRowResolved && (
-                  <p className="mt-1 ml-2.5 text-[8px] text-slate-400 leading-normal">
-                    {row.desc}
-                  </p>
-                )}
-                {row.desc && isRowResolved && (
-                  <p className="mt-1 ml-2.5 text-[8px] text-emerald-600 leading-normal flex items-center gap-1 font-semibold">
-                    ✓ Cleaned & merged by Primescore Audit Desk
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Action Button & State Bar */}
-        <div className="pt-2.5 border-t border-slate-100 flex flex-col items-center gap-2.5">
-          {isScanning && (
-            <div className="w-full">
-              <div className="flex justify-between text-[8px] text-slate-400 mb-1 font-bold tracking-wide">
-                <span>Disputing & reconciling records...</span>
-                <span>{progress}%</span>
-              </div>
-              <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
-                <div
-                  className="bg-blue-500 h-full transition-all duration-100 ease-out"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {!isScanning && (
-            <div className="w-full flex items-center justify-between gap-2.5">
-              <p className="text-[9px] text-slate-400 leading-tight">
-                {isCorrected
-                  ? "✓ Bureau reconciliation complete. Score boosted."
-                  : "⌛ Reconciling profile records..."}
-              </p>
-              {isCorrected && (
-                <button
-                  onClick={() => {
-                    setIsCorrected(false)
-                    setProgress(0)
-                  }}
-                  className="px-2 py-1 rounded bg-slate-50 hover:bg-slate-100 text-[8px] font-bold text-slate-600 border border-slate-200/60 transition-colors"
-                >
-                  Replay
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+      {/* Footer Trust Bar */}
+      <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-bold text-slate-400">
+        <span className="flex items-center gap-1.5 text-emerald-400">
+          <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+          100% CIC Act 2005 Compliant
+        </span>
+        <span className="text-slate-400">Mon–Sat SLA</span>
       </div>
     </div>
   )
@@ -472,61 +351,65 @@ function InteractiveCreditReport() {
         style={{ scaleX }}
       />
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative pt-24 pb-20 sm:pt-32 sm:pb-28 bg-slate-950 text-white border-b border-slate-900 overflow-hidden">
-        {/* Background Image - Parallax layout */}
-        <motion.div 
-          style={{ y: heroImageY, scale: heroImageScale }}
-          className="absolute inset-y-0 right-0 w-full lg:w-[55%] pointer-events-none select-none overflow-hidden z-0 opacity-40 lg:opacity-50 origin-top-right"
-        >
-          <img 
-            src="/images/business-hero.jpg" 
-            alt="PrimeScore Business Operations Backdrop" 
-            className="w-full h-full object-cover"
-          />
-          {/* Subtle gradient to merge the image seamlessly into the deep slate background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
-        </motion.div>
+      {/* ── HERO SECTION ─────────────────────────────────── */}
+      <section className="relative bg-[#0B132B] text-white pt-24 pb-20 sm:pt-36 sm:pb-32 overflow-hidden border-b border-slate-800">
+        {/* Crisp Hero Backdrop Image */}
+        <div className="absolute inset-0 z-0 opacity-75 sm:opacity-85 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/images/business-hero.jpg')" }} />
         
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_50%)] z-0" />
-        
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-8 relative z-10 grid lg:grid-cols-12 gap-16 items-center">
-          {/* Hero Content with fade/shift on scroll */}
-          <motion.div 
-            style={{ opacity: heroTextOpacity, y: heroTextY }}
-            className="lg:col-span-9 flex flex-col items-start relative z-10"
-          >
+        {/* Localized Dark Gradient & Glass Blur Overlay ONLY on the Text Side */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#0B132B] via-[#0B132B]/90 sm:via-[#0B132B]/80 to-transparent sm:w-[70%] lg:w-[60%] backdrop-blur-[2px]" />
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#0B132B] to-transparent z-0" />
+
+        <div className="relative z-10 mx-auto max-w-[1280px] px-6 sm:px-10 text-left">
+          <div className="max-w-2xl">
             <Reveal>
-              <h1 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
-                Your company's credit profile <span className="text-blue-500">deserves more</span> than a checklist.
+              <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-6 [text-shadow:0_2px_8px_rgba(0,0,0,0.5)]">
+                Your company's credit profile <span className="text-blue-400">deserves more</span> than a checklist.
               </h1>
-              <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+              
+              <p className="text-sm sm:text-lg text-slate-200 mb-8 leading-relaxed font-normal [text-shadow:0_1px_6px_rgba(0,0,0,0.4)]">
                 Primescore's commercial audit desk reviews your CCR, disputes bureau errors, reconciles bank records, and monitors supplier credit risk — all under a single transparent engagement fee.
               </p>
               
-              <div className="flex flex-wrap gap-4">
-                <Button href="#audit-form" className="!bg-blue-600 hover:!bg-blue-700 text-white font-semibold transition-all">
+              <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
+                <Button href="#audit-form" className="w-full sm:w-auto text-center justify-center !bg-blue-600 hover:!bg-blue-700 text-white font-bold transition-all py-3.5 px-8 shadow-xl shadow-blue-600/40">
                   Request Commercial Audit
                 </Button>
-                <a href="#capabilities" className="inline-flex items-center text-sm font-semibold text-slate-300 hover:text-white transition-colors gap-1.5 px-4 py-2.5">
-                  See How It Works <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <a href="#capabilities" className="w-full sm:w-auto inline-flex items-center justify-center text-sm font-bold text-slate-200 hover:text-white transition-colors gap-2 px-6 py-3.5 border border-slate-700/80 rounded-xl bg-slate-900/80 hover:bg-slate-800/90 backdrop-blur-md shadow-md">
+                  See How It Works <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="ml-1 shrink-0 h-3.5 w-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
               </div>
+
+              {/* B2B Trust Indicators Row */}
+              <div className="pt-6 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px] font-bold text-slate-200 [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]">
+                <div className="flex items-center justify-start gap-2">
+                  <ShieldCheck className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
+                  <span>CIBIL & CRIF Audit Desk</span>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <Clock className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
+                  <span>2-Hour SLA Response</span>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <Check className="h-4 w-4 text-blue-400 shrink-0 filter drop-shadow" />
+                  <span>Zero Monthly Retainers</span>
+                </div>
+              </div>
             </Reveal>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ── STATS BAR ────────────────────────────────────── */}
-      <section className="border-b border-slate-100">
-        <div className="mx-auto max-w-[1280px] px-6 sm:px-10 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="border-b border-slate-100 bg-white">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-10 py-8 sm:py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, i) => (
-              <div key={i} className="relative pl-5 border-l-2 border-slate-200">
-                <div className="font-display text-3xl sm:text-4xl font-black text-brandNavy">
+              <div key={i} className="relative p-3.5 sm:p-0 sm:pl-5 sm:border-l-2 sm:border-slate-200 bg-slate-50/70 sm:bg-transparent rounded-2xl sm:rounded-none border border-slate-100 sm:border-0">
+                <div className="font-display text-2xl sm:text-4xl font-black text-brandNavy tracking-tight">
                   <GlitchValue stat={stat} />
                 </div>
-                <div className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">{stat.label}</div>
+                <div className="mt-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-snug">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -641,33 +524,65 @@ function InteractiveCreditReport() {
                 </div>
               </div>
 
-              {/* Right — partner orbit */}
-              <div className="relative flex items-center justify-center h-[480px] w-full max-w-[480px] mx-auto overflow-visible">
-                <style>{`
-                  @keyframes bizOrbit { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-                  @keyframes bizCounter { 0%{transform:rotate(0deg)} 100%{transform:rotate(-360deg)} }
-                  @keyframes bizPulse { 0%,100%{transform:scale(1);opacity:.12} 50%{transform:scale(1.08);opacity:.22} }
-                  .biz-orbit-ring { position:absolute;width:480px;height:480px;border:1.5px dashed rgba(148,163,184,0.35);border-radius:50%;animation:bizOrbit 40s linear infinite; }
-                  .biz-orbit-node { position:absolute;width:96px;height:96px;margin-left:-48px;margin-top:-48px;border-radius:50%;background:white;border:2px solid rgba(226,232,240,0.9);box-shadow:0 8px 24px -4px rgba(15,23,42,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:bizCounter 40s linear infinite; }
-                  .biz-pulse { position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.14) 0%,transparent 70%);animation:bizPulse 4s ease-in-out infinite; }
-                  .biz-hub { position:relative;z-index:20;width:148px;height:148px;border-radius:50%;background:white;border:2.5px solid rgba(226,232,240,0.9);box-shadow:0 16px 40px -8px rgba(15,23,42,.15);display:flex;align-items:center;justify-content:center;padding:1.5rem; }
-                `}</style>
-                <div className="biz-pulse" />
-                <div className="absolute w-[240px] h-[240px] border border-slate-100/80 rounded-full" />
-                <div className="biz-orbit-ring">
-                  {[
-                    { top: '0%', left: '50%', content: <img src="https://lmjservices.in/wp-content/uploads/2023/09/Screenshot-from-2023-09-30-11-40-45-1.png" alt="LMJ" className="w-[78%] h-auto object-contain rounded-full"/> },
-                    { top: '25%', left: '93%', content: <span className="font-black text-[12px] text-[#2563EB] tracking-tight text-center leading-none">GANPATI<span className="block text-[9px] text-slate-400 font-bold mt-1">STEEL</span></span> },
-                    { top: '75%', left: '93%', content: <span className="font-black text-[12px] text-brandNavy tracking-tight text-center leading-none">SINGHAL<span className="block text-[8px] text-[#2563EB] font-bold mt-1">LOGISTICS</span></span> },
-                    { top: '100%', left: '50%', content: <span className="font-black text-[12px] text-brandRed tracking-tight text-center leading-none">NAIR<span className="block text-[8px] text-slate-400 font-bold mt-1">AUTOTECH</span></span> },
-                    { top: '75%', left: '7%', content: <span className="font-black text-[12px] text-brandNavy tracking-tight text-center leading-none">PATEL<span className="block text-[8px] text-emerald-600 font-bold mt-1">AGRO</span></span> },
-                    { top: '25%', left: '7%', content: <span className="font-black text-[11px] text-[#2563EB] tracking-tight text-center leading-none">+ MANY<span className="block text-[8px] text-slate-400 font-bold mt-1">MORE</span></span> },
-                  ].map((node, i) => (
-                    <div key={i} className="biz-orbit-node p-1.5" style={{ top: node.top, left: node.left }}>{node.content}</div>
-                  ))}
+              {/* Right — partner orbit (Responsive: Mobile clean badge grid, Desktop rotating orbit) */}
+              <div className="w-full max-w-[480px] mx-auto">
+                {/* Mobile Partner Grid Card (< 640px) */}
+                <div className="block sm:hidden bg-gradient-to-br from-slate-50 to-white border border-slate-200/90 rounded-2xl p-6 shadow-sm text-center">
+                  <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center p-3">
+                    <img src="/Logo-primescore.png" alt="Primescore" className="w-full h-auto object-contain" />
+                  </div>
+                  <h4 className="font-display text-sm font-extrabold text-brandNavy mb-1">
+                    Trusted Commercial Partner Network
+                  </h4>
+                  <p className="text-[11px] text-slate-500 mb-5 leading-relaxed font-normal">
+                    Supporting enterprise CFOs, logistics directors, and manufacturing firms across India.
+                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { name: 'Ganpati Steel', tag: 'Manufacturing' },
+                      { name: 'Singhal Logistics', tag: 'Supply Chain' },
+                      { name: 'Nair Autotech', tag: 'Automotive' },
+                      { name: 'Patel Agro', tag: 'Exports' },
+                      { name: 'LMJ Services', tag: 'Enterprise' },
+                      { name: '+37 More', tag: 'Corporates' },
+                    ].map((p, idx) => (
+                      <div key={idx} className="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs text-left">
+                        <div className="font-extrabold text-[10px] text-brandNavy leading-tight">{p.name}</div>
+                        <div className="text-[8px] font-bold text-slate-400 mt-0.5 uppercase tracking-wider">{p.tag}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="biz-hub">
-                  <img src="/Logo-primescore.png" alt="Primescore" className="w-full h-auto object-contain" />
+
+                {/* Desktop Rotating Orbit Graphic (>= 640px) */}
+                <div className="hidden sm:flex relative items-center justify-center h-[480px] w-full overflow-visible">
+                  <style>{`
+                    @keyframes bizOrbit { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+                    @keyframes bizCounter { 0%{transform:rotate(0deg)} 100%{transform:rotate(-360deg)} }
+                    @keyframes bizPulse { 0%,100%{transform:scale(1);opacity:.12} 50%{transform:scale(1.08);opacity:.22} }
+                    .biz-orbit-ring { position:absolute;width:480px;height:480px;border:1.5px dashed rgba(148,163,184,0.35);border-radius:50%;animation:bizOrbit 40s linear infinite; }
+                    .biz-orbit-node { position:absolute;width:96px;height:96px;margin-left:-48px;margin-top:-48px;border-radius:50%;background:white;border:2px solid rgba(226,232,240,0.9);box-shadow:0 8px 24px -4px rgba(15,23,42,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:bizCounter 40s linear infinite; }
+                    .biz-pulse { position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.14) 0%,transparent 70%);animation:bizPulse 4s ease-in-out infinite; }
+                    .biz-hub { position:relative;z-index:20;width:148px;height:148px;border-radius:50%;background:white;border:2.5px solid rgba(226,232,240,0.9);box-shadow:0 16px 40px -8px rgba(15,23,42,.15);display:flex;align-items:center;justify-content:center;padding:1.5rem; }
+                  `}</style>
+                  <div className="biz-pulse" />
+                  <div className="absolute w-[240px] h-[240px] border border-slate-100/80 rounded-full" />
+                  <div className="biz-orbit-ring">
+                    {[
+                      { top: '0%', left: '50%', content: <img src="https://lmjservices.in/wp-content/uploads/2023/09/Screenshot-from-2023-09-30-11-40-45-1.png" alt="LMJ" className="w-[78%] h-auto object-contain rounded-full"/> },
+                      { top: '25%', left: '93%', content: <span className="font-black text-[12px] text-[#2563EB] tracking-tight text-center leading-none">GANPATI<span className="block text-[9px] text-slate-400 font-bold mt-1">STEEL</span></span> },
+                      { top: '75%', left: '93%', content: <span className="font-black text-[12px] text-brandNavy tracking-tight text-center leading-none">SINGHAL<span className="block text-[8px] text-[#2563EB] font-bold mt-1">LOGISTICS</span></span> },
+                      { top: '100%', left: '50%', content: <span className="font-black text-[12px] text-brandRed tracking-tight text-center leading-none">NAIR<span className="block text-[8px] text-slate-400 font-bold mt-1">AUTOTECH</span></span> },
+                      { top: '75%', left: '7%', content: <span className="font-black text-[12px] text-brandNavy tracking-tight text-center leading-none">PATEL<span className="block text-[8px] text-emerald-600 font-bold mt-1">AGRO</span></span> },
+                      { top: '25%', left: '7%', content: <span className="font-black text-[11px] text-[#2563EB] tracking-tight text-center leading-none">+ MANY<span className="block text-[8px] text-slate-400 font-bold mt-1">MORE</span></span> },
+                    ].map((node, i) => (
+                      <div key={i} className="biz-orbit-node p-1.5" style={{ top: node.top, left: node.left }}>{node.content}</div>
+                    ))}
+                  </div>
+                  <div className="biz-hub">
+                    <img src="/Logo-primescore.png" alt="Primescore" className="w-full h-auto object-contain" />
+                  </div>
                 </div>
               </div>
             </div>
