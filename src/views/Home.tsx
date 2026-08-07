@@ -167,7 +167,7 @@ function ImageToggleSection() {
 
             {/* Sub copy */}
             <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
-              We audit your credit reports across all 4 bureaus (CIBIL, Experian, Equifax &amp; CRIF) to correct clerical errors, dispute invalid defaults, and update settled status legally in 60–90 days.
+              We audit your credit reports across all 4 bureaus (CIBIL, Experian, Equifax &amp; CRIF) to correct clerical errors, dispute invalid defaults, and update settled status legally.
             </p>
 
             {/* Quick Proof Stat Chips */}
@@ -177,8 +177,8 @@ function ImageToggleSection() {
                 <span className="text-slate-400 text-[11px] font-medium">Clients Helped</span>
               </div>
               <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
-                <span className="text-emerald-400 text-lg sm:text-xl font-black block">60-90 Days</span>
-                <span className="text-slate-400 text-[11px] font-medium">Avg Resolution</span>
+                <span className="text-emerald-400 text-lg sm:text-xl font-black block">Fast Audit</span>
+                <span className="text-slate-400 text-[11px] font-medium">Fast Resolution</span>
               </div>
               <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-center">
                 <span className="text-emerald-400 text-lg sm:text-xl font-black block">4 Bureaus</span>

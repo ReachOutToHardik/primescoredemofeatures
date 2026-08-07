@@ -95,7 +95,7 @@ export default function CityService({ city }: { city?: string }) {
 
   return (
     <div className="bg-white min-h-screen">
-      
+
       {/* 1. HERO SECTION — High Conversion 2-Column with Instant Lead Capture Form */}
       <section className="bg-gradient-to-br from-[#f8faff] via-[#eef4ff] to-[#f0fdf8] pt-36 sm:pt-44 pb-16 sm:pb-24 border-b border-slate-200/60" data-theme="light">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +103,7 @@ export default function CityService({ city }: { city?: string }) {
 
             {/* LEFT — Value Proposition & Proof */}
             <div className="lg:col-span-7 space-y-6">
-              
+
               {/* Location Badge */}
               <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider">
                 <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -118,16 +118,15 @@ export default function CityService({ city }: { city?: string }) {
 
               {/* Subheadline */}
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-                Has a bank rejection or incorrect default tag blocked your home loan, personal loan, or credit card? We audit CIBIL, Experian, Equifax &amp; CRIF reports to dispute wrong entries legally in 60 to 90 days. We also offer commercial B2B credit audits, corporate CIBIL checks, and MSME loan correction services for enterprises in {cityName}.
+                Has a bank rejection or incorrect default tag blocked your home loan, personal loan, or credit card? We audit CIBIL, Experian, Equifax &amp; CRIF reports to dispute wrong entries legally. We also offer commercial B2B credit audits, corporate CIBIL checks, and MSME loan correction services for enterprises in {cityName}.
               </p>
 
               {/* Key Trust Chips */}
               <div className="flex flex-wrap gap-2.5 pt-1">
                 {[
-                  { icon: <Shield className="w-4 h-4 text-emerald-600" />, text: '100% Legal & CICRA Compliant' },
-                  { icon: <Award className="w-4 h-4 text-emerald-600" />, text: 'Govt. Recognized Startup' },
+                  { icon: <Shield className="w-4 h-4 text-emerald-600" />, text: '100% Legal & Bureau Compliant' },
                   { icon: <Building className="w-4 h-4 text-emerald-600" />, text: 'B2B & MSME Audits Enabled' },
-                  { icon: <Clock className="w-4 h-4 text-emerald-600" />, text: '60–90 Day Resolution' },
+                  { icon: <Clock className="w-4 h-4 text-emerald-600" />, text: 'Fast Dispute Resolution' },
                 ].map((item, idx) => (
                   <div key={idx} className="bg-white border border-slate-200 shadow-sm px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 flex items-center gap-2">
                     {item.icon}
@@ -140,7 +139,7 @@ export default function CityService({ city }: { city?: string }) {
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200/80 max-w-lg">
                 <div>
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 block leading-none">5,000+</span>
-                  <span className="text-xs text-slate-500 font-medium mt-1 block">Scores Fixed</span>
+                  <span className="text-xs text-slate-500 font-medium mt-1 block">Clients Helped</span>
                 </div>
                 <div>
                   <span className="text-2xl sm:text-3xl font-black text-emerald-600 block leading-none">350+</span>
@@ -148,7 +147,7 @@ export default function CityService({ city }: { city?: string }) {
                 </div>
                 <div>
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 block leading-none">4 Bureaus</span>
-                  <span className="text-xs text-slate-500 font-medium mt-1 block">CIBIL, Experian +</span>
+                  <span className="text-xs text-slate-500 font-medium mt-1 block">CIBIL, Experian, Equifax & CRIF</span>
                 </div>
               </div>
 
@@ -266,7 +265,7 @@ export default function CityService({ city }: { city?: string }) {
       {/* 2. STEP-BY-STEP LEGAL PROCESS */}
       <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
+
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950 border border-emerald-500/30 px-3 py-1 rounded-full">
               Legal &amp; CICRA Compliant
@@ -467,16 +466,16 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
 
   return (
     <section className="bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#1e1b4b] text-white pt-16 sm:pt-24 pb-0 relative overflow-hidden border-t border-slate-800" data-theme="dark">
-      
+
       {/* Background Subtle Geometry Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25 pointer-events-none" />
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* LEFT COLUMN — TEXT, BADGES, STAT CARDS & DASHBOARD BUTTON */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8">
-            
+
             {/* Top Tag Chip */}
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-4 py-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -532,11 +531,10 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
           {/* RIGHT COLUMN — TOGGLING PERSON WITH DYNAMIC CARD */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative pt-6 lg:pt-0">
             <div className="relative w-full max-w-[420px] h-[380px] sm:h-[480px] flex items-end justify-center">
-              
+
               {/* Floating Dynamic Status Card */}
-              <div className={`absolute top-2 left-2 z-20 bg-slate-900/95 border px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md transition-all duration-300 ${
-                isHappy ? 'border-emerald-500/60 shadow-emerald-500/10' : 'border-amber-500/60 shadow-amber-500/10'
-              }`}>
+              <div className={`absolute top-2 left-2 z-20 bg-slate-900/95 border px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md transition-all duration-300 ${isHappy ? 'border-emerald-500/60 shadow-emerald-500/10' : 'border-amber-500/60 shadow-amber-500/10'
+                }`}>
                 <div className="flex items-center gap-2.5">
                   <span className={`w-3 h-3 rounded-full ${isHappy ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                   <div>
@@ -552,18 +550,16 @@ function ImageToggleSection({ cityName }: { cityName: string }) {
               <img
                 src="/images/thinking.png"
                 alt="Thinking about credit score issues"
-                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${
-                  !isHappy ? 'block' : 'hidden'
-                }`}
+                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${!isHappy ? 'block' : 'hidden'
+                  }`}
               />
 
               {/* Cutout Image 2: Happy */}
               <img
                 src="/images/happy.png"
                 alt="Happy after credit score fix"
-                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${
-                  isHappy ? 'block' : 'hidden'
-                }`}
+                className={`max-h-[460px] w-auto object-contain absolute bottom-0 z-10 ${isHappy ? 'block' : 'hidden'
+                  }`}
               />
 
             </div>
