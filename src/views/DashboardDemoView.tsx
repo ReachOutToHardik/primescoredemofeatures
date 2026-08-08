@@ -446,6 +446,151 @@ export default function DashboardDemoView() {
               </div>
             </div>
           )}
+
+          {/* TAB 2: ACCOUNTS (Desktop) */}
+          {activeTab === 'accounts' && (
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/70 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Active &amp; Closed Loan Accounts</h3>
+                  <p className="text-xs text-slate-500">Summary of reported loan accounts across all 4 bureaus.</p>
+                </div>
+                <button
+                  onClick={() => openDemoModal("Filter & Audit Accounts", "Filter accounts by lender, default status, or days past due. Sign up for full access to run real-time audits.")}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition-all"
+                >
+                  Filter Accounts
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px] bg-slate-50/50">
+                      <th className="py-3 px-4">LENDER / ACCOUNT</th>
+                      <th className="py-3 px-4">ACCOUNT TYPE</th>
+                      <th className="py-3 px-4 text-right">CURRENT BALANCE</th>
+                      <th className="py-3 px-4 text-center">STATUS</th>
+                      <th className="py-3 px-4 text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {[
+                      { name: 'BAJAJ FIN LTD', type: 'Consumer Loan', balance: '₹34,500', status: 'Active', color: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
+                      { name: 'CANARA BANK', type: 'Personal Loan', balance: '₹215,000', status: 'Active', color: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
+                      { name: 'HDFC BANK', type: 'Credit Card', balance: '₹0', status: 'Closed', color: 'bg-slate-100 text-slate-600 border border-slate-200' },
+                      { name: 'SMICC (****8568)', type: 'Personal Loan', balance: '₹3,964', status: 'Active', color: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
+                      { name: 'AXIS BANK LTD', type: 'Two-Wheeler Loan', balance: '₹0', status: 'Closed', color: 'bg-slate-100 text-slate-600 border border-slate-200' },
+                    ].map((acc, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-slate-900">{acc.name}</td>
+                        <td className="py-3.5 px-4 text-slate-600">{acc.type}</td>
+                        <td className="py-3.5 px-4 text-right font-black text-slate-900">{acc.balance}</td>
+                        <td className="py-3.5 px-4 text-center">
+                          <span className={`text-[11px] font-extrabold px-2.5 py-1 rounded-full ${acc.color}`}>
+                            {acc.status}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <button
+                            onClick={() => openDemoModal("Account Dispute Filing", "File a formal legal dispute against this account entry. Sign up for full access to initiate bank dispute filings.")}
+                            className="text-[#4F46E5] hover:underline font-bold text-xs"
+                          >
+                            Dispute &gt;
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: ENQUIRIES (Desktop) */}
+          {activeTab === 'enquiries' && (
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/70 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Recent Credit Enquiries</h3>
+                  <p className="text-xs text-slate-500">Lender credit score checks pulled across bureaus.</p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px] bg-slate-50/50">
+                      <th className="py-3 px-4">LENDER / INSTITUTION</th>
+                      <th className="py-3 px-4">PURPOSE</th>
+                      <th className="py-3 px-4 text-right">AMOUNT ENQUIRED</th>
+                      <th className="py-3 px-4 text-center">DATE</th>
+                      <th className="py-3 px-4 text-right">BUREAU</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {[
+                      { lender: 'Experian Credit Pull', purpose: 'Two-Wheeler Loan', amount: '₹5,000', date: '27-Jun-2026', bureau: 'Experian' },
+                      { lender: 'BAJAJ FIN LTD', purpose: 'Consumer Finance', amount: '₹1', date: '29-May-2026', bureau: 'CIBIL' },
+                      { lender: 'CANARA BANK', purpose: 'Personal Loan', amount: '₹215,000', date: '02-Jul-2025', bureau: 'CIBIL' },
+                      { lender: 'HDFC BANK LTD', purpose: 'Credit Card', amount: '₹50,000', date: '14-Apr-2025', bureau: 'Equifax' },
+                    ].map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-slate-900">{row.lender}</td>
+                        <td className="py-3.5 px-4 text-slate-600">{row.purpose}</td>
+                        <td className="py-3.5 px-4 text-right font-black text-slate-900">{row.amount}</td>
+                        <td className="py-3.5 px-4 text-center text-slate-500">{row.date}</td>
+                        <td className="py-3.5 px-4 text-right font-bold text-slate-700">{row.bureau}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: COMPARISON (Desktop) */}
+          {activeTab === 'comparison' && (
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/70 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">4-Bureau Comparison Matrix</h3>
+                  <p className="text-xs text-slate-500">Side-by-side analysis of reports across TransUnion CIBIL, CRIF, Experian &amp; Equifax.</p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px] bg-slate-50/50">
+                      <th className="py-3.5 px-4">METRIC</th>
+                      <th className="py-3.5 px-4 text-center text-teal-600 font-bold">TRANSUNION CIBIL</th>
+                      <th className="py-3.5 px-4 text-center text-amber-600 font-bold">CRIF HIGH MARK</th>
+                      <th className="py-3.5 px-4 text-center text-red-500 font-bold">EXPERIAN INDIA</th>
+                      <th className="py-3.5 px-4 text-center text-red-500 font-bold">EQUIFAX INDIA</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {[
+                      { metric: 'Credit Score', cibil: '708 (Good)', crif: '611 (Fair)', experian: '488 (Poor)', equifax: '547 (Poor)' },
+                      { metric: 'Total Accounts', cibil: 27, crif: 28, experian: 27, equifax: 16 },
+                      { metric: 'Active Accounts', cibil: 5, crif: 5, experian: 5, equifax: 1 },
+                      { metric: 'Closed Accounts', cibil: 22, crif: 23, experian: 22, equifax: 15 },
+                      { metric: 'Flagged Discrepancies', cibil: '8 Issues', crif: '9 Issues', experian: '11 Issues', equifax: '6 Issues' },
+                    ].map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-4 px-4 font-bold text-slate-900">{row.metric}</td>
+                        <td className="py-4 px-4 text-center font-black text-teal-600">{row.cibil}</td>
+                        <td className="py-4 px-4 text-center font-black text-amber-600">{row.crif}</td>
+                        <td className="py-4 px-4 text-center font-black text-red-500">{row.experian}</td>
+                        <td className="py-4 px-4 text-center font-black text-red-500">{row.equifax}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </main>
 
         {/* ── MOBILE WORKSPACE (block lg:hidden) - Native Mobile App UI ── */}
