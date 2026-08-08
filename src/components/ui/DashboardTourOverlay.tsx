@@ -136,7 +136,7 @@ export default function DashboardTourOverlay({
       if (el) {
         const rect = el.getBoundingClientRect()
         setTargetRect(rect)
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
         // Calculate popover coordinates next to target element
         const windowWidth = window.innerWidth
@@ -149,10 +149,23 @@ export default function DashboardTourOverlay({
 
         if (isMobile) {
           left = Math.max(16, (windowWidth - popoverWidth) / 2)
-          if (currentStep.placement === 'above') {
+
+          const spaceBelow = windowHeight - rect.bottom
+          const spaceAbove = rect.top
+
+          if (currentStep.placement === 'above' || (spaceBelow < popoverHeight + 70 && spaceAbove > popoverHeight + 20)) {
             top = Math.max(16, rect.top - popoverHeight - 12)
           } else {
             top = Math.min(windowHeight - popoverHeight - 75, rect.bottom + 12)
+          }
+
+          // If popover still overlaps target rect on small phones, force position outside rect bounds
+          if (top < rect.bottom && top + popoverHeight > rect.top) {
+            if (spaceAbove >= spaceBelow) {
+              top = Math.max(12, rect.top - popoverHeight - 12)
+            } else {
+              top = Math.min(windowHeight - popoverHeight - 70, rect.bottom + 12)
+            }
           }
         } else {
           if (currentStep.placement === 'below') {

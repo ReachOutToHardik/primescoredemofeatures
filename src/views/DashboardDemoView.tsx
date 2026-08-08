@@ -554,34 +554,34 @@ export default function DashboardDemoView() {
             </div>
 
             {/* CARD 2: Mobile Verification Info Pills */}
-            <div id="tour-mobile-info-cards" className="space-y-2.5">
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
-                  <PanIcon className="w-4 h-4" />
+            <div id="tour-mobile-info-cards" className="grid grid-cols-3 gap-2">
+              <div className="bg-white rounded-2xl p-2.5 border border-slate-200/70 shadow-2xs flex flex-col items-center justify-center text-center gap-1 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <PanIcon className="w-3.5 h-3.5" />
                 </div>
-                <div>
-                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">PAN</span>
-                  <span className="text-xs font-black text-slate-900 font-mono tracking-wider">XXGQ5764X</span>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
-                  <Smartphone className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">MOBILE</span>
-                  <span className="text-xs font-black text-slate-900 font-mono tracking-wider">+91 77239XXXXX</span>
+                <div className="w-full">
+                  <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block truncate">PAN</span>
+                  <span className="text-[11px] font-black text-slate-900 font-mono tracking-tight block truncate">XXGQ5764X</span>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
-                  <Calendar className="w-4 h-4" />
+              <div className="bg-white rounded-2xl p-2.5 border border-slate-200/70 shadow-2xs flex flex-col items-center justify-center text-center gap-1 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <Smartphone className="w-3.5 h-3.5" />
                 </div>
-                <div>
-                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">DOB</span>
-                  <span className="text-xs font-black text-slate-900 tracking-wider">30 Apr 1992</span>
+                <div className="w-full">
+                  <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block truncate">MOBILE</span>
+                  <span className="text-[11px] font-black text-slate-900 font-mono tracking-tight block truncate">77239XXXXX</span>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-2.5 border border-slate-200/70 shadow-2xs flex flex-col items-center justify-center text-center gap-1 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <Calendar className="w-3.5 h-3.5" />
+                </div>
+                <div className="w-full">
+                  <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block truncate">DOB</span>
+                  <span className="text-[11px] font-black text-slate-900 tracking-tight block truncate">30 Apr 1992</span>
                 </div>
               </div>
             </div>
