@@ -101,6 +101,7 @@ export default function AdminCareersPage() {
   const [newJob, setNewJob] = useState({
     title: '',
     type: 'job' as 'job' | 'internship',
+    department: 'General',
     location: '',
     description: '',
     requirements: '',
@@ -172,9 +173,10 @@ export default function AdminCareersPage() {
       const payload = {
         title: newJob.title,
         type: newJob.type,
+        department: newJob.department || 'General',
         location: newJob.location || 'Remote',
         description: newJob.description || '<p>Describe the role responsibilities and overview here...</p>',
-        requirements: newJob.requirements,
+        requirements: newJob.requirements || '',
         min_pay: newJob.min_pay === '' ? null : Number(newJob.min_pay),
         max_pay: newJob.max_pay === '' ? null : Number(newJob.max_pay),
         hide_pay: newJob.hide_pay,
@@ -201,6 +203,7 @@ export default function AdminCareersPage() {
       setNewJob({
         title: '',
         type: 'job',
+        department: 'General',
         location: '',
         description: '',
         requirements: '',
@@ -227,9 +230,10 @@ export default function AdminCareersPage() {
     setNewJob({
       title: job.title,
       type: job.type,
+      department: job.department || 'General',
       location: job.location,
       description: job.description,
-      requirements: job.requirements,
+      requirements: job.requirements || '',
       min_pay: job.min_pay ?? '',
       max_pay: job.max_pay ?? '',
       hide_pay: job.hide_pay ?? false,
@@ -393,6 +397,17 @@ export default function AdminCareersPage() {
                     placeholder="Senior React Developer"
                     value={newJob.title}
                     onChange={e => setNewJob(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-500">Department</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Engineering, Operations, Credit Audit"
+                    value={newJob.department}
+                    onChange={e => setNewJob(prev => ({ ...prev, department: e.target.value }))}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-250 bg-white text-slate-900 outline-none focus:border-emerald-500 text-sm"
                   />
                 </div>
