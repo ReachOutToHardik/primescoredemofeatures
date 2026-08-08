@@ -336,7 +336,7 @@ export default function DashboardDemoView() {
           </div>
 
           {/* Tabs Pill Navigation */}
-          <div className="bg-[#EBEFF5]/60 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold overflow-x-auto">
+          <div className="bg-[#EBEFF5]/60 p-1 rounded-2xl flex items-center gap-1 text-xs font-bold overflow-x-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {[
               { id: 'overview', label: 'Overview' },
               { id: 'accounts', label: 'Accounts' },
@@ -586,8 +586,8 @@ export default function DashboardDemoView() {
               </div>
             </div>
 
-            {/* Mobile Tab Pills */}
-            <div className="bg-slate-200/60 p-1 rounded-2xl flex items-center gap-1 text-xs font-extrabold overflow-x-auto">
+            {/* Mobile Tab Pills (All 4 Tabs Supported) */}
+            <div className="bg-slate-200/60 p-1 rounded-2xl grid grid-cols-4 gap-1 text-[11px] sm:text-xs font-extrabold no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'accounts', label: 'Accounts' },
@@ -597,7 +597,7 @@ export default function DashboardDemoView() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex-1 min-w-[85px] py-2.5 rounded-xl transition-all text-center ${
+                  className={`w-full py-2.5 px-1 rounded-xl transition-all text-center truncate ${
                     activeTab === tab.id
                       ? 'bg-white text-slate-900 shadow-sm'
                       : 'text-slate-500'
