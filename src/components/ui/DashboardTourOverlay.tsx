@@ -74,7 +74,7 @@ const TOUR_STEPS_MOBILE: StepItem[] = [
     id: 'step-m2',
     title: 'Verified Personal Identifiers',
     subtitle: 'STEP 2 OF 5',
-    description: 'Verify your linked PAN card (COGPD5764N), mobile number, and date of birth across bureau records.',
+    description: 'Verify your linked PAN card (XXGQ5764X), mobile number, and date of birth across bureau records.',
     targetId: 'tour-mobile-info-cards',
     placement: 'below'
   },
