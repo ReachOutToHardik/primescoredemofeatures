@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import DashboardIntroLoader from '../components/ui/DashboardIntroLoader'
 import DashboardTourOverlay from '../components/ui/DashboardTourOverlay'
 import {
@@ -17,11 +18,14 @@ import {
   RefreshCw,
   Download,
   ChevronDown,
+  ChevronLeft,
   Info,
   Smartphone,
   Calendar,
   CreditCard as PanIcon,
-  ExternalLink
+  ExternalLink,
+  Phone,
+  X
 } from 'lucide-react'
 
 export default function DashboardDemoView() {
@@ -29,10 +33,32 @@ export default function DashboardDemoView() {
   const [isCreditReportsOpen, setIsCreditReportsOpen] = useState(true)
   const [isIntroComplete, setIsIntroComplete] = useState(false)
 
+  // Demo Feature Modal State
+  const [demoModal, setDemoModal] = useState<{
+    isOpen: boolean
+    title: string
+    description: string
+    isDownloadOnly?: boolean
+  } | null>(null)
+
+  const openDemoModal = (title: string, description: string, isDownloadOnly = false) => {
+    setDemoModal({
+      isOpen: true,
+      title,
+      description,
+      isDownloadOnly
+    })
+  }
+
+  const closeDemoModal = () => {
+    setDemoModal(null)
+  }
+
   return (
     <div className="h-screen max-h-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex flex-col font-sans selection:bg-[#253B7E]/10">
       {/* Premium Dashboard Logo Intro Animation */}
       <DashboardIntroLoader onComplete={() => setIsIntroComplete(true)} />
+
       {/* Top Banner Marquee */}
       <div className="w-full bg-[#0B132B] text-white py-2 px-4 flex items-center justify-between overflow-hidden border-b border-slate-800/80 shrink-0 shadow-md z-50">
         {/* Marquee Ticker Container */}
@@ -65,10 +91,11 @@ export default function DashboardDemoView() {
         </a>
       </div>
 
+      {/* Main Container Layout */}
       <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden relative">
 
-        {/* Left Sidebar */}
-        <aside id="tour-sidebar-nav" className="w-full lg:w-[240px] bg-white border-r border-slate-200/80 p-4 lg:py-6 lg:px-4 flex flex-col justify-between shrink-0 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-20">
+        {/* ── DESKTOP LEFT SIDEBAR (hidden lg:flex) ── */}
+        <aside id="tour-sidebar-nav" className="hidden lg:flex w-[240px] bg-white border-r border-slate-200/80 p-4 lg:py-6 lg:px-4 flex-col justify-between shrink-0 overflow-y-auto z-20">
           <div>
             {/* Logo */}
             <div className="flex items-center gap-2 mb-8 px-2">
@@ -81,7 +108,7 @@ export default function DashboardDemoView() {
             <nav className="space-y-1.5">
               <Link
                 href="/dashboard"
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all bg-[#EEF2FF] text-[#4F46E5] font-semibold"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all bg-[#EEF2FF] text-[#4F46E5] font-semibold"
               >
                 <div className="flex items-center gap-3">
                   <LayoutDashboard className="w-4 h-4 stroke-[1.75]" />
@@ -106,15 +133,13 @@ export default function DashboardDemoView() {
                 {isCreditReportsOpen && (
                   <div className="ml-7 mt-1 space-y-0.5 pl-2">
                     {['CIBIL', 'Experian', 'Equifax', 'CRIF'].map((bureau) => (
-                      <a
+                      <button
                         key={bureau}
-                        href="https://dashboard.primescore.in/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-[#4F46E5] hover:bg-indigo-50/60 transition-all focus:outline-none"
+                        onClick={() => openDemoModal(`${bureau} Report Access`, `To view live line-by-line loan entries and credit score history for ${bureau}, sign up for full access or talk to our credit team.`)}
+                        className="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-[#4F46E5] hover:bg-indigo-50/60 transition-all focus:outline-none"
                       >
                         {bureau}
-                      </a>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -130,58 +155,53 @@ export default function DashboardDemoView() {
                 </div>
               </Link>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Subscription Management", "To manage your active credit repair plan, view billing invoices, or upgrade your package, sign up for full access or contact our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-4 h-4 stroke-[1.75]" />
                   <span className="text-[13px]">Subscription</span>
                 </div>
-              </a>
+              </button>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Refer & Earn Rewards", "To generate your unique referral link and claim credit audit cashback rewards, sign up for full access or speak with our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <Share2 className="w-4 h-4 stroke-[1.75]" />
-                  <span className="text-[13px]">Refer & Earn</span>
+                  <span className="text-[13px]">Refer &amp; Earn</span>
                 </div>
-              </a>
+              </button>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents, personal details, and security preferences, sign up for full access or contact our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <User className="w-4 h-4 stroke-[1.75]" />
                   <span className="text-[13px]">Profile</span>
                 </div>
-              </a>
+              </button>
             </nav>
           </div>
 
           {/* User Profile Footer Section */}
           <div className="pt-6 space-y-3">
-            {/* User Tile */}
             <div className="flex items-center gap-3 px-1">
               <div className="w-9 h-9 rounded-full bg-[#0E1726] text-white font-semibold flex items-center justify-center text-xs shadow-sm shrink-0">
                 D
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="text-xs font-bold text-slate-900 truncate tracking-tight">YOUR NAME</h4>
+                <h4 className="text-xs font-bold text-slate-900 truncate tracking-tight">DEMO USER</h4>
                 <p className="text-[11px] text-slate-400">Premium Member</p>
               </div>
             </div>
 
-            {/* Sign Up Button */}
             <a
               href="https://dashboard.primescore.in/"
               target="_blank"
@@ -192,16 +212,15 @@ export default function DashboardDemoView() {
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
-            {/* Bottom Nav Links */}
             <div className="space-y-2 text-xs text-slate-600 pt-2 px-1">
-              <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
+              <button onClick={() => openDemoModal("Access Account Settings", "To customize your notifications, security, and dashboard layout, sign up for full access or contact our team.")} className="w-full flex items-center gap-3 py-1 hover:text-slate-900 transition-colors text-left">
                 <Settings className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Settings</span>
-              </a>
-              <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
+              </button>
+              <button onClick={() => openDemoModal("Access Support Desk", "To get 2-hour SLA response support from senior credit audit analysts, sign up for full access or call us directly.")} className="w-full flex items-center gap-3 py-1 hover:text-slate-900 transition-colors text-left">
                 <Headphones className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Contact Support</span>
-              </a>
+              </button>
               <Link href="/" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
                 <LogOut className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Logout</span>
@@ -210,21 +229,16 @@ export default function DashboardDemoView() {
           </div>
         </aside>
 
-        {/* Main Dashboard Workspace */}
-        <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-5">
+        {/* ── DESKTOP MAIN WORKSPACE (hidden lg:block) ── */}
+        <main className="hidden lg:block flex-1 h-full overflow-y-auto p-6 lg:p-7 space-y-5">
 
           {/* User Profile Card */}
           <div id="tour-profile-card" className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
-
-            {/* Top row: Score + Info + Action Bar */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-
-              {/* Left Score + User Info */}
               <div className="flex items-center gap-5">
                 {/* Arc Score Gauge */}
                 <div className="relative w-28 h-20 flex items-center justify-center pt-2">
                   <svg className="w-28 h-28 overflow-visible" viewBox="0 0 100 100">
-                    {/* Background Arc */}
                     <path
                       d="M 12 68 A 42 42 0 1 1 88 68"
                       fill="none"
@@ -232,7 +246,6 @@ export default function DashboardDemoView() {
                       strokeWidth="11"
                       strokeLinecap="round"
                     />
-                    {/* Amber Score Arc */}
                     <path
                       d="M 12 68 A 42 42 0 1 1 88 68"
                       fill="none"
@@ -249,49 +262,47 @@ export default function DashboardDemoView() {
                   </div>
                 </div>
 
-                {/* User Details */}
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold flex items-center justify-center text-base shadow-sm">
                     D
                   </div>
                   <div>
-                    <h2 className="text-base font-bold text-slate-900 tracking-tight">YOUR NAME</h2>
-                    <p className="text-xs text-slate-400 font-medium">GENDER</p>
+                    <h2 className="text-base font-bold text-slate-900 tracking-tight">DEMO USER</h2>
+                    <p className="text-xs text-slate-400 font-medium">Verified Profile</p>
                   </div>
                 </div>
               </div>
 
-              {/* Action Buttons & Last Fetched */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="flex items-center gap-3">
                 <span className="text-xs text-slate-400 font-medium">
                   Last fetched: <strong className="text-slate-600 font-semibold">13 Jul, 12:38 pm</strong>
                 </span>
 
                 <div className="flex items-center gap-2 flex-wrap">
-                  <a
-                    href="https://dashboard.primescore.in/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => openDemoModal("Refresh Credit Report & Scores", "You can refresh your latest report and updated scores across all 4 bureaus directly from here. Sign up for full access to fetch your live real-time credit updates.")}
                     className="bg-white border-2 border-[#10B981] hover:bg-emerald-50 text-[#059669] font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-xs"
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-[#059669]" />
-                    <span>Sign Up Now</span>
-                  </a>
-                  <button className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+                    <RefreshCw className="w-3.5 h-3.5 text-[#059669]" />
+                    <span>+ Refresh Now</span>
+                  </button>
+                  <button
+                    onClick={() => openDemoModal("Download Unified 4-Bureau Report", "You can download your multi-bureau report which has all the data combined from all 4 bureaus (CIBIL, Experian, Equifax & CRIF) into one comprehensive PDF report.", true)}
+                    className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
+                  >
                     <Download className="w-3.5 h-3.5" /> Download Multi Bureau Report
                   </button>
-                  <button className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+                  <button
+                    onClick={() => openDemoModal("Credit Report Overview & Analysis", "Access full line-by-line breakdown of all active loan accounts, credit utilization, and bureau status summaries. Sign up for full access or speak with our team.")}
+                    className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-xs"
+                  >
                     <FileText className="w-3.5 h-3.5 text-blue-600" /> Credit Report Overview
                   </button>
                 </div>
               </div>
-
             </div>
 
-            {/* Bottom 3 Information Pill Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-
-              {/* PAN */}
+            <div className="grid grid-cols-3 gap-3 pt-1">
               <div className="bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-100 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center text-slate-400 shrink-0">
                   <FileText className="w-4 h-4" />
@@ -302,7 +313,6 @@ export default function DashboardDemoView() {
                 </div>
               </div>
 
-              {/* Mobile */}
               <div className="bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-100 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center text-slate-400 shrink-0">
                   <Smartphone className="w-4 h-4" />
@@ -313,7 +323,6 @@ export default function DashboardDemoView() {
                 </div>
               </div>
 
-              {/* DOB */}
               <div className="bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-100 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center text-slate-400 shrink-0">
                   <Calendar className="w-4 h-4" />
@@ -323,9 +332,7 @@ export default function DashboardDemoView() {
                   <span className="text-xs font-bold text-slate-800 tracking-tight">30 Apr 1992</span>
                 </div>
               </div>
-
             </div>
-
           </div>
 
           {/* Tabs Pill Navigation */}
@@ -339,22 +346,21 @@ export default function DashboardDemoView() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl transition-all text-center ${activeTab === tab.id
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
-                  }`}
+                className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl transition-all text-center ${
+                  activeTab === tab.id
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
               >
                 {tab.label}
               </button>
             ))}
           </div>
 
-          {/* TAB 1: OVERVIEW */}
+          {/* TAB OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-5">
-
-              {/* 4 Bureau Score Cards */}
-              <div id="tour-bureau-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div id="tour-bureau-cards" className="grid grid-cols-4 gap-4">
                 {[
                   { bureau: 'EQUIFAX INDIA', score: 547, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 16, active: 1, closed: 15 },
                   { bureau: 'EXPERIAN INDIA', score: 488, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 27, active: 5, closed: 22 },
@@ -363,15 +369,12 @@ export default function DashboardDemoView() {
                 ].map((b, i) => (
                   <div key={i} className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-sm flex flex-col justify-between">
                     <div>
-                      {/* Title Header */}
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`w-2 h-2 rounded-full ${b.dotColor}`} />
                         <span className="text-[11px] font-bold text-slate-700 tracking-wide">{b.bureau}</span>
                       </div>
 
-                      {/* Donut Gauge + Status & Counts */}
                       <div className="flex items-center gap-4">
-                        {/* Gauge */}
                         <div className="relative w-20 h-20 flex items-center justify-center shrink-0">
                           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="38" stroke="#F1F5F9" strokeWidth="9" fill="transparent" />
@@ -393,7 +396,6 @@ export default function DashboardDemoView() {
                           </div>
                         </div>
 
-                        {/* Details Right */}
                         <div className="flex-1 space-y-1 text-xs">
                           <div className="mb-1">
                             <span className={`text-xs font-bold ${b.statusColor}`}>{b.status}</span>
@@ -414,10 +416,12 @@ export default function DashboardDemoView() {
                       </div>
                     </div>
 
-                    {/* Footer */}
                     <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
                       <span>Fetched: 13 Jul, 12:38 pm</span>
-                      <button className="text-[#4F46E5] hover:underline flex items-center gap-1 font-semibold">
+                      <button
+                        onClick={() => openDemoModal("Download Unified 4-Bureau Report", "You can download your multi-bureau report which has all the data combined from all 4 bureaus (CIBIL, Experian, Equifax & CRIF) into one comprehensive PDF report.", true)}
+                        className="text-[#4F46E5] hover:underline flex items-center gap-1 font-semibold"
+                      >
                         <Download className="w-3 h-3" /> Report
                       </button>
                     </div>
@@ -425,238 +429,459 @@ export default function DashboardDemoView() {
                 ))}
               </div>
 
-              {/* Discrepancy Alerts & Credit Mix Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Discrepancies Box */}
+              <div id="tour-discrepancy-alerts" className="bg-[#FFFDF5] rounded-2xl p-5 border border-amber-200/80 shadow-sm space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    <span>Discrepancy Alerts</span>
+                  </div>
+                  <button onClick={() => openDemoModal("All 34 Discrepancy Alerts", "To view line-by-line flagged credit errors and submit disputes, sign up for full access or speak with our team.")} className="text-xs font-bold text-amber-700 hover:underline">
+                    View All (34) &gt;
+                  </button>
+                </div>
+                <p className="text-xs text-amber-900/80 font-medium">
+                  We found <strong className="text-amber-900">34 potential issue(s)</strong> across your bureau reports that may be impacting your score.
+                </p>
+              </div>
+            </div>
+          )}
+        </main>
 
-                {/* Discrepancy Alerts Box (7 cols) */}
-                <div id="tour-discrepancy-alerts" className="lg:col-span-7 bg-[#FFFDF5] rounded-2xl p-5 border border-amber-200/80 shadow-sm space-y-3.5">
+        {/* ── MOBILE WORKSPACE (block lg:hidden) - Native Mobile App UI ── */}
+        <div className="block lg:hidden flex-1 overflow-y-auto bg-[#F8FAFC] pb-24 font-sans">
+          
+          {/* Top Mobile Bar */}
+          <div className="bg-white border-b border-slate-200/80 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors p-1" title="Back to Home">
+                <ChevronLeft className="w-6 h-6" />
+              </Link>
+              <img src="/lightmode_Logo.png" alt="PrimeScore" className="h-7 w-auto object-contain" />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button onClick={() => openDemoModal("Theme Preferences", "To customize your theme preferences, sign up for full access or speak with our team.")} className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold shadow-2xs">
+                🌙
+              </button>
+              <button onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents and profile details, sign up for full access or contact our team.")} className="w-9 h-9 rounded-full bg-[#0A2342] text-white font-extrabold flex items-center justify-center text-xs shadow-sm ring-2 ring-blue-500/20">
+                D
+              </button>
+            </div>
+          </div>
+
+          <div className="p-4 space-y-4">
+            
+            {/* Title Header */}
+            <div>
+              <h1 className="text-2xl font-black text-slate-900 font-display tracking-tight">Multi Bureau</h1>
+              <p className="text-xs text-slate-500 font-medium">Credit report for DEMO USER</p>
+            </div>
+
+            {/* CARD 1: Mobile Profile & Arc Gauge Card */}
+            <div id="tour-mobile-profile-card" className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                {/* Arc Gauge */}
+                <div className="relative w-28 h-20 flex items-center justify-center pt-2 shrink-0">
+                  <svg className="w-28 h-28 overflow-visible" viewBox="0 0 100 100">
+                    <path
+                      d="M 12 68 A 42 42 0 1 1 88 68"
+                      fill="none"
+                      stroke="#F1F5F9"
+                      strokeWidth="11"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M 12 68 A 42 42 0 1 1 88 68"
+                      fill="none"
+                      stroke="#F59E0B"
+                      strokeWidth="11"
+                      strokeLinecap="round"
+                      strokeDasharray="210"
+                      strokeDashoffset="75"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pt-1 text-center">
+                    <span className="text-2xl font-black text-slate-900 leading-none">589</span>
+                    <span className="text-[9px] font-extrabold text-amber-500 uppercase tracking-wider mt-1">Average Score</span>
+                  </div>
+                </div>
+
+                {/* User Avatar Badge */}
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-[#4F46E5] font-black flex items-center justify-center text-lg shadow-sm border border-indigo-100">
+                    D
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-extrabold text-slate-900 tracking-tight">DEMO USER</h3>
+                    <p className="text-[11px] text-slate-400 font-bold">Client Profile</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-[11px] text-slate-400 font-medium text-right pt-1">
+                Last fetched: <strong className="text-slate-700 font-bold">13 Jul, 12:38 pm</strong>
+              </div>
+
+              {/* Action Buttons Row */}
+              <div className="space-y-2 pt-1">
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => openDemoModal("Refresh Credit Report & Scores", "You can refresh your latest report and updated scores across all 4 bureaus directly from here. Sign up for full access to fetch your live real-time credit updates.")}
+                    className="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-extrabold text-xs py-3 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>+ Refresh Now</span>
+                  </button>
+
+                  <button
+                    onClick={() => openDemoModal("Download Unified 4-Bureau Report", "You can download your multi-bureau report which has all the data combined from all 4 bureaus (CIBIL, Experian, Equifax & CRIF) into one comprehensive PDF report.", true)}
+                    className="bg-[#3730A3] hover:bg-[#312E81] text-white font-extrabold text-xs py-3 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download Report</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => openDemoModal("Credit Report Overview & Analysis", "Access full line-by-line breakdown of all active loan accounts, credit utilization, and bureau status summaries. Sign up for full access or speak with our team.")}
+                  className="w-full bg-indigo-50/80 hover:bg-indigo-100/80 border border-indigo-200/80 text-[#4F46E5] font-extrabold text-xs py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 active:scale-95"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Credit Report Overview</span>
+                </button>
+              </div>
+            </div>
+
+            {/* CARD 2: Mobile Verification Info Pills */}
+            <div id="tour-mobile-info-cards" className="space-y-2.5">
+              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <PanIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">PAN</span>
+                  <span className="text-xs font-black text-slate-900 font-mono tracking-wider">XXGQ5764X</span>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">MOBILE</span>
+                  <span className="text-xs font-black text-slate-900 font-mono tracking-wider">+91 77239XXXXX</span>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-500 shrink-0">
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">DOB</span>
+                  <span className="text-xs font-black text-slate-900 tracking-wider">30 Apr 1992</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Tab Pills */}
+            <div className="bg-slate-200/60 p-1 rounded-2xl flex items-center gap-1 text-xs font-extrabold overflow-x-auto">
+              {[
+                { id: 'overview', label: 'Overview' },
+                { id: 'accounts', label: 'Accounts' },
+                { id: 'enquiries', label: 'Enquiries' },
+                { id: 'comparison', label: 'Comparison' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex-1 min-w-[85px] py-2.5 rounded-xl transition-all text-center ${
+                    activeTab === tab.id
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-500'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* TAB OVERVIEW */}
+            {activeTab === 'overview' && (
+              <div className="space-y-4">
+                <div id="tour-mobile-bureau-cards" className="space-y-3.5">
+                  {[
+                    { bureau: 'EQUIFAX INDIA', score: 547, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 16, active: 1, closed: 15 },
+                    { bureau: 'EXPERIAN INDIA', score: 488, status: 'Poor', dotColor: 'bg-red-500', statusColor: 'text-red-500', stroke: '#EF4444', total: 27, active: 5, closed: 22 },
+                    { bureau: 'CRIF HIGH MARK', score: 611, status: 'Fair', dotColor: 'bg-amber-500', statusColor: 'text-amber-600', stroke: '#F59E0B', total: 28, active: 5, closed: 23 },
+                    { bureau: 'TRANSUNION CIBIL', score: 708, status: 'Good', dotColor: 'bg-teal-500', statusColor: 'text-teal-600', stroke: '#0D9488', total: 27, active: 5, closed: 22 },
+                  ].map((b, i) => (
+                    <div key={i} className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2.5 h-2.5 rounded-full ${b.dotColor}`} />
+                          <span className="text-xs font-black text-slate-800 tracking-wide">{b.bureau}</span>
+                        </div>
+                        <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-slate-50 ${b.statusColor}`}>
+                          {b.status}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="38" stroke="#F1F5F9" strokeWidth="9" fill="transparent" />
+                            <circle
+                              cx="50"
+                              cy="50"
+                              r="38"
+                              stroke={b.stroke}
+                              strokeWidth="9"
+                              fill="transparent"
+                              strokeDasharray="238.7"
+                              strokeDashoffset="80"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          <div className="absolute text-center leading-none">
+                            <span className="text-base font-black text-slate-900 block">{b.score}</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-3 text-center flex-1 ml-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                          <div>
+                            <span className="text-[9px] font-extrabold text-slate-400 block uppercase">Accounts</span>
+                            <span className="text-xs font-black text-slate-900">{b.total}</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-extrabold text-slate-400 block uppercase">Active</span>
+                            <span className="text-xs font-black text-slate-900">{b.active}</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-extrabold text-slate-400 block uppercase">Closed</span>
+                            <span className="text-xs font-black text-slate-900">{b.closed}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-[#FFFDF5] rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                       <AlertTriangle className="w-4 h-4 text-amber-600" />
                       <span>Discrepancy Alerts</span>
                     </div>
-                    <button className="text-xs font-bold text-amber-700 hover:underline">
+                    <button onClick={() => openDemoModal("All 34 Discrepancy Alerts", "To view line-by-line flagged credit errors and submit disputes, sign up for full access or speak with our team.")} className="text-xs font-extrabold text-amber-700 hover:underline">
                       View All (34) &gt;
                     </button>
                   </div>
-
-                  <p className="text-xs text-amber-900/80 font-medium">
-                    We found <strong className="text-amber-900">34 potential issue(s)</strong> across your bureau reports that may be impacting your score.
+                  <p className="text-xs text-amber-900/80 font-medium leading-relaxed">
+                    We found <strong>34 potential issue(s)</strong> across your bureau reports that may be impacting your credit score.
                   </p>
-
-                  {/* Alert Items */}
-                  <div className="space-y-2.5">
-
-                    {/* Item 1 */}
-                    <div className="bg-white p-3 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-xs">
-                      <div className="flex items-center gap-2.5">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                        <span className="text-xs font-bold text-slate-800">Suit Filed</span>
-                        <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">Experian</span>
-                        <span className="text-[9px] bg-red-600 text-white font-black px-1.5 py-0.5 rounded">CRITICAL</span>
-                      </div>
-                      <button className="bg-[#F59E0B] hover:bg-amber-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg transition-all">
-                        Raise a Request
-                      </button>
-                    </div>
-
-                    {/* Item 2 */}
-                    <div className="bg-white p-3 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-xs">
-                      <div className="flex items-center gap-2.5">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                        <span className="text-xs font-bold text-slate-800">Name Mismatch (PAN vs Report)</span>
-                        <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">CRIF</span>
-                        <span className="text-[9px] bg-amber-500 text-white font-black px-1.5 py-0.5 rounded">MEDIUM</span>
-                      </div>
-                      <button className="bg-[#F59E0B] hover:bg-amber-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg transition-all">
-                        Raise a Request
-                      </button>
-                    </div>
-
-                    {/* Item 3 */}
-                    <div className="bg-white p-3 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-xs">
-                      <div className="flex items-center gap-2.5">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                        <span className="text-xs font-bold text-slate-800">Name Variation Across Bureaus</span>
-                        <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">CRIF</span>
-                        <span className="text-[9px] bg-amber-500 text-white font-black px-1.5 py-0.5 rounded">MEDIUM</span>
-                      </div>
-                      <button className="bg-[#F59E0B] hover:bg-amber-600 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg transition-all">
-                        Raise a Request
-                      </button>
-                    </div>
-
-                  </div>
-
-                  {/* Big Banner Button */}
-                  <button className="w-full bg-[#F59E0B] hover:bg-amber-600 text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm">
-                    Review &amp; Dispute
-                  </button>
                 </div>
+              </div>
+            )}
 
-                {/* Credit Mix Visual Box (5 cols) */}
-                <div className="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-2">Credit Mix</h3>
-
-                    <div className="flex items-center justify-between gap-4 py-2">
-                      {/* Donut */}
-                      <div className="relative w-36 h-36 flex items-center justify-center shrink-0">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="38" stroke="#4F46E5" strokeWidth="11" fill="transparent" strokeDasharray="238.7" strokeDashoffset="114" />
-                          <circle cx="50" cy="50" r="38" stroke="#EF4444" strokeWidth="11" fill="transparent" strokeDasharray="238.7" strokeDashoffset="197" />
-                          <circle cx="50" cy="50" r="38" stroke="#F59E0B" strokeWidth="11" fill="transparent" strokeDasharray="238.7" strokeDashoffset="220" />
-                          <circle cx="50" cy="50" r="38" stroke="#0D9488" strokeWidth="11" fill="transparent" strokeDasharray="238.7" strokeDashoffset="231" />
-                        </svg>
-                        <div className="absolute text-center leading-none">
-                          <span className="text-xl font-black text-slate-900 block">29</span>
-                          <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider">ACCOUNTS</span>
-                        </div>
+            {/* TAB ACCOUNTS */}
+            {activeTab === 'accounts' && (
+              <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-3.5">
+                <h3 className="text-sm font-extrabold text-slate-900">Active &amp; Closed Accounts</h3>
+                <div className="space-y-2.5">
+                  {[
+                    { name: 'BAJAJ FIN LTD', type: 'Consumer Loan', balance: '₹34,500', status: 'Active', color: 'bg-emerald-500' },
+                    { name: 'CANARA BANK', type: 'Personal Loan', balance: '₹215,000', status: 'Active', color: 'bg-emerald-500' },
+                    { name: 'HDFC BANK', type: 'Credit Card', balance: '₹0', status: 'Closed', color: 'bg-slate-400' },
+                    { name: 'SMICC (****8568)', type: 'Personal Loan', balance: '₹3,964', status: 'Active', color: 'bg-emerald-500' },
+                  ].map((acc, i) => (
+                    <div key={i} className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-150 flex items-center justify-between text-xs">
+                      <div>
+                        <div className="font-extrabold text-slate-900">{acc.name}</div>
+                        <div className="text-[11px] text-slate-400 font-medium">{acc.type}</div>
                       </div>
-
-                      {/* Legend */}
-                      <div className="flex-1 space-y-2 text-[11px] font-medium text-slate-600">
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#4F46E5]" /> Personal Loan</span>
-                          <span className="font-bold text-slate-800">52%</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> Gold Loan</span>
-                          <span className="font-bold text-slate-800">35%</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Credit Card</span>
-                          <span className="font-bold text-slate-800">10%</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-teal-500" /> Priority Sector Gold Loan</span>
-                          <span className="font-bold text-slate-800">3%</span>
+                      <div className="text-right">
+                        <div className="font-black text-slate-900">{acc.balance}</div>
+                        <div className="inline-flex items-center gap-1 text-[10px] font-extrabold text-slate-500">
+                          <span className={`w-1.5 h-1.5 rounded-full ${acc.color}`} />
+                          {acc.status}
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-
               </div>
+            )}
 
-            </div>
-          )}
-
-          {/* TAB 2: ACCOUNTS */}
-          {activeTab === 'accounts' && (
-            <div className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
-              <h3 className="text-base font-bold text-slate-900">Active Accounts Breakdown (29)</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
-                      <th className="py-2.5 px-2">Account Name</th>
-                      <th className="py-2.5 px-2">Type</th>
-                      <th className="py-2.5 px-2">Bureaus</th>
-                      <th className="py-2.5 px-2 text-right">Balance</th>
-                      <th className="py-2.5 px-2 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {[
-                      { name: 'SMICC (****8568)', type: 'Personal Loan', bureaus: 'CIBIL, CRIF, Experian', balance: '₹3,964', status: 'Active' },
-                      { name: 'SMICC (****3844)', type: 'Personal Loan', bureaus: 'CIBIL, CRIF, Experian, Equifax', balance: '₹2,631', status: 'Active' },
-                      { name: 'IOB (****2158)', type: 'Gold Loan', bureaus: 'CIBIL, CRIF, Experian', balance: '₹288,000', status: 'Active' },
-                      { name: 'FEDBANKFSL (****0484)', type: 'Gold Loan', bureaus: 'CIBIL, CRIF, Experian', balance: '₹39,822', status: 'Active' },
-                    ].map((row, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="py-3 px-2 font-bold text-slate-900">{row.name}</td>
-                        <td className="py-3 px-2 text-slate-600">{row.type}</td>
-                        <td className="py-3 px-2 text-slate-500">{row.bureaus}</td>
-                        <td className="py-3 px-2 text-right font-bold text-slate-800">{row.balance}</td>
-                        <td className="py-3 px-2 text-center">
-                          <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">
-                            {row.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {/* TAB ENQUIRIES */}
+            {activeTab === 'enquiries' && (
+              <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-3.5">
+                <h3 className="text-sm font-extrabold text-slate-900">Recent Credit Enquiries</h3>
+                <div className="space-y-2.5">
+                  {[
+                    { lender: 'Experian Pull', purpose: 'Two-Wheeler Loan', amount: '₹5,000', date: '27-Jun-2026' },
+                    { lender: 'BAJAJ FIN LTD', purpose: 'Consumer Finance', amount: '₹1', date: '29-May-2026' },
+                    { lender: 'CANARA BANK', purpose: 'Personal Loan', amount: '₹215,000', date: '02-Jul-2025' },
+                  ].map((enq, i) => (
+                    <div key={i} className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-150 flex items-center justify-between text-xs">
+                      <div>
+                        <div className="font-extrabold text-slate-900">{enq.lender}</div>
+                        <div className="text-[11px] text-slate-400 font-medium">{enq.purpose} • {enq.date}</div>
+                      </div>
+                      <div className="font-black text-slate-900">{enq.amount}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* TAB 3: ENQUIRIES */}
-          {activeTab === 'enquiries' && (
-            <div className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
-              <h3 className="text-base font-bold text-slate-900">Recent Credit Enquiries</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
-                      <th className="py-2.5 px-2">Lender</th>
-                      <th className="py-2.5 px-2">Purpose</th>
-                      <th className="py-2.5 px-2 text-right">Amount</th>
-                      <th className="py-2.5 px-2 text-center">Date</th>
-                      <th className="py-2.5 px-2 text-right">Bureau</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {[
-                      { lender: 'XXXXXXXXXX', purpose: 'Two-Wheeler Loan', amount: '₹5,000', date: '27-Jun-2026', bureau: 'Experian' },
-                      { lender: 'BAJAJ FIN LTD', purpose: 'Other', amount: '₹1', date: '29-May-2026', bureau: 'CIBIL' },
-                      { lender: 'CANARA BANK', purpose: 'Personal Loan', amount: '₹215,000', date: '02-Jul-2025', bureau: 'CIBIL' },
-                    ].map((row, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="py-3 px-2 font-bold text-slate-900">{row.lender}</td>
-                        <td className="py-3 px-2 text-slate-600">{row.purpose}</td>
-                        <td className="py-3 px-2 text-right font-bold text-slate-800">{row.amount}</td>
-                        <td className="py-3 px-2 text-center text-slate-500">{row.date}</td>
-                        <td className="py-3 px-2 text-right font-semibold text-slate-700">{row.bureau}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {/* TAB COMPARISON */}
+            {activeTab === 'comparison' && (
+              <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-3.5">
+                <h3 className="text-sm font-extrabold text-slate-900">Bureau Comparison Matrix</h3>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {[
+                    { b: 'CIBIL', score: 708, col: 'text-teal-600', status: 'Good' },
+                    { b: 'CRIF', score: 611, col: 'text-amber-600', status: 'Fair' },
+                    { b: 'EXPERIAN', score: 488, col: 'text-red-500', status: 'Poor' },
+                    { b: 'EQUIFAX', score: 547, col: 'text-red-500', status: 'Poor' },
+                  ].map((matrix, i) => (
+                    <div key={i} className="bg-slate-50 p-3 rounded-2xl border border-slate-150 text-center">
+                      <div className="text-[10px] font-extrabold text-slate-400 uppercase">{matrix.b}</div>
+                      <div className={`text-lg font-black my-0.5 ${matrix.col}`}>{matrix.score}</div>
+                      <div className="text-[10px] font-extrabold text-slate-600">{matrix.status}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* TAB 4: COMPARISON */}
-          {activeTab === 'comparison' && (
-            <div className="bg-white rounded-2xl p-5 border border-slate-200/70 shadow-sm space-y-4">
-              <h3 className="text-base font-bold text-slate-900">Bureau Comparison Matrix</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
-                      <th className="py-2.5 px-2">Metric</th>
-                      <th className="py-2.5 px-2 text-center text-teal-600">CIBIL</th>
-                      <th className="py-2.5 px-2 text-center text-amber-600">CRIF</th>
-                      <th className="py-2.5 px-2 text-center text-red-600">EXPERIAN</th>
-                      <th className="py-2.5 px-2 text-center text-red-600">EQUIFAX</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {[
-                      { metric: 'Total Accounts', cibil: 27, crif: 28, experian: 27, equifax: 16 },
-                      { metric: 'Active Accounts', cibil: 5, crif: 5, experian: 5, equifax: 1 },
-                      { metric: 'Credit Score', cibil: 708, crif: 611, experian: 488, equifax: 547 },
-                    ].map((row, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="py-3 px-2 font-bold text-slate-900">{row.metric}</td>
-                        <td className="py-3 px-2 text-center font-bold text-teal-600">{row.cibil}</td>
-                        <td className="py-3 px-2 text-center font-bold text-amber-600">{row.crif}</td>
-                        <td className="py-3 px-2 text-center font-bold text-red-600">{row.experian}</td>
-                        <td className="py-3 px-2 text-center font-bold text-red-600">{row.equifax}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          </div>
 
-        </main>
+          {/* CARD 4: Fixed Mobile Navigation App Bar */}
+          <div id="tour-mobile-bottom-nav" className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-2.5 flex justify-between items-center z-40 shadow-lg">
+            <Link href="/dashboard" className="flex flex-col items-center gap-1 text-[#4F46E5]">
+              <LayoutDashboard className="w-5 h-5" />
+              <span className="text-[10px] font-extrabold">Home</span>
+            </Link>
+            <button onClick={() => openDemoModal("Multi-Bureau Credit Reports", "To view and download official PDF reports from CIBIL, Experian, Equifax, and CRIF, sign up for full access or speak with our team.")} className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
+              <FileText className="w-5 h-5" />
+              <span className="text-[10px] font-extrabold">Reports</span>
+            </button>
+            <Link href="/dashboard/disputes" className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
+              <AlertTriangle className="w-5 h-5" />
+              <span className="text-[10px] font-extrabold">Disputes</span>
+            </Link>
+            <button onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents and personal details, sign up for full access or contact our team.")} className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
+              <User className="w-5 h-5" />
+              <span className="text-[10px] font-extrabold">Profile</span>
+            </button>
+          </div>
+
+        </div>
+
       </div>
 
-      {/* Guided Product Walkthrough Tour Overlay (starts after loading intro ends) */}
+      {/* Guided Product Walkthrough Tour Overlay */}
       {isIntroComplete && <DashboardTourOverlay />}
+
+      {/* Interactive Demo Action Modal */}
+      <AnimatePresence>
+        {demoModal && demoModal.isOpen && (
+          <div className="fixed inset-0 z-[10005] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeDemoModal}
+              className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 8 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className="relative z-10 bg-white rounded-2xl p-6 max-w-sm sm:max-w-md w-full shadow-2xl border border-slate-200/90 text-left font-sans"
+            >
+              {/* Header Bar */}
+              <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100">
+                <img src="/lightmode_Logo.png" alt="PrimeScore" className="h-6 w-auto object-contain" />
+                <button
+                  onClick={closeDemoModal}
+                  className="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-lg hover:bg-slate-100"
+                  title="Close"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Title & Description */}
+              <h3 className="text-base sm:text-lg font-extrabold text-[#0A2342] font-display mb-2 leading-snug">
+                {demoModal.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed mb-6">
+                {demoModal.description}
+              </p>
+
+              {/* Action Buttons */}
+              {demoModal.isDownloadOnly ? (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
+                  <a
+                    href="https://dashboard.primescore.in/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white font-bold text-xs py-3 px-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+                  >
+                    <span>Sign Up for Full Access</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+
+                  <button
+                    onClick={closeDemoModal}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 px-4 rounded-xl transition-colors active:scale-95"
+                  >
+                    Back to Demo
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <a
+                      href="https://dashboard.primescore.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#10B981] hover:bg-[#059669] text-white font-bold text-xs py-3 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <span>Sign Up for Full Access</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+
+                    <a
+                      href="tel:+917728948413"
+                      className="bg-[#0A2342] hover:bg-[#112D4E] text-white font-bold text-xs py-3 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Call Credit Expert</span>
+                    </a>
+                  </div>
+
+                  <button
+                    onClick={closeDemoModal}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-colors active:scale-95"
+                  >
+                    Back to Demo
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

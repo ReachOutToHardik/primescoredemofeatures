@@ -1,14 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   ChevronRight,
-  ChevronLeft,
   X,
   RotateCcw,
-  Sparkles,
-  ExternalLink,
   CheckCircle2
 } from 'lucide-react'
 
@@ -21,7 +18,7 @@ export interface StepItem {
   placement: 'below' | 'above' | 'right'
 }
 
-const TOUR_STEPS: StepItem[] = [
+const TOUR_STEPS_DESKTOP: StepItem[] = [
   {
     id: 'step-1',
     title: 'Your Details & Average Score',
@@ -64,6 +61,49 @@ const TOUR_STEPS: StepItem[] = [
   }
 ]
 
+const TOUR_STEPS_MOBILE: StepItem[] = [
+  {
+    id: 'step-m1',
+    title: 'Average Score & Quick Actions',
+    subtitle: 'STEP 1 OF 5',
+    description: 'Track your average score gauge (589), fetch fresh report updates, or download your combined multi-bureau PDF report in one tap.',
+    targetId: 'tour-mobile-profile-card',
+    placement: 'below'
+  },
+  {
+    id: 'step-m2',
+    title: 'Verified Personal Identifiers',
+    subtitle: 'STEP 2 OF 5',
+    description: 'Verify your linked PAN card (COGPD5764N), mobile number, and date of birth across bureau records.',
+    targetId: 'tour-mobile-info-cards',
+    placement: 'below'
+  },
+  {
+    id: 'step-m3',
+    title: 'All 4 Credit Bureau Scores',
+    subtitle: 'STEP 3 OF 5',
+    description: 'Inspect individual report scores for Equifax (547), Experian (488), CRIF (611), and TransUnion CIBIL (708).',
+    targetId: 'tour-mobile-bureau-cards',
+    placement: 'above'
+  },
+  {
+    id: 'step-m4',
+    title: 'Mobile Navigation App Bar',
+    subtitle: 'STEP 4 OF 5',
+    description: 'Switch between Dashboard, Bureau Reports, Dispute Desk, and Profile using the mobile bottom navigation bar.',
+    targetId: 'tour-mobile-bottom-nav',
+    placement: 'above'
+  },
+  {
+    id: 'step-m5',
+    title: 'Sign Up for Full Access',
+    subtitle: 'STEP 5 OF 5',
+    description: 'Ready to repair your real credit profile? Click below to sign up and start filing live disputes with banks & credit bureaus.',
+    targetId: 'tour-signup-btn',
+    placement: 'below'
+  }
+]
+
 export default function DashboardTourOverlay({
   onComplete
 }: {
@@ -73,12 +113,23 @@ export default function DashboardTourOverlay({
   const [isVisible, setIsVisible] = useState<boolean>(true)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
   const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
-
-  const currentStep = TOUR_STEPS[currentStepIndex]
-  const isFinalStep = currentStepIndex === TOUR_STEPS.length - 1
+  const [isMobile, setIsMobile] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!isVisible) return
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const activeSteps = isMobile ? TOUR_STEPS_MOBILE : TOUR_STEPS_DESKTOP
+  const currentStep = activeSteps[Math.min(currentStepIndex, activeSteps.length - 1)]
+  const isFinalStep = currentStepIndex === activeSteps.length - 1
+
+  useEffect(() => {
+    if (!isVisible || !currentStep) return
 
     const updatePosition = () => {
       const el = document.getElementById(currentStep.targetId)
@@ -90,26 +141,35 @@ export default function DashboardTourOverlay({
         // Calculate popover coordinates next to target element
         const windowWidth = window.innerWidth
         const windowHeight = window.innerHeight
-        const popoverWidth = 360
+        const popoverWidth = isMobile ? Math.min(340, windowWidth - 32) : 360
         const popoverHeight = 200
 
         let top = 0
         let left = 0
 
-        if (currentStep.placement === 'below') {
-          top = rect.bottom + 16
-          left = Math.max(20, Math.min(rect.left + (rect.width / 2) - (popoverWidth / 2), windowWidth - popoverWidth - 20))
-          if (top + popoverHeight > windowHeight - 20) {
-            top = Math.max(20, rect.top - popoverHeight - 16)
+        if (isMobile) {
+          left = Math.max(16, (windowWidth - popoverWidth) / 2)
+          if (currentStep.placement === 'above') {
+            top = Math.max(16, rect.top - popoverHeight - 12)
+          } else {
+            top = Math.min(windowHeight - popoverHeight - 75, rect.bottom + 12)
           }
-        } else if (currentStep.placement === 'above') {
-          top = Math.max(20, rect.top - popoverHeight - 16)
-          left = Math.max(20, Math.min(rect.left + (rect.width / 2) - (popoverWidth / 2), windowWidth - popoverWidth - 20))
-        } else if (currentStep.placement === 'right') {
-          top = Math.max(20, Math.min(rect.top + 60, windowHeight - popoverHeight - 20))
-          left = rect.right + 20
-          if (left + popoverWidth > windowWidth - 20) {
-            left = Math.max(20, rect.left - popoverWidth - 20)
+        } else {
+          if (currentStep.placement === 'below') {
+            top = rect.bottom + 16
+            left = Math.max(20, Math.min(rect.left + (rect.width / 2) - (popoverWidth / 2), windowWidth - popoverWidth - 20))
+            if (top + popoverHeight > windowHeight - 20) {
+              top = Math.max(20, rect.top - popoverHeight - 16)
+            }
+          } else if (currentStep.placement === 'above') {
+            top = Math.max(20, rect.top - popoverHeight - 16)
+            left = Math.max(20, Math.min(rect.left + (rect.width / 2) - (popoverWidth / 2), windowWidth - popoverWidth - 20))
+          } else if (currentStep.placement === 'right') {
+            top = Math.max(20, Math.min(rect.top + 60, windowHeight - popoverHeight - 20))
+            left = rect.right + 20
+            if (left + popoverWidth > windowWidth - 20) {
+              left = Math.max(20, rect.left - popoverWidth - 20)
+            }
           }
         }
 
@@ -127,7 +187,7 @@ export default function DashboardTourOverlay({
       window.removeEventListener('resize', updatePosition)
       window.removeEventListener('scroll', updatePosition, true)
     }
-  }, [currentStepIndex, isVisible, currentStep])
+  }, [currentStepIndex, isVisible, currentStep, isMobile])
 
   const handleNext = () => {
     if (isFinalStep) {
@@ -166,11 +226,7 @@ export default function DashboardTourOverlay({
 
   return (
     <div className="fixed inset-0 z-[9999] pointer-events-auto overflow-hidden">
-      {/* 
-        Spotlight Box Cutout using box-shadow. 
-        Inside the box is 100% TRANSPARENT so target area is 100% FULL BRIGHTNESS & OPACITY.
-        Outside the box is dark (rgba(15, 23, 42, 0.85)).
-      */}
+      {/* Spotlight Box Cutout using box-shadow */}
       {targetRect ? (
         <motion.div
           key={currentStep.id + '-cutout'}
@@ -201,7 +257,7 @@ export default function DashboardTourOverlay({
             top: `${popoverPos.top}px`,
             left: `${popoverPos.left}px`,
           }}
-          className="z-[10001] w-[360px] bg-white rounded-xl border border-slate-200 shadow-2xl p-5 font-sans pointer-events-auto"
+          className="z-[10001] w-[340px] sm:w-[360px] bg-white rounded-xl border border-slate-200 shadow-2xl p-5 font-sans pointer-events-auto max-w-[calc(100vw-32px)]"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
@@ -229,7 +285,7 @@ export default function DashboardTourOverlay({
           <div className="flex items-center justify-between pt-3 border-t border-slate-100">
             {/* Step Dots */}
             <div className="flex items-center gap-1.5">
-              {TOUR_STEPS.map((_, idx) => (
+              {activeSteps.map((_, idx) => (
                 <span
                   key={idx}
                   className={`h-1.5 rounded-full transition-all ${
