@@ -229,7 +229,7 @@ export default function DashboardTourOverlay({
           setCurrentStepIndex(0)
           setIsVisible(true)
         }}
-        className="fixed bottom-5 right-5 z-50 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow-lg border border-slate-700 flex items-center gap-2 transition-all cursor-pointer"
+        className="fixed bottom-20 right-4 lg:bottom-5 lg:right-5 z-50 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2 transition-all cursor-pointer active:scale-95"
       >
         <RotateCcw className="w-3.5 h-3.5" />
         <span>Replay Tour</span>

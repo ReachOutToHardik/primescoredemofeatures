@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import DashboardIntroLoader from '../components/ui/DashboardIntroLoader'
 import {
   LayoutDashboard,
@@ -23,12 +24,33 @@ import {
   Search,
   Filter,
   ArrowUpDown,
-  ExternalLink
+  ExternalLink,
+  Phone,
+  X
 } from 'lucide-react'
 
 export default function DashboardDisputesView() {
   const [searchTerm, setSearchTerm] = useState('')
   const [isCreditReportsOpen, setIsCreditReportsOpen] = useState(true)
+
+  // Demo Feature Modal State
+  const [demoModal, setDemoModal] = useState<{
+    isOpen: boolean
+    title: string
+    description: string
+  } | null>(null)
+
+  const openDemoModal = (title: string, description: string) => {
+    setDemoModal({
+      isOpen: true,
+      title,
+      description
+    })
+  }
+
+  const closeDemoModal = () => {
+    setDemoModal(null)
+  }
 
   const disputesData = [
     {
@@ -121,15 +143,13 @@ export default function DashboardDisputesView() {
                 {isCreditReportsOpen && (
                   <div className="ml-7 mt-1 space-y-0.5 pl-2">
                     {['CIBIL', 'Experian', 'Equifax', 'CRIF'].map((bureau) => (
-                      <a
+                      <button
                         key={bureau}
-                        href="https://dashboard.primescore.in/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-[#4F46E5] hover:bg-indigo-50/60 transition-all focus:outline-none"
+                        onClick={() => openDemoModal(`${bureau} Bureau Access`, `To view live line-by-line loan entries and credit score history for ${bureau}, sign up for full access or talk to our credit team.`)}
+                        className="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-[#4F46E5] hover:bg-indigo-50/60 transition-all focus:outline-none"
                       >
                         {bureau}
-                      </a>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -145,41 +165,38 @@ export default function DashboardDisputesView() {
                 </div>
               </Link>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Subscription Management", "To manage your active credit repair plan, view billing invoices, or upgrade your package, sign up for full access or contact our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-4 h-4 stroke-[1.75]" />
                   <span className="text-[13px]">Subscription</span>
                 </div>
-              </a>
+              </button>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Refer & Earn Rewards", "To generate your unique referral link and claim credit audit cashback rewards, sign up for full access or speak with our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <Share2 className="w-4 h-4 stroke-[1.75]" />
                   <span className="text-[13px]">Refer &amp; Earn</span>
                 </div>
-              </a>
+              </button>
 
-              <a
-                href="https://dashboard.primescore.in/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents, personal details, and security preferences, sign up for full access or contact our team.")}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <User className="w-4 h-4 stroke-[1.75]" />
                   <span className="text-[13px]">Profile</span>
                 </div>
-              </a>
+              </button>
             </nav>
           </div>
 
@@ -205,14 +222,14 @@ export default function DashboardDisputesView() {
             </a>
 
             <div className="space-y-2 text-xs text-slate-600 pt-2 px-1">
-              <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
+              <button onClick={() => openDemoModal("Access Account Settings", "To customize your notifications, security, and dashboard layout, sign up for full access or contact our team.")} className="w-full flex items-center gap-3 py-1 hover:text-slate-900 transition-colors text-left">
                 <Settings className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Settings</span>
-              </a>
-              <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
+              </button>
+              <button onClick={() => openDemoModal("Access Support Desk", "To get 2-hour SLA response support from senior credit audit analysts, sign up for full access or call us directly.")} className="w-full flex items-center gap-3 py-1 hover:text-slate-900 transition-colors text-left">
                 <Headphones className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Contact Support</span>
-              </a>
+              </button>
               <Link href="/" className="flex items-center gap-3 py-1 hover:text-slate-900 transition-colors">
                 <LogOut className="w-4 h-4 text-slate-400 stroke-[1.75]" />
                 <span className="text-[13px]">Logout</span>
@@ -395,12 +412,12 @@ export default function DashboardDisputesView() {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold shadow-2xs">
+              <button onClick={() => openDemoModal("Theme Settings", "To customize your theme preferences, sign up for full access or speak with our team.")} className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold shadow-2xs">
                 🌙
-              </div>
-              <div className="w-9 h-9 rounded-full bg-[#0A2342] text-white font-extrabold flex items-center justify-center text-xs shadow-sm ring-2 ring-blue-500/20">
+              </button>
+              <button onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents and profile details, sign up for full access or contact our team.")} className="w-9 h-9 rounded-full bg-[#0A2342] text-white font-extrabold flex items-center justify-center text-xs shadow-sm ring-2 ring-blue-500/20">
                 D
-              </div>
+              </button>
             </div>
           </div>
 
@@ -514,23 +531,98 @@ export default function DashboardDisputesView() {
               <LayoutDashboard className="w-5 h-5" />
               <span className="text-[10px] font-extrabold">Home</span>
             </Link>
-            <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
+            <button onClick={() => openDemoModal("Multi-Bureau Credit Reports", "To view and download official PDF reports from CIBIL, Experian, Equifax, and CRIF, sign up for full access or speak with our credit team.")} className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
               <FileText className="w-5 h-5" />
               <span className="text-[10px] font-extrabold">Reports</span>
-            </a>
+            </button>
             <Link href="/dashboard/disputes" className="flex flex-col items-center gap-1 text-[#4F46E5]">
               <AlertTriangle className="w-5 h-5" />
               <span className="text-[10px] font-extrabold">Disputes</span>
             </Link>
-            <a href="https://dashboard.primescore.in/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
+            <button onClick={() => openDemoModal("Access Account Profile & KYC", "To manage your verified KYC documents and profile details, sign up for full access or contact our credit team.")} className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-800">
               <User className="w-5 h-5" />
               <span className="text-[10px] font-extrabold">Profile</span>
-            </a>
+            </button>
           </div>
 
         </div>
 
       </div>
+
+      {/* Interactive Demo Action Modal */}
+      <AnimatePresence>
+        {demoModal && demoModal.isOpen && (
+          <div className="fixed inset-0 z-[10005] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeDemoModal}
+              className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 8 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className="relative z-10 bg-white rounded-2xl p-6 max-w-sm sm:max-w-md w-full shadow-2xl border border-slate-200/90 text-left font-sans"
+            >
+              {/* Header Bar */}
+              <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100">
+                <img src="/lightmode_Logo.png" alt="PrimeScore" className="h-6 w-auto object-contain" />
+                <button
+                  onClick={closeDemoModal}
+                  className="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-lg hover:bg-slate-100"
+                  title="Close"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Title & Description */}
+              <h3 className="text-base sm:text-lg font-extrabold text-[#0A2342] font-display mb-2 leading-snug">
+                {demoModal.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed mb-6">
+                {demoModal.description}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="space-y-2 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <a
+                    href="https://dashboard.primescore.in/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#10B981] hover:bg-[#059669] text-white font-bold text-xs py-3 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+                  >
+                    <span>Sign Up for Full Access</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+
+                  <a
+                    href="tel:+917728948413"
+                    className="bg-[#0A2342] hover:bg-[#112D4E] text-white font-bold text-xs py-3 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Call Credit Expert</span>
+                  </a>
+                </div>
+
+                <button
+                  onClick={closeDemoModal}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl transition-colors active:scale-95"
+                >
+                  Back to Demo
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
